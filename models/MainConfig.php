@@ -9,11 +9,9 @@ class KlearMatrix_Model_MainConfig {
 	
 	const module = 'klearMatrix';
 	
-	protected $_defaultScreen;
+	protected $_config;
 	
-	protected $_controller;
-    protected $_action = 'index';
-    	
+    
 	static public function getModuleName() {
 	    return self::module;
 	}
@@ -21,39 +19,72 @@ class KlearMatrix_Model_MainConfig {
 	
 	public function setConfig(Zend_Config $config) {
 		
-		// TO-DO COntrol de errores, configuración mal seteada
+		$this->_config = $config;
 
-		if (isset($config->main->defaultScreen)) {
-			$this->_defaultScreen = $config->main->defaultScreen;
+	}
+	
+
+	public function getDefaultScreen() {
+
+		if (isset($this->_config->main->defaultScreen)) {
+			$this->_defaultScreen = $this->_config->main->defaultScreen;
 		} else {
-			//TO-DO ¿Qué hacer cuando no hay una screen definida por defecto?
+			
+			// Si no hay una defaultScreen, devolvemos la primera definida en el fichero de configuración.
+			if (isset($this->_config->screens)) {
+				foreach ($this->_config->screens as $screenName => $_data) {
+					$this->_defaultScreen = $screenName;
+					break;
+				}
+				
+			} else {
+				Throw new Zend_Exception("Default screen not found");				
+			}
 		}
 
-		
-		$this->_selectedConfig = $config->screens->{$this->_defaultScreen};
-		$this->_parseSelectedConfig();
-		return $this;
+		return $this->_defaultScreen;
 	}
+	
+	
+	public function getScreenConfig($screen)
+	{
+		
+		
+		if (!isset($this->_config->screens->{$screen})) {
+			Throw new Zend_Exception("Configuration for selected screen not found");
+		}
+		
+		return $this->_config->screens->{$screen};
+		
+	}
+	
 	
 	
 	protected function _parseSelectedConfig() {
 	    
 	    $this->_controller = $this->_selectedConfig->controller;
 	    
-	    if (isset($this->_selectedConfig->action)) {
-	        $this->_action = $this->_selectedConfig->action;
+	    $propertiesToMap = array("action","mapper");
+
+	    foreach($propertiesToMap as $prop) {
+	    	if (isset($this->_selectedConfig->{$prop})) {
+	    		$propName = '_' . $prop;
+	    		$this->{$propName} = $this->_selectedConfig->{$prop};
+	    		
+	    	}
 	    }
 	}
 	
 	
-	public function getActionName(){
-	    return $this->_action;
+	/**
+	 * @return KlearMatrix_Model_RouteDispatcher
+	 */
+	public function buildRouterConfig() {
+		$router = new KlearMatrix_Model_RouteDispatcher();
+		$router->setConfig($this);
+		return $router;		
 	}
-	
-	
-	public function getControllerName() {
-		return $this->_controller;
-	}
+
 	
 	
 	

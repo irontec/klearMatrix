@@ -7,9 +7,18 @@
 */
 class KlearMatrix_Model_RouteDispatcher {
 	
+	
 	const module = 'klearMatrix';
 	
+	/**
+	 * @var Klear_Matrix_Screen
+	 */
 	protected $_screen;
+	
+	/**
+	 * @var string
+	 */
+	protected $_screenName;
 	protected $_selectedConfig;
 	
 	protected $_controller;
@@ -30,6 +39,9 @@ class KlearMatrix_Model_RouteDispatcher {
 		$this->_config = $config;
 	}
 	
+	public function getConfig() {
+		return $this->_config;
+	}
 	
 	public function setParams(array $params) {
 		foreach ($params as $param=>$value) {
@@ -53,22 +65,32 @@ class KlearMatrix_Model_RouteDispatcher {
 		return $this->_controller;
 	}
 	
-	public function getMapperName() {
-		return $this->_mapper;
+	
+	public function getCurrentScreen() {
+		if (null === $this->_screen) {
+
+			$this->_screen = new KlearMatrix_Model_Screen();
+			$this->_screen->setRouteDispatcher($this);
+			$this->_screen->setScreenName($this->_screenName);
+			$this->_screen->setConfig($this->_selectedConfig);
+			
+		}
+				
+		return $this->_screen;
 	}
 	
 	
 	protected function _resolveCurrentScreen() {
 		
-		if ($this->_screen == null) {
-			$this->_screen = $this->_config->getDefaultScreen();
+		if ($this->_screenName == null) {
+			$this->_screenName = $this->_config->getDefaultScreen();
 		}
 		return $this;
 	}
 	
 	public function _resolveCurrentConfig() {
 		if ($this->_selectedConfig == null) {
-			$this->_selectedConfig = $this->_config->getScreenConfig($this->_screen);
+			$this->_selectedConfig = $this->_config->getScreenConfig($this->_screenName);
 		}
 		return $this;
 	}
@@ -96,7 +118,6 @@ class KlearMatrix_Model_RouteDispatcher {
 			->_resolveCurrentScreen()
 			->_resolveCurrentConfig()
 			->_resolveCurrentProperty("controller", true)
-			->_resolveCurrentProperty("mapper", true)
 			->_resolveCurrentProperty("action", false);
 		
 	

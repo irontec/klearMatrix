@@ -14,18 +14,37 @@
 			
 			var element = this.element;
 
-			return $.grep($.ui.kModule.instances, function(el){
+			return $.grep($.ui.klearMatrix.instances, function(el){
 				return el !== element;
 			});
 		},
 		
 		_init: function() {
-			this._loadMainTemplate();
+			
+			this
+				._registerEvents()
+				._loadMainTemplate();
 			
 				
 		},
+		_registerEvents : function() {
+			// highlight effect on tr
+			$(this.element.kModule("getPanel")).on('mouseenter mouseleave','table.kMatrix tr',function() {
+				$("td",$(this)).toggleClass("ui-state-highlight");
+			});
+			return this;
+		},
 		_loadMainTemplate : function() {
-			var $table = $.tmpl("mainkMatrix", this.options.data);
+			var $table = $.tmpl(
+							"mainkMatrix",
+							this.options.data,
+							{ 
+								getIndex : function(values,index) {
+									console.log(values,index);
+									return values[index];
+								}
+			        
+							});
 			
 			$(this.element.kModule("getPanel")).append($table);
 			
@@ -48,7 +67,7 @@
 
 			// if this instance was found, splice it off
 			if(position > -1){
-				$.ui.kModule.instances.splice(position, 1);
+				$.ui.klearMatrix.instances.splice(position, 1);
 			}
 
 			// call the original destroy method since we overwrote it
@@ -61,5 +80,6 @@
 	$.extend($.ui.klearMatrix, {
 		instances: []
 	});
+	
 		
 })(jQuery);

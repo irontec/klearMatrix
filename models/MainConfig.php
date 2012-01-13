@@ -10,7 +10,7 @@ class KlearMatrix_Model_MainConfig {
 	const module = 'klearMatrix';
 	
 	protected $_config;
-	
+	protected $_configPath;
     
 	static public function getModuleName() {
 	    return self::module;
@@ -19,20 +19,35 @@ class KlearMatrix_Model_MainConfig {
 	
 	public function setConfig(Zend_Config $config) {
 		
-		$this->_config = $config;
-
+		$this->_config = new Klear_Model_KConfigParser;
+		$this->_config->setConfig($config);
+		return $this;
 	}
 	
+	/**
+	 * La configuración debe recibir la ruta de ficheros de configuración, para cargar configuraciones auxiliares de cada módulo
+	 * @param string $path
+	 */
+	public function setConfigPath($path) {
+		$this->_configPath = $path;
+		return $this;
+	}
+
+	public function getConfigPath() {
+		return $this->_configPath;
+	}
 
 	public function getDefaultScreen() {
+		
+		if ($this->_config->exists("main->defaultScreen") )  {
 
-		if (isset($this->_config->main->defaultScreen)) {
-			$this->_defaultScreen = $this->_config->main->defaultScreen;
+			$this->_defaultScreen = $this->_config->getRaw()->main->defaultScreen;
+			
 		} else {
 			
 			// Si no hay una defaultScreen, devolvemos la primera definida en el fichero de configuración.
-			if (isset($this->_config->screens)) {
-				foreach ($this->_config->screens as $screenName => $_data) {
+			if ($this->_config->exists("screens")) {
+				foreach ($this->_config->getRaw()->screens as $screenName => $_data) {
 					$this->_defaultScreen = $screenName;
 					break;
 				}
@@ -49,12 +64,11 @@ class KlearMatrix_Model_MainConfig {
 	public function getScreenConfig($screen)
 	{
 		
-		
-		if (!isset($this->_config->screens->{$screen})) {
+		if (!$this->_config->exists("screens->" . $screen)) {
 			Throw new Zend_Exception("Configuration for selected screen not found");
 		}
 		
-		return $this->_config->screens->{$screen};
+		return $this->_config->getRaw()->screens->{$screen};
 		
 	}
 	

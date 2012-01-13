@@ -1,3 +1,16 @@
-h1 {
-	color:#f00;
+
+table.kMatrix {
+	width:100%;
+}
+
+table.kMatrix th {
+    padding: 3px;
+}
+
+table.kMatrix td {
+    padding: 3px;
+}
+
+.odd {
+    background:transparent none;
 }

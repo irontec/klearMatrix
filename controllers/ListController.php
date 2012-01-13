@@ -24,46 +24,44 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     	$mainRouter = $this->getRequest()->getParam("mainRouter");
     	
-    	$maperName = $mainRouter->getMapperName();
-    	$mapper = new $maperName;
+    	$screen = $mainRouter->getCurrentScreen();
+
+    	$mapperName = $screen->getMapperName();
+    	
+    	$mapper = new $mapperName;
+    	//$mapper = new \Mappers\Soap\Brands;
     	
     	$where = null;
     	$order = null;
-    	$limit = 100;
+    	$offset = 0;
+		$count = 100;
     	
+		
+		$cols = $screen->getVisibleColumnWrapper();
+		
+    	$data = new KlearMatrix_Model_KMatrixResponse;
+    	$data->setColumnWraper($cols);
+    	$data->setPK($screen->getPK());
     	
-    	
-    	$data = array(
-    		"fields"=>array()
-    	);
-
-    	if (!$results= $mapper->fetchAll()) {
-			// No hay resultados    		
+    	if (!$results= $mapper->fetchListToArray($where,$order,$count,$offset)) {
+			// No hay resultados
+			$data->setResults(array());
+    		
     		
     	} else {
     	    
-    	    $columnList = array();
-    	    
-    		foreach($results as $object) {
-    		    if (sizeof($columnList) == 0) {
-    		        $columnList = $object->getColumnsList();
-    		        
-    		    }
-    		    
-    		}
-    		$data['columns'] = array("Brand Name","Brand Description","Opciones");
-    		$data['fields'] = $results;
-    		
+    		$data->setResults($results);
     	}
     	
     	
+    	Zend_Json::$useBuiltinEncoderDecoder = true;
     	
     	$jsonResponse = new Klear_Model_DispatchResponse();
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->addTemplate("/list/template","mainkMatrix");
     	$jsonResponse->addJsFile("/js/plugins/jquery.ui.klearMatrix.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");
-    	$jsonResponse->setData($data);
+    	$jsonResponse->setData($data->toJson());
     	$jsonResponse->attachView($this->view);
     	
     }

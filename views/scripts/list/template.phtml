@@ -2,9 +2,15 @@
 <caption></caption>
 
 <th>
-   {{each(idx,field) fields}}
-            <td></td>
+   {{each(idx,column) columns}}
+            <td>${column}</td>
    {{/each}}
 </th>
 
+{{each(idx,field) fields}}
+<tr data-id="${field._BrandId}">
+
+
+</tr>
+{{/each}}
 </table>

@@ -31,12 +31,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$order = null;
     	$limit = 100;
     	
-    	$jsonResponse = new Klear_Model_DispatchResponse();
-    	$jsonResponse->setModule('klearMatrix');
     	
-    	$jsonResponse->addTemplate("/list/template");
-    	$jsonResponse->addJsFile("/js/plugins/jquery.ui.klearMatrix.js");
-    	$jsonResponse->addCssFile("/css/klearMatrix.css");
     	
     	$data = array(
     		"fields"=>array()
@@ -46,16 +41,31 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 			// No hay resultados    		
     		
     	} else {
-    		
-    		
+    	    
+    	    $columnList = array();
+    	    
+    		foreach($results as $object) {
+    		    if (sizeof($columnList) == 0) {
+    		        $columnList = $object->getColumnsList();
+    		        
+    		    }
+    		    
+    		}
     		$data['columns'] = array("Brand Name","Brand Description","Opciones");
     		$data['fields'] = $results;
     		
     	}
     	
-    	$jsonResponse->setData($data);
     	
+    	
+    	$jsonResponse = new Klear_Model_DispatchResponse();
+    	$jsonResponse->setModule('klearMatrix');
+    	$jsonResponse->addTemplate("/list/template","mainkMatrix");
+    	$jsonResponse->addJsFile("/js/plugins/jquery.ui.klearMatrix.js");
+    	$jsonResponse->addCssFile("/css/klearMatrix.css");
+    	$jsonResponse->setData($data);
     	$jsonResponse->attachView($this->view);
+    	
     }
 
 

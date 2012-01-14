@@ -10,7 +10,7 @@
 {{each(idx,row) values}}
 <tr data-id="${$item.getIndex(row,pk)}">
    {{each(colIdx,column) columns}}
-		<td class="ui-widget-content">${$item.getIndex(row,column.id)}</td>
+		<td class="ui-widget-content{{if (column.default)}} default{{/if}}">{{html $item.getIndex(row,column.id)}}</td>
 	{{/each}}
 </tr>
 {{/each}}

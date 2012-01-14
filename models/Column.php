@@ -10,8 +10,11 @@ class KlearMatrix_Model_Column {
 	protected $_attributeName;
 	protected $_publicName;
 	protected $_publicName_i18n = array();
-
+	protected $_isDefault = false;
+	
 	protected $_config;
+	
+	protected $_isOption;
 	
 	public function setAttributeName($name) {
 		$this->_attributeName = $name;
@@ -21,6 +24,10 @@ class KlearMatrix_Model_Column {
 		$this->_publicName = $name;
 	}
 
+	public function markAsOption() {
+		$this->_isOption = true;		
+	}
+	
 	public function setConfig(Zend_Config $config) {
 
 		$this->_config = new Klear_Model_KConfigParser;
@@ -28,6 +35,10 @@ class KlearMatrix_Model_Column {
 
 		list($attrName,$value) = $this->_config->getPropertyML("title","publicName",false);
 		$this->$attrName = $value;
+		
+		$default = $this->_config->getProperty("default",false);
+		$this->_isDefault = (bool)$default;
+		
 	}
 	
 	protected function _getProperty($attribute) {
@@ -52,11 +63,20 @@ class KlearMatrix_Model_Column {
 		
 	}
 	
+	public function getAttributeName() {
+		return $this->_attributeName;
+	}
+	
 	public function toArray() {
-		return array(
-					"id" => $this->_attributeName,
-					"name" => $this->getPublicName()
-				);		
+		$ret= array();
+		
+		$ret["id"] = $this->_attributeName;
+		$ret["name"] = $this->getPublicName();
+		if ($this->_isDefault) {
+			$ret['default'] = true;
+		}
+		
+		return $ret;
 	}
 	
 }

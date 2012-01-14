@@ -18,6 +18,8 @@ class KlearMatrix_Model_Screen {
 	
 	protected $_modelSpec;
 	
+	protected $_visibleColumnWrapper;
+	
 	public function setConfig(Zend_Config $config) {
 		
 		$this->_config = new Klear_Model_KConfigParser;
@@ -84,11 +86,12 @@ class KlearMatrix_Model_Screen {
 	 * @param array $modelColumns listado de columnas que devuelve el modelo
 	 */
 	public function getVisibleColumnWrapper() {
+		if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
 		
 		$obj = $this->_modelSpec->getInstance();
 		//$obj = new EKT_Model_Brands();
 		
-		$columns =  new KlearMatrix_Model_ColumnWrapper;
+		$this->_visibleColumnWrapper =  new KlearMatrix_Model_ColumnWrapper;
 		
 		//Inicializamos blackList (los campos que no se mostrarán)
 		$blacklist = array();
@@ -128,13 +131,26 @@ class KlearMatrix_Model_Screen {
 				$col->setConfig($colConfig);
 			}
 			
-			$columns->addCol($col);
+			$this->_visibleColumnWrapper->addCol($col);
 		}
 		
-		return $columns;
+		if ($this->hasFieldOptions()) {
+			
+			$col = new KlearMatrix_Model_Column;
+			$col->markAsOption();
+			$col->setAttributeName("_fieldOptions");
+			$col->setConfig($this->_config->getRaw()->fields->options);
+			$this->_visibleColumnWrapper->addCol($col);
+		}
+		
+		return $this->_visibleColumnWrapper;
 		
 	}
 
+	
+	public function hasFieldOptions() {
+		return ($this->_config->exists("fields->options"));
+	}
 	
 	/**
 	 * gateway hacia modelo específico, para devolver el nombre de la PK 
@@ -143,5 +159,10 @@ class KlearMatrix_Model_Screen {
 		return $this->_modelSpec->getInstance()->getPrimaryKeyName();
 	}
 	
+	public function filterVisibleResults($results) {
+		
+		
+		
+	}
 	
 }

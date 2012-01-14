@@ -27,7 +27,6 @@ class KlearMatrix_Model_ModelSpecification {
 			return $this->_config->getRaw()->fields->{$fName};			
 		}
 		return false;
-		
 	}
 	
 }

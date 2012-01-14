@@ -25,6 +25,9 @@ class KlearMatrix_Model_RouteDispatcher {
 	protected $_action = 'index';
 	protected $_mapper;
 	
+	
+	protected $_params = array();
+	
 	/**
 	 * @var KlearMatrix_Model_MainConfig
 	 */
@@ -44,15 +47,29 @@ class KlearMatrix_Model_RouteDispatcher {
 	}
 	
 	public function setParams(array $params) {
+		
 		foreach ($params as $param=>$value) {
-			
+	
 			switch($param) {
-				case 'alguno':
+				case 'screen':
+					$this->_screenName = $value;
 				break;
+				default:
+					$this->_params[$param] = $value;
+				break;
+				
 			}
 			
 		}
 		
+	}
+	
+	public function getParam($param) {
+		if (isset($this->_params[$param])) {
+			return $this->_params[$param];
+		}
+		
+		throw new Zend_Exception('Parámetro ['+ $param+'] no encontrado.');
 	}
 	
 	
@@ -66,6 +83,9 @@ class KlearMatrix_Model_RouteDispatcher {
 	}
 	
 	
+	/**
+	 * @return Klear_Matrix_Screen
+	 */
 	public function getCurrentScreen() {
 		if (null === $this->_screen) {
 

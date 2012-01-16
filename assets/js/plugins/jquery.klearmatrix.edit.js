@@ -27,7 +27,7 @@
 							"editkMatrix",
 							data);
 			
-			$(this.element.module("getPanel")).append($form);
+			$(this.element.klearModule("getPanel")).append($form);
 			
 			
 		},
@@ -44,6 +44,6 @@
 
 	});
 
+	$.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);
 	
-		
 })(jQuery);

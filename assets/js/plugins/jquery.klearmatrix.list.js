@@ -1,5 +1,10 @@
-;(function($) {
-
+;var loadInterval = window.setInterval(function() {
+	
+	if (!$.klearmatrix.module) return;
+	clearInterval(loadInterval);
+	
+(function($) {
+	
 	$.widget("klearmatrix.list", $.klearmatrix.module,  {
 		options: {
 			data : null,
@@ -7,16 +12,13 @@
 		},
 		_super: $.klearmatrix.module.prototype,
 		_create : function() {
-			console.log("created 0");
 			this._super._create.apply(this);
-			console.log("created");
 		},
 		_init: function() {
 			
 			this
 				._registerEvents()
 				._loadMainTemplate();
-			
 				
 		},
 		_registerEvents : function() {
@@ -24,28 +26,28 @@
 			var self = this.element;
 			
 			// highlight effect on tr
-			$(this.element.module("getPanel")).on('mouseenter mouseleave','table.kMatrix tr',function() {
+			$(this.element.klearModule("getPanel")).on('mouseenter mouseleave','table.kMatrix tr',function() {
 				$("td",$(this)).toggleClass("ui-state-highlight");
 			});
 			
-			$(this.element.module("getPanel")).on('mouseenter','a._fieldOption',function(e) {
+			$(this.element.klearModule("getPanel")).on('mouseenter','a._fieldOption',function(e) {
 				if ($(this).data("relatedtab")) {
-					$(this).data("relatedtab").module("highlightOn");
+					$(this).data("relatedtab").klearModule("highlightOn");
 				}				
 			}).on('mouseleave','a._fieldOption',function(e) {
 				if ($(this).data("relatedtab")) {
-					$(this).data("relatedtab").module("highlightOff");
+					$(this).data("relatedtab").klearModule("highlightOff");
 				}				
 			});
 			
-			$(this.element.module("getPanel")).on('click','a._fieldOption',function(e) {
+			$(this.element.klearModule("getPanel")).on('click','a._fieldOption',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();
 				
-				var _container = self.module("getContainer");
+				var _container = self.klearModule("getContainer");
 				
-				var _iden = "#tabs-" + self.module("option","file")
+				var _iden = "#tabs-" + self.klearModule("option","file")
 							+ '_' + $(this).data("screen")
 							+ '_' + $(this).parents("tr:eq(0)").data("id");
 				
@@ -55,7 +57,7 @@
 					return;
 				}
 				
-				var _newIndex = self.module("option","tabIndex")+1;
+				var _newIndex = self.klearModule("option","tabIndex")+1;
 				var _menuLink = $(this);
 				var _parentTr = $(this).parents("tr:eq(0)");
 				
@@ -65,10 +67,10 @@
 					
 					var $tabLi = $(ui.tab).parent("li");
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
-					$tabLi.module("option","menuLink",_menuLink);
+					$tabLi.klearModule("option","menuLink",_menuLink);
 					
 					// Actualizamos el file, al del padre (En el constructor se pasa "sucio"
-					$tabLi.module("option","file",self.module("option","file"));
+					$tabLi.klearModule("option","file",self.klearModule("option","file"));
 					
 					// Seteamos el valor para dispatchOptions
 					var _dispatchOptions = {
@@ -78,8 +80,8 @@
 					
 					_menuLink.data("relatedtab",$tabLi);
 					
-					$tabLi.module("option","dispatchOptions",_dispatchOptions);
-					$tabLi.module("reload");
+					$tabLi.klearModule("option","dispatchOptions",_dispatchOptions);
+					$tabLi.klearModule("reload");
 					
 				});
 				
@@ -137,12 +139,15 @@
 			        
 							});
 			
-			$(this.element.module("getPanel")).append($table);
+			$(this.element.klearModule("getPanel")).append($table);
 			
 			
 		}
 		
 	});
-
+	
+	$.widget.bridge("klearMatrixList", $.klearmatrix.list);
 					
 })(jQuery);
+
+},100);

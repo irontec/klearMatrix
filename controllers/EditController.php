@@ -37,16 +37,21 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $data->setColumnWraper($cols);
 	    $data->setPK($screen->getPK());
 	    
-	    $obj = $mapper->find($pk);
-	    
-	    $data->setResults(array($obj));
-	    
+	    if (!$obj = $mapper->find($pk)) {
+	    	// Error
+	    	
+	    	
+	    } else {
+	    	$data->setResults($obj);
+	    	$data->fixResults($screen);	
+	    }
 	    
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');
 	    $jsonResponse->setPlugin('edit');
 	    $jsonResponse->addTemplate("/edit/template","editkMatrix");
-	    $jsonResponse->addJsFile("/js/plugins/jquery.km.edit.js");
+	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
+	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
 	    $jsonResponse->setData($data->toJson());
 	    $jsonResponse->attachView($this->view);

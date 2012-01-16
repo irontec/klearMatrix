@@ -1,1 +1,17 @@
-hola gorka
+{{each(idx,row) values}}
+
+<form class="klearMatrix_edit">
+	<fieldset>
+		<legend></legend>
+		<dl>
+	 	{{each(idx,column) columns}}
+        
+	            <dt><label for="${randIden}${column.id}">${column.name}</label></dt>
+	            <dd><input type="text" name="name" id="${randIden}${column.id}" value="{{html $item.getIndex(row,column.id)}}" /></dd>
+		
+		{{/each}}
+		</dl>
+	</fieldset>
+
+</form>
+{{/each}}

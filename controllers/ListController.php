@@ -44,7 +44,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$data->setColumnWraper($cols);
     	$data->setPK($screen->getPK());
     	
-    	if (!$results= $mapper->fetchListToArray($where,$order,$count,$offset)) {
+    	if (!$results= $mapper->fetchList($where,$order,$count,$offset)) {
 			// No hay resultados
 			$data->setResults(array());
     	
@@ -70,7 +70,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     			$data->setFieldOptions($fieldOpts);
     			
     		}
-    		
+    		$data->fixResults($screen);
     	}
     	
     	
@@ -80,6 +80,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('list');
     	$jsonResponse->addTemplate("/list/template","mainkMatrix");
+    	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");
     	$jsonResponse->setData($data->toJson());

@@ -75,7 +75,7 @@ class KlearMatrix_Model_Screen {
 
 	
 	public function getModelName() {
-		return $this->_model;
+		return $this->_modelSpec->getClassName();
 	}
 	
 	
@@ -161,29 +161,12 @@ class KlearMatrix_Model_Screen {
 		return $this->_modelSpec->getInstance()->getPrimaryKeyName();
 	}
 	
-	public function fixObject($object) {
-		$obj = new EKT_Model_Brands();
-		
-		
+	/**
+	 * gateway hacia modelo específico, para devolver la instancia del objeto "vacío"
+	 */
+	public function getObjectInstance() {
+		return $this->_modelSpec->getInstance();
 	}
 	
-	public function filterVisibleResults($results) {
-		
-		$colIndexes = array();
-		foreach($this->getVisibleColumnWrapper() as $column) {
-			if ($column->isOption()) continue;
-			$colIndexes[$column->getDbName()] = true;
-		}
-		
-		foreach($results as $result) {
-			$_getter = "getBrandId";
-			
-			var_dump($result->{$_getter}());
-		}
-		
-		exit();
-		
-		
-	}
 	
 }

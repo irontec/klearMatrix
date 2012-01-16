@@ -1,24 +1,16 @@
 ;(function($) {
-		
-	$.widget("klearmatrix.list", {
+
+	$.widget("klearmatrix.list", $.klearmatrix.module,  {
 		options: {
-			data : null
+			data : null,
+			moduleName: 'list'
 		},
-		
-		_create: function(){
-
-			// remember this instance
-			$.klearmatrix.list.instances.push(this.element);
+		_super: $.klearmatrix.module.prototype,
+		_create : function() {
+			console.log("created 0");
+			this._super._create.apply(this);
+			console.log("created");
 		},
-		_getOtherInstances: function(){
-			
-			var element = this.element;
-
-			return $.grep($.klearmatrix.list.instances, function(el){
-				return el !== element;
-			});
-		},
-		
 		_init: function() {
 			
 			this
@@ -148,37 +140,9 @@
 			$(this.element.module("getPanel")).append($table);
 			
 			
-		},
-		_setOption: function(key, value){
-			
-			this.options[key] = value;
-
-			switch(key){
-				case "title":
-					this.options.mainEnl.html(value);
-				break;
-			}
-		},
-		destroy: function(){
-			// remove this instance from $.klearmatrix.mywidget.instances
-			var element = this.element,
-			position = $.inArray(element, $.klearmatrix.mywidget.instances);
-
-			// if this instance was found, splice it off
-			if(position > -1){
-				$.klearmatrix.list.instances.splice(position, 1);
-			}
-
-			// call the original destroy method since we overwrote it
-			$.Widget.prototype.destroy.call( this );
 		}
-
-	});
-
-	
-	$.extend($.klearmatrix.list, {
-		instances: []
-	});
-	
 		
+	});
+
+					
 })(jQuery);

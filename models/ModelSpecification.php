@@ -22,6 +22,10 @@ class KlearMatrix_Model_ModelSpecification {
 		return $this->_instance;
 	}
 	
+	public function getClassName() {
+		return $this->_class;	
+	}
+	
 	public function getField($fName) {
 		if ($this->_config->exists("fields->" . $fName)) {
 			return $this->_config->getRaw()->fields->{$fName};			

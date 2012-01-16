@@ -1,6 +1,6 @@
 ;(function($) {
 		
-	$.widget("km.list", {
+	$.widget("klearmatrix.list", {
 		options: {
 			data : null
 		},
@@ -8,13 +8,13 @@
 		_create: function(){
 
 			// remember this instance
-			$.km.list.instances.push(this.element);
+			$.klearmatrix.list.instances.push(this.element);
 		},
 		_getOtherInstances: function(){
 			
 			var element = this.element;
 
-			return $.grep($.km.list.instances, function(el){
+			return $.grep($.klearmatrix.list.instances, function(el){
 				return el !== element;
 			});
 		},
@@ -138,7 +138,7 @@
 										}
 										
 									} else {
-										
+									
 										return values[index];
 									}
 								}
@@ -160,13 +160,13 @@
 			}
 		},
 		destroy: function(){
-			// remove this instance from $.km.mywidget.instances
+			// remove this instance from $.klearmatrix.mywidget.instances
 			var element = this.element,
-			position = $.inArray(element, $.km.mywidget.instances);
+			position = $.inArray(element, $.klearmatrix.mywidget.instances);
 
 			// if this instance was found, splice it off
 			if(position > -1){
-				$.km.list.instances.splice(position, 1);
+				$.klearmatrix.list.instances.splice(position, 1);
 			}
 
 			// call the original destroy method since we overwrote it
@@ -176,7 +176,7 @@
 	});
 
 	
-	$.extend($.km.list, {
+	$.extend($.klearmatrix.list, {
 		instances: []
 	});
 	

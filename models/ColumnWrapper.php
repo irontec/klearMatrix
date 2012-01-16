@@ -4,6 +4,7 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	
 	public $_cols = array();
 	protected $_position;
+	protected $_columnsListKeys = array();
 	
 	public function addCol($col) {
 		$this->_cols[] = $col;

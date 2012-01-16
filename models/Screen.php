@@ -83,7 +83,7 @@ class KlearMatrix_Model_Screen {
 	/**
 	 * El método filtrará las columnas del modelo con el fichero de configuración de modelo y la whitelist/blacklist de la configuración
 	 * 
-	 * @param array $modelColumns listado de columnas que devuelve el modelo
+	 * @param KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
 	 */
 	public function getVisibleColumnWrapper() {
 		if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
@@ -100,20 +100,21 @@ class KlearMatrix_Model_Screen {
 		
 		// La primary Key estará por defecto en la blackList, a excepción de encontrarse en la whitelist
 		if ( ($this->_config->exists("fields->whitelist")) && ($this->_config->getRaw()->fields->whitelist->{$pk}) ) {
-			// La Pk se mostrará en las columnas
+			// La Pk se mostrará si está en la whitelist
 			// Something to do?
 			
 		} else {
-			$blacklist[strtolower($pk)] = true;
+			$blacklist[$pk] = true;
 		}
 		
 		// Le pregunto al fichero de configuración por los campos en la blackList - no deben salir - 
 		if ($this->_config->exists("fields->blacklist")) {
-			if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
 			
+			if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
+
 				foreach($_blacklistConfig as $field => $value) {
 					if ((bool)$value) {
-						$blacklist[strtolower($field)] = true;
+						$blacklist[$field] = true;
 					}
 				}			
 			}
@@ -122,12 +123,13 @@ class KlearMatrix_Model_Screen {
 		 
 		foreach($obj->getColumnsList() as $dbName => $attribute) {
 
-			if (isset($blacklist[strtolower($dbName)])) continue;
+			if (isset($blacklist[$dbName])) continue;
 			
 			$col = new KlearMatrix_Model_Column;
-			$col->setAttributeName($dbName);
 			
-			if ($colConfig = $this->_modelSpec->getField($attribute)) {			
+			$col->setDbName($dbName);
+			
+			if ($colConfig = $this->_modelSpec->getField($dbName)) {			
 				$col->setConfig($colConfig);
 			}
 			
@@ -138,7 +140,7 @@ class KlearMatrix_Model_Screen {
 			
 			$col = new KlearMatrix_Model_Column;
 			$col->markAsOption();
-			$col->setAttributeName("_fieldOptions");
+			$col->setdbName("_fieldOptions");
 			$col->setConfig($this->_config->getRaw()->fields->options);
 			$this->_visibleColumnWrapper->addCol($col);
 		}
@@ -159,8 +161,27 @@ class KlearMatrix_Model_Screen {
 		return $this->_modelSpec->getInstance()->getPrimaryKeyName();
 	}
 	
+	public function fixObject($object) {
+		$obj = new EKT_Model_Brands();
+		
+		
+	}
+	
 	public function filterVisibleResults($results) {
 		
+		$colIndexes = array();
+		foreach($this->getVisibleColumnWrapper() as $column) {
+			if ($column->isOption()) continue;
+			$colIndexes[$column->getDbName()] = true;
+		}
+		
+		foreach($results as $result) {
+			$_getter = "getBrandId";
+			
+			var_dump($result->{$_getter}());
+		}
+		
+		exit();
 		
 		
 	}

@@ -24,6 +24,7 @@ class KlearMatrix_Model_KMatrixResponse {
 	}
 	
 	public function toJson() {
+		
 		return array(
 					"columns" => $this->_columnWrapper->toArray(),
 					"values" => $this->_results,

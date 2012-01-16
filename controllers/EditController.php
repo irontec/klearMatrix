@@ -26,7 +26,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $screen = $mainRouter->getCurrentScreen();
 	    
 	    $mapperName = $screen->getMapperName();
-	    $mapper = new $mapperName;
+	    //$mapper = new $mapperName;
 	    $mapper = new \Mappers\Soap\Brands;
 	    
 	    $pk = $mainRouter->getParam("pk");
@@ -36,7 +36,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    
 	    $data->setColumnWraper($cols);
 	    $data->setPK($screen->getPK());
-	    
 	    
 	    $obj = $mapper->find($pk);
 	    

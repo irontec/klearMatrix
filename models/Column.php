@@ -7,7 +7,7 @@
 */
 class KlearMatrix_Model_Column {
 
-	protected $_attributeName;
+	protected $_dbName;
 	protected $_publicName;
 	protected $_publicName_i18n = array();
 	protected $_isDefault = false;
@@ -16,8 +16,8 @@ class KlearMatrix_Model_Column {
 	
 	protected $_isOption;
 	
-	public function setAttributeName($name) {
-		$this->_attributeName = $name;
+	public function setDbName($name) {
+		$this->_dbName = $name;
 	}
 	
 	public function setPublicName($name) {
@@ -26,6 +26,10 @@ class KlearMatrix_Model_Column {
 
 	public function markAsOption() {
 		$this->_isOption = true;		
+	}
+	
+	public function isOption() {
+		return $this->_isOption;
 	}
 	
 	public function setConfig(Zend_Config $config) {
@@ -59,18 +63,18 @@ class KlearMatrix_Model_Column {
 			return $pubName;
 		}
 		
-		return $this->_attributeName;
+		return $this->_dbName;
 		
 	}
 	
-	public function getAttributeName() {
-		return $this->_attributeName;
+	public function getDbName() {
+		return $this->_dbName;
 	}
 	
 	public function toArray() {
 		$ret= array();
 		
-		$ret["id"] = $this->_attributeName;
+		$ret["id"] = $this->_dbName;
 		$ret["name"] = $this->getPublicName();
 		if ($this->_isDefault) {
 			$ret['default'] = true;

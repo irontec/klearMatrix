@@ -1,6 +1,6 @@
 ;(function($) {
 	
-	$.widget("km.edit", {
+	$.widget("klearmatrix.edit", {
 		options: {
 			data : null
 		},
@@ -14,7 +14,7 @@
 			
 			var element = this.element;
 
-			return $.grep($.km.edit.instances, function(el){
+			return $.grep($.klearmatrix.edit.instances, function(el){
 				return el !== element;
 			});
 		},
@@ -52,11 +52,11 @@
 		destroy: function(){
 			// remove this instance from $.km.mywidget.instances
 			var element = this.element,
-			position = $.inArray(element, $.km.mywidget.instances);
+			position = $.inArray(element, $.klearmatrix.mywidget.instances);
 
 			// if this instance was found, splice it off
 			if(position > -1){
-				$.km.edit.instances.splice(position, 1);
+				$.klearmatrix.edit.instances.splice(position, 1);
 			}
 
 			// call the original destroy method since we overwrote it
@@ -66,7 +66,7 @@
 	});
 
 	
-	$.extend($.km.edit, {
+	$.extend($.klearmatrix.edit, {
 		instances: []
 	});
 	

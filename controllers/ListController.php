@@ -55,7 +55,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     		$data->setResults($results);
     		
     		if ($screen->hasFieldOptions()) {
-    			//$fieldOpts = $screen->getFieldOptions();
+    		//	$fieldOpts = $screen->getFieldOptions();
     			
     			$fieldOpts = array(
     					array(
@@ -66,6 +66,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     						)
     					
     					);
+    			
     			$data->setFieldOptions($fieldOpts);
     			
     		}
@@ -79,7 +80,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('list');
     	$jsonResponse->addTemplate("/list/template","mainkMatrix");
-    	$jsonResponse->addJsFile("/js/plugins/jquery.km.list.js");
+    	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");
     	$jsonResponse->setData($data->toJson());
     	$jsonResponse->attachView($this->view);

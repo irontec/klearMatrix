@@ -14,55 +14,44 @@ class KlearMatrix_EditController extends Zend_Controller_Action
     }
 
     
-    public function templateAction()
-    {
-        if ($fieldType = $this->getRequest()->getParam("field")) {
-            
-            switch($fieldType) {
-                case "text":
-                case "textarea":
-                    $this->_helper->viewRenderer('fields/' . $fieldType);
-                break;
-                
-            }
-        }
-        
+    
+    public function saveAction() {
+    	
+    	
     	
     }
+    
     
     public function indexAction()
     {
 	    
 	    $mainRouter = $this->getRequest()->getParam("mainRouter");
-	    $screen = $mainRouter->getCurrentScreen();
+	    $item = $mainRouter->getCurrentItem();
 	    
-	    $mapperName = $screen->getMapperName();
-	    //$mapper = new $mapperName;
-	    $mapper = new \Mappers\Soap\Brands;
-	    
+	    $mapperName = $item->getMapperName();
+	    $mapper = new $mapperName;
+	    	    
 	    $pk = $mainRouter->getParam("pk");
-	    $cols = $screen->getVisibleColumnWrapper();
+	    $cols = $item->getVisibleColumnWrapper();
 	    
-	    $data = new KlearMatrix_Model_KMatrixResponse;
+	    $data = new KlearMatrix_Model_MatrixResponse;
 	    
 	    $data->setColumnWraper($cols);
-	    $data->setPK($screen->getPK());
+	    $data->setPK($item->getPK());
 	    
 	    if (!$obj = $mapper->find($pk)) {
 	    	// Error
 	    	
-	    	
 	    } else {
 	    	$data->setResults($obj);
-	    	$data->fixResults($screen);	
+	    	$data->fixResults($item);	
 	    }
 	    
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');
 	    $jsonResponse->setPlugin('edit');
-	    $jsonResponse->addTemplate("/edit/template","editkMatrix");
-	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/edit/template/field/","editkMatrix"));
-	    
+	    $jsonResponse->addTemplate("/template/edit/type" . $item->getType(),"klearmatrixEdit");
+	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");

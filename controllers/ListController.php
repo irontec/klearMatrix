@@ -13,19 +13,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     		->initContext('json');
     }
 
-    
-    public function templateAction()
-    {
-    	
-    }
-    
+   
     public function indexAction()
     {
 
     	$mainRouter = $this->getRequest()->getParam("mainRouter");
-    	$screen = $mainRouter->getCurrentScreen();
+    	$item = $mainRouter->getCurrentItem();
 
-    	$mapperName = $screen->getMapperName();
+    	$mapperName = $item->getMapperName();
     	
     	$mapper = new $mapperName;
     	//$mapper = new \Mappers\Soap\Brands;
@@ -36,13 +31,13 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 		$count = 100;
     	
 		
-		$cols = $screen->getVisibleColumnWrapper();
+		$cols = $item->getVisibleColumnWrapper();
 		
 		
-    	$data = new KlearMatrix_Model_KMatrixResponse;
+    	$data = new KlearMatrix_Model_MatrixResponse;
     	
     	$data->setColumnWraper($cols);
-    	$data->setPK($screen->getPK());
+    	$data->setPK($item->getPK());
     	
     	if (!$results= $mapper->fetchList($where,$order,$count,$offset)) {
 			// No hay resultados
@@ -50,27 +45,38 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	
     	} else {
     	    
-    		//$results = $screen->filterVisibleResults($results);
+    		//$results = $item->filterVisibleResults($results);
     		
     		$data->setResults($results);
     		
-    		if ($screen->hasFieldOptions()) {
-    		//	$fieldOpts = $screen->getFieldOptions();
+    		if ($item->hasFieldOptions()) {
     			
-    			$fieldOpts = array(
-    					array(
-    							"screen"=>"screen_editar",
-    							"class"=>"ui-silk-page-white-edit",
-    							"title"=>"Editar Marca",
-    							"noLabel"=>true
-    						)
-    					
-    					);
+    			$fieldOptionsWrapper = new KlearMatrix_Model_FieldOptionsWrapper;
     			
-    			$data->setFieldOptions($fieldOpts);
+    			foreach ($item->getScreensFromFieldOption() as $_screen) {
+    				
+    				$screenOption = new KlearMatrix_Model_ScreenFieldOption;
+    				$screenOption->setScreenName($_screen);
+    				// Recuperamos la configuración del screen, de la configuración general del módulo
+    				// Supongo que cuando lo vea Alayn, le gustará mucho :)
+    				// El "nombre" mainRouter apesta... pero... O:)
+    				$screenOption->setConfig($mainRouter->getConfig()->getScreenConfig($_screen));
+    				$fieldOptionsWrapper->addOption($screenOption);
+    			}
+
+    			foreach ($item->getDialogsFromFieldOption() as $_dialog) {
+    				$dialogOption = new KlearMatrix_Model_DialogFieldOption;
+    				$dialogOption->setDialogName($_dialog);
+    				$dialogOption->setConfig($mainRouter->getConfig()->getDialogConfig($_dialog));
+    				$fieldOptionsWrapper->addOption($dialogOption);
+    				
+    			}
+    			
+    			
+    			$data->setFieldOptions($fieldOptionsWrapper);
     			
     		}
-    		$data->fixResults($screen);
+    		$data->fixResults($item);
     	}
     	
     	
@@ -79,7 +85,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$jsonResponse = new Klear_Model_DispatchResponse();
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('list');
-    	$jsonResponse->addTemplate("/list/template","mainkMatrix");
+    	$jsonResponse->addTemplate("/template/list/type/" . $item->getType(),"klearmatrixList");
+    	
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");

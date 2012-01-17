@@ -26,7 +26,7 @@ class KlearMatrix_Model_Column {
 	}
 
 	public function markAsOption() {
-		$this->_isOption = true;		
+		$this->_isOption = true;	
 	}
 	
 	public function isOption() {
@@ -44,10 +44,26 @@ class KlearMatrix_Model_Column {
 		$default = $this->_config->getProperty("default",false);
 		$this->_isDefault = (bool)$default;
 		
-		if (!$this->_type = $this->_config->getProperty("type",false)) {
-		    $this->_type = 'text';
+		if ($this->isOption()) {
+			$this->_type = '_option';	
+			
+		} else {
+			if (!$this->_type = $this->_config->getProperty("type",false)) {
+		    	$this->_type = 'text';
+			}
 		}
-		
+	}
+	
+	public function isDefault() {
+		return $this->_isDefault;
+	}
+	
+	
+	/**
+	 * @return Klear_Model_KConfigParser
+	 */
+	public function getKlearConfig() {
+		return $this->_config;
 		
 	}
 	
@@ -81,6 +97,7 @@ class KlearMatrix_Model_Column {
     public function getType() {
 		return $this->_type;
 	}
+	
 	
 	public function toArray() {
 		$ret= array();

@@ -6,11 +6,24 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	protected $_position;
 	protected $_columnsListKeys = array();
 
+	protected $_optionColumnIdx = false;
+	protected $_defaultColumnIdx = false;
 	protected $_types = array();
 	
 	public function addCol($col) {
 		$this->_cols[] = $col;
-		$this->_types[$col->getType()] = true;
+		
+		// Estamos dando por hecho, que hay sólo una columna de opciones por listado.
+		if ($col->isOption()) {
+			$this->_optionColumnsIdx = sizeof($this->_cols) - 1;			
+		} else {
+			$this->_types[$col->getType()] = true;
+		}
+		
+		
+		if ($col->isDefault()) {
+			$this->_defaultColumnIdx = sizeof($this->_cols) - 1;
+		}
 	}
 	
 	public function toArray() {
@@ -31,6 +44,32 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	    
 	    return $tmpls;   
 	    
+	}
+	
+	public function getDefaultCol() {
+		if (false === $this->_defaultColumnIdx) {
+			return $this->_cols[0];
+		}
+		
+		return $this->_cols[$this->_defaultColumnIdx];
+	}
+	
+	public function resetWrapper() {
+		$this->_cols = array();
+		$this->_types = array();
+		$this->_defaultColumnIdx = false;
+		$this->_optionColumnIdx = false;
+		return $this;
+	}
+	
+	public function getOptionColumn() {
+		
+		if (false === $this->_optionColumnsIdx) {
+			return false;
+		}
+		
+		return $this->_cols[$this->_optionColumnsIdx];
+
 	}
 	
 	public function __construct() {

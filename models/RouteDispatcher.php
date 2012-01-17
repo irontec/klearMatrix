@@ -11,15 +11,29 @@ class KlearMatrix_Model_RouteDispatcher {
 	const module = 'klearMatrix';
 	
 	/**
-	 * @var Klear_Matrix_Screen
+	 * @var KlearMatrix_Model_Screen
 	 */
 	protected $_screen;
+	
+	/**
+	 * @var KlearMatrix_Model_Dialog
+	 */
+	protected $_dialog;
 	
 	/**
 	 * @var string
 	 */
 	protected $_screenName;
+	protected $_dialogName;
 	protected $_selectedConfig;
+	
+	
+	/**
+	 * @var string
+	 * Que tipo de request = dialog | *screen
+	 */
+	protected $_typeName = 'screen';
+	
 	
 	protected $_controller;
 	protected $_action = 'index';
@@ -52,7 +66,10 @@ class KlearMatrix_Model_RouteDispatcher {
 	
 			switch($param) {
 				case 'screen':
-					$this->_screenName = $value;
+				case 'dialog':
+				case 'type':
+					$attrName = "_" . $param . "Name";
+					$this->{$attrName} = $value;
 				break;
 				default:
 					$this->_params[$param] = $value;
@@ -83,34 +100,85 @@ class KlearMatrix_Model_RouteDispatcher {
 	}
 	
 	
-	/**
-	 * @return Klear_Matrix_Screen
-	 */
+	
 	public function getCurrentScreen() {
+	
 		if (null === $this->_screen) {
-
+	
 			$this->_screen = new KlearMatrix_Model_Screen();
 			$this->_screen->setRouteDispatcher($this);
 			$this->_screen->setScreenName($this->_screenName);
 			$this->_screen->setConfig($this->_selectedConfig);
-			
 		}
-				
 		return $this->_screen;
 	}
 	
 	
-	protected function _resolveCurrentScreen() {
+	public function getCurrentDialog() {
+	
+		if (null === $this->_dialog) {
+	
+			$this->_dialog = new KlearMatrix_Model_Dialog();
+			$this->_dialog->setRouteDispatcher($this);
+			$this->_dialog->setDialogName($this->_dialogName);
+			$this->_dialog->setConfig($this->_selectedConfig);
+		}
+		return $this->_dialog;
+	}
+	
+	
+	
+	/**
+	 * @return Klear_Matrix_Screen
+	 */
+	public function getCurrentItem() {
+		switch($this->_typeName) {
+			case "dialog":
+				return $this->getCurrentDialog();
+			default:
+				return $this->getCurrentScreen();
+		}
+	}
+	
+	
+	protected function _resolveCurrentItem() {
 		
+		switch($this->_typeName) {
+			case "dialog":
+				return $this->_resolveCurrentItemDialog();
+			default:
+				return $this->_resolveCurrentItemScreen();
+		}
+			
+	}
+	
+	protected function _resolveCurrentItemScreen() {
 		if ($this->_screenName == null) {
 			$this->_screenName = $this->_config->getDefaultScreen();
+		}
+		return $this;		
+	}
+	
+	protected function _resolveCurrentItemDialog() {
+		
+		if ($this->_dialogName == null) {
+			$this->_dialogName = $this->_config->getDefaultDialog();
 		}
 		return $this;
 	}
 	
 	public function _resolveCurrentConfig() {
+		
+		// Aquí resolvemos a que métodos de MainConfig llamar:
+		// getScreenConfig | getDialogConfig
+		// a partir al atributo de entidad que corresponda según el type
+		// _screenName | _dialogName 
+		
+		$configGetter = "get" . ucfirst($this->_typeName) . "Config";
+		$attrName = "_" . $this->_typeName . "Name";
+		
 		if ($this->_selectedConfig == null) {
-			$this->_selectedConfig = $this->_config->getScreenConfig($this->_screenName);
+			$this->_selectedConfig = $this->_config->{$configGetter}($this->{$attrName});
 		}
 		return $this;
 	}
@@ -131,15 +199,15 @@ class KlearMatrix_Model_RouteDispatcher {
 		$this->{$propName} = $this->_selectedConfig->{$name};
 		return $this;		
 	}
+
 	
 	public function resolveDispatch() {
 		
 		$this
-			->_resolveCurrentScreen()
+			->_resolveCurrentItem()
 			->_resolveCurrentConfig()
 			->_resolveCurrentProperty("controller", true)
 			->_resolveCurrentProperty("action", false);
-		
 	
 	}
 	

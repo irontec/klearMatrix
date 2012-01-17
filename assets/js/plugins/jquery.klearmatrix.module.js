@@ -51,11 +51,18 @@
 											fieldValue:value
 									};
 								},
-								getIndex : function(values,index) {
-									if ('undefined' === typeof values[index]) {
+								getIndex : function(values,idx) {
+									if (!values[idx]) return 'error';
+
+									return values[idx];
+									
+								},
+								getIndexFromColumn : function(values,column) {
+									
+									if ('undefined' === typeof values[column.id]) {
 										
-										switch(index) {
-											case "_fieldOptions":
+										switch(column.type) {
+											case "_option":
 												
 												if (this.data.fieldOptions) {
 													var ret = [];
@@ -64,9 +71,10 @@
 														
 														var _op = this.data.fieldOptions[i];
 														
-														ret.push('<a class="_fieldOption" href="" data-screen="'+_op.screen+'" title="'+_op.title+'">');
+														var _type = _op.type || 'screen';
+														ret.push('<a class="_fieldOption '+_type+'" href="" data-'+_type+'="'+_op[_type]+'" title="'+_op.title+'">');
 														ret.push('<span class="ui-silk inline '+_op.class+'"></span>');
-														if (!_op.noLabel) {
+														if (_op.label) {
 															ret.push(_op.title);
 														}
 														ret.push('</a>');
@@ -82,11 +90,11 @@
 										
 									} else {
 									
-										return values[index];
+										return values[column.id];
 									}
 								},
 								getTemplateForType : function(column) {
-									return $.template['editkMatrix' + column.type];
+									return $.template['clearMatrixFields' + column.type];
 								}
 			        
 							});

@@ -14,13 +14,20 @@
 			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 			
 			this
-				._loadTemplate("editkMatrix")
-				._loadOptionIcons();
+				._loadTemplate("klearmatrixEdit")
+				._loadOptionIcons()
+				._registerEvents(); 
 			
 				
 		},
 		_registerEvents : function() {
 			
+			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_edit',function() {
+			
+				
+				
+			});
+
 			
 
 		},
@@ -34,7 +41,7 @@
 		            text: $(this).data("text")
 				})
 			});
-			
+			return this;
 		}
 	});
 

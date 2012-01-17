@@ -5,13 +5,11 @@
 * @author jabi
 *
 */
-class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem  {
-
-	protected $_type = 'screen';
-
+class KlearMatrix_Model_Dialog extends KlearMatrix_Model_ResponseItem {
 	
-	public function setScreenName($name) {
+	protected $_type = 'dialog';
+	
+	public function setDialogName($name) {
 		$this->setItemName($name);
-	}
-
+	}	
 }

@@ -37,29 +37,44 @@ class KlearMatrix_Model_MainConfig {
 		return $this->_configPath;
 	}
 
-	public function getDefaultScreen() {
+	protected function _getDefaultItem($itemName) {
+		if (!in_array($itemName,array("screen","dialog"))) {
+			Throw new Zend_Exception("Error accediendo a la configuración. No se ha especificado un tipo de enrutado válido.");
+		}
 		
-		if ($this->_config->exists("main->defaultScreen") )  {
-
-			$this->_defaultScreen = $this->_config->getRaw()->main->defaultScreen;
-			
+		$attrName = "_default" . ucfirst($itemName);
+		$configItemName = "default" . ucfirst($itemName);
+		$itemConfigWrapper = $itemName . "s";
+		
+		if ($this->_config->exists("main->default" . ucfirst($itemName)) )  {
+	
+			$this->{$attrName} = $this->_config->getRaw()->main->$configItemName;
+	
 		} else {
-			
+	
 			// Si no hay una defaultScreen, devolvemos la primera definida en el fichero de configuración.
-			if ($this->_config->exists("screens")) {
-				foreach ($this->_config->getRaw()->screens as $screenName => $_data) {
-					$this->_defaultScreen = $screenName;
+			if ($this->_config->exists($itemConfigWrapper)) {
+				foreach ($this->_config->getRaw()->{$itemConfigWrapper} as $_name => $_data) {
+					$this->{$attrName} = $_name;
 					break;
 				}
-				
+	
 			} else {
-				Throw new Zend_Exception("Default screen not found");				
+				Throw new Zend_Exception("Default item [".$itemName."] not found");
 			}
 		}
-
-		return $this->_defaultScreen;
+	
+		return $this->{$attrName};
 	}
 	
+	public function getDefaultScreen() {
+		return $this->_getDefaultItem("screen");
+	}
+	
+	public function getDefaultDialog() {
+		return $this->_getDefaultItem("dialog");
+	}
+
 	
 	public function getScreenConfig($screen)
 	{
@@ -72,6 +87,18 @@ class KlearMatrix_Model_MainConfig {
 		
 	}
 	
+	
+	public function getDialogConfig($dialog)
+	{
+		
+		if (!$this->_config->exists("dialogs->" . $dialog)) {
+			Throw new Zend_Exception("Configuration for selected dialog not found");
+		}
+	
+		
+		return $this->_config->getRaw()->dialogs->{$dialog};
+	
+	}
 	
 	
 	protected function _parseSelectedConfig() {

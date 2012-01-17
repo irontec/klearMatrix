@@ -13,7 +13,7 @@
 			
 			this
 				._registerEvents()
-				._loadTemplate("mainkMatrix");
+				._loadTemplate("klearmatrixList");
 				
 		},
 		_registerEvents : function() {
@@ -35,7 +35,7 @@
 				}				
 			});
 			
-			$(this.element.klearModule("getPanel")).on('click','a._fieldOption',function(e) {
+			$(this.element.klearModule("getPanel")).on('click','a._fieldOption.screen',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();
@@ -86,6 +86,31 @@
 				
 			});
 			
+			/*
+			 */
+			$(this.element.klearModule("getPanel")).on('click','a._fieldOption.dialog',function(e) {
+				
+				e.preventDefault();
+				e.stopPropagation();
+				
+				
+				var _container = self.klearModule("getContainer");
+				var _parentTr = $(this).parents("tr:eq(0)");
+				
+				$.klear.request({
+					file: self.klearModule("option","file"),
+					type: 'dialog',
+					dialog : $(this).data("dialog"),
+					pk : _parentTr.data("id")
+				},function() {
+					
+					
+				},function() {
+					
+					
+				});
+				
+			});
 			
 			return this;
 		}		

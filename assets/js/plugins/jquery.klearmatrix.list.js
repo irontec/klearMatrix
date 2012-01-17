@@ -1,9 +1,4 @@
-;var loadInterval = window.setInterval(function() {
-	
-	if (!$.klearmatrix.module) return;
-	clearInterval(loadInterval);
-	
-(function($) {
+;(function($) {
 	
 	$.widget("klearmatrix.list", $.klearmatrix.module,  {
 		options: {
@@ -18,7 +13,7 @@
 			
 			this
 				._registerEvents()
-				._loadMainTemplate();
+				._loadTemplate("mainkMatrix");
 				
 		},
 		_registerEvents : function() {
@@ -64,7 +59,6 @@
 				_menuLink.addClass("ui-state-highlight");
 				
 				_container.one( "tabspostadd", function(event, ui) {
-					
 					var $tabLi = $(ui.tab).parent("li");
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
 					$tabLi.klearModule("option","menuLink",_menuLink);
@@ -94,60 +88,9 @@
 			
 			
 			return this;
-		},
-		_loadMainTemplate : function() {
-			var $table = $.tmpl(
-							"mainkMatrix",
-							this.options.data,
-							{ 
-								getIndex : function(values,index) {
-									
-									if ('undefined' === typeof values[index]) {
-										
-										switch(index) {
-											case "_fieldOptions":
-												
-												
-												if (this.data.fieldOptions) {
-													var ret = [];
-
-													for(var i=0;i<this.data.fieldOptions.length;i++) {
-														
-														var _op = this.data.fieldOptions[i];
-														
-														ret.push('<a class="_fieldOption" href="" data-screen="'+_op.screen+'" title="'+_op.title+'">');
-														ret.push('<span class="ui-silk inline '+_op.class+'"></span>');
-														if (!_op.noLabel) {
-															ret.push(_op.title);
-														}
-														ret.push('</a>');
-													}
-													return ret.join('');
-												}
-												
-											break;
-										
-											default:
-												return "no disponible";
-										}
-										
-									} else {
-									
-										return values[index];
-									}
-								}
-			        
-							});
-			
-			$(this.element.klearModule("getPanel")).append($table);
-			
-			
-		}
-		
+		}		
 	});
 	
 	$.widget.bridge("klearMatrixList", $.klearmatrix.list);
 					
 })(jQuery);
-
-},100);

@@ -1,17 +1,21 @@
 {{each(idx,row) values}}
 
-<form class="klearMatrix_edit">
+<form class="klearMatrix_edit" data-id="${$item.getIndex(row,pk)}">
 	<fieldset>
 		<legend></legend>
 		<dl>
-	 	{{each(idx,column) columns}}
+	 	{{each columns}}
         
-	            <dt><label for="${randIden}${column.id}">${column.name}</label></dt>
-	            <dd><input type="text" name="name" id="${randIden}${column.id}" value="{{html $item.getIndex(row,column.id)}}" /></dd>
+	            <dt><label for="${id}${randIden}">${name}</label></dt>
+	            <dd>{{tmpl($item.getDataForFieldTemplate(row[id],$value)) $item.getTemplateForType($value)}}</dd>
 		
 		{{/each}}
 		</dl>
 	</fieldset>
+    <div class="klearMatrix_options">
+        <button data-text="true" data-icon="ui-icon-close" title="Guardar">Cerrar</button>
+        <button data-text="true" data-icon="ui-icon-circle-check" title="Guardar">Guardar</button>
+    </div>
 
 </form>
 {{/each}}

@@ -11,7 +11,11 @@
 		},
 		_init: function() {
 			
-			this._loadMainTemplate();
+			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
+			
+			this
+				._loadTemplate("editkMatrix")
+				._loadOptionIcons();
 			
 				
 		},
@@ -20,28 +24,18 @@
 			
 
 		},
-		_loadMainTemplate : function() {
-			var data = $.extend(this.options.data,{randIden:Math.random(1000,9999)});
+		_loadOptionIcons : function() {
 			
-			var $form = $.tmpl(
-							"editkMatrix",
-							data);
+			$(".klearMatrix_options button",this.element.klearModule("getPanel")).each(function() {
+				$(this).button({
+					icons: {
+		                primary: $(this).data("icon")
+		            },
+		            text: $(this).data("text")
+				})
+			});
 			
-			$(this.element.klearModule("getPanel")).append($form);
-			
-			
-		},
-		_setOption: function(key, value){
-			
-			this.options[key] = value;
-
-			switch(key){
-				case "title":
-					this.options.mainEnl.html(value);
-				break;
-			}
 		}
-
 	});
 
 	$.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);

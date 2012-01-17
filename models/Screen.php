@@ -109,7 +109,6 @@ class KlearMatrix_Model_Screen {
 		
 		// Le pregunto al fichero de configuración por los campos en la blackList - no deben salir - 
 		if ($this->_config->exists("fields->blacklist")) {
-			
 			if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
 
 				foreach($_blacklistConfig as $field => $value) {

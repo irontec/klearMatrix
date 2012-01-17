@@ -16,6 +16,17 @@ class KlearMatrix_EditController extends Zend_Controller_Action
     
     public function templateAction()
     {
+        if ($fieldType = $this->getRequest()->getParam("field")) {
+            
+            switch($fieldType) {
+                case "text":
+                case "textarea":
+                    $this->_helper->viewRenderer('fields/' . $fieldType);
+                break;
+                
+            }
+        }
+        
     	
     }
     
@@ -50,6 +61,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $jsonResponse->setModule('klearMatrix');
 	    $jsonResponse->setPlugin('edit');
 	    $jsonResponse->addTemplate("/edit/template","editkMatrix");
+	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/edit/template/field/","editkMatrix"));
+	    
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");

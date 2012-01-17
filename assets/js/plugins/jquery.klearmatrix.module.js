@@ -39,6 +39,61 @@
 		},
 		_setOption : function() {
 			$.Widget.prototype._setOption.apply(this,arguments)
+		},
+		_loadTemplate : function(tmplName) {
+			var $tmplObj = $.tmpl(
+							tmplName,
+							this.options.data,
+							{ 
+								getDataForFieldTemplate : function(value,column) {
+									return {
+											elemIden: column.iden + this.data.randIden,
+											fieldValue:value
+									};
+								},
+								getIndex : function(values,index) {
+									if ('undefined' === typeof values[index]) {
+										
+										switch(index) {
+											case "_fieldOptions":
+												
+												if (this.data.fieldOptions) {
+													var ret = [];
+
+													for(var i=0;i<this.data.fieldOptions.length;i++) {
+														
+														var _op = this.data.fieldOptions[i];
+														
+														ret.push('<a class="_fieldOption" href="" data-screen="'+_op.screen+'" title="'+_op.title+'">');
+														ret.push('<span class="ui-silk inline '+_op.class+'"></span>');
+														if (!_op.noLabel) {
+															ret.push(_op.title);
+														}
+														ret.push('</a>');
+													}
+													return ret.join('');
+												}
+												
+											break;
+										
+											default:
+												return "no disponible";
+										}
+										
+									} else {
+									
+										return values[index];
+									}
+								},
+								getTemplateForType : function(column) {
+									return $.template['editkMatrix' + column.type];
+								}
+			        
+							});
+			
+			$(this.element.klearModule("getPanel")).append($tmplObj);
+			return this;
+			
 		}
 
 	});

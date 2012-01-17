@@ -15,6 +15,7 @@ class KlearMatrix_Model_Column {
 	protected $_config;
 	
 	protected $_isOption;
+	protected $_type;
 	
 	public function setDbName($name) {
 		$this->_dbName = $name;
@@ -43,9 +44,15 @@ class KlearMatrix_Model_Column {
 		$default = $this->_config->getProperty("default",false);
 		$this->_isDefault = (bool)$default;
 		
+		if (!$this->_type = $this->_config->getProperty("type",false)) {
+		    $this->_type = 'text';
+		}
+		
+		
 	}
 	
 	protected function _getProperty($attribute) {
+	    // TO-DO: recoger el idioma? ZendRegistry?
 		$lang = 'es';
 		$attributeName = '_' . $attribute . '_i18n';
 	
@@ -71,11 +78,16 @@ class KlearMatrix_Model_Column {
 		return $this->_dbName;
 	}
 	
+    public function getType() {
+		return $this->_type;
+	}
+	
 	public function toArray() {
 		$ret= array();
 		
 		$ret["id"] = $this->_dbName;
 		$ret["name"] = $this->getPublicName();
+		$ret["type"] = $this->_type;
 		if ($this->_isDefault) {
 			$ret['default'] = true;
 		}

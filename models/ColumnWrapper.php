@@ -5,9 +5,12 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	public $_cols = array();
 	protected $_position;
 	protected $_columnsListKeys = array();
+
+	protected $_types = array();
 	
 	public function addCol($col) {
 		$this->_cols[] = $col;
+		$this->_types[$col->getType()] = true;
 	}
 	
 	public function toArray() {
@@ -17,7 +20,17 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 		}
 		
 		return $retArray;
-		
+	}
+	
+	public function getTypesTemplateArray($path ,$prefix) {
+	    
+	    $tmpls = array();
+	    foreach($this->_types as $type => $foo) {
+	        $tmpls[ $prefix . $type] = $path . $type;
+	    }
+	    
+	    return $tmpls;   
+	    
 	}
 	
 	public function __construct() {

@@ -38,7 +38,6 @@ class KlearMatrix_Model_KMatrixResponse {
 		
 		$colIndexes[] = $screen->getPK();
 		
-		
 		if (!is_array($this->_results)) $this->_results = array($this->_results);
 
 		$_newResults = array();

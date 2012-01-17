@@ -1,6 +1,6 @@
 {{each(idx,row) values}}
 
-<form class="klearMatrix_edit" data-id="${$item.getIndex(row,pk)}">
+<form class="klearMatrix_edit" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
 	<fieldset>
 		<legend></legend>
 		<dl>

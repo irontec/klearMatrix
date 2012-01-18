@@ -24,6 +24,12 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     }
     
     
+    public function deleteAction()
+    {
+    
+    }
+    
+    
     public function fieldAction()
     {
     	if ($fieldType = $this->getRequest()->getParam("type")) {

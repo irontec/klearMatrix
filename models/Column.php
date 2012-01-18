@@ -48,7 +48,8 @@ class KlearMatrix_Model_Column {
 			$this->_type = '_option';	
 			
 		} else {
-			if (!$this->_type = $this->_config->getProperty("type",false)) {
+			$this->_type = $this->_config->getProperty("type",false);
+			if (empty($this->_type)) {
 		    	$this->_type = 'text';
 			}
 		}

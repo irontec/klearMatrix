@@ -78,7 +78,7 @@ class KlearMatrix_Model_MainConfig {
 	
 	public function getScreenConfig($screen)
 	{
-		
+
 		if (!$this->_config->exists("screens->" . $screen)) {
 			Throw new Zend_Exception("Configuration for selected screen not found");
 		}

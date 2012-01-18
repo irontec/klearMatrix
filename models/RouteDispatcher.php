@@ -25,6 +25,7 @@ class KlearMatrix_Model_RouteDispatcher {
 	 */
 	protected $_screenName;
 	protected $_dialogName;
+	
 	protected $_selectedConfig;
 	
 	
@@ -35,8 +36,16 @@ class KlearMatrix_Model_RouteDispatcher {
 	protected $_typeName = 'screen';
 	
 	
-	protected $_controller;
+	
+	/**
+	 * @var unknown_type
+	 * Acción por defecto a ejecutar
+	 * Si existe el campo _actionName, cargado desde getParam, éste prevalecerá.
+	 */
 	protected $_action = 'index';
+	
+	protected $_controller;
+	
 	protected $_mapper;
 	
 	
@@ -183,7 +192,7 @@ class KlearMatrix_Model_RouteDispatcher {
 		return $this;
 	}
 	
-	public function _resolveCurrentproperty($name, $required) {
+	public function _resolveCurrentProperty($name, $required) {
 
 		if (!isset($this->_selectedConfig->{$name})) {
 			if ($required) {
@@ -201,13 +210,27 @@ class KlearMatrix_Model_RouteDispatcher {
 	}
 
 	
+	protected function _resolveAction() {
+		if (isset($this->_params['action'])) {
+			$this->_action = $this->_params['action'];
+			return $this;
+		}
+		
+		// Si no hemos recibido por parámetro action
+		// Cogeremos la del fichero de configuración
+		// o 'index' por defecto
+		$this->_resolveCurrentProperty('action', false);
+		return $this;		
+	}
+	
+	
 	public function resolveDispatch() {
 		
 		$this
 			->_resolveCurrentItem()
 			->_resolveCurrentConfig()
 			->_resolveCurrentProperty("controller", true)
-			->_resolveCurrentProperty("action", false);
+			->_resolveAction();
 	
 	}
 	

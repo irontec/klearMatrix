@@ -37,6 +37,7 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	
 	public function getTypesTemplateArray($path ,$prefix) {
 	    
+		
 	    $tmpls = array();
 	    foreach($this->_types as $type => $foo) {
 	        $tmpls[ $prefix . $type] = $path . $type;

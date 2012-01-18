@@ -13,9 +13,10 @@
 			
 			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 			
-			this
-				._loadTemplate("klearmatrixEdit")
-				._loadOptionIcons()
+			var $appliedTemplate = this._loadTemplate("klearmatrixEdit");
+			$(this.element.klearModule("getPanel")).append($appliedTemplate);
+			
+			this._loadOptionIcons()
 				._registerEvents(); 
 			
 				
@@ -27,8 +28,6 @@
 				
 				
 			});
-
-			
 
 		},
 		_loadOptionIcons : function() {

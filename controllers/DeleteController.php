@@ -14,8 +14,6 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     }
 
     
-    
-    
     public function indexAction() {
     	
     	
@@ -30,7 +28,10 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$cols = $item->getVisibleColumnWrapper();
     	
     	$defaultCol = $cols->getDefaultCol();
-    	$cols->resetWrapper()->addCol($defaultCol);
+    	
+    	$cols
+    		->resetWrapper()
+    		->addCol($defaultCol);
     	
     	$data = new KlearMatrix_Model_MatrixResponse;
     	
@@ -48,7 +49,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$jsonResponse = new Klear_Model_DispatchResponse();
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('delete');
-    	$jsonResponse->addTemplate("/template/edit/type/" . $item->getType(),"klearmatrixEdit");
+    	$jsonResponse->addTemplate("/template/delete/type/" . $item->getType(),"klearmatrixDelete");
     	$jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.delete.js");
@@ -57,6 +58,43 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$jsonResponse->attachView($this->view);
     	
     	
+    }
+    
+    
+    public function deleteAction()
+    {
+    
+  		$mainRouter = $this->getRequest()->getParam("mainRouter");
+    	$item = $mainRouter->getCurrentItem();
+    	
+    	$mapperName = $item->getMapperName();
+    	$mapper = new $mapperName;
+    	
+    	$pk = $mainRouter->getParam("pk");
+    	// Recuperamos el objeto
+    	if ( ($obj = $mapper->find($pk)) &&
+    			($mapper->delete($obj)) ) {
+    		
+    		
+    		
+    	}
+    	exit;
+    	
+    	
+    	$data = new KlearMatrix_Model_MatrixResponse;
+    	
+    	$data->setColumnWraper($cols);
+    	$data->setPK($item->getPK());
+    	
+    	if (!$obj = $mapper->find($pk)) {
+    		// Error
+    	
+    	} else {
+    		$data->setResults($obj);
+    		$data->fixResults($item);
+    	}
+    	
+    
     }
     
 } 

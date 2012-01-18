@@ -98,9 +98,7 @@
 								}
 			        
 							});
-			
-			$(this.element.klearModule("getPanel")).append($tmplObj);
-			return this;
+			return $tmplObj;
 			
 		}
 

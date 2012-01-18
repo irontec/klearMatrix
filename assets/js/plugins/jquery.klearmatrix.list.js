@@ -11,14 +11,16 @@
 		},
 		_init: function() {
 			
-			this
-				._registerEvents()
-				._loadTemplate("klearmatrixList");
+			var $appliedTemplate = this._loadTemplate("klearmatrixList");
+			$(this.element.klearModule("getPanel")).append($appliedTemplate);
+			
+			this._registerEvents();
 				
 		},
 		_registerEvents : function() {
 			
 			var self = this.element;
+			var _self = this;
 			
 			// highlight effect on tr
 			$(this.element.klearModule("getPanel")).on('mouseenter mouseleave','table.kMatrix tr',function() {
@@ -59,6 +61,7 @@
 				_menuLink.addClass("ui-state-highlight");
 				
 				_container.one( "tabspostadd", function(event, ui) {
+					
 					var $tabLi = $(ui.tab).parent("li");
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
 					$tabLi.klearModule("option","menuLink",_menuLink);
@@ -95,20 +98,30 @@
 				
 				
 				var _container = self.klearModule("getContainer");
-				var _parentTr = $(this).parents("tr:eq(0)");
+				var $_parentTr = $(this).parents("tr:eq(0)");
 				
-				$.klear.request({
-					file: self.klearModule("option","file"),
-					type: 'dialog',
-					dialog : $(this).data("dialog"),
-					pk : _parentTr.data("id")
-				},function() {
-					
-					
-				},function() {
-					
-					
-				});
+				$(self).klearModule("showDialog",
+						'<br /><div class="loadingCircle"></div><div class="loadingCircle1"></div>'
+					,{
+						title: $(this).attr("title"),
+						template : '<div class="ui-widget">{{html text}}</div>',
+					});
+				var $_dialog = $(self).klearModule("getModuleDialog");
+				
+				$.klear.request(
+						{
+							file: self.klearModule("option","file"),
+							type: 'dialog',
+							dialog : $(this).data("dialog"),
+							pk : $_parentTr.data("id")
+						},
+						function(plugin,data) {
+							$_dialog[plugin]({data : data, parent: self});
+						},
+						function() {
+										
+						}
+				);
 				
 			});
 			

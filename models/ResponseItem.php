@@ -100,7 +100,7 @@ class KlearMatrix_Model_ResponseItem {
 		$pk = $obj->getPrimaryKeyName();
 		
 		// La primary Key estará por defecto en la blackList, a excepción de encontrarse en la whitelist
-		if ( ($this->_config->exists("fields->whitelist")) && ($this->_config->getRaw()->fields->whitelist->{$pk}) ) {
+		if  ($this->_config->exists("fields->whitelist->" . $pk)) {
 			// La Pk se mostrará si está en la whitelist
 			// Something to do?
 			

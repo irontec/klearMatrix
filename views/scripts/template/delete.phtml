@@ -1,0 +1,19 @@
+
+{{each(idx,row) values}}
+
+	<p>¿Desea eliminar este registro?</p>
+	
+	<p class="deleteable-item" data-id="${$item.getIndex(row,pk)}">
+	
+	{{each(colIdx,column) columns}}
+			
+		{{if (column.default)}} 
+			${name}: 
+			<strong>{{html $item.getIndexFromColumn(row,column)}}</strong>
+			
+		{{/if}}
+	{{/each}}
+		<em>(#${$item.getIndex(row,pk)})</em>		
+	</p>
+
+{{/each}}

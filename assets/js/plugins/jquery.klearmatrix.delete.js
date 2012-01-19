@@ -18,17 +18,44 @@
 			var $refParent = $(this.options.parent);
 			var $self = $(this.element);
 			var _ids = $(".deleteable-item",$(moduleDialogCaller)).data("id");
-			console.log($(".deleteable-item",$(moduleDialogCaller)));
+			
+			$self.moduleDialog("setAsLoading");
+			
 			$.klear.request(
 					{
 						file: $refParent.klearModule("option","file"),
 						type: 'dialog',
-						action: 'delete',
+						execute: 'delete',
 						dialog : $(this).data("dialog"),
 						pk : _ids
 					},
-					function(plugin,data) {
-						//$_dialog[plugin]({data : data});
+					function(data) {
+						
+						$self.moduleDialog("updateContent",data.message);
+						
+						
+						if (data.error) {
+							//TO-DO: FOK OFF
+						} else {
+							if (!$.isArray(data.pk)) data.pk = [data.pk];
+							
+							$.each(data.pk,function(idx,_pk) {
+								$("tr[data-id='"+_pk+"']",$refParent.klearModule("getPanel")).slideUp(function() {
+									$(this).remove();
+								});
+							});
+						}
+
+						$self.moduleDialog("option","buttons",
+								 [
+								  	{
+			    						text: "Cerrar",
+			    						click: function() { $(this).moduleDialog("close"); }
+									}
+								]
+						);
+														
+						
 					},
 					function() {
 									

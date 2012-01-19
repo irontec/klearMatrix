@@ -101,13 +101,14 @@
 				var $_parentTr = $(this).parents("tr:eq(0)");
 				
 				$(self).klearModule("showDialog",
-						'<br /><div class="loadingCircle"></div><div class="loadingCircle1"></div>'
-					,{
-						title: $(this).attr("title"),
-						template : '<div class="ui-widget">{{html text}}</div>',
-					});
-				var $_dialog = $(self).klearModule("getModuleDialog");
+						'<br />',
+						{
+							title: $(this).attr("title"),
+							template : '<div class="ui-widget">{{html text}}</div>',
+						});
 				
+				var $_dialog = $(self).klearModule("getModuleDialog");
+				$_dialog.moduleDialog("setAsLoading");				
 				$.klear.request(
 						{
 							file: self.klearModule("option","file"),

@@ -90,7 +90,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");
-    	$jsonResponse->setData($data->toJson());
+    	$jsonResponse->setData($data->toArray());
     	$jsonResponse->attachView($this->view);
     	
     }

@@ -62,11 +62,10 @@ class KlearMatrix_Model_MatrixResponse {
 		
 	}
 	
-	public function toJson() {
+	public function toArray() {
 		
 		$ret = array();
 		$ret['columns'] = $this->_columnWrapper->toArray();
-		
 		$ret['values'] = $this->_results;
 		$ret['pk'] = $this->_pk;
 		if (false !== $this->_fieldOptionsWrapper) {

@@ -10,6 +10,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	
     	$this->_helper->ContextSwitch()
     		->addActionContext('index', 'json')
+    		->addActionContext('delete', 'json')
     		->initContext('json');
     }
 
@@ -54,7 +55,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.delete.js");
     	$jsonResponse->addCssFile("/css/klearMatrixEdit.css");
-    	$jsonResponse->setData($data->toJson());
+    	$jsonResponse->setData($data->toArray());
     	$jsonResponse->attachView($this->view);
     	
     	
@@ -70,29 +71,34 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$mapperName = $item->getMapperName();
     	$mapper = new $mapperName;
     	
+    	
+    	$sResponse = new Klear_Model_SimpleResponse;
+    	
+    	
     	$pk = $mainRouter->getParam("pk");
-    	// Recuperamos el objeto
+    	
+    	
+    	// TO-DO traducir mensaje?
+    	// TO-DO lanzar excepción ?
+    	// Recuperamos el objeto y realizamos la acción de borrar
     	if ( ($obj = $mapper->find($pk)) &&
     			($mapper->delete($obj)) ) {
-    		
-    		
-    		
-    	}
-    	exit;
-    	
-    	
-    	$data = new KlearMatrix_Model_MatrixResponse;
-    	
-    	$data->setColumnWraper($cols);
-    	$data->setPK($item->getPK());
-    	
-    	if (!$obj = $mapper->find($pk)) {
-    		// Error
-    	
+    		$data = array(
+    					'error'=>false,
+    					'pk'=>$pk,
+    					'message'=>'Registro Eliminado correctamente'
+    				);
     	} else {
-    		$data->setResults($obj);
-    		$data->fixResults($item);
+    		$data = array(
+    				'error'=>true,
+    				'message'=>'Algún error eliminado el registro'
+    		);
+    		
     	}
+    	
+    	$jsonResponse = new Klear_Model_SimpleResponse();
+    	$jsonResponse->setData($data);
+    	$jsonResponse->attachView($this->view);
     	
     
     }

@@ -1,4 +1,14 @@
-;(function($) {
+;(function load($) {
+
+	this.count = this.count || 0;
+	
+	if (typeof $.klearmatrix.module != 'function') {
+		if (++this.count == 10) {
+			throw "JS Dependency error!";
+		}
+		setTimeout(function() {load($);},10);
+		return;
+	}
 	
 	$.widget("klearmatrix.list", $.klearmatrix.module,  {
 		options: {
@@ -14,8 +24,16 @@
 			var $appliedTemplate = this._loadTemplate("klearmatrixList");
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
 			
-			this._registerEvents();
+			this
+				._applyDecorators()
+				._registerEvents();
 				
+		},
+		_applyDecorators : function() {
+
+			$(".generalOptionsToolbar a",$(this.element.klearModule("getPanel"))).button();
+			
+			return this;
 		},
 		_registerEvents : function() {
 			
@@ -37,7 +55,7 @@
 				}				
 			});
 			
-			$(this.element.klearModule("getPanel")).on('click','a._fieldOption.screen',function(e) {
+			$(this.element.klearModule("getPanel")).on('click','a.option.screen',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();
@@ -45,9 +63,13 @@
 				var _container = self.klearModule("getContainer");
 				
 				var _iden = "#tabs-" + self.klearModule("option","file")
-							+ '_' + $(this).data("screen")
-							+ '_' + $(this).parents("tr:eq(0)").data("id");
+							+ '_' + $(this).data("screen");
 				
+				if ($(this).data("multiinstance")) {
+					_iden += '_' + Math.round(Math.random(1000,9999)*100000);
+				} else {
+					_iden += '_' + $(this).parents("tr:eq(0)").data("id");
+				}
 				
 				if ($(_iden).length > 0) {
 					_container.tabs('select', _iden);
@@ -58,11 +80,14 @@
 				var _menuLink = $(this);
 				var _parentTr = $(this).parents("tr:eq(0)");
 				
-				_menuLink.addClass("ui-state-highlight");
+				if ($(this).hasClass("_fieldOption")) {
+					_menuLink.addClass("ui-state-highlight");
+				}
 				
 				_container.one( "tabspostadd", function(event, ui) {
-					
+
 					var $tabLi = $(ui.tab).parent("li");
+
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
 					$tabLi.klearModule("option","menuLink",_menuLink);
 					
@@ -77,8 +102,11 @@
 					
 					_menuLink.data("relatedtab",$tabLi);
 					
-					$tabLi.klearModule("option","dispatchOptions",_dispatchOptions);
-					$tabLi.klearModule("reload");
+					$tabLi
+						.klearModule("highlightOn")
+						.klearModule("option","dispatchOptions",_dispatchOptions)
+						.klearModule("reload");
+						
 					
 				});
 				
@@ -91,7 +119,7 @@
 			
 			/*
 			 */
-			$(this.element.klearModule("getPanel")).on('click','a._fieldOption.dialog',function(e) {
+			$(this.element.klearModule("getPanel")).on('click','a.option.dialog',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();

@@ -1,17 +1,23 @@
 <?php
 
 /**
- * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
+* 
 * @author jabi
 *
 */
-class KlearMatrix_Model_ScreenFieldOption {
+class KlearMatrix_Model_ScreenGeneralOption {
 	
 	protected $_config;
 	protected $_screen;
 	protected $_class;
 	protected $_title;
 	protected $_title_i18n = array();
+	
+	// La opción es abrible en multi-instancia? 
+	protected $_multiInstance = false;
+	
+	// Define si es necesario seleccionar campos para ejecutar esta opción general
+	protected $_fieldRelated = false;
 	
 	protected $_noLabel = true;
 	
@@ -30,6 +36,7 @@ class KlearMatrix_Model_ScreenFieldOption {
 		
 		$this->_class = $this->_config->getProperty("class",false);
 		$this->_label = (bool)$this->_config->getProperty("label",false);
+		$this->_multiInstance = (bool)$this->_config->getProperty("multiInstance",false);
 	}
 	
 	
@@ -63,7 +70,8 @@ class KlearMatrix_Model_ScreenFieldOption {
 			'type'=>'screen',
 			'screen'=>$this->_screen,
 			'title'=>$this->getTitle(),
-			'label'=>$this->_label
+			'label'=>$this->_label,
+			'multiInstance'=>$this->_multiInstance
 		);
 	}
 	

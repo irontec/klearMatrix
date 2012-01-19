@@ -9,9 +9,35 @@
 
 {{each(idx,row) values}}
 <tr data-id="${$item.getIndex(row,pk)}">
-   {{each(colIdx,column) columns}}
-		<td class="ui-widget-content{{if (column.default)}} default{{/if}}">{{html $item.getIndexFromColumn(row,column)}}</td>
+   {{each columns}}
+   		{{if (type != '_option') }}
+			<td class="ui-widget-content{{if ($value.default)}} default{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
+		{{else}}
+			<td class="ui-widget-content options">
+			{{each fieldOptions}}
+				<a class="_fieldOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${title}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${title}{{/if}}</a>        
+			{{/each}}
+			</td>
+		{{/if}}
 	{{/each}}
+	
+	
+	
+	
+	
 </tr>
 {{/each}}
 </table>
+
+{{if (generalOptions.length>0) }}
+<div class="generalOptionsToolbar ui-widget-content ui-corner-all">
+{{each generalOptions}}
+	<a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${title}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+	<span class="ui-silk inline ${icon}"></span>
+	{{if (label) }}
+		${title}
+	{{/if}}
+	</a>        
+{{/each}}
+</div>
+{{/if}}

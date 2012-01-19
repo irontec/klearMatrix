@@ -41,13 +41,16 @@
 			$.Widget.prototype._setOption.apply(this,arguments)
 		},
 		_loadTemplate : function(tmplName) {
+			
+			
 			var $tmplObj = $.tmpl(
 							tmplName,
 							this.options.data,
 							{ 
 								getDataForFieldTemplate : function(value,column) {
+																	
 									return {
-											elemIden: column.iden + this.data.randIden,
+											elemIden: column.id + this.data.randIden,
 											fieldValue:value
 									};
 								},
@@ -62,34 +65,11 @@
 									if ('undefined' === typeof values[column.id]) {
 										
 										switch(column.type) {
-											case "_option":
-												
-												if (this.data.fieldOptions) {
-													var ret = [];
-
-													for(var i=0;i<this.data.fieldOptions.length;i++) {
-														
-														var _op = this.data.fieldOptions[i];
-														
-														var _type = _op.type || 'screen';
-														ret.push('<a class="_fieldOption '+_type+'" href="" data-'+_type+'="'+_op[_type]+'" title="'+_op.title+'">');
-														ret.push('<span class="ui-silk inline '+_op.class+'"></span>');
-														if (_op.label) {
-															ret.push(_op.title);
-														}
-														ret.push('</a>');
-													}
-													return ret.join('');
-												}
-												
-											break;
-										
 											default:
 												return "no disponible";
 										}
 										
 									} else {
-									
 										return values[column.id];
 									}
 								},
@@ -100,6 +80,19 @@
 							});
 			return $tmplObj;
 			
+		},
+		_registerBaseEvents : function() {
+			
+			var self = this.element;
+			
+			$(self.klearModule("getPanel")).on('click','.closeTab',function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				self.klearModule("close");
+			});
+			
+			return this;
 		}
 
 	});

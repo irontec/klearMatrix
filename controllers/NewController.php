@@ -1,6 +1,6 @@
 <?php
 
-class KlearMatrix_EditController extends Zend_Controller_Action
+class KlearMatrix_NewController extends Zend_Controller_Action
 {
 	
     public function init()
@@ -31,30 +31,24 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $mapperName = $item->getMapperName();
 	    $mapper = new $mapperName;
 	    	    
-	    $pk = $mainRouter->getParam("pk");
+	    
 	    $cols = $item->getVisibleColumnWrapper();
 	    
 	    $data = new KlearMatrix_Model_MatrixResponse;
 	    
 	    $data->setColumnWraper($cols);
-	    $data->setPK($item->getPK());
 	    
-	    if (!$obj = $mapper->find($pk)) {
-	    	// Error
-	    	
-	    } else {
-	    	$data->setResults($obj);
-	    	$data->fixResults($item);	
-	    }
 	    
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');
-	    $jsonResponse->setPlugin('edit');
-	    $jsonResponse->addTemplate("/template/edit/type/" . $item->getType(),"klearmatrixEdit");
+	    $jsonResponse->setPlugin('new');
+	    $jsonResponse->addTemplate("/template/new/type/" . $item->getType(),"klearmatrixNew");
 	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
-	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
-	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
+	    
+	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js"); // klearmatrix.new hereda de klearmatrix.edit
+	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.new.js");
+	    $jsonResponse->addCssFile("/css/klearMatrixNew.css");
 	    $jsonResponse->setData($data->toArray());
 	    $jsonResponse->attachView($this->view);
 	    

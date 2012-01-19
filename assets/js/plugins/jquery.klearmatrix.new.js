@@ -2,7 +2,7 @@
 
 	this.count = this.count || 0;
 	
-	if (typeof $.klearmatrix.module != 'function') {
+	if (typeof $.klearmatrix.edit != 'function') {
 		if (++this.count == 10) {
 			throw "JS Dependency error!";
 		}
@@ -10,10 +10,10 @@
 		return;
 	}
 	
-	$.widget("klearmatrix.edit", $.klearmatrix.module, {
+	$.widget("klearmatrix.new", $.klearmatrix.edit, {
 		options: {
 			data : null,
-			moduleName: 'edit'
+			moduleName: 'new'
 		},
 		_super: $.klearmatrix.module.prototype,
 		_create : function() {
@@ -23,7 +23,7 @@
 			
 			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 			
-			var $appliedTemplate = this._loadTemplate("klearmatrixEdit");
+			var $appliedTemplate = this._loadTemplate("klearmatrixNew");
 			
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
 			
@@ -35,27 +35,15 @@
 		},
 		_registerEvents : function() {
 			
-			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_edit',function() {
+			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_new',function() {
 			
 				
 				
 			});
 
-		},
-		_applyDecorators : function() {
-			
-			$(".generalOptionsToolbar button",this.element.klearModule("getPanel")).each(function() {
-				$(this).button({
-					icons: {
-		                primary: $(this).data("icon")
-		            },
-		            text: $(this).data("text")
-				})
-			});
-			return this;
-		}
+		}		
 	});
 
-	$.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);
-
+	$.widget.bridge("klearMatrixNew", $.klearmatrix.new);
+	
 })(jQuery);

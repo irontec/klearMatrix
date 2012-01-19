@@ -4,6 +4,9 @@ class KlearMatrix_Model_MatrixResponse {
 	protected $_columnWrapper;
 	protected $_results;
 	protected $_fieldOptionsWrapper = false;
+	protected $_generalOptionsWrapper = false;
+	
+	
 	protected $_pk;
 	
 	public function setColumnWraper(KlearMatrix_Model_ColumnWrapper $columnWrapper) {
@@ -19,6 +22,18 @@ class KlearMatrix_Model_MatrixResponse {
 		$this->_pk = $pk;
 	}
 	
+	/**
+	 * Opciones "generales" de pantalla
+	 * @param KlearMatrix_Model_ScreenOptionsWrapper $screenOptsWrapper
+	 */
+	public function setGeneralOptions(KlearMatrix_Model_GeneralOptionsWrapper $generalOptsWrapper) {
+		$this->_generalOptionsWrapper = $generalOptsWrapper;
+	}
+	
+	/**
+	 * Opciones por fila
+	 * @param KlearMatrix_Model_FieldOptionsWrapper $fieldOptsWrapper
+	 */
 	public function setFieldOptions(KlearMatrix_Model_FieldOptionsWrapper $fieldOptsWrapper) {
 		$this->_fieldOptionsWrapper = $fieldOptsWrapper;
 	}
@@ -71,6 +86,10 @@ class KlearMatrix_Model_MatrixResponse {
 		if (false !== $this->_fieldOptionsWrapper) {
 			$ret['fieldOptions'] = $this->_fieldOptionsWrapper->toArray();
 		}
+		if (false !== $this->_generalOptionsWrapper) {
+			$ret['generalOptions'] = $this->_generalOptionsWrapper->toArray();
+		}
+		
 
 		return $ret;
 		

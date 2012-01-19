@@ -15,7 +15,7 @@ class KlearMatrix_Model_Column {
 	protected $_config;
 	
 	protected $_isOption;
-	protected $_type;
+	protected $_type ='text';
 	
 	public function setDbName($name) {
 		$this->_dbName = $name;

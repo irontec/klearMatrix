@@ -53,7 +53,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     			
     			$fieldOptionsWrapper = new KlearMatrix_Model_FieldOptionsWrapper;
     			
-    			foreach ($item->getScreensFromFieldOption() as $_screen) {
+    			foreach ($item->getScreenFieldsOptionsConfig() as $_screen) {
     				
     				$screenOption = new KlearMatrix_Model_ScreenFieldOption;
     				$screenOption->setScreenName($_screen);
@@ -64,7 +64,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     				$fieldOptionsWrapper->addOption($screenOption);
     			}
 
-    			foreach ($item->getDialogsFromFieldOption() as $_dialog) {
+    			foreach ($item->getDialogsFieldsOptionsConfig() as $_dialog) {
     				$dialogOption = new KlearMatrix_Model_DialogFieldOption;
     				$dialogOption->setDialogName($_dialog);
     				$dialogOption->setConfig($mainRouter->getConfig()->getDialogConfig($_dialog));
@@ -79,10 +79,24 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     		$data->fixResults($item);
     	}
     	
+
+    	$generalOptionsWrapper = new KlearMatrix_Model_GeneralOptionsWrapper;
+    	
+    	foreach($item->getScreensGeneralOptionsConfig() as $_screen) {
+    		$screenOption = new KlearMatrix_Model_ScreenGeneralOption;
+    		$screenOption->setScreenName($_screen);
+    		$screenOption->setConfig($mainRouter->getConfig()->getScreenConfig($_screen));
+    		$generalOptionsWrapper->addOption($screenOption);
+    	}
+    	
+    	// TO-DO > Opciones generales de dialogo y comprobar checkboxes
+    	
+    	$data->setGeneralOptions($generalOptionsWrapper);
+    	
     	
     	Zend_Json::$useBuiltinEncoderDecoder = true;
     	
-    	$jsonResponse = new Klear_Model_DispatchResponse();
+    	$jsonResponse = new Klear_Model_DispatchResponse;
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('list');
     	$jsonResponse->addTemplate("/template/list/type/" . $item->getType(),"klearmatrixList");

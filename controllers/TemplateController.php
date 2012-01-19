@@ -18,7 +18,12 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     
     
     
-    public function editAction()
+	public function editAction()
+    {
+    
+    }
+    
+    public function newAction()
     {
     
     }

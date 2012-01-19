@@ -157,34 +157,62 @@ class KlearMatrix_Model_ResponseItem {
 	/**
 	 * Devuelve un array de objetos FieldOption (opciones por campo), a partir de las columnas de tipo Option del ColWrapper 
 	 */
-	public function getScreensFromFieldOption() {
+	public function getScreenFieldsOptionsConfig() {
 		
-		$retScreens = array();
-		
-		$optionColumn = $this->_visibleColumnWrapper->getOptionColumn();
-		$screensConfig = $optionColumn->getKlearConfig()->getProperty("screens",false);
-		foreach ($screensConfig as $_screen => $_enabled) {
-			if (!(bool)$_enabled) continue;
-			$retScreens[] = $_screen;
-			
-		}
-		return $retScreens;
+		$parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
+		return $this->_getItemFieldsOptionsConfig('screen',$parent);
 	}
 	
-	public function getDialogsFromFieldOption() {
+	public function getDialogsFieldsOptionsConfig() {
 		
-		$retDialogs = array();
-		
-		$optionColumn = $this->_visibleColumnWrapper->getOptionColumn();
-		$dialogsConfig = $optionColumn->getKlearConfig()->getProperty("dialogs",false);
-		foreach ($dialogsConfig as $_dialog => $_enabled) {
-			if (!(bool)$_enabled) continue;
-			$retDialogs[] = $_dialog;
-		
-		}
-		return $retDialogs;
-		
+		$parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
+		return $this->_getItemFieldsOptionsConfig('dialog',$parent);
 	}
+	
+	
+	public function getScreensGeneralOptionsConfig() {
+		
+		$parent = new Klear_Model_KConfigParser();
+		$parent->setConfig($this->_config->getRaw()->options);
+		return $this->_getItemFieldsOptionsConfig('screen',$parent);
+	}
+	
+	public function getDialogsGeneralOptionsConfig() {
+	
+		$parent = new Klear_Model_KConfigParser();
+		$parent->setConfig($this->_config->getRaw()->options);
+		return $this->_getItemFieldsOptionsConfig('dialog',$parent);
+	}
+	
+	public function _getItemFieldsOptionsConfig($type,$parent) {
+	
+		$retArray = array();
+		
+		switch($type) {
+			case 'dialog':
+				$property = 'dialogs';
+			break;
+			case 'screen':
+				$property = 'screens';
+			break;
+			default:
+				Throw new Zend_Exception("Undefined Option Type");
+			break;
+		}
+	
+		$optionColumn = $this->_visibleColumnWrapper->getOptionColumn();
+		
+		$_items = $parent->getProperty($property,false);
+		
+		foreach ($_items  as $_item=> $_enabled) {
+			if (!(bool)$_enabled) continue;
+			$retArray[] = $_item;
+	
+		}
+		return $retArray;
+	
+	}
+	
 	
 	/**
 	 * gateway hacia modelo específico, para devolver el nombre de la PK 

@@ -15,3 +15,7 @@ table.kMatrix td {
     background:transparent none;
 }
 
+.generalOptionsToolbar {
+	padding:1em;
+	margin:1em 0 1em 0;  
+}

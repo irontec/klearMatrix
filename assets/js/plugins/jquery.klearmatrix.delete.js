@@ -19,7 +19,9 @@
 			var $self = $(this.element);
 			var _ids = $(".deleteable-item",$(moduleDialogCaller)).data("id");
 			
-			$self.moduleDialog("setAsLoading");
+			$self
+				.moduleDialog("setAsLoading")
+				.moduleDialog("option","buttons",[]);
 			
 			$.klear.request(
 					{

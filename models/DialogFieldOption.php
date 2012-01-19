@@ -29,7 +29,7 @@ class KlearMatrix_Model_DialogFieldOption {
 		$this->$attrName = $value;
 		
 		$this->_class = $this->_config->getProperty("class",false);
-		$this->_label = (bool)$this->_config->getProperty("labelOption",false);
+		$this->_label = (bool)$this->_config->getProperty("label",false);
 	}
 	
 	
@@ -59,7 +59,7 @@ class KlearMatrix_Model_DialogFieldOption {
 		
 	public function toArray() {
 		return array(
-			'class'=>$this->_class,
+			'icon'=>$this->_class,
 			'type'=>'dialog',
 			'dialog'=>$this->_dialog,
 			'title'=>$this->getTitle(),

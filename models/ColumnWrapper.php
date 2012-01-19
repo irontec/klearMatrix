@@ -40,6 +40,7 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 		
 	    $tmpls = array();
 	    foreach($this->_types as $type => $foo) {
+	    	if ($type == '') continue; // FIX ME! por que hay types vacíos?
 	        $tmpls[ $prefix . $type] = $path . $type;
 	    }
 	    

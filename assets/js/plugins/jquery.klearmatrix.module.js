@@ -51,6 +51,7 @@
 																	
 									return {
 											elemIden: column.id + this.data.randIden,
+											elemName: column.id,
 											fieldValue:value
 									};
 								},

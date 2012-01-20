@@ -42,6 +42,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     		switch($fieldType) {
     			case "text":
     			case "textarea":
+    			case "select":
     				$this->_helper->viewRenderer('fields/' . $fieldType);
     				break;
     

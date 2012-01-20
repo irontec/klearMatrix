@@ -12,6 +12,8 @@ class KlearMatrix_Model_Column {
 	protected $_publicName_i18n = array();
 	protected $_isDefault = false;
 	
+	protected $_fieldConfig;
+	
 	protected $_config;
 	
 	protected $_isOption;
@@ -53,6 +55,17 @@ class KlearMatrix_Model_Column {
 		    	$this->_type = 'text';
 			}
 		}
+		$this->_loadConfigClass();
+		
+	}
+	
+	public function _loadConfigClass() {
+
+	    $fieldConfigClassName = 'KlearMatrix_Model_Fields_' . ucfirst($this->_type);
+		$this->_fieldConfig = new $fieldConfigClassName;
+		$this->_fieldConfig
+		            ->setColum($this)
+		            ->init(); 
 	}
 	
 	public function isDefault() {

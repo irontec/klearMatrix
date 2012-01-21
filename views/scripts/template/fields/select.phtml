@@ -1,2 +1,7 @@
-<select name="${elemName}" id="${elemIden}">${fieldValue}
+<select name="${elemName}" id="${elemIden}">
+{{each(idx,dataValue) dataConfig}}
+    {{if (idx != '__className')}}
+        <option{{if (idx == fieldValue)}} selected="selected"{{/if}} value="${idx}">${dataValue}</option>
+    {{/if}}
+{{/each}}
 </select>

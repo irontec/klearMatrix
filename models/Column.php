@@ -9,7 +9,6 @@ class KlearMatrix_Model_Column {
 
 	protected $_dbName;
 	protected $_publicName;
-	protected $_publicName_i18n = array();
 	protected $_isDefault = false;
 	
 	protected $_fieldConfig;
@@ -40,8 +39,7 @@ class KlearMatrix_Model_Column {
 		$this->_config = new Klear_Model_KConfigParser;
 		$this->_config->setConfig($config);
 
-		list($attrName,$value) = $this->_config->getPropertyML("title","publicName",false);
-		$this->$attrName = $value;
+		$this->_publicName = $this->_config->getProperty("title",false);
 		
 		$default = $this->_config->getProperty("default",false);
 		$this->_isDefault = (bool)$default;
@@ -55,16 +53,19 @@ class KlearMatrix_Model_Column {
 		    	$this->_type = 'text';
 			}
 		}
-		$this->_loadConfigClass();
+		
 		
 	}
 	
 	public function _loadConfigClass() {
-
-	    $fieldConfigClassName = 'KlearMatrix_Model_Fields_' . ucfirst($this->_type);
+        if ($this->isOption()) return $this;
+        if (is_object($this->_fieldConfig)) return $this;
+                
+	    $fieldConfigClassName = 'KlearMatrix_Model_Field_' . ucfirst($this->_type);
+	    
 		$this->_fieldConfig = new $fieldConfigClassName;
 		$this->_fieldConfig
-		            ->setColum($this)
+		            ->setColumn($this)
 		            ->init(); 
 	}
 	
@@ -80,24 +81,11 @@ class KlearMatrix_Model_Column {
 		return $this->_config;
 		
 	}
-	
-	protected function _getProperty($attribute) {
-	    // TO-DO: recoger el idioma? ZendRegistry?
-		$lang = 'es';
-		$attributeName = '_' . $attribute . '_i18n';
-	
-		if (isset($this->{$attributeName}[$lang])) {
-	
-			return $this->{$attributeName}[$lang];
-		}
-		$attributeName = '_' . $attribute;
-		return $this->{$attributeName};
-	}
-	
+
 	
 	public function getPublicName() {
-		if ($pubName = $this->_getProperty("publicName")) {
-			return $pubName;
+		if (null !== $this->_publicName) {
+			return $this->_publicName;
 		}
 		
 		return $this->_dbName;
@@ -114,6 +102,9 @@ class KlearMatrix_Model_Column {
 	
 	
 	public function toArray() {
+	    
+	    $this->_loadConfigClass();
+	    
 		$ret= array();
 		
 		$ret["id"] = $this->_dbName;
@@ -122,7 +113,9 @@ class KlearMatrix_Model_Column {
 		if ($this->_isDefault) {
 			$ret['default'] = true;
 		}
-		
+		if ( ($this->_fieldConfig) && ($config = $this->_fieldConfig->toArray()) ) {
+		    $ret['config'] = $config;
+		}
 		return $ret;
 	}
 	

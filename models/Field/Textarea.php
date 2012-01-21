@@ -6,7 +6,7 @@
 *
 */
 
-class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
+class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract {
 
 	
 }

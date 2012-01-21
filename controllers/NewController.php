@@ -38,6 +38,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 	    
 	    $data->setColumnWraper($cols);
 	    
+	    Zend_Json::$useBuiltinEncoderDecoder = true;
 	    
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');

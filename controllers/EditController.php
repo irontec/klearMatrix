@@ -47,6 +47,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    	$data->fixResults($item);	
 	    }
 	    
+	    Zend_Json::$useBuiltinEncoderDecoder = true;
+	    
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');
 	    $jsonResponse->setPlugin('edit');

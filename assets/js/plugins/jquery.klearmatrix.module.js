@@ -48,10 +48,11 @@
 							this.options.data,
 							{ 
 								getDataForFieldTemplate : function(value,column) {
-																	
+									var extraConfig = column.config || false
 									return {
 											elemIden: column.id + this.data.randIden,
 											elemName: column.id,
+											dataConfig : extraConfig,
 											fieldValue:value
 									};
 								},

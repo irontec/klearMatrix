@@ -1,10 +1,20 @@
 <?php 
 
 
-abstract class KlearMatrix_Model_Field_Select_Interface implements Iterator {
-
+abstract class KlearMatrix_Model_Field_Select_Abstract implements Iterator {
+    
+    protected $_config;
+    protected $_items;
+    protected $_keys;
+    protected $_position;
+       
     public function __construct() {
         $this->rewind();
+    }
+    
+    public function setConfig(Zend_Config $config) {
+        $this->_config = $config;
+        return $this;
     }
     
     public function rewind() {
@@ -16,7 +26,7 @@ abstract class KlearMatrix_Model_Field_Select_Interface implements Iterator {
     }
     
     public function key() {
-        return $this->_position;
+        return $this->_keys[$this->_position];
     }
     
     public function next() {
@@ -26,11 +36,6 @@ abstract class KlearMatrix_Model_Field_Select_Interface implements Iterator {
     public function valid() {
         return isset($this->_items[$this->_position]);
     
-    }
-    
-    public function setConfig($config) {
-        
-        
     }
     
     

@@ -15,10 +15,11 @@ abstract class KlearMatrix_Model_Field_Abstract {
 	 */
 	public function init() {
 	    
+	    return $this;
 	}
 	
 	public function toArray() {
-	  return array();	    
+	  return false;	    
 	}
 	
 }

@@ -36,9 +36,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 		
     	$data = new KlearMatrix_Model_MatrixResponse;
     	
-    	$data->setColumnWraper($cols);
-    	$data->setPK($item->getPK());
-    	
+    	$data
+	        ->setTitle($item->getTitle())
+	        ->setColumnWraper($cols)
+	        ->setPK($item->getPK());
+	    
     	if (!$results= $mapper->fetchList($where,$order,$count,$offset)) {
 			// No hay resultados
 			$data->setResults(array());

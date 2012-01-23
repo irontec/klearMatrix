@@ -1,6 +1,13 @@
+/*List controller */
 
 table.kMatrix {
+	margin-top:1em;
 	width:100%;
+}
+
+table.kMatrix caption {
+	text-align: left;
+	padding:.3em;
 }
 
 table.kMatrix th {
@@ -18,4 +25,50 @@ table.kMatrix td {
 .generalOptionsToolbar {
 	padding:1em;
 	margin:1em 0 1em 0;  
+}
+
+/* Form */
+
+.klearMatrix_form {
+	margin:1em;
+		
+}
+
+.klearMatrix_form fieldset {
+	padding:1em;
+	width:48%;
+}
+
+.klearMatrix_form legend {
+	padding:.4em;
+}
+
+.klearMatrix_form p {
+	padding:.8em;
+	margin:.3em 0;
+}
+
+.klearMatrix_form label {
+	font-weight: bold;
+    display:block;
+    margin-bottom:.2em;
+}
+
+dt {
+	clear: both;
+    margin: 0 0 0 0.8em;
+    padding: 1em;
+    text-align: left;
+    width: 160px;
+	z-index:10;
+}
+
+dd {
+    float: left;
+    margin: -.3em 0 0.3em 0.4em;
+    padding: 1.5em;
+    width: 50%;
+    z-index:9;
+    
+    
 }

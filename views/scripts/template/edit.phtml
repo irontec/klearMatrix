@@ -1,20 +1,19 @@
 {{each(idx,row) values}}
 
-<form class="klearMatrix_edit" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
-	<fieldset>
-		<legend></legend>
-		<dl>
-	 	{{each columns}}
-        
-	            <dt><label for="${id}${randIden}">${name}</label></dt>
-	            <dd>{{tmpl($item.getDataForFieldTemplate(row[id],$value)) $item.getTemplateForType($value)}}</dd>
+<form class="klearMatrix_form" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
+	<fieldset class="ui-widget-content ui-corner-all">
+		<legend class="ui-widget-header ui-corner-all">${title}</legend>
 		
+	 	{{each columns}}
+        <p class="ui-widget-content ui-corner-all">
+            <label for="${id}${randIden}">${name}:</label>
+	       {{tmpl($item.getDataForFieldTemplate(row[id],$value)) $item.getTemplateForType($value)}}
+		</p>
 		{{/each}}
-		</dl>
 	</fieldset>
     <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
-        <button class="closeTab" data-text="true" data-icon="ui-icon-close" title="Guardar">Cerrar</button>
-        <button data-text="true" data-icon="ui-icon-circle-check" title="Guardar">Guardar</button>
+        <a class="closeTab" href="" title="Cerrar"><span class="ui-silk inline ui-silk-cross"></span>Cerrar</a>
+        <a class="action" href="" title="Cerrar"><span class="ui-silk inline ui-silk-bullet-disk"></span>Guardar</a>
     </div>
 
 </form>

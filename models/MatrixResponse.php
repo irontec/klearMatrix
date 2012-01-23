@@ -6,20 +6,28 @@ class KlearMatrix_Model_MatrixResponse {
 	protected $_fieldOptionsWrapper = false;
 	protected $_generalOptionsWrapper = false;
 	
+	protected $_title;
 	
 	protected $_pk;
 	
 	public function setColumnWraper(KlearMatrix_Model_ColumnWrapper $columnWrapper) {
 		$this->_columnWrapper = $columnWrapper;
+		return $this;
 	}
 	
 	public function setResults($results) {
-		
 		$this->_results = $results;
+		return $this;
 	}
 	
 	public function setPK($pk) {
 		$this->_pk = $pk;
+		return $this;
+	}
+	
+	public function setTitle($title) {
+	    $this->_title = $title;
+	    return $this;
 	}
 	
 	/**
@@ -28,6 +36,7 @@ class KlearMatrix_Model_MatrixResponse {
 	 */
 	public function setGeneralOptions(KlearMatrix_Model_GeneralOptionsWrapper $generalOptsWrapper) {
 		$this->_generalOptionsWrapper = $generalOptsWrapper;
+		return $this;
 	}
 	
 	/**
@@ -36,6 +45,7 @@ class KlearMatrix_Model_MatrixResponse {
 	 */
 	public function setFieldOptions(KlearMatrix_Model_FieldOptionsWrapper $fieldOptsWrapper) {
 		$this->_fieldOptionsWrapper = $fieldOptsWrapper;
+		return $this;
 	}
 	
 	
@@ -80,9 +90,11 @@ class KlearMatrix_Model_MatrixResponse {
 	public function toArray() {
 		
 		$ret = array();
+		$ret['title'] = $this->_title;
 		$ret['columns'] = $this->_columnWrapper->toArray();
 		$ret['values'] = $this->_results;
 		$ret['pk'] = $this->_pk;
+		
 		if (false !== $this->_fieldOptionsWrapper) {
 			$ret['fieldOptions'] = $this->_fieldOptionsWrapper->toArray();
 		}

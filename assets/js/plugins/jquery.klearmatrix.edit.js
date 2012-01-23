@@ -2,7 +2,8 @@
 
 	this.count = this.count || 0;
 	
-	if (typeof $.klearmatrix.module != 'function') {
+	if ( (typeof $.klearmatrix.module != 'function') 
+		|| (typeof $.fn.h5Validate != 'function') ) {
 		if (++this.count == 10) {
 			throw "JS Dependency error!";
 		}
@@ -23,15 +24,22 @@
 			
 			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 			
+			this.options.data.title = this.options.data.title || this.options.title;
+			
 			var $appliedTemplate = this._loadTemplate("klearmatrixEdit");
 			
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
 			
 			this._applyDecorators()
 				._registerBaseEvents()
-				._registerEvents(); 
-			
+				._registerEvents()
+				._initFormElements(); 
 				
+		},
+		_initFormElements : function() {
+			$("form",$(this.element.klearModule("getPanel"))).form();
+			return this;
+			
 		},
 		_registerEvents : function() {
 			
@@ -43,14 +51,8 @@
 
 		},
 		_applyDecorators : function() {
-			
-			$(".generalOptionsToolbar button",this.element.klearModule("getPanel")).each(function() {
-				$(this).button({
-					icons: {
-		                primary: $(this).data("icon")
-		            },
-		            text: $(this).data("text")
-				})
+			$(".generalOptionsToolbar a",this.element.klearModule("getPanel")).each(function() {
+				$(this).button();
 			});
 			return this;
 		}

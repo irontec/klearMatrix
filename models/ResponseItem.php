@@ -16,6 +16,8 @@ class KlearMatrix_Model_ResponseItem {
 	protected $_modelFile;
 	protected $_routeDispatcher;
 	
+	protected $_title;
+	
 	protected $_modelSpec;
 	
 	protected $_visibleColumnWrapper;
@@ -29,6 +31,8 @@ class KlearMatrix_Model_ResponseItem {
 		
 		$this->_mapper = $this->_config->getProperty("mapper",true);
 		$this->_modelFile = $this->_config->getProperty("modelFile",true);
+		
+		$this->_title = $this->_config->getProperty("title",false);
 		
 		$this->_parseModelFile();
 		
@@ -79,6 +83,9 @@ class KlearMatrix_Model_ResponseItem {
 		return $this->_modelSpec->getClassName();
 	}
 	
+	public function getTitle() {
+	    return $this->_title;
+	}
 	
 	
 	/**

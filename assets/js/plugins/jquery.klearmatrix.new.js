@@ -22,14 +22,15 @@
 		_init: function() {
 			
 			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
-			
+			this.options.data.title = this.options.data.title || this.options.title;
 			var $appliedTemplate = this._loadTemplate("klearmatrixNew");
 			
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
 			
 			this._applyDecorators()
 				._registerBaseEvents()
-				._registerEvents(); 
+				._registerEvents()
+				._initFormElements(); 
 			
 				
 		},
@@ -40,7 +41,7 @@
 				
 				
 			});
-
+			return this;
 		}		
 	});
 

@@ -84,12 +84,17 @@
 					_menuLink.addClass("ui-state-highlight");
 				}
 				
+				var tabTitle = ($("td.default",_parentTr).length>0) ? 
+						$("td.default",_parentTr).text() : $(this).attr("title");
+				
 				_container.one( "tabspostadd", function(event, ui) {
 
 					var $tabLi = $(ui.tab).parent("li");
-
+					
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
 					$tabLi.klearModule("option","menuLink",_menuLink);
+					
+					$tabLi.klearModule("options","title",tabTitle);
 					
 					// Actualizamos el file, al del padre (En el constructor se pasa "sucio"
 					$tabLi.klearModule("option","file",self.klearModule("option","file"));
@@ -110,8 +115,7 @@
 					
 				});
 				
-				var tabTitle = ($("td.default",_parentTr).length>0) ? 
-									$("td.default",_parentTr).text() : $(this).attr("title");
+				
 				_container.tabs( "add", _iden, tabTitle,_newIndex);
 				
 				

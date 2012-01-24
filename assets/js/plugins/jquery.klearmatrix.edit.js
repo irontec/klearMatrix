@@ -23,8 +23,8 @@
 		_init: function() {
 			
 			$.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
-			
-			this.options.data.title = this.options.data.title || this.options.title;
+
+			this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
 			
 			var $appliedTemplate = this._loadTemplate("klearmatrixEdit");
 			
@@ -43,7 +43,7 @@
 		},
 		_registerEvents : function() {
 			
-			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_edit',function() {
+			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_form',function() {
 			
 				
 				

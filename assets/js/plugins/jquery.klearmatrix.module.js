@@ -11,7 +11,6 @@
 					instances: []
 				});
 			}
-			
 			$.klearmatrix[this.options.moduleName].instances.push(this.element);
 			
 		},
@@ -37,7 +36,7 @@
 			// call the original destroy method since we overwrote it
 			$.Widget.prototype.destroy.call( this );
 		},
-		_setOption : function() {
+		_setOption : function(key, value) {
 			$.Widget.prototype._setOption.apply(this,arguments)
 		},
 		_loadTemplate : function(tmplName) {

@@ -107,14 +107,14 @@
 					
 					_menuLink.data("relatedtab",$tabLi);
 					
-					$tabLi
-						.klearModule("highlightOn")
-						.klearModule("option","dispatchOptions",_dispatchOptions)
+					$tabLi.klearModule("option","dispatchOptions",_dispatchOptions)
 						.klearModule("reload");
 						
 					
 				});
 				
+				// Klear CTRL+click Listener
+				$.klear.navctrlKey(e, $(self.klearModule("getPanel")).parent());
 				
 				_container.tabs( "add", _iden, tabTitle,_newIndex);
 				

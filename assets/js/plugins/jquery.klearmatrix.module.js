@@ -62,8 +62,9 @@
 									
 								},
 								getIndexFromColumn : function(values,column) {
-									
-									if ('undefined' === typeof values[column.id]) {
+
+									if (!values[column.id]) {
+										
 										
 										switch(column.type) {
 											default:
@@ -71,7 +72,15 @@
 										}
 										
 									} else {
-										return values[column.id];
+										switch(column.type){
+											case 'select':
+												var _curVal = values[column.id];
+												return column.config[_curVal];
+											break;
+											default:
+												return values[column.id];
+											break;
+										}
 									}
 								},
 								getTemplateForType : function(column) {

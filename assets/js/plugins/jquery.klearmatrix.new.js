@@ -6,7 +6,7 @@
 		if (++this.count == 10) {
 			throw "JS Dependency error!";
 		}
-		setTimeout(function() {load($);},10);
+		setTimeout(function() {load($);},30);
 		return;
 	}
 	
@@ -31,20 +31,10 @@
 			
 			this._applyDecorators()
 				._registerBaseEvents()
-				._registerEvents()
-				._initFormElements(); 
-			
+				._initFormElements()
+				._registerEvents();
 				
-		},
-		_registerEvents : function() {
-			
-			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_new',function() {
-			
-				
-				
-			});
-			return this;
-		}		
+		}	
 	});
 
 	$.widget.bridge("klearMatrixNew", $.klearmatrix.new);

@@ -35,7 +35,6 @@
 						
 						$self.moduleDialog("updateContent",data.message);
 						
-						
 						if (data.error) {
 							//TO-DO: FOK OFF
 						} else {

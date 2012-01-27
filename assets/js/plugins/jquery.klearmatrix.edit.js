@@ -3,9 +3,14 @@
 	this.count = this.count || 0;
 	
 	if ( (typeof $.klearmatrix.module != 'function') 
-		|| (typeof $.fn.h5Validate != 'function') ) {
-		if (++this.count == 10) {
-			throw "JS Dependency error!";
+		|| (typeof $.fn.h5Validate != 'function') 
+		|| (typeof Crypto != 'object')
+		) {
+		if (++this.count == 30) {
+			throw "JS Dependency error!"
+				+ 'klearmatrix.module: ' + typeof $.klearmatrix.module  
+				+ 'h5Validate'  + typeof $.fn.h5Validate
+				+ 'Crypto' + typeof Crypto;
 		}
 		setTimeout(function() {load($);},10);
 		return;
@@ -32,22 +37,87 @@
 			
 			this._applyDecorators()
 				._registerBaseEvents()
-				._registerEvents()
-				._initFormElements(); 
+				._initFormElements()
+				._registerEvents();
+				
 				
 		},
+		
+		$theForm : null,
+		
+		_initSavedValueHashes : function() {
+			
+			$("select,input,textarea",this.$theForm).each(function() {
+				var _hash = Crypto.MD5($(this).val()); 
+				$(this).data("savedValue",_hash);
+			});			
+		},
 		_initFormElements : function() {
-			$("form",$(this.element.klearModule("getPanel"))).form();
+			
+			this.$theForm = $("form",$(this.element.klearModule("getPanel")));
+			this.$theForm.form();
+			this._initSavedValueHashes();			
 			return this;
 			
 		},
 		_registerEvents : function() {
 			
-			$(this.element.klearModule("getPanel")).on('submit','form.klearMatrix_form',function() {
+			var self = this;
+			
+			this.$theForm.on('submit',function() {
 			
 				
 				
+			}).on('updateChangedState',function() {
+				if ($(".changed",$(this)).length > 0) {
+					
+					self.element.klearModule("setAsChanged", function() {
+						self.element.klearModule('showDialog',
+							$.translate("Existe contenido no guardado.") + '<br />' + $.translate("¿Desea cerrar la pantalla?")
+							,{
+							title : $.translate("Cuidado!"),
+							buttons : 
+								 [
+								  	{
+			    						text: $.translate("Cancelar"),
+			    						click: function() {
+			    							$(this).moduleDialog("close");
+			    						}
+									},
+								    {
+								        text: $.translate("Omitir Cambios y Cerrar"),
+								        click: function() {
+								        	self.element.klearModule("setAsUnChanged");
+								        	self.element.klearModule("close");
+								        }
+								    }
+								]
+						});
+						
+						
+						
+						return true;
+						
+					});
+				} else {
+					self.element.klearModule("setAsUnChanged");
+				}
+				
 			});
+				
+			
+			$("select,input,textarea",this.$theForm).on('change',function() {
+
+				if ($(this).data("savedValue") != Crypto.MD5($(this).val())) {
+					$(this).addClass("changed ui-state-highlight");
+				} else {
+					$(this).removeClass("changed ui-state-highlight");					
+				}
+				self.$theForm.trigger("updateChangedState");
+				
+			});
+			
+			return this;
 
 		},
 		_applyDecorators : function() {

@@ -95,7 +95,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');
-	    $jsonResponse->setPlugin('new');
+	    $jsonResponse->setPlugin('klearMatrixNew');
 	    $jsonResponse->addTemplate("/template/new/type/" . $this->_item->getType(),"klearmatrixNew");
 	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");

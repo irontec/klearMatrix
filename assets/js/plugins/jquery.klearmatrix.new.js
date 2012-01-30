@@ -4,7 +4,7 @@
 	
 	if ( (!$.klearmatrix) ||
 			(typeof $.klearmatrix.edit != 'function')) {
-		if (++this.count == 10) {
+		if (++this.count == 20) {
 			throw "JS Dependency error!";
 		}
 		setTimeout(function() {load($);},30);

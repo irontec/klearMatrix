@@ -33,12 +33,59 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     public function indexAction()
     {
 
+        
     	$mapperName = $this->_item->getMapperName();
-
     	$mapper = new $mapperName;
-
+    	
+    	$data = new KlearMatrix_Model_MatrixResponse;
+    	$cols = $this->_item->getVisibleColumnWrapper();
+    	
+    	
     	$where = null;
-    	$order = $this->_item->getPK();
+    	
+    	if ($this->_item->isFilteredScreen()) {
+    	    $where = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
+    	    
+    	    if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
+    	        
+    	       $parentScreen = new KlearMatrix_Model_Screen;
+    	       $parentScreen->setRouteDispatcher($this->_mainRouter);
+    	       $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
+    	       $parentMapperName = $parentScreen->getMapperName();
+    	       
+    	       $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
+    	       $defaultParentCol = $parentColWrapper->getDefaultCol();
+    	       
+    	       $parentMapper = new $parentMapperName;
+    	       $parentData = $parentMapper->find($this->_mainRouter->getParam('pk'));
+    	       
+    	       $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+    	       $data->setParentIden($parentData->$getter());
+    	       
+    	        
+    	    }
+    	    
+    	      
+    	}
+    	
+    	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
+    	    $order = $orderField;
+    	    
+    	    $orderColumn->setAsOrdered();
+    	    
+    	    if (in_array($this->getRequest()->getPost("orderType"),array("asc","desc")) ){
+    	        
+    	        $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));    
+    	        $order .= ' ' . $this->getRequest()->getPost("orderType");
+    	        
+    	    } else {
+    	        $order .= ' asc';
+    	    }
+    	    
+    	} else {
+    	    $order = $this->_item->getPK(); // Por defecto ordenamos por PK
+    	}
+    	
 
     	if ($paginationConfig = $this->_item->getPaginationConfig()) {
 
@@ -66,11 +113,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
 
 
-		$cols = $this->_item->getVisibleColumnWrapper();
-
-
-    	$data = new KlearMatrix_Model_MatrixResponse;
-
     	$data
     	    ->setResponseItem($this->_item)
 	        ->setTitle($this->_item->getTitle())
@@ -90,7 +132,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	        $totalItems = $mapper->countByQuery($where);
     	        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
                 $paginator->setCurrentPageNumber($page);
-                $paginator->setItemCountPerPage($offset);
+                $paginator->setItemCountPerPage($count);
 
                 $data->setPaginator($paginator);
     	    }
@@ -159,8 +201,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$jsonResponse = new Klear_Model_DispatchResponse;
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('list');
+    	$jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
     	$jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
-
+    	
+    	
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");

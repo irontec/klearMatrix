@@ -32,7 +32,7 @@
 						pk : _ids
 					},
 					function(data) {
-						
+						console.log(data);
 						$self.moduleDialog("updateContent",data.message);
 						
 						if (data.error) {

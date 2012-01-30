@@ -44,7 +44,6 @@
 		},
 		_registerMainActionEvent : function() {
 			var self = this;
-			console.log(this.$theForm);
 			
 			this.$theForm.on('submit',function(e) {
 				e.preventDefault();
@@ -53,7 +52,7 @@
 				$(self.element).klearModule("showDialog",
 						'<br />',
 						{
-							title: self.options.data.title,
+							title: $.translate("guardando..."),
 							template : '<div class="ui-widget">{{html text}}</div>',
 							buttons : []
 						});
@@ -92,7 +91,7 @@
 
 						self._initSavedValueHashes();
 						self.$theForm.trigger('updateChangedState');
-						
+						$dialog.moduleDialog("option","title",'');
 						$dialog.moduleDialog("option","buttons",
 								 [
 								  	{

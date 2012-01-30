@@ -20,7 +20,7 @@
 			this._super._create.apply(this);
 		},
 		_init: function() {
-			console.log(this.options.data);
+			
 			this.options.data.title = this.options.data.title || this.options.title; 
 			var $appliedTemplate = this._loadTemplate("klearmatrixList");
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
@@ -108,7 +108,7 @@
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
 					$tabLi.klearModule("option","menuLink",_menuLink);
 					$tabLi.klearModule("option","parentScreen",self);
-					$tabLi.klearModule("options","title",tabTitle);
+					$tabLi.klearModule("option","title",tabTitle);
 					
 					// Actualizamos el file, al del padre (En el constructor se pasa "sucio")
 					$tabLi.klearModule("option","file",self.klearModule("option","file"));
@@ -116,7 +116,10 @@
 					// Seteamos el valor para dispatchOptions
 					var _dispatchOptions = {
 						screen : _menuLink.data("screen"),
-						pk : _parentTr.data("id")
+						pk : _parentTr.data("id"),
+						post : {
+							callerScreen : _self.options.data.screen
+						}
 					};
 					
 					
@@ -164,8 +167,8 @@
 							dialog : $(this).data("dialog"),
 							pk : $_parentTr.data("id")
 						},
-						function(plugin,data) {
-							$_dialog[plugin]({data : data, parent: self});
+						function(response) {
+							$_dialog[response.plugin]({data : response.data, parent: self});
 						},
 						function() {
 										
@@ -173,6 +176,52 @@
 				);
 				
 			});
+			
+			$(".paginator a",this.element.klearModule("getPanel")).on('click',function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				var targetPage = $(this).data("page");
+				
+				var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+				
+				if (!_dispatchOptions.post) _dispatchOptions.post = {};
+				
+				$.extend(_dispatchOptions.post,{
+					page : targetPage 
+				});
+
+				$(self)
+					.klearModule("option","dispatchOptions",_dispatchOptions)
+					.klearModule("reDispatch");
+				
+			});
+			
+			$("th:not(.optionHeader)",this.element.klearModule("getPanel")).on("click",function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				var targetOrder = $(this).data("field");
+				var orderType = $("span.asc",$(this)).length>0? 'desc':'asc';
+				
+				var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+
+				if (!_dispatchOptions.post) _dispatchOptions.post = {};
+
+				
+				$.extend(_dispatchOptions.post,{
+					order: targetOrder,
+					orderType: orderType,
+					page: 1
+				});
+			
+				$(self)
+					.klearModule("option","dispatchOptions",_dispatchOptions)
+					.klearModule("reDispatch");
+				
+				
+			}).css("cursor","pointer");
+			
 			
 			return this;
 		}		

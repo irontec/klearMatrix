@@ -18,6 +18,7 @@ class KlearMatrix_Model_ScreenGeneralOption {
 	// Define si es necesario seleccionar campos para ejecutar esta opción general
 	protected $_fieldRelated = false;
 	
+
 	protected $_noLabel = true;
 	
 	public function setScreenName($screen) {
@@ -34,7 +35,10 @@ class KlearMatrix_Model_ScreenGeneralOption {
 		$this->_class = $this->_config->getProperty("class",false);
 		$this->_label = (bool)$this->_config->getProperty("label",false);
 		$this->_multiInstance = (bool)$this->_config->getProperty("multiInstance",false);
+		
+		
 	}
+	
 	
 	
 	

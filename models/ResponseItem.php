@@ -18,6 +18,8 @@ class KlearMatrix_Model_ResponseItem {
 
 	protected $_title;
 
+	protected $_filteredField;
+	
 	protected $_modelSpec;
 
 	protected $_visibleColumnWrapper;
@@ -32,11 +34,14 @@ class KlearMatrix_Model_ResponseItem {
 		$this->_mapper = $this->_config->getProperty("mapper",true);
 		$this->_modelFile = $this->_config->getProperty("modelFile",true);
 
+		$this->_filteredField = $this->_config->getProperty("filterField",false);
+		
 		$this->_title = $this->_config->getProperty("title",false);
+		
+		
+	    $this->_parseModelFile();
+	    $this->_checkClasses(array("_mapper"));
 
-		$this->_parseModelFile();
-
-		$this->_checkClasses(array("_mapper"));
 
 	}
 
@@ -131,6 +136,10 @@ class KlearMatrix_Model_ResponseItem {
 				}
 			}
 		}
+		
+		if ($this->isFilteredScreen()) {
+		    $blacklist[$this->_filteredField] = true;
+		}
 
 
 		foreach($obj->getColumnsList() as $dbName => $attribute) {
@@ -166,6 +175,14 @@ class KlearMatrix_Model_ResponseItem {
 
 	}
 
+	
+	public function isFilteredScreen() {
+	    return (!empty($this->_filteredField));
+	}
+	
+	public function getFilteredCondition($pkValue) {
+	    return $this->_filteredField . "='" . $pkValue . "'";
+	}
 
 	public function hasFieldOptions() {
 		return ($this->_config->exists("fields->options"));
@@ -189,13 +206,21 @@ class KlearMatrix_Model_ResponseItem {
 
 	public function getScreensGeneralOptionsConfig() {
 
+	    if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
+	        return array();
+	    }
+
+	    
 		$parent = new Klear_Model_KConfigParser();
 		$parent->setConfig($this->_config->getRaw()->options);
 		return $this->_getItemFieldsOptionsConfig('screen',$parent);
 	}
 
 	public function getDialogsGeneralOptionsConfig() {
-
+	    if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
+	        return array();
+	    }
+	    
 		$parent = new Klear_Model_KConfigParser();
 		$parent->setConfig($this->_config->getRaw()->options);
 		return $this->_getItemFieldsOptionsConfig('dialog',$parent);
@@ -230,7 +255,11 @@ class KlearMatrix_Model_ResponseItem {
 		$optionColumn = $this->_visibleColumnWrapper->getOptionColumn();
 
 		$_items = $parent->getProperty($property,false);
-
+		
+		if (!$_items) {
+		    return array();
+		}
+		
 		foreach ($_items  as $_item=> $_enabled) {
 			if (!(bool)$_enabled) continue;
 			$retArray[] = $_item;

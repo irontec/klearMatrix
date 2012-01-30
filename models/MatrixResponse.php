@@ -8,6 +8,8 @@ class KlearMatrix_Model_MatrixResponse {
 
 	protected $_paginator = false;
 
+	protected $_parentIden = false;
+	
 	protected $_title;
 
 	/**
@@ -64,6 +66,10 @@ class KlearMatrix_Model_MatrixResponse {
 
 	public function setPaginator(Zend_Paginator $paginator) {
 	    $this->_paginator = $paginator;
+	}
+	
+	public function setParentIden($parentIden) {
+	    $this->_parentIden = $parentIden;	    
 	}
 
 	/**
@@ -122,9 +128,13 @@ class KlearMatrix_Model_MatrixResponse {
 		}
 
 		if (false !== $this->_paginator) {
-		    $res['paginator'] = (array)$this->_paginator->getPages();
+		    $ret['paginator'] = (array)$this->_paginator->getPages();
 		}
-
+		
+		if (false !== $this->_parentIden) {
+		    $ret['parentIden'] = $this->_parentIden;
+		}
+		
 		$ret[$this->_item->getType()] = $this->_item->getItemName();
 
 		return $ret;

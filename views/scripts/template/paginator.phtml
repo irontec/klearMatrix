@@ -1,0 +1,14 @@
+<div class="paginator ui-widget-content ui-corner-all">
+<a href="" class="ui-state-default" data-page="${firstPageInRange}">«</a>
+<a href="" class="ui-state-default" data-page="{{if (prev)}}${prev}{{else}}${current}{{/if}}">‹</a>
+
+{{each(idx,_curPage) pagesInRange}}
+
+    <a href="" class="{{if (_curPage==current)}}ui-state-active{{else}}ui-state-default{{/if}}" data-page="${_curPage}">${_curPage}</a>
+
+{{/each}}
+
+<a href="" class="ui-state-default" data-page="{{if (next)}}${next}{{else}}${lastPageInRange}{{/if}}">›</a>
+<a href="" class="ui-state-default" data-page="${lastPageInRange}">»</a>	
+	
+</div>

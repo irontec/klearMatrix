@@ -12,6 +12,9 @@ class KlearMatrix_Model_Column {
 	protected $_isDefault = false;
 	protected $_isReadonly = false;
 
+	protected $_ordered = false;
+	protected $_orderedType = 'asc';
+	
 	protected $_fieldConfig;
 
 	protected $_config;
@@ -110,7 +113,15 @@ class KlearMatrix_Model_Column {
 
 	}
 
-
+	public function setAsOrdered() {
+	    $this->_ordered = true;
+	}
+	
+	public function setOrderedType($_orderType) {
+	    $this->_orderedType = $_orderType;
+	}
+	
+	
 	/**
 	 * @return Klear_Model_KConfigParser
 	 */
@@ -161,6 +172,11 @@ class KlearMatrix_Model_Column {
 			$ret['readonly'] = true;
 		}
 
+		if ($this->_ordered) {
+		    $ret['order'] = $this->_orderedType;
+		}
+		
+		
 		if ( ($this->_fieldConfig) && ($config = $this->_fieldConfig->toArray()) ) {
 		    $ret['config'] = $config;
 		}

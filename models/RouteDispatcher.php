@@ -81,7 +81,6 @@ class KlearMatrix_Model_RouteDispatcher {
 					$this->{$attrName} = $value;
 				break;
 				default:
-					echo $param . '=>' . $value;
 					$this->_params[$param] = $value;
 				break;
 
@@ -90,7 +89,8 @@ class KlearMatrix_Model_RouteDispatcher {
 		}
 
 	}
-
+	
+	
 	public function getParam($param) {
 		if (isset($this->_params[$param])) {
 			return $this->_params[$param];

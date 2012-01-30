@@ -10,14 +10,19 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	protected $_defaultColumnIdx = false;
 	protected $_types = array();
 	
-	public function addCol($col) {
+	// Indexamos los nombres de db de columnas por rendimiento
+	protected $_dbNameIndex = array();
+	
+	public function addCol(KlearMatrix_Model_Column $col) {
 		$this->_cols[] = $col;
+		$currentIdx = sizeof($this->_cols) - 1;
 		
 		// Estamos dando por hecho, que hay sólo una columna de opciones por listado.
 		if ($col->isOption()) {
-			$this->_optionColumnsIdx = sizeof($this->_cols) - 1;			
+			$this->_optionColumnsIdx = $currentIdx;			
 		} else {
-			$this->_types[$col->getType()] = true;
+			$this->_types[$col->getType()] = $currentIdx;
+			$this->_dbNameIndex[$col->getDbName()] = $currentIdx;
 		}
 		
 		
@@ -33,6 +38,15 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 		}
 		
 		return $retArray;
+	}
+	
+	public function getColFromDbName($field) {
+	    if (!isset($this->_dbNameIndex[$field])) {
+	        return false;
+	    }
+	    
+	    return $this->_cols[$this->_dbNameIndex[$field]];
+	    
 	}
 	
 	public function getTypesTemplateArray($path ,$prefix) {

@@ -1,9 +1,30 @@
+{{if ($item.data.paginator)}}
+    {{if (paginator.pageCount>1)}}
+        {{tmpl(paginator) $item.getPaginatorTemplate()}}
+    {{/if}}
+{{/if}}
+
+
 <table class="kMatrix">
-<caption class="ui-state-active ui-priority-primary">${title}</caption>
+<caption class="ui-state-active ui-priority-primary">${$item.getTitle(title,false)}</caption>
 
 <tr>
    {{each(idx,column) columns}}
-            <th class="ui-widget-header">${column.name}</td>
+            <th data-field="${column.id}" class="ui-widget-header{{if (type == '_option') }} optionHeader{{/if}}">
+            ${column.name}
+            {{if (column.order)}}
+                {{if (column.order=='asc')}}
+                    <span class="order asc ui-icon ui-icon-circle-triangle-s"></span>
+                {{else}}
+                    <span class="order desc ui-icon ui-icon-circle-triangle-n"></span>
+                {{/if}}
+            {{else}}
+                {{if (type != '_option') }}
+                <span class="order ui-icon ui-icon-circle-triangle-s ui-state-disabled"></span>
+                {{/if}}            
+            {{/if}}
+            
+            </td>
    {{/each}}
 </tr>
 
@@ -15,7 +36,7 @@
 		{{else}}
 			<td class="ui-widget-content options">
 			{{each fieldOptions}}
-				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}}" href="" data-${type}="${$item.getIndex($value,type)}" title="${title}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${title}{{/if}}</a>
+				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx)}{{/if}}</a>
 			{{/each}}
 			</td>
 		{{/if}}
@@ -23,6 +44,14 @@
 </tr>
 {{/each}}
 </table>
+
+
+{{if ($item.data.paginator)}}
+    {{if (paginator.pageCount>1)}}
+        {{tmpl(paginator) $item.getPaginatorTemplate()}}
+    {{/if}}
+{{/if}}
+
 
 {{if (generalOptions.length>0) }}
 <div class="generalOptionsToolbar ui-widget-content ui-corner-all">

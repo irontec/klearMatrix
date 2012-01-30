@@ -14,6 +14,12 @@ table.kMatrix th {
     padding: 3px;
 }
 
+
+table.kMatrix th span.order {
+    float:right;
+}
+
+
 table.kMatrix td {
     padding: 3px;
 }
@@ -61,4 +67,23 @@ table.kMatrix td {
 .klearMatrix_form .fieldDisabled {
 	border:0;
 }
+
+.paginator {
+    clear: both;
+    margin: 0.2em;
+    overflow: hidden;
+    padding: 0.5em;
+    
+}
+
+.paginator a {
+    display: block;
+    float: left;
+    height: 1.2em;
+    text-align: center;
+    width: 1.2em;
+    margin:0.3em;
+    text-decoration:none;
+}
+
 	

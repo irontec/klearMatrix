@@ -93,18 +93,28 @@
 								getTemplateForType : function(column) {
 									return $.template['clearMatrixFields' + column.type];
 								},
+								getPaginatorTemplate : function() {
+									return $.template['klearmatrixPaginator'];
+								},
 								getTitle : function(title,idx) {
 									
-									var defaultColumn = this.data.columns[0].id;
+									if (false !== idx) {
+										var defaultColumn = this.data.columns[0].id;
 									
-									for(var i in this.data.columns) {
-										if (this.data.columns[i].default) {
-											var defaultColumn = this.data.columns[i].id;
-											break;
+										for(var i in this.data.columns) {
+											if (this.data.columns[i].default) {
+												var defaultColumn = this.data.columns[i].id;
+												break;
+											}
 										}
+										var defaultColumn = this.data.values[idx][defaultColumn];
+									} else {
+										var defaultColumn = '';
 									}
 
-									return title.replace(/\%item\%/,this.data.values[idx][defaultColumn]);
+									return title
+											.replace(/\%parent\%/,this.data.parentIden)
+											.replace(/\%item\%/,defaultColumn);
 									
 									
 								}

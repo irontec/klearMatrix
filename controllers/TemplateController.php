@@ -28,6 +28,11 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     
     }
     
+    public function paginatorAction()
+    {
+    
+    }
+    
     
     public function deleteAction()
     {

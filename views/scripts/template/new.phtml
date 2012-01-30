@@ -1,6 +1,6 @@
 <form class="klearMatrix_form" action="${saveAction}" data-type='new'>
     <fieldset class="ui-widget-content ui-corner-all">
-		<legend class="ui-widget-header ui-corner-all">${title}</legend>
+		<legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,false)}</legend>
 
 		{{each columns}}
 	    <p class="ui-widget-content ui-corner-all">

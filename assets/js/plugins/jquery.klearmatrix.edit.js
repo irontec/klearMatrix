@@ -38,9 +38,90 @@
 			this._applyDecorators()
 				._registerBaseEvents()
 				._initFormElements()
-				._registerEvents();
+				._registerEvents()
+				._registerMainActionEvent();
+			
+		},
+		_registerMainActionEvent : function() {
+			var self = this;
+			console.log(this.$theForm);
+			
+			this.$theForm.on('submit',function(e) {
+				e.preventDefault();
+				e.stopPropagation();
 				
+				$(self.element).klearModule("showDialog",
+						'<br />',
+						{
+							title: self.options.data.title,
+							template : '<div class="ui-widget">{{html text}}</div>',
+							buttons : []
+						});
 				
+				$(self.element).klearModule("getModuleDialog").moduleDialog("setAsLoading");	
+				
+				self._doAction.call(self);
+			});
+			
+			return this;
+		},	
+		_doAction : function() {
+			
+			var self = this;
+			var $self = $(this.element);
+			
+			var $dialog = $self.klearModule("getModuleDialog") 
+			
+			$.klear.request(
+					{
+						file: $self.klearModule("option","file"),
+						type: 'screen',
+						execute: 'save',
+						pk: self.$theForm.data("id"),
+						screen: self.options.data.screen,
+						post : self.$theForm.serialize()
+					},
+					function(data) {
+						
+						if (data.error) {
+							//TO-DO: FOK OFF
+						} else {
+							var $parentModule = $self.klearModule("option","parentScreen");
+							$parentModule.klearModule("reDispatch");
+						}
+
+						self._initSavedValueHashes();
+						self.$theForm.trigger('updateChangedState');
+						
+						$dialog.moduleDialog("option","buttons",
+								 [
+								  	{
+			    						text: $.translate("Cerrar"),
+			    						click: function() {
+			    							$(this).moduleDialog("close");
+			    							$self.klearModule("close");
+			    						}
+									},
+									{
+										text: $.translate("Editar de nuevo"),
+										click: function() {
+											$(this).moduleDialog("close");
+										}
+									}
+								]
+						);
+						
+						$dialog.moduleDialog("updateContent",data.message);
+														
+						
+					},
+					// Error from new/index/save
+					function(data) {
+						
+									
+					}
+			);			
+			
 		},
 		
 		$theForm : null,
@@ -49,7 +130,9 @@
 			
 			$("select,input,textarea",this.$theForm).each(function() {
 				var _hash = Crypto.MD5($(this).val()); 
-				$(this).data("savedValue",_hash);
+				$(this)
+					.data("savedValue",_hash)
+					.trigger("change");
 			});			
 		},
 		_initFormElements : function() {
@@ -64,11 +147,7 @@
 			
 			var self = this;
 			
-			this.$theForm.on('submit',function() {
-			
-				
-				
-			}).on('updateChangedState',function() {
+			this.$theForm.on('updateChangedState',function() {
 				if ($(".changed",$(this)).length > 0) {
 					
 					self.element.klearModule("setAsChanged", function() {
@@ -105,6 +184,12 @@
 				
 			});
 				
+			$(".generalOptionsToolbar a.action").on('click',function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				self.$theForm.trigger("submit");
+			});
+			
 			
 			$("select,input,textarea",this.$theForm).on('change',function() {
 

@@ -48,12 +48,19 @@
 							{ 
 								getDataForFieldTemplate : function(value,column) {
 									var extraConfig = column.config || false
-									return {
-											elemIden: column.id + this.data.randIden,
-											elemName: column.id,
-											dataConfig : extraConfig,
-											fieldValue:value
+									
+									// htmlentities in JS ;)
+									
+									var _text = (!value)? '':$('<div/>').text(value).html();
+									
+									var ret = {
+											_elemIden: column.id + this.data.randIden,
+											_elemName: column.id,
+											_readonly: column.readonly? true:false,
+											_dataConfig : extraConfig,
+											_fieldValue: _text
 									};
+									return ret;
 								},
 								getIndex : function(values,idx) {
 									if (!values[idx]) return 'error';
@@ -78,7 +85,7 @@
 												return column.config[_curVal];
 											break;
 											default:
-												return values[column.id];
+												return $('<div/>').text(values[column.id]).html();
 											break;
 										}
 									}

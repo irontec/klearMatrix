@@ -2,11 +2,11 @@
 
 	this.count = this.count || 0;
 	
-	if (typeof $.klearmatrix.module != 'function') {
-		if (++this.count == 10) {
+	if ( (!$.klearmatrix) || (typeof $.klearmatrix.module != 'function') ) {
+		if (++this.count == 20) {
 			throw "JS Dependency error!";
 		}
-		setTimeout(function() {load($);},10);
+		setTimeout(function() {load($);},20);
 		return;
 	}
 	
@@ -20,6 +20,7 @@
 			this._super._create.apply(this);
 		},
 		_init: function() {
+			console.log(this.options.data);
 			this.options.data.title = this.options.data.title || this.options.title; 
 			var $appliedTemplate = this._loadTemplate("klearmatrixList");
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
@@ -41,21 +42,34 @@
 			var _self = this;
 			
 			// highlight effect on tr
-			$(this.element.klearModule("getPanel")).on('mouseenter mouseleave','table.kMatrix tr',function() {
+			$('table.kMatrix tr',this.element.klearModule("getPanel")).on('mouseenter mouseleave',function() {
 				$("td",$(this)).toggleClass("ui-state-highlight");
+				
+				if ($("a.option.default",$(this)).length>0) {
+					$(this).toggleClass("pointer");
+					$("a.option.default",$(this)).toggleClass("ui-state-active");
+				}
+				
+			})
+			.on('click',function(e) {
+				// Haciendo toda la tupla clickable para la default option
+				e.stopPropagation();
+				e.preventDefault();
+				$.klear.navctrlKey(e, $(self.klearModule("getPanel")).parent());
+				$("a.option.default",$(this)).trigger("click");
 			});
 			
-			$(this.element.klearModule("getPanel")).on('mouseenter','a._fieldOption',function(e) {
+			$('a._fieldOption', this.element.klearModule("getPanel")).on('mouseenter',function(e) {
 				if ($(this).data("relatedtab")) {
 					$(this).data("relatedtab").klearModule("highlightOn");
 				}				
-			}).on('mouseleave','a._fieldOption',function(e) {
+			}).on('mouseleave',function(e) {
 				if ($(this).data("relatedtab")) {
 					$(this).data("relatedtab").klearModule("highlightOff");
 				}				
 			});
 			
-			$(this.element.klearModule("getPanel")).on('click','a.option.screen',function(e) {
+			$('a.option.screen',this.element.klearModule("getPanel")).on('click',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();
@@ -93,10 +107,10 @@
 					
 					// Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
 					$tabLi.klearModule("option","menuLink",_menuLink);
-					
+					$tabLi.klearModule("option","parentScreen",self);
 					$tabLi.klearModule("options","title",tabTitle);
 					
-					// Actualizamos el file, al del padre (En el constructor se pasa "sucio"
+					// Actualizamos el file, al del padre (En el constructor se pasa "sucio")
 					$tabLi.klearModule("option","file",self.klearModule("option","file"));
 					
 					// Seteamos el valor para dispatchOptions
@@ -105,6 +119,8 @@
 						pk : _parentTr.data("id")
 					};
 					
+					
+					// hioghlight on hover
 					_menuLink.data("relatedtab",$tabLi);
 					
 					$tabLi.klearModule("option","dispatchOptions",_dispatchOptions)
@@ -123,7 +139,7 @@
 			
 			/*
 			 */
-			$(this.element.klearModule("getPanel")).on('click','a.option.dialog',function(e) {
+			$('a.option.dialog',this.element.klearModule("getPanel")).on('click',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();

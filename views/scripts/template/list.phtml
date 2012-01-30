@@ -1,5 +1,5 @@
 <table class="kMatrix">
-<caption class="ui-widget-content ui-priority-primary">${title}</caption>
+<caption class="ui-state-active ui-priority-primary">${title}</caption>
 
 <tr>
    {{each(idx,column) columns}}
@@ -15,7 +15,7 @@
 		{{else}}
 			<td class="ui-widget-content options">
 			{{each fieldOptions}}
-				<a class="_fieldOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${title}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${title}{{/if}}</a>        
+				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}}" href="" data-${type}="${$item.getIndex($value,type)}" title="${title}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${title}{{/if}}</a>
 			{{/each}}
 			</td>
 		{{/if}}
@@ -32,7 +32,7 @@
 	{{if (label) }}
 		${title}
 	{{/if}}
-	</a>        
+	</a>
 {{/each}}
 </div>
 {{/if}}

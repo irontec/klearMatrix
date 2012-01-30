@@ -18,6 +18,9 @@ $.widget("ui.form",{
 				else if($(this).is(":radio"))
 				self.radio(this);
 			
+				if ($(this).is(":disabled")) {
+					$(this).addClass("fieldDisabled");
+				}
 				
 				if($(this).hasClass("date"))
 				{

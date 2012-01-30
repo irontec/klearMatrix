@@ -54,21 +54,11 @@ table.kMatrix td {
     margin-bottom:.2em;
 }
 
-dt {
-	clear: both;
-    margin: 0 0 0 0.8em;
-    padding: 1em;
-    text-align: left;
-    width: 160px;
-	z-index:10;
+.pointer {
+	cursor:pointer;
 }
 
-dd {
-    float: left;
-    margin: -.3em 0 0.3em 0.4em;
-    padding: 1.5em;
-    width: 50%;
-    z-index:9;
-    
-    
+.klearMatrix_form .fieldDisabled {
+	border:0;
 }
+	

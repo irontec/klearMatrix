@@ -2,59 +2,125 @@
 
 class KlearMatrix_EditController extends Zend_Controller_Action
 {
-	
+
+    /**
+     * Route Dispatcher desde klear/index/dispatch
+     * @var KlearMatrix_Model_RouteDispatcher
+     */
+    protected $_mainRouter;
+
+    /**
+     * Screen|Dialog
+     * @var KlearMatrix_Model_ResponseItem
+     */
+    protected $_item;
+
+
     public function init()
     {
         /* Initialize action controller here */
     	$this->_helper->layout->disableLayout();
-    	
+
     	$this->_helper->ContextSwitch()
     		->addActionContext('index', 'json')
+    		->addActionContext('save', 'json')
     		->initContext('json');
+
+    	$this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+    	$this->_item = $this->_mainRouter->getCurrentItem();
+
     }
 
-    
-    
+
+
     public function saveAction() {
-    	
-    	
-    	
+
+    	$mapperName = $this->_item->getMapperName();
+    	$mapper = new $mapperName;
+
+    	$pk = $this->_mainRouter->getParam("pk");
+
+
+    	// TO-DO traducir mensaje?
+    	// TO-DO lanzar excepción ?
+    	// Recuperamos el objeto y realizamos la acción de borrar
+
+    	if (!$object = $mapper->find($pk)) {
+    	    Throw new Zend_Exception('El registro no se encuentra almacenado.');
+    	}
+
+    	$cols = $this->_item->getVisibleColumnWrapper();
+
+        foreach($cols as $column) {
+			if ($column->isOption()) continue;
+			$value = $this->getRequest()->getPost($column->getDbName());
+
+			//TO-DO: VALIDADORES!!!
+			if (empty($value)) {
+
+			    continue;
+			}
+
+			$setterMethod = "set" . $object->columnNameToVar($column->getDbName());
+			$object->$setterMethod($value);
+		}
+
+		try {
+		     $object->save();
+             $data = array(
+    			'error'=>false,
+    			'pk'=>$object->getPrimaryKey(),
+    			'message'=>'Registro modificado correctamente.'
+    	    );
+
+		} catch (Zend_Exception $exception) {
+
+		    $data = array(
+    				'error'=>true,
+    				'message'=>'Error añadiendo el registro.'
+    		);
+
+
+		}
+
+		$jsonResponse = new Klear_Model_SimpleResponse();
+    	$jsonResponse->setData($data);
+    	$jsonResponse->attachView($this->view);
+
     }
-    
-    
+
+
     public function indexAction()
     {
-	    
-	    $mainRouter = $this->getRequest()->getParam("mainRouter");
-	    $item = $mainRouter->getCurrentItem();
-	    
-	    $mapperName = $item->getMapperName();
+
+	    $mapperName = $this->_item->getMapperName();
 	    $mapper = new $mapperName;
-	    	    
-	    $pk = $mainRouter->getParam("pk");
-	    $cols = $item->getVisibleColumnWrapper();
-	    
+
+	    $pk = $this->_mainRouter->getParam("pk");
+	    $cols = $this->_item->getVisibleColumnWrapper();
+
 	    $data = new KlearMatrix_Model_MatrixResponse;
-	    
+
 	    $data
-	        ->setTitle($item->getTitle())
+	        ->setTitle($this->_item->getTitle())
 	        ->setColumnWraper($cols)
-	        ->setPK($item->getPK());
-	    
+	        ->setPK($this->_item->getPK())
+	        ->setResponseItem($this->_item);
+
 	    if (!$obj = $mapper->find($pk)) {
 	    	// Error
-	    	
+
 	    } else {
 	    	$data->setResults($obj)
-	    	        ->fixResults($item);	
+	    	        ->fixResults($this->_item);
 	    }
-	    
+
 	    Zend_Json::$useBuiltinEncoderDecoder = true;
-	    
+
 	    $jsonResponse = new Klear_Model_DispatchResponse();
 	    $jsonResponse->setModule('klearMatrix');
 	    $jsonResponse->setPlugin('edit');
-	    $jsonResponse->addTemplate("/template/edit/type/" . $item->getType(),"klearmatrixEdit");
+	    $jsonResponse->addTemplate("/template/edit/type/" . $this->_item->getType(),"klearmatrixEdit");
 	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
 	    $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 	    $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
@@ -64,7 +130,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
 	    $jsonResponse->setData($data->toArray());
 	    $jsonResponse->attachView($this->view);
-	    
+
 	}
-    
+
 }

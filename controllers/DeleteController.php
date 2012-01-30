@@ -2,82 +2,91 @@
 
 class KlearMatrix_DeleteController extends Zend_Controller_Action
 {
-	
+
+    /**
+     * Route Dispatcher desde klear/index/dispatch
+     * @var KlearMatrix_Model_RouteDispatcher
+     */
+    protected $_mainRouter;
+
+    /**
+     * Screen|Dialog
+     * @var KlearMatrix_Model_ResponseItem
+     */
+    protected $_item;
+
     public function init()
     {
         /* Initialize action controller here */
     	$this->_helper->layout->disableLayout();
-    	
+
     	$this->_helper->ContextSwitch()
     		->addActionContext('index', 'json')
     		->addActionContext('delete', 'json')
     		->initContext('json');
+
+    	$this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+    	$this->_item = $this->_mainRouter->getCurrentItem();
+
+
     }
 
-    
+
     public function indexAction() {
-    	
-    	
-    	$mainRouter = $this->getRequest()->getParam("mainRouter");
-    	$item = $mainRouter->getCurrentItem();
-    	
-    	$mapperName = $item->getMapperName();
+
+    	$mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
-    	
-    	$pk = $mainRouter->getParam("pk");
-    	
-    	$cols = $item->getVisibleColumnWrapper();
-    	
+
+    	$pk = $this->_mainRouter->getParam("pk");
+
+    	$cols = $this->_item->getVisibleColumnWrapper();
+
     	$defaultCol = $cols->getDefaultCol();
-    	
+
     	$cols
     		->resetWrapper()
     		->addCol($defaultCol);
-    	
+
     	$data = new KlearMatrix_Model_MatrixResponse;
-    	
-    	$data->setColumnWraper($cols);
-    	$data->setPK($item->getPK());
-    	
+
+    	$data->setColumnWraper($cols)
+    	    ->setPK($this->_item->getPK())
+    	    ->setResponseItem($this->_item);
+
     	if (!$obj = $mapper->find($pk)) {
     		// Error
-    	
+
     	} else {
     		$data->setResults($obj);
-    		$data->fixResults($item);
+    		$data->fixResults($this->_item);
     	}
-    	
+
     	$jsonResponse = new Klear_Model_DispatchResponse();
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('delete');
-    	$jsonResponse->addTemplate("/template/delete/type/" . $item->getType(),"klearmatrixDelete");
+    	$jsonResponse->addTemplate("/template/delete/type/" . $this->_item->getType(),"klearmatrixDelete");
     	$jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.delete.js");
     	$jsonResponse->addCssFile("/css/klearMatrixEdit.css");
     	$jsonResponse->setData($data->toArray());
     	$jsonResponse->attachView($this->view);
-    	
-    	
+
+
     }
-    
-    
+
+
     public function deleteAction()
     {
-    
-  		$mainRouter = $this->getRequest()->getParam("mainRouter");
-    	$item = $mainRouter->getCurrentItem();
-    	
-    	$mapperName = $item->getMapperName();
+
+    	$mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
-    	
-    	
-    	$sResponse = new Klear_Model_SimpleResponse;
-    	
-    	
-    	$pk = $mainRouter->getParam("pk");
-    	
-    	
+
+
+
+    	$pk = $this->_mainRouter->getParam("pk");
+
+
     	// TO-DO traducir mensaje?
     	// TO-DO lanzar excepción ?
     	// Recuperamos el objeto y realizamos la acción de borrar
@@ -93,14 +102,14 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     				'error'=>true,
     				'message'=>'Algún error eliminado el registro'
     		);
-    		
+
     	}
-    	
+
     	$jsonResponse = new Klear_Model_SimpleResponse();
     	$jsonResponse->setData($data);
     	$jsonResponse->attachView($this->view);
-    	
-    
+
+
     }
-    
-} 
+
+}

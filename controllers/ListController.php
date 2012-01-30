@@ -2,113 +2,171 @@
 
 class KlearMatrix_ListController extends Zend_Controller_Action
 {
-	
+
+    /**
+     * Route Dispatcher desde klear/index/dispatch
+     * @var KlearMatrix_Model_RouteDispatcher
+     */
+    protected $_mainRouter;
+
+    /**
+     * Screen|Dialog
+     * @var KlearMatrix_Model_ResponseItem
+     */
+    protected $_item;
+
+
     public function init()
     {
         /* Initialize action controller here */
     	$this->_helper->layout->disableLayout();
-    	
+
     	$this->_helper->ContextSwitch()
     		->addActionContext('index', 'json')
     		->initContext('json');
+
+    	$this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+    	$this->_item = $this->_mainRouter->getCurrentItem();
     }
 
-   
+
     public function indexAction()
     {
 
-    	$mainRouter = $this->getRequest()->getParam("mainRouter");
-    	$item = $mainRouter->getCurrentItem();
+    	$mapperName = $this->_item->getMapperName();
 
-    	$mapperName = $item->getMapperName();
-    	
     	$mapper = new $mapperName;
-    	//$mapper = new \Mappers\Soap\Brands;
-    	
+
     	$where = null;
-    	$order = null;
-    	$offset = 0;
-		$count = 100;
-    	
-		
-		$cols = $item->getVisibleColumnWrapper();
-		
-		
+    	$order = $this->_item->getPK();
+
+    	if ($paginationConfig = $this->_item->getPaginationConfig()) {
+
+    	    $configCount = $paginationConfig->getproperty('items');
+
+    	    if ($currentCount = (int)$this->getRequest()->getPost("count")) {
+    	        $count = $currentCount;
+    	    } else {
+    	        $count = $configCount;
+    	    }
+
+    	    if ($currentPage = (int)$this->getRequest()->getPost("page")) {
+    	        $page = ($currentPage<1)? 1:$currentPage;
+    	    } else {
+    	        $page = 1;
+    	    }
+
+    	    $offset = ($page-1)*$count;
+
+
+    	} else {
+    	    $count = NULL;
+    	    $offset = NULL;
+    	}
+
+
+
+		$cols = $this->_item->getVisibleColumnWrapper();
+
+
     	$data = new KlearMatrix_Model_MatrixResponse;
-    	
+
     	$data
-	        ->setTitle($item->getTitle())
+    	    ->setResponseItem($this->_item)
+	        ->setTitle($this->_item->getTitle())
 	        ->setColumnWraper($cols)
-	        ->setPK($item->getPK());
-	    
+	        ->setPK($this->_item->getPK());
+
     	if (!$results= $mapper->fetchList($where,$order,$count,$offset)) {
 			// No hay resultados
 			$data->setResults(array());
-    	
+
     	} else {
-    	    
-    		//$results = $item->filterVisibleResults($results);
-    		
-    		$data->setResults($results);
-    		
-    		if ($item->hasFieldOptions()) {
-    			
+
+
+
+    	    if (!is_null($count) && !is_null($offset) ) {
+
+    	        $totalItems = $mapper->countByQuery($where);
+    	        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
+                $paginator->setCurrentPageNumber($page);
+                $paginator->setItemCountPerPage($offset);
+
+                $data->setPaginator($paginator);
+    	    }
+
+     		$data->setResults($results);
+
+    		if ($this->_item->hasFieldOptions()) {
+
+    		    $defaultOption = $cols->getOptionColumn()->getDefaultOption();
+
     			$fieldOptionsWrapper = new KlearMatrix_Model_FieldOptionsWrapper;
-    			
-    			foreach ($item->getScreenFieldsOptionsConfig() as $_screen) {
-    				
+
+    			foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
+
     				$screenOption = new KlearMatrix_Model_ScreenFieldOption;
     				$screenOption->setScreenName($_screen);
+    				if ($_screen === $defaultOption) {
+    				    $screenOption->setAsDefault();
+    				    $defaultOption = false;
+    				}
     				// Recuperamos la configuración del screen, de la configuración general del módulo
     				// Supongo que cuando lo vea Alayn, le gustará mucho :)
     				// El "nombre" mainRouter apesta... pero... O:)
-    				$screenOption->setConfig($mainRouter->getConfig()->getScreenConfig($_screen));
+    				$screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
     				$fieldOptionsWrapper->addOption($screenOption);
     			}
 
-    			foreach ($item->getDialogsFieldsOptionsConfig() as $_dialog) {
+    			foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
     				$dialogOption = new KlearMatrix_Model_DialogFieldOption;
     				$dialogOption->setDialogName($_dialog);
-    				$dialogOption->setConfig($mainRouter->getConfig()->getDialogConfig($_dialog));
+
+    				if ($_dialog === $defaultOption) {
+    				    $dialogOption->setAsDefault();
+    				    $defaultOption = false;
+    				}
+
+    				$dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($_dialog));
     				$fieldOptionsWrapper->addOption($dialogOption);
-    				
+
     			}
-    			
-    			
+
+
     			$data->setFieldOptions($fieldOptionsWrapper);
-    			
+
     		}
-    		$data->fixResults($item);
+    		$data->fixResults($this->_item);
     	}
-    	
+
 
     	$generalOptionsWrapper = new KlearMatrix_Model_GeneralOptionsWrapper;
-    	
-    	foreach($item->getScreensGeneralOptionsConfig() as $_screen) {
+
+    	foreach($this->_item->getScreensGeneralOptionsConfig() as $_screen) {
     		$screenOption = new KlearMatrix_Model_ScreenGeneralOption;
     		$screenOption->setScreenName($_screen);
-    		$screenOption->setConfig($mainRouter->getConfig()->getScreenConfig($_screen));
+    		$screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
     		$generalOptionsWrapper->addOption($screenOption);
     	}
-    	
+
     	// TO-DO > Opciones generales de dialogo y comprobar checkboxes
-    	
+
     	$data->setGeneralOptions($generalOptionsWrapper);
-    	
-    	
+
+
     	Zend_Json::$useBuiltinEncoderDecoder = true;
-    	
+
     	$jsonResponse = new Klear_Model_DispatchResponse;
     	$jsonResponse->setModule('klearMatrix');
     	$jsonResponse->setPlugin('list');
-    	$jsonResponse->addTemplate("/template/list/type/" . $item->getType(),"klearmatrixList");
-    	
+    	$jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
+
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");
     	$jsonResponse->setData($data->toArray());
     	$jsonResponse->attachView($this->view);
-    	
+
     }
 
 

@@ -1,5 +1,5 @@
-<select name="${elemName}" id="${elemIden}">
-{{each(idx,dataValue) dataConfig}}
+<select name="${_elemName}" id="${_elemIden}" {{if (_readonly)}} disabled="disabled"{{/if}}>
+{{each(idx,dataValue) _dataConfig}}
     {{if (idx != '__className')}}
         <option{{if (idx == fieldValue)}} selected="selected"{{/if}} value="${idx}">${dataValue}</option>
     {{/if}}

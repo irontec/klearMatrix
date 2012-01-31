@@ -57,7 +57,11 @@ class KlearMatrix_Model_RouteDispatcher {
 	protected $_config;
 
 
-	static public function getModuleName() {
+	public function getModuleName() {
+	    if (isset($this->_selectedConfig->module)) {
+	        return $this->_selectedConfig->module;
+	    }
+	    
 		return self::module;
 	}
 

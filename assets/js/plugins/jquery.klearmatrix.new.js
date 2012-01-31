@@ -3,7 +3,7 @@
 	this.count = this.count || 0;
 	
 	if ( (!$.klearmatrix) ||
-			(typeof $.klearmatrix.edit != 'function')) {
+			(typeof $.klearMatrixEdit != 'function')) {
 		if (++this.count == 20) {
 			throw "JS Dependency error!";
 		}

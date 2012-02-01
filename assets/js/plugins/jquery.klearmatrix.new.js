@@ -5,7 +5,7 @@
 	if ( (!$.klearmatrix) ||
 			(typeof $.klearmatrix.edit != 'function')) {
 		if (++this.count == 20) {
-			throw "JS Dependency error!";
+			throw "JS Dependency error! [new]";
 		}
 		setTimeout(function() {load($);},30);
 		return;
@@ -39,7 +39,6 @@
 		},
 		_registerMainActionEvent : function() {
 			var self = this;
-			console.log(this.$theForm);
 			
 			this.$theForm.on('submit',function(e) {
 				e.preventDefault();
@@ -124,5 +123,4 @@
 	});
 
 	$.widget.bridge("klearMatrixNew", $.klearmatrix.new);
-	console.log("NEW",typeof $.klearMatrixNew);	
 })(jQuery);

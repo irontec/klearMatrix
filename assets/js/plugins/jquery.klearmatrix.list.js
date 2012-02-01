@@ -137,10 +137,14 @@
 				
 				_container.tabs( "add", _iden, tabTitle,_newIndex);
 				
-				
+			}).on('click',function(e) {
+				// Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
+				e.preventDefault();
+				e.stopPropagation();
 			});
 			
 			/*
+			 * Capturar opciones de diálogo.
 			 */
 			$('a.option.dialog',this.element.klearModule("getPanel")).on('click',function(e,data) {
 				
@@ -180,6 +184,10 @@
 						}
 				);
 				
+			}).on('mouseup',function(e) {
+				// Paramos el evento mouseup, para no llegar al tr
+				e.preventDefault();
+				e.stopPropagation();
 			});
 			
 			$(".paginator a",this.element.klearModule("getPanel")).on('click',function(e) {

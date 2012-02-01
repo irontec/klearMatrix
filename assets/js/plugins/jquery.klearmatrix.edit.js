@@ -3,14 +3,16 @@
 	this.count = this.count || 0;
 	
 	if ( (typeof $.klearmatrix.module != 'function') 
+		|| (typeof $.fn.autoResize != 'function')
 		|| (typeof $.fn.h5Validate != 'function')
 		|| (typeof Crypto != 'object')
 		) {
 		if (++this.count == 30) {
 			throw "JS Dependency error!"
-				+ 'klearmatrix.module: ' + typeof $.klearmatrix.module  
-				+ 'h5Validate'  + typeof $.fn.h5Validate
-				+ 'Crypto' + typeof Crypto;
+				+ '\nklearmatrix.module: ' + typeof $.klearmatrix.module  
+				+ '\nh5Validate'  + typeof $.fn.h5Validate
+				+ '\nAutoresize'  + typeof $.fn.autoResize
+				+ '\nCrypto' + typeof Crypto;
 		}
 		setTimeout(function() {load($);},10);
 		return;
@@ -131,7 +133,7 @@
 				var _hash = Crypto.MD5($(this).val()); 
 				$(this)
 					.data("savedValue",_hash)
-					.trigger("change.manual");
+					.trigger("manualchange");
 			});			
 		},
 		_initFormElements : function() {
@@ -226,5 +228,7 @@
 	});
 
 	$.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);
+	
+	console.log("KM EDIT : ",typeof $.klearmatrix.edit);
 
 })(jQuery);

@@ -51,12 +51,12 @@
 				}
 				
 			})
-			.on('click',function(e) {
+			.on('mouseup',function(e) {
 				// Haciendo toda la tupla clickable para la default option
 				e.stopPropagation();
 				e.preventDefault();
-				$.klear.navctrlKey(e, $(self.klearModule("getPanel")).parent());
-				$("a.option.default",$(this)).trigger("click");
+				$.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(),$("a.option.default",$(this)));
+				$("a.option.default",$(this)).trigger("mouseup");
 			});
 			
 			$('a._fieldOption', this.element.klearModule("getPanel")).on('mouseenter',function(e) {
@@ -69,7 +69,7 @@
 				}				
 			});
 			
-			$('a.option.screen',this.element.klearModule("getPanel")).on('click',function(e) {
+			$('a.option.screen',this.element.klearModule("getPanel")).on('mouseup',function(e) {
 				
 				e.preventDefault();
 				e.stopPropagation();
@@ -132,8 +132,8 @@
 					
 				});
 				
-				// Klear CTRL+click Listener
-				$.klear.navctrlKey(e, $(self.klearModule("getPanel")).parent());
+				// Klear open in background
+				$.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(), $(this));
 				
 				_container.tabs( "add", _iden, tabTitle,_newIndex);
 				
@@ -142,7 +142,7 @@
 			
 			/*
 			 */
-			$('a.option.dialog',this.element.klearModule("getPanel")).on('click',function(e) {
+			$('a.option.dialog',this.element.klearModule("getPanel")).on('click',function(e,data) {
 				
 				e.preventDefault();
 				e.stopPropagation();
@@ -150,27 +150,32 @@
 				
 				var _container = self.klearModule("getContainer");
 				var $_parentTr = $(this).parents("tr:eq(0)");
-				
+				var $caller = $(this);
 				$(self).klearModule("showDialog",
 						'<br />',
 						{
 							title: $(this).attr("title"),
-							template : '<div class="ui-widget">{{html text}}</div>',
+							template : '<div class="ui-widget">{{html text}}</div>'
 						});
 				
 				var $_dialog = $(self).klearModule("getModuleDialog");
-				$_dialog.moduleDialog("setAsLoading");				
+				$_dialog.moduleDialog("setAsLoading");
+				
+				var _postData = (typeof data != undefined)? data:false;
 				$.klear.request(
 						{
 							file: self.klearModule("option","file"),
 							type: 'dialog',
 							dialog : $(this).data("dialog"),
-							pk : $_parentTr.data("id")
+							pk : $_parentTr.data("id"),
+							post: _postData
 						},
 						function(response) {
-							$_dialog[response.plugin]({data : response.data, parent: self});
+				
+							$_dialog[response.plugin]({data : response.data, parent: self, caller: $caller});
 						},
 						function() {
+							console.log(arguments);
 										
 						}
 				);

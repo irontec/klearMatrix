@@ -1,7 +1,11 @@
-<select name="${_elemName}" id="${_elemIden}" {{if (_readonly)}} disabled="disabled"{{/if}}>
+{{if (_readonly)}}
+    {{html _dataConfig[_fieldValue]}}
+{{else}}
+<select name="${_elemName}" id="${_elemIden}">
 {{each(idx,dataValue) _dataConfig}}
     {{if (idx != '__className')}}
         <option{{if (idx == _fieldValue)}} selected="selected"{{/if}} value="${idx}">${dataValue}</option>
     {{/if}}
 {{/each}}
 </select>
+{{/if}}

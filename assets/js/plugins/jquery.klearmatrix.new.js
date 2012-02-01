@@ -3,7 +3,7 @@
 	this.count = this.count || 0;
 	
 	if ( (!$.klearmatrix) ||
-			(typeof $.klearMatrixEdit != 'function')) {
+			(typeof $.klearmatrix.edit != 'function')) {
 		if (++this.count == 20) {
 			throw "JS Dependency error!";
 		}
@@ -124,5 +124,5 @@
 	});
 
 	$.widget.bridge("klearMatrixNew", $.klearmatrix.new);
-	
+	console.log("NEW",typeof $.klearMatrixNew);	
 })(jQuery);

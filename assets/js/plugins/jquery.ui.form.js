@@ -34,9 +34,9 @@ $.widget("ui.form",{
 		textelements:function(element){
 			
 			$(element).on('focusin',function() {
-				$(this).toggleClass('ui-state-focus');
+				$(this).addClass('ui-state-focus');
  			}).on('focusout',function() {
- 				$(this).toggleClass('ui-state-focus');
+ 				$(this).removeClass('ui-state-focus');
  			});
 		},
 		checkboxes:function(element) {

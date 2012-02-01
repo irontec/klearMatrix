@@ -3,7 +3,7 @@
 	this.count = this.count || 0;
 	
 	if ( (typeof $.klearmatrix.module != 'function') 
-		|| (typeof $.fn.h5Validate != 'function') 
+		|| (typeof $.fn.h5Validate != 'function')
 		|| (typeof Crypto != 'object')
 		) {
 		if (++this.count == 30) {
@@ -131,14 +131,21 @@
 				var _hash = Crypto.MD5($(this).val()); 
 				$(this)
 					.data("savedValue",_hash)
-					.trigger("change");
+					.trigger("changed.manual");
 			});			
 		},
 		_initFormElements : function() {
 			
 			this.$theForm = $("form",$(this.element.klearModule("getPanel")));
 			this.$theForm.form();
-			this._initSavedValueHashes();			
+			this._initSavedValueHashes();
+			$("input, select, textarea",this.$theForm)
+				.autoResize({
+					onStartCheck: function() {
+						$(this).trigger("changed.manual");
+					}
+				})
+				.find(":not(:disabled):eq(0)").trigger("focusin").select();
 			return this;
 			
 		},
@@ -190,7 +197,7 @@
 			});
 			
 			
-			$("select,input,textarea",this.$theForm).on('change',function() {
+			$("select,input,textarea",this.$theForm).on('changed.manual',function() {
 
 				if ($(this).data("savedValue") != Crypto.MD5($(this).val())) {
 					$(this).addClass("changed ui-state-highlight");
@@ -198,8 +205,9 @@
 					$(this).removeClass("changed ui-state-highlight");					
 				}
 				self.$theForm.trigger("updateChangedState");
-				
 			});
+			
+			$("[title]",this.$theForm).tooltip();
 			
 			return this;
 

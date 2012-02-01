@@ -131,7 +131,7 @@
 				var _hash = Crypto.MD5($(this).val()); 
 				$(this)
 					.data("savedValue",_hash)
-					.trigger("changed.manual");
+					.trigger("change.manual");
 			});			
 		},
 		_initFormElements : function() {
@@ -142,7 +142,8 @@
 			$("input, select, textarea",this.$theForm)
 				.autoResize({
 					onStartCheck: function() {
-						$(this).trigger("changed.manual");
+						// El plugin se "come" el evento :S
+						$(this).trigger("manualchange");
 					}
 				})
 				.find(":not(:disabled):eq(0)").trigger("focusin").select();
@@ -197,7 +198,7 @@
 			});
 			
 			
-			$("select,input,textarea",this.$theForm).on('changed.manual',function() {
+			$("select,input,textarea",this.$theForm).on('manualchange',function() {
 
 				if ($(this).data("savedValue") != Crypto.MD5($(this).val())) {
 					$(this).addClass("changed ui-state-highlight");
@@ -205,6 +206,10 @@
 					$(this).removeClass("changed ui-state-highlight");					
 				}
 				self.$theForm.trigger("updateChangedState");
+			});
+			
+			$("select",this.$theForm).on("change",function() {
+				$(this).trigger("manualchange");
 			});
 			
 			$("[title]",this.$theForm).tooltip();

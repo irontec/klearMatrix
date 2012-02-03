@@ -59,7 +59,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	       
     	       $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
     	       $data->setParentIden($parentData->$getter());
-    	       
     	        
     	    }
     	    
@@ -122,9 +121,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 			$data->setResults(array());
 
     	} else {
-
-
-
+    	
     	    if (!is_null($count) && !is_null($offset) ) {
 
     	        $totalItems = $mapper->countByQuery($where);
@@ -176,6 +173,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     			$data->setFieldOptions($fieldOptionsWrapper);
 
     		}
+    		
     		$data->fixResults($this->_item);
     	}
 

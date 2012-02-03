@@ -50,16 +50,20 @@
 									var extraConfig = column.config || false
 									
 									// htmlentities in JS ;)
-									
-									var _text = (!value)? '':$('<div/>').text(value).html();
+									if (typeof value != 'object') {
+										var _value = (!value)? '':$('<div/>').text(value).html();
+									} else {
+										var _value = value;
+									}
 									
 									var ret = {
 											_elemIden: column.id + this.data.randIden,
 											_elemName: column.id,
 											_readonly: column.readonly? true:false,
 											_dataConfig : extraConfig,
-											_fieldValue: _text
+											_fieldValue: _value
 									};
+									
 									return ret;
 								},
 								getIndex : function(values,idx) {
@@ -83,6 +87,22 @@
 											case 'select':
 												var _curVal = values[column.id];
 												return column.config[_curVal];
+											break;
+											case 'multiselect':
+												
+												var returnValue = [];
+												for(var i in values[column.id]['relStruct']) {
+													var relId = values[column.id]['relStruct'][i]['relatedId'];
+													if (column.config[relId]) {
+														returnValue.push(column.config[relId]);
+													}
+												}
+												if (returnValue.length == 0) {
+													return '<em>' + $.translate('no hay elementos asociados') + '</em>';
+												} else {
+													return returnValue.join(', ');
+												}
+												
 											break;
 											default:
 												return $('<div/>').text(values[column.id]).html();

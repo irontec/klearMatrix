@@ -1,17 +1,25 @@
 <?php 
 
 
-abstract class KlearMatrix_Model_Field_Select_Abstract implements Iterator {
+abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator {
     
     protected $_config;
     protected $_items;
     protected $_keys;
     protected $_position;
-       
+    
+    public function filterValue($value,$original) {
+        return $value;
+    }
+    
+    public function prepareValue($value) {
+        return $value;
+    }
+    
+    
     public function __construct() {
         $this->rewind();
     }
-    
     
     public function setConfig(Zend_Config $config) {
         $this->_config = $config;

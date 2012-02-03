@@ -107,8 +107,7 @@ class KlearMatrix_Model_ResponseItem {
 		if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
 
 		$obj = $this->_modelSpec->getInstance();
-		//$obj = new EKT_Model_Brands();
-
+		
 		$this->_visibleColumnWrapper =  new KlearMatrix_Model_ColumnWrapper;
 
 		//Inicializamos blackList (los campos que no se mostrarán)
@@ -141,30 +140,64 @@ class KlearMatrix_Model_ResponseItem {
 		    $blacklist[$this->_filteredField] = true;
 		}
 
+		
+		$multiLangFields = $obj->getMultiLangColumnsList();
+		
+		if ( (is_array($availableLangsPerModel = $obj->getAvailableLangs())) && (sizeof($availableLangsPerModel)>0) ) {
+		    $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
+		}
+
+		foreach($multiLangFields as $dbName=>$columnName) {
+		    foreach($availableLangsPerModel as $langIden => $langName) {
+		        
+		        $blacklist[$dbName . '_'. $langIden] = true;
+		        
+		    }
+		    
+		    
+		    
+		}
 
 		foreach($obj->getColumnsList() as $dbName => $attribute) {
-
-			if (isset($blacklist[$dbName])) continue;
+		    if (isset($blacklist[$dbName])) continue;
 
 			$col = new KlearMatrix_Model_Column;
-
 			$col->setDbName($dbName);
-
-
 
 			if ($colConfig = $this->_modelSpec->getField($dbName)) {
 				$col->setConfig($colConfig);
 			}
-
+			
+			if (isset($multiLangFields[$dbName])) {
+			    $col->markAsMultilang();
+			}
+			
 			// A cada columna, le pasamos el "dispatcherador de ruta, ya que puede hacer variar la funcionalidad
 			$col->setRouteDispatcher($this->_routeDispatcher);
-
 			$this->_visibleColumnWrapper->addCol($col);
+		}
+		
+		
+	   /**
+	    *  Buscamos las tablas dependientes, por si estuvieran *Explicitamente* declaradas en el fichero de modelo
+	    */ 
+		foreach ($obj->getDependentList() as $dependatConfig) {
+
+		    if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {
+
+		        $col = new KlearMatrix_Model_Column;
+		        $col->setDbName($dependatConfig['table_name']);
+		        $col->setConfig($colConfig);
+		        $col->markAsDependant();
+		        $col->setRouteDispatcher($this->_routeDispatcher);
+		        $this->_visibleColumnWrapper->addCol($col);
+		    }
+		    
 		}
 
 		if ($this->hasFieldOptions()) {
 
-			$col = new KlearMatrix_Model_Column;
+		    $col = new KlearMatrix_Model_Column;
 			$col->markAsOption();
 			$col->setdbName("_fieldOptions");
 			$col->setConfig($this->_config->getRaw()->fields->options);
@@ -209,7 +242,6 @@ class KlearMatrix_Model_ResponseItem {
 	    if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
 	        return array();
 	    }
-
 	    
 		$parent = new Klear_Model_KConfigParser();
 		$parent->setConfig($this->_config->getRaw()->options);

@@ -35,9 +35,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
     public function saveAction() {
 
+
     	$mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
-
     	$pk = $this->_mainRouter->getParam("pk");
 
 
@@ -61,12 +61,62 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 			    continue;
 			}
 
-			$setterMethod = "set" . $object->columnNameToVar($column->getDbName());
-			$object->$setterMethod($value);
+			if (!$setter = $column->getSetterName($object)) continue;
+			if (!$getter = $column->getGetterName($object)) continue;
+			
+			$value =  $column->filterValue($value,$object->{$getter}());
+			$object->$setter($value);
 		}
 
+
 		try {
-		     $object->save();
+		     if (!$pk = $object->save(false,true)) {
+		         Throw New Zend_Exception("Error salvando el registro.");
+		     }
+		     
+	     
+		     // Recuperamos la tabla principal 
+		     $primaryTable = $object->getMapper()->getDbTable()->getTableName();
+		     
+		     // Recorremos los campos dependientes, para proceder a salvarlos.
+		     foreach($cols as $column) {
+		         
+		         if (!$column->isDependant()) continue;
+		         if (!$getter = $column->getGetterName($object)) continue;
+		         
+		         $aModels = $object->$getter();
+		         if (sizeof($aModels)>0) {
+		             
+		             $model = $aModels[0];
+		             $relatedIdColumn = $model->getColumnForParentTable($primaryTable);
+		             
+		            
+		             // FIXME: Ya he preguntado por arriba. El campo fieldConfig de Column lo sabe WTF?
+		             // "Pregunto" por existentes en BBDD
+		             $relatedToPk = $aModels[0]->getMapper()->fetchList($relatedIdColumn . "='".$pk."'");
+		             
+		             // Salvo relaciones nuevas, y "anoto" las que no hay que borrar
+		             foreach ($aModels as $model) {
+		                 if (!$model->getPrimaryKey()) {
+		                     $model->{'set' .$relatedIdColumn}($pk);
+		                     $model->save();
+		                 } else {
+		                     $notToBeDeletedRels[$model->getPrimaryKey()] = true;
+		                 }
+		             }
+		                
+		             foreach($relatedToPk as $model) {
+		                 if (!isset($notToBeDeletedRels[$model->getPrimaryKey()])) {
+		                     $model->delete();		                     
+		                 }
+		             }
+		             
+		             
+		         }
+		         
+		         
+		     }
+		     
              $data = array(
     			'error'=>false,
     			'pk'=>$object->getPrimaryKey(),
@@ -77,7 +127,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
 		    $data = array(
     				'error'=>true,
-    				'message'=>'Error añadiendo el registro.'
+    				'message'=>'Error añadiendo el registro.' . $exception->getMessage()
     		);
 
 
@@ -126,9 +176,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
 	    $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
+	    $jsonResponse->addJsArray($cols->getColsJsArray());
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
+	    $jsonResponse->addCssArray($cols->getColsCssArray());
 	    $jsonResponse->setData($data->toArray());
 	    $jsonResponse->attachView($this->view);
 

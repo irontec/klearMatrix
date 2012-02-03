@@ -103,9 +103,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 	    $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
+	    $jsonResponse->addJsArray($cols->getColsJsArray());
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js"); // klearmatrix.new hereda de klearmatrix.edit
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.new.js");
 	    $jsonResponse->addCssFile("/css/klearMatrixNew.css");
+	    $jsonResponse->addCssArray($cols->getColsCssArray());
 	    $jsonResponse->setData($data->toArray());
 	    $jsonResponse->attachView($this->view);
 

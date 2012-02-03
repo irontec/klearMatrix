@@ -23,6 +23,10 @@ class KlearMatrix_Model_Column {
 	protected $_defaultOption;
 	protected $_type ='text';
 
+	protected $_isMultilang = false;
+		
+	protected $_isDependant = false;
+	
 	protected $_routeDispatcher;
 
 	public function setDbName($name) {
@@ -40,11 +44,27 @@ class KlearMatrix_Model_Column {
 	public function markAsOption() {
 		$this->_isOption = true;
 	}
+	
+	public function markAsDependant() {
+	    $this->_isDependant = true;
+	}
+	
+	public function markAsMultilang() {
+	    $this->_isMultilang = true;
+	}
 
 	public function isOption() {
 		return $this->_isOption;
 	}
+	
+	public function isDependant() {
+	    return $this->_isDependant;
+	}
 
+	public function isMultilang() {
+	    return $this->_isMultilang;
+	}
+	
 	public function setConfig(Zend_Config $config) {
 
 		$this->_config = new Klear_Model_KConfigParser;
@@ -84,7 +104,7 @@ class KlearMatrix_Model_Column {
 
 	}
 
-	public function _loadConfigClass() {
+	protected function _loadConfigClass() {
         if ($this->isOption()) return $this;
         if (is_object($this->_fieldConfig)) return $this;
 
@@ -94,6 +114,17 @@ class KlearMatrix_Model_Column {
 		$this->_fieldConfig
 		            ->setColumn($this)
 		            ->init();
+		 
+	}
+	
+	public function getJsPaths() {
+	    $this->_loadConfigClass();
+	    return $this->_fieldConfig->getExtraJavascript();
+	}
+	
+	public function getCssPaths() {
+	
+	    return $this->_fieldConfig->getExtraCss();
 	}
 
 	public function isDefault() {
@@ -152,7 +183,55 @@ class KlearMatrix_Model_Column {
         if (!$this->isOption()) return false;
         return $this->_defaultOption;
     }
-
+    
+    /**
+     * gateway hacia la clase de cada campo
+     * Preparar cada campo en base a su tipo, antes de devolverlo.
+     * @param mixed $value
+     * @return mixed
+     */
+    public function prepareValue($value) {
+        $this->_loadConfigClass();
+        return $this->_fieldConfig->prepareValue($value);
+    }
+    
+    
+    public function filterValue($value,$original) {
+        $this->_loadConfigClass();
+        return $this->_fieldConfig->filterValue($value,$original);
+    }
+    
+    
+    
+    
+    
+    public function getGetterName($object)
+    {
+        if ($this->isOption()) return false;
+        
+        
+        if ($this->isDependant()) {
+            return 'get' . $this->getDbName();
+        } else {
+            return 'get' . $object->columnNameToVar($this->getDbName());
+        }
+        
+    }
+    
+    public function getSetterName($object)
+    {
+        if ($this->isOption()) return false;
+    
+    
+        if ($this->isDependant()) {
+            return 'set' . $this->getDbName();
+        } else {
+            return 'set' . $object->columnNameToVar($this->getDbName());
+        }
+    
+    }
+    
+    
 	public function toArray() {
 
 	    $this->_loadConfigClass();

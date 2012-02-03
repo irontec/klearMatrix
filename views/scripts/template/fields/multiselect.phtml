@@ -1,0 +1,13 @@
+<select class="multiselect" multiple name="${_elemName}[]" id="${_elemIden}">
+{{each(idx,dataValue) _dataConfig}}
+    {{if (idx != '__className')}}
+        
+        <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][idx]) )}}
+            
+                selected="selected" 
+            {{/if}}
+            
+        value="${idx}">${dataValue}</option>
+    {{/if}}
+{{/each}}
+</select>

@@ -76,35 +76,45 @@ class KlearMatrix_Model_MatrixResponse {
 	 * Si los resultados (de data) son objetos, los pasa a array (para JSON)
 	 * Se eliminan los campos no presentes en el column-wrapper
 	 * Se pasa el controlador llamante(edit|new|delete|list), por si implicara cambio en funcionalidad por columna
+	 * Gestionamos el multi-idioma de los campos multiidioma (getters con $lang seleccionado)
 	 */
 	public function fixResults(KlearMatrix_Model_ResponseItem $screen) {
 
-		$colIndexes = array();
-		foreach($screen->getVisibleColumnWrapper() as $column) {
-			if ($column->isOption()) continue;
-			$colIndexes[] = $column->getDbName();
-		}
 
-		$colIndexes[] = $screen->getPK();
+		$primaryKeyName = $screen->getPK(); 
 
 		if (!is_array($this->_results)) $this->_results = array($this->_results);
 
 		$_newResults = array();
 
+		
 		foreach($this->_results as $result) {
 
 			$_newResult = array();
 
 			if ( (is_object($result)) && (get_class($result) == $screen->getModelName()) ) {
 
-				foreach($colIndexes as $dbName) {
-					$getterFieldName = "get" . $result->columnNameToVar($dbName);
-					$_newResult[$dbName] = $result->{$getterFieldName}();
-				}
-
+			    
+			    foreach($screen->getVisibleColumnWrapper() as $column) {
+			        
+			        if (!$getter = $column->getGetterName($result)) continue;
+			        
+			        if ($column->isMultilang()) {
+			            $rValue = $result->{$getter}('es');
+			        } else {
+			            $rValue = $result->{$getter}();
+			        }
+			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue);
+			            
+			    }
+				
+			    // Recuperamos también la clave primaria
+			    $_newResult[$primaryKeyName] = $result->getPrimaryKey();
 				$_newResults[] = $_newResult;
+				
 			}
 
+			
 		}
 
 		$this->_results = $_newResults;

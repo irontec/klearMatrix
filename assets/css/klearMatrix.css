@@ -40,6 +40,10 @@ table.kMatrix td {
 		
 }
 
+.klearMatrix_form select.multiselect {
+    width:70%;
+}
+
 .klearMatrix_form fieldset {
 	padding:1em;
 	width:48%;

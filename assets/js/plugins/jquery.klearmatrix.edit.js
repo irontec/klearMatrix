@@ -8,7 +8,7 @@
 		|| (typeof Crypto != 'object')
 		) {
 		if (++this.count == 30) {
-			throw "JS Dependency error!"
+			throw "JS Dependency error! (" +this.count+")"
 				+ '\nklearmatrix.module: ' + typeof $.klearmatrix.module  
 				+ '\nh5Validate'  + typeof $.fn.h5Validate
 				+ '\nAutoresize'  + typeof $.fn.autoResize
@@ -140,6 +140,23 @@
 			
 			this.$theForm = $("form",$(this.element.klearModule("getPanel")));
 			this.$theForm.form();
+			
+			if ($("select.multiselect",this.$theForm).length > 0) {
+				$("select.multiselect",this.$theForm).multiselect({
+					container: this.element.klearModule('getPanel'),
+					selectedList: 4,
+					selectedText: $.translate("# de # seleccionados"),
+					checkAllText: $.translate('Seleccionar todo'),
+					uncheckAllText: $.translate('Deseleccionar todo'),
+					noneSelectedText: $.translate('Selecciona una opción'),
+					selectedText: $.translate('# seleccionados'),
+					position: {
+					      my: 'center',
+					      at: 'center'
+					 }
+				});
+			}
+			
 			this._initSavedValueHashes();
 			$("input, select, textarea",this.$theForm)
 				.autoResize({
@@ -201,8 +218,8 @@
 			
 			
 			$("select,input,textarea",this.$theForm).on('manualchange',function() {
-
-				if ($(this).data("savedValue") != Crypto.MD5($(this).val())) {
+				var _val = $(this).val()? $(this).val():'';
+				if ($(this).data("savedValue") != Crypto.MD5(_val)) {
 					$(this).addClass("changed ui-state-highlight");
 				} else {
 					$(this).removeClass("changed ui-state-highlight");					

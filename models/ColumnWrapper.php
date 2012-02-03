@@ -8,6 +8,11 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 
 	protected $_optionColumnIdx = false;
 	protected $_defaultColumnIdx = false;
+	protected $_dependantColumIdx = false;
+	
+	
+	protected $_langs = array();
+	
 	protected $_types = array();
 	
 	// Indexamos los nombres de db de columnas por rendimiento
@@ -28,6 +33,10 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 		
 		if ($col->isDefault()) {
 			$this->_defaultColumnIdx = sizeof($this->_cols) - 1;
+		}
+		
+		if ($col->isDependant()) {
+		    $this->_dependantColumIdx = sizeof($this->_cols) -1;
 		}
 	}
 	
@@ -62,12 +71,46 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	    
 	}
 	
+	public function getColsJsArray() {
+	    
+	    $retJs = array();
+	    
+	    foreach ($this->_cols as $col) {
+	        if ($aJs = $col->getJsPaths()) {
+	            foreach ($aJs as $script) {
+	                $retJs[crc32($script)] = $script;
+	            }
+	        }
+	    }
+	    return $retJs;
+	}
+	
+	
+	public function getColsCssArray() {
+	
+	    $retCss = array();
+	
+	    foreach ($this->_cols as $col) {
+	        if ($aCss = $col->getCssPaths()) {
+	            foreach ($aCss as $css) {
+	                $retCss[crc32($css)] = $css;
+	            }
+	        }
+	    }
+	    return $retCss;
+	}
+	
+	
 	public function getDefaultCol() {
 		if (false === $this->_defaultColumnIdx) {
 			return $this->_cols[0];
 		}
 		
 		return $this->_cols[$this->_defaultColumnIdx];
+	}
+	
+	public function setLangs($langs) {
+	    $this->_langs = $langs;
 	}
 	
 	public function resetWrapper() {

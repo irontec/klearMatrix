@@ -32,9 +32,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
-
-        
-    	$mapperName = $this->_item->getMapperName();
+        $mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
     	
     	$data = new KlearMatrix_Model_MatrixResponse;

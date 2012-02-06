@@ -158,7 +158,8 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 }
                 
                 $getter = 'get' . $fkColumn;
-                if ($idx = array_search($model->{$getter}(),$value)) {
+                
+                if ( (is_array($value)) && ($idx = array_search($model->{$getter}(),$value)) ) {
                     $retRelations[] = $model;
                     unset($value[$idx]);
                 }

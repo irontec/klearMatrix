@@ -51,6 +51,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
     	$cols = $this->_item->getVisibleColumnWrapper();
 
+    	$hasDependant = false;
+    	
         foreach($cols as $column) {
 			if ($column->isOption()) continue;
 			if ($column->isReadonly()) continue;
@@ -77,13 +79,15 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 			    }
 			} else {
 			    $value =  $column->filterValue($value,$object->{$getter}());
-			    $object->$setter($value);
+			    $object->$setter($value,$column->isDependant());
+			    $hasDependant = $hasDependant || $column->isDependant();
 			}
 		}
 
 
 		try {
-		     if (!$pk = $object->save()) {
+		    
+		     if (!$pk = $object->save(false,$hasDependant)) {
 		         Throw New Zend_Exception("Error salvando el registro.");
 		     }
 

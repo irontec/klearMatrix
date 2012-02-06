@@ -143,41 +143,43 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $tableRelatedName = $dataMapper->getDbTable()->getTableName();
         
         $fkColumn = false;
-        
-        foreach ($original as $model) {
-            if ( (!is_object($model)) ||
-                    (!$model->getMapper() instanceof $this->_relationMapper) ) {
+
+        if (is_array($original)) {
+            
+            foreach ($original as $model) {
+                if ( (!is_object($model)) ||
+                        (!$model->getMapper() instanceof $this->_relationMapper) ) {
+                    
+                    Throw New Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
+                }
                 
-                Throw New Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
-            }
-            
-            if (false === $fkColumn) {
-                $fkColumn = $model->getColumnForParentTable($tableRelatedName);
-            }
-            
-            $getter = 'get' . $fkColumn;
-            if ($idx = array_search($model->{$getter}(),$value)) {
-                $retRelations[] = $model;
-                unset($value[$idx]);
+                if (false === $fkColumn) {
+                    $fkColumn = $model->getColumnForParentTable($tableRelatedName);
+                }
+                
+                $getter = 'get' . $fkColumn;
+                if ($idx = array_search($model->{$getter}(),$value)) {
+                    $retRelations[] = $model;
+                    unset($value[$idx]);
+                }
             }
         }
-        
         $relationMapperName = $this->_relationMapper; 
-        
-        foreach ($value as $idRelated) {
+        if (is_array($value)) {
+            foreach ($value as $idRelated) {
             
-            $relationMapper = new $relationMapperName;
-            $relationModel = $relationMapper->loadModel(null);
+                $relationMapper = new $relationMapperName;
+                $relationModel = $relationMapper->loadModel(null);
             
-            if (false === $fkColumn) {
-                $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName);
+                if (false === $fkColumn) {
+                    $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName);
+                }
+                $setter = 'set'.$fkColumn;
+                
+                $relationModel->{$setter}($idRelated);
+                $retRelations[] = $relationModel;
             }
-            $setter = 'set'.$fkColumn;
-            
-            $relationModel->{$setter}($idRelated);
-            $retRelations[] = $relationModel;
         }
-        
         return $retRelations;
         
         

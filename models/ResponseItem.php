@@ -143,6 +143,7 @@ class KlearMatrix_Model_ResponseItem {
 
 		$multiLangFields = $obj->getMultiLangColumnsList();
 
+		
 		if ( (is_array($availableLangsPerModel = $obj->getAvailableLangs())) && (sizeof($availableLangsPerModel)>0) ) {
 		    $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
 		}

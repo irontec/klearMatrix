@@ -35,25 +35,40 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     public function saveAction() {
 
-        $object = $this->_item->getObjectInstance();
+       $object = $this->_item->getObjectInstance();
+       $cols = $this->_item->getVisibleColumnWrapper();
 
-        $cols = $this->_item->getVisibleColumnWrapper();
-
+        
         foreach($cols as $column) {
-			if ($column->isOption()) continue;
-			$value = $this->getRequest()->getPost($column->getDbName());
+            if ($column->isOption()) continue;
+        
+            if ($column->isMultilang()) {
+                $value = array();
+                foreach($cols->getLangs() as $lang) {
+                    $value[$lang] = $this->getRequest()->getPost($column->getDbName().$lang);
+                }
+            } else {
+        
+                $value = $this->getRequest()->getPost($column->getDbName());
+        
+            }
+        
+        
+            if (!$setter = $column->getSetterName($object)) continue;
+            if (!$getter = $column->getGetterName($object)) continue;
+        
+            if ($column->isMultilang()) {
+                foreach($value as $lang => $_value) {
+                    $_value =  $column->filterValue($_value,$object->{$getter}($lang));
+                    $object->$setter($_value,$lang);
+                }
+            } else {
+                $value =  $column->filterValue($value,$object->{$getter}());
+                $object->$setter($value);
+            }
+        }
 
-			//TO-DO: VALIDADORES!!!
-			if (empty($value)) {
-
-			    continue;
-			}
-
-			$setterMethod = "set" . $object->columnNameToVar($column->getDbName());
-			$object->$setterMethod($value);
-		}
-
-		try {
+        try {
 		     $object->save();
              $data = array(
     			'error'=>false,
@@ -99,7 +114,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 	    $jsonResponse->addTemplate("/template/new/type/" . $this->_item->getType(),"klearmatrixNew");
 	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
 	    $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
-
+	    
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
 	    $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");

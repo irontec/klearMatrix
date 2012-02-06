@@ -109,6 +109,8 @@ class KlearMatrix_Model_MatrixResponse {
 			        } else {
 			            $rValue = $result->{$getter}();
 			        }
+			    
+			        
 			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue);
 
 			    }

@@ -53,7 +53,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         foreach($cols as $column) {
 			if ($column->isOption()) continue;
-
+			if ($column->isReadonly()) continue;
+			 
 			if ($column->isMultilang()) {
 			    $value = array();
                 foreach($cols->getLangs() as $lang) {
@@ -82,7 +83,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
 
 		try {
-		     if (!$pk = $object->save(false,true)) {
+		     if (!$pk = $object->save()) {
 		         Throw New Zend_Exception("Error salvando el registro.");
 		     }
 
@@ -91,7 +92,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 		     $primaryTable = $object->getMapper()->getDbTable()->getTableName();
 
 		     // Recorremos los campos dependientes, para proceder a salvarlos.
-		     foreach($cols as $column) {
+		     if (false) {
+		         //foreach($cols as $column) {
+		     
 
 		         if (!$column->isDependant()) continue;
 		         if (!$getter = $column->getGetterName($object)) continue;
@@ -139,7 +142,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
 		    $data = array(
     				'error'=>true,
-    				'message'=>'Error añadiendo el registro.' . $exception->getMessage()
+    				'message'=> $exception->getMessage()
     		);
 
 
@@ -170,9 +173,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	        ->setResponseItem($this->_item);
 
 	    if (!$model = $mapper->find($pk)) {
-	    	// Error
+	    	exit;// Error
 
 	    } else {
+	        
+	        
 	    	$data->setResults($model)
 	    	        ->fixResults($this->_item);
 	    }

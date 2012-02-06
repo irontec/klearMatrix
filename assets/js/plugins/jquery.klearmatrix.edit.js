@@ -2,11 +2,13 @@
 
 	this.count = this.count || 0;
 	
+
 	if ( (typeof $.klearmatrix.module != 'function') 
 		|| (typeof $.fn.autoResize != 'function')
 		|| (typeof $.fn.h5Validate != 'function')
 		|| (typeof Crypto != 'object')
 		) {
+		
 		if (++this.count == 30) {
 			throw "JS Dependency error! (" +this.count+")"
 				+ '\nklearmatrix.module: ' + typeof $.klearmatrix.module  
@@ -14,7 +16,7 @@
 				+ '\nAutoresize'  + typeof $.fn.autoResize
 				+ '\nCrypto' + typeof Crypto;
 		}
-		setTimeout(function() {load($);},10);
+		setTimeout(function() {console.log("111");load($);},1000);
 		return;
 	}
 	
@@ -130,7 +132,8 @@
 		_initSavedValueHashes : function() {
 			
 			$("select,input,textarea",this.$theForm).each(function() {
-				var _hash = Crypto.MD5($(this).val()); 
+				var _val = (null == $(this).val())? '':$(this).val();
+				var _hash = Crypto.MD5(_val); 
 				$(this)
 					.data("savedValue",_hash)
 					.trigger("manualchange");
@@ -158,6 +161,7 @@
 			}
 			
 			this._initSavedValueHashes();
+			
 			$("input, select, textarea",this.$theForm)
 				.autoResize({
 					onStartCheck: function() {

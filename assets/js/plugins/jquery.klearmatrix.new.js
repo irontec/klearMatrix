@@ -7,7 +7,7 @@
 		if (++this.count == 20) {
 			throw "JS Dependency error! [new]";
 		}
-		setTimeout(function() {load($);},30);
+		setTimeout(function() {load($);},100);
 		return;
 	}
 	

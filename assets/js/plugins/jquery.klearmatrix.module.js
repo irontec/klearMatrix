@@ -101,7 +101,7 @@
 												_dataConfig : extraConfig,
 												_fieldValue: _curValue
 											};
-											
+												
 											var _node = $("<div />");
 											
 											$.tmpl(this.getTemplateNameForType(column.type),_curFieldData).appendTo(_node);
@@ -113,6 +113,7 @@
 											
 											
 										}
+										
 										$.tmpl('klearmatrixMultiLangField',mlData).appendTo(node);
 										
 									} else {

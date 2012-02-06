@@ -81,7 +81,7 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	    switch($type) {
 	        case 'list':
             case 'field':
-	            return $path . $type;
+	            return array($path . $type);
 	        break;
 	    }
 

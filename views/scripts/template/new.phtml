@@ -2,10 +2,10 @@
     <fieldset class="ui-widget-content ui-corner-all">
 		<legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,false)}</legend>
 
-		{{each columns}}
+        {{each(colIdx,column) columns}}
 	    <p class="ui-widget-content ui-corner-all">
             <label for="${id}${randIden}">${name}:</label>
-	       {{tmpl($item.getDataForFieldTemplate('',$value)) $item.getTemplateForType($value)}}
+           {{html $item.getEditDataForField(false,column,true)}}
         </p>
 		{{/each}}
 	</fieldset>

@@ -31,10 +31,36 @@
 				
 		},
 		_applyDecorators : function() {
-
-			$(".generalOptionsToolbar a",$(this.element.klearModule("getPanel"))).button();
+			$container = $(this.element.klearModule("getPanel"));
+			
+			$(".generalOptionsToolbar a",$container).button();
+			
+			if ($("td.multilang",$container).length>0) {
+				
+				var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Campo disponible en multi-lenguaje"));
+				
+				$("td.multilang",$container).each(function() {
+					$(this).prepend($mlSelector.clone().tooltip());
+				});
+			}
 			
 			return this;
+		},
+		_getTdClearText : function($item) {
+			if (!$item.is(".multilang")) {
+				return $item.contents().first().text()
+			}
+			
+			if ($(".multilangValue",$item).length>0) {
+				if ($(".selected",$item).length == 1) {
+					return $(".selected",$item).contents().first().text()				
+				} else {
+					return $(".multilangValue:eq(0)",$item).contents().first().text()
+				}
+			} else {
+				return false;
+			}
+			
 		},
 		_registerEvents : function() {
 			
@@ -99,7 +125,7 @@
 				}
 				
 				var tabTitle = ($("td.default",_parentTr).length>0) ? 
-						$("td.default",_parentTr).text() : $(this).attr("title");
+						_self._getTdClearText($("td.default",_parentTr)) : $(this).attr("title");
 				
 				_container.one( "tabspostadd", function(event, ui) {
 
@@ -142,6 +168,8 @@
 				e.preventDefault();
 				e.stopPropagation();
 			});
+			
+			
 			
 			/*
 			 * Capturar opciones de diálogo.
@@ -235,6 +263,25 @@
 				
 			}).css("cursor","pointer");
 			
+			$("span.mlTag",this.element.klearModule("getPanel")).on("click",function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				var $td = $(this).parent("td");
+				var shown = $("div.multilangValue:not(.selected)",$td).is(":visible");
+				
+				$("div.multilangValue:not(.selected)",$td).slideToggle();
+				
+				if (shown) {
+					$(".langIden",$td).animate({opacity:'0'});
+				} else {
+					$(".langIden",$td).animate({opacity:'.5'});
+				}
+				
+			}).on('mouseup',function(e) {
+				// Paramos el evento mouseup, para no llegar al tr
+				e.preventDefault();
+				e.stopPropagation();
+			});
 			
 			return this;
 		}		

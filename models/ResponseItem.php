@@ -19,7 +19,7 @@ class KlearMatrix_Model_ResponseItem {
 	protected $_title;
 
 	protected $_filteredField;
-	
+
 	protected $_modelSpec;
 
 	protected $_visibleColumnWrapper;
@@ -35,10 +35,10 @@ class KlearMatrix_Model_ResponseItem {
 		$this->_modelFile = $this->_config->getProperty("modelFile",true);
 
 		$this->_filteredField = $this->_config->getProperty("filterField",false);
-		
+
 		$this->_title = $this->_config->getProperty("title",false);
-		
-		
+
+
 	    $this->_parseModelFile();
 	    $this->_checkClasses(array("_mapper"));
 
@@ -101,13 +101,13 @@ class KlearMatrix_Model_ResponseItem {
 	/**
 	 * El método filtrará las columnas del modelo con el fichero de configuración de modelo y la whitelist/blacklist de la configuración
 	 *
-	 * @param KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
+	 * return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
 	 */
 	public function getVisibleColumnWrapper() {
 		if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
 
 		$obj = $this->_modelSpec->getInstance();
-		
+
 		$this->_visibleColumnWrapper =  new KlearMatrix_Model_ColumnWrapper;
 
 		//Inicializamos blackList (los campos que no se mostrarán)
@@ -135,27 +135,27 @@ class KlearMatrix_Model_ResponseItem {
 				}
 			}
 		}
-		
+
 		if ($this->isFilteredScreen()) {
 		    $blacklist[$this->_filteredField] = true;
 		}
 
-		
+
 		$multiLangFields = $obj->getMultiLangColumnsList();
-		
+
 		if ( (is_array($availableLangsPerModel = $obj->getAvailableLangs())) && (sizeof($availableLangsPerModel)>0) ) {
 		    $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
 		}
 
 		foreach($multiLangFields as $dbName=>$columnName) {
-		    foreach($availableLangsPerModel as $langIden => $langName) {
-		        
+		    foreach($availableLangsPerModel as $langIden) {
+
 		        $blacklist[$dbName . '_'. $langIden] = true;
-		        
+
 		    }
-		    
-		    
-		    
+
+
+
 		}
 
 		foreach($obj->getColumnsList() as $dbName => $attribute) {
@@ -167,20 +167,20 @@ class KlearMatrix_Model_ResponseItem {
 			if ($colConfig = $this->_modelSpec->getField($dbName)) {
 				$col->setConfig($colConfig);
 			}
-			
+
 			if (isset($multiLangFields[$dbName])) {
 			    $col->markAsMultilang();
 			}
-			
+
 			// A cada columna, le pasamos el "dispatcherador de ruta, ya que puede hacer variar la funcionalidad
 			$col->setRouteDispatcher($this->_routeDispatcher);
 			$this->_visibleColumnWrapper->addCol($col);
 		}
-		
-		
+
+
 	   /**
 	    *  Buscamos las tablas dependientes, por si estuvieran *Explicitamente* declaradas en el fichero de modelo
-	    */ 
+	    */
 		foreach ($obj->getDependentList() as $dependatConfig) {
 
 		    if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {
@@ -192,7 +192,7 @@ class KlearMatrix_Model_ResponseItem {
 		        $col->setRouteDispatcher($this->_routeDispatcher);
 		        $this->_visibleColumnWrapper->addCol($col);
 		    }
-		    
+
 		}
 
 		if ($this->hasFieldOptions()) {
@@ -208,11 +208,11 @@ class KlearMatrix_Model_ResponseItem {
 
 	}
 
-	
+
 	public function isFilteredScreen() {
 	    return (!empty($this->_filteredField));
 	}
-	
+
 	public function getFilteredCondition($pkValue) {
 	    return $this->_filteredField . "='" . $pkValue . "'";
 	}
@@ -242,7 +242,7 @@ class KlearMatrix_Model_ResponseItem {
 	    if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
 	        return array();
 	    }
-	    
+
 		$parent = new Klear_Model_KConfigParser();
 		$parent->setConfig($this->_config->getRaw()->options);
 		return $this->_getItemFieldsOptionsConfig('screen',$parent);
@@ -252,7 +252,7 @@ class KlearMatrix_Model_ResponseItem {
 	    if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
 	        return array();
 	    }
-	    
+
 		$parent = new Klear_Model_KConfigParser();
 		$parent->setConfig($this->_config->getRaw()->options);
 		return $this->_getItemFieldsOptionsConfig('dialog',$parent);
@@ -287,11 +287,11 @@ class KlearMatrix_Model_ResponseItem {
 		$optionColumn = $this->_visibleColumnWrapper->getOptionColumn();
 
 		$_items = $parent->getProperty($property,false);
-		
+
 		if (!$_items) {
 		    return array();
 		}
-		
+
 		foreach ($_items  as $_item=> $_enabled) {
 			if (!(bool)$_enabled) continue;
 			$retArray[] = $_item;

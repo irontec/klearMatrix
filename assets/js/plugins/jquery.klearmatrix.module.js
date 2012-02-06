@@ -45,38 +45,111 @@
 			var $tmplObj = $.tmpl(
 							tmplName,
 							this.options.data,
-							{ 
-								getDataForFieldTemplate : function(value,column) {
-									var extraConfig = column.config || false
-									
-									// htmlentities in JS ;)
-									if (typeof value != 'object') {
-										var _value = (!value)? '':$('<div/>').text(value).html();
-									} else {
-										var _value = value;
+							{
+								cleanValue : function(_value,ifNull) {
+									ifNUll = (typeof ifNULL == 'undefined')? 'no disponible':ifNUll;									
+									if(!_value) {
+										return ifNUll;
 									}
 									
-									var ret = {
+									return $('<div/>').text(_value).html();
+									
+									
+								},
+								getEditDataForField : function(value,column,isNew) {
+									
+									var extraConfig = column.config || false
+
+									if (true === isNew) {
+										
+										var _value = '';
+										
+									} else {
+										if (typeof value != 'object') {
+
+											var _value = this.cleanValue(value,'');
+
+										} else {
+											// Casos de multiselect y multiLang 
+											var _value = value;
+										}
+									}	
+									
+									var fieldData = {
 											_elemIden: column.id + this.data.randIden,
 											_elemName: column.id,
 											_readonly: column.readonly? true:false,
 											_dataConfig : extraConfig,
-											_fieldValue: _value
+											_fieldValue : _value
 									};
+
 									
-									return ret;
+									var node = $("<div />");
+									
+									if (column.multilang) {
+										var mlData = [];
+										
+										for (var i in this.data.langs) {
+											
+											var lang = this.data.langs[i];
+											var _curValue = isNew? '':this.cleanValue(fieldData._fieldValue[lang] ,'');
+											
+											var _curFieldData = {
+												_elemIden: column.id + lang + this.data.randIden,
+												_elemName : column.id + lang,
+												_readonly: column.readonly? true:false,
+												_dataConfig : extraConfig,
+												_fieldValue: _curValue
+											};
+											
+											var _node = $("<div />");
+											
+											$.tmpl(this.getTemplateNameForType(column.type),_curFieldData).appendTo(_node);
+											mlData.push({
+												_iden: _curFieldData._elemIden,
+												_lang : lang,
+												_field : _node.html()
+											});
+											
+											
+										}
+										$.tmpl('klearmatrixMultiLangField',mlData).appendTo(node);
+										
+									} else {
+										
+										$.tmpl(this.getTemplateNameForType(column.type),fieldData).appendTo(node);
+									}
+									
+									return node.html();
+									
 								},
+								
 								getIndex : function(values,idx) {
 									if (!values[idx]) return 'error';
 
 									return values[idx];
 									
 								},
-								getIndexFromColumn : function(values,column) {
+								
+								getMultiLangValue : function(value,langs,defaultLang) {
+									var retItem = $("<div />");
+									for (var i in langs) {
+										var mlData = {
+												_lang : langs[i],
+												_value : this.cleanValue(value[langs[i]]),
+												_default : (langs[i] == defaultLang)
+										};
+										_compiled = $.tmpl('klearmatrixMultiLangList',mlData);
+										retItem.append(_compiled);
 
+									}
+									
+									return retItem.html();								
+									
+								},
+								getIndexFromColumn : function(values,column) {
+										
 									if (!values[column.id]) {
-										
-										
 										switch(column.type) {
 											default:
 												return "no disponible";
@@ -85,8 +158,12 @@
 									} else {
 										switch(column.type){
 											case 'select':
-												var _curVal = values[column.id];
-												return column.config[_curVal];
+												var _curVal = this.cleanValue(values[column.id]);
+												if (column.config[_curVal]) {
+													return column.config[_curVal];
+												} else {
+													return '';
+												}
 											break;
 											case 'multiselect':
 												
@@ -105,13 +182,23 @@
 												
 											break;
 											default:
-												return $('<div/>').text(values[column.id]).html();
+												if (column.multilang) {
+												
+													return this.getMultiLangValue(values[column.id],this.data.langs,this.data.defaultLang);
+												
+												} else {
+												
+													return this.cleanValue(values[column.id]);
+												}
 											break;
 										}
 									}
 								},
-								getTemplateForType : function(column) {
-									return $.template['clearMatrixFields' + column.type];
+								getTemplateNameForType : function(type) {
+									return 'klearMatrixFields' + type;
+								},
+								getTemplateForType : function(type) {
+									return $.template[this.getTemplateNameForType(type)];
 								},
 								getPaginatorTemplate : function() {
 									return $.template['klearmatrixPaginator'];
@@ -119,22 +206,30 @@
 								getTitle : function(title,idx) {
 									
 									if (false !== idx) {
-										var defaultColumn = this.data.columns[0].id;
+										var defaultColumn = this.data.columns[0];
 									
 										for(var i in this.data.columns) {
 											if (this.data.columns[i].default) {
-												var defaultColumn = this.data.columns[i].id;
+												var defaultColumn = this.data.columns[i];
 												break;
 											}
 										}
-										var defaultColumn = this.data.values[idx][defaultColumn];
+										
+
+										var defaultValue = this.data.values[idx][defaultColumn.id];
+
+										if (defaultColumn.multilang) {
+											defaultValue = defaultValue[this.data.defaultLang];
+											
+										}
+										
 									} else {
 										var defaultColumn = '';
 									}
 
 									return title
-											.replace(/\%parent\%/,this.data.parentIden)
-											.replace(/\%item\%/,defaultColumn);
+											.replace(/\%parent\%/,this.cleanValue(this.data.parentIden))
+											.replace(/\%item\%/,this.cleanValue(defaultValue));
 									
 									
 								}

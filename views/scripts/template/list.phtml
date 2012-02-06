@@ -21,9 +21,9 @@
             {{else}}
                 {{if (type != '_option') }}
                 <span class="order ui-icon ui-icon-circle-triangle-s ui-state-disabled"></span>
-                {{/if}}            
+                {{/if}}
             {{/if}}
-            
+
             </td>
    {{/each}}
 </tr>
@@ -32,7 +32,7 @@
 <tr data-id="${$item.getIndex(row,pk)}">
    {{each columns}}
    		{{if (type != '_option') }}
-			<td class="ui-widget-content{{if ($value.default)}} default{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
+			<td class="ui-widget-content{{if ($value.default)}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
 		{{else}}
 			<td class="ui-widget-content options">
 			{{each fieldOptions}}

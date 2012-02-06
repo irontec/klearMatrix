@@ -4,7 +4,7 @@
 <select name="${_elemName}" id="${_elemIden}">
 {{each(idx,dataValue) _dataConfig}}
     {{if (idx != '__className')}}
-        <option{{if (idx == _fieldValue)}} selected="selected"{{/if}} value="${idx}">${dataValue}</option>
+        <option{{if (_fieldValue && idx == _fieldValue)}} selected="selected"{{/if}} value="${idx}">${dataValue}</option>
     {{/if}}
 {{/each}}
 </select>

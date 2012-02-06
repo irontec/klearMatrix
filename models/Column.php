@@ -14,7 +14,7 @@ class KlearMatrix_Model_Column {
 
 	protected $_ordered = false;
 	protected $_orderedType = 'asc';
-	
+
 	protected $_fieldConfig;
 
 	protected $_config;
@@ -24,9 +24,9 @@ class KlearMatrix_Model_Column {
 	protected $_type ='text';
 
 	protected $_isMultilang = false;
-		
+
 	protected $_isDependant = false;
-	
+
 	protected $_routeDispatcher;
 
 	public function setDbName($name) {
@@ -44,11 +44,11 @@ class KlearMatrix_Model_Column {
 	public function markAsOption() {
 		$this->_isOption = true;
 	}
-	
+
 	public function markAsDependant() {
 	    $this->_isDependant = true;
 	}
-	
+
 	public function markAsMultilang() {
 	    $this->_isMultilang = true;
 	}
@@ -56,7 +56,7 @@ class KlearMatrix_Model_Column {
 	public function isOption() {
 		return $this->_isOption;
 	}
-	
+
 	public function isDependant() {
 	    return $this->_isDependant;
 	}
@@ -64,7 +64,7 @@ class KlearMatrix_Model_Column {
 	public function isMultilang() {
 	    return $this->_isMultilang;
 	}
-	
+
 	public function setConfig(Zend_Config $config) {
 
 		$this->_config = new Klear_Model_KConfigParser;
@@ -114,16 +114,16 @@ class KlearMatrix_Model_Column {
 		$this->_fieldConfig
 		            ->setColumn($this)
 		            ->init();
-		 
+
 	}
-	
+
 	public function getJsPaths() {
 	    $this->_loadConfigClass();
 	    return $this->_fieldConfig->getExtraJavascript();
 	}
-	
+
 	public function getCssPaths() {
-	
+
 	    return $this->_fieldConfig->getExtraCss();
 	}
 
@@ -147,12 +147,12 @@ class KlearMatrix_Model_Column {
 	public function setAsOrdered() {
 	    $this->_ordered = true;
 	}
-	
+
 	public function setOrderedType($_orderType) {
 	    $this->_orderedType = $_orderType;
 	}
-	
-	
+
+
 	/**
 	 * @return Klear_Model_KConfigParser
 	 */
@@ -183,7 +183,7 @@ class KlearMatrix_Model_Column {
         if (!$this->isOption()) return false;
         return $this->_defaultOption;
     }
-    
+
     /**
      * gateway hacia la clase de cada campo
      * Preparar cada campo en base a su tipo, antes de devolverlo.
@@ -194,44 +194,44 @@ class KlearMatrix_Model_Column {
         $this->_loadConfigClass();
         return $this->_fieldConfig->prepareValue($value);
     }
-    
-    
+
+
     public function filterValue($value,$original) {
         $this->_loadConfigClass();
         return $this->_fieldConfig->filterValue($value,$original);
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     public function getGetterName($object)
     {
         if ($this->isOption()) return false;
-        
-        
+
+
         if ($this->isDependant()) {
             return 'get' . $this->getDbName();
         } else {
             return 'get' . $object->columnNameToVar($this->getDbName());
         }
-        
+
     }
-    
+
     public function getSetterName($object)
     {
         if ($this->isOption()) return false;
-    
-    
+
+
         if ($this->isDependant()) {
             return 'set' . $this->getDbName();
         } else {
             return 'set' . $object->columnNameToVar($this->getDbName());
         }
-    
+
     }
-    
-    
+
+
 	public function toArray() {
 
 	    $this->_loadConfigClass();
@@ -247,6 +247,11 @@ class KlearMatrix_Model_Column {
 			$ret['default'] = true;
 		}
 
+
+		if ($this->isMultilang()) {
+		    $ret['multilang'] = true;
+		}
+
 		if ($this->isReadonly()) {
 			$ret['readonly'] = true;
 		}
@@ -254,8 +259,8 @@ class KlearMatrix_Model_Column {
 		if ($this->_ordered) {
 		    $ret['order'] = $this->_orderedType;
 		}
-		
-		
+
+
 		if ( ($this->_fieldConfig) && ($config = $this->_fieldConfig->toArray()) ) {
 		    $ret['config'] = $config;
 		}

@@ -97,7 +97,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 	    $jsonResponse->setModule('klearMatrix');
 	    $jsonResponse->setPlugin('klearMatrixNew');
 	    $jsonResponse->addTemplate("/template/new/type/" . $this->_item->getType(),"klearmatrixNew");
-	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
+	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
+	    $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
+
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
 	    $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");

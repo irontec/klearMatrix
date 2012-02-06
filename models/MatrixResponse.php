@@ -9,7 +9,7 @@ class KlearMatrix_Model_MatrixResponse {
 	protected $_paginator = false;
 
 	protected $_parentIden = false;
-	
+
 	protected $_title;
 
 	/**
@@ -67,9 +67,9 @@ class KlearMatrix_Model_MatrixResponse {
 	public function setPaginator(Zend_Paginator $paginator) {
 	    $this->_paginator = $paginator;
 	}
-	
+
 	public function setParentIden($parentIden) {
-	    $this->_parentIden = $parentIden;	    
+	    $this->_parentIden = $parentIden;
 	}
 
 	/**
@@ -81,40 +81,44 @@ class KlearMatrix_Model_MatrixResponse {
 	public function fixResults(KlearMatrix_Model_ResponseItem $screen) {
 
 
-		$primaryKeyName = $screen->getPK(); 
+		$primaryKeyName = $screen->getPK();
 
 		if (!is_array($this->_results)) $this->_results = array($this->_results);
 
 		$_newResults = array();
 
-		
+
 		foreach($this->_results as $result) {
 
 			$_newResult = array();
 
 			if ( (is_object($result)) && (get_class($result) == $screen->getModelName()) ) {
 
-			    
-			    foreach($screen->getVisibleColumnWrapper() as $column) {
-			        
+
+			    foreach($this->_columnWrapper as $column) {
+
 			        if (!$getter = $column->getGetterName($result)) continue;
-			        
+
 			        if ($column->isMultilang()) {
-			            $rValue = $result->{$getter}('es');
+
+			            $rValue = array();
+			            foreach($this->_columnWrapper->getLangs() as $_lang) {
+			                $rValue[$_lang] = $result->{$getter}($_lang);
+			            }
+
 			        } else {
 			            $rValue = $result->{$getter}();
 			        }
 			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue);
-			            
+
 			    }
-				
+
 			    // Recuperamos también la clave primaria
 			    $_newResult[$primaryKeyName] = $result->getPrimaryKey();
 				$_newResults[] = $_newResult;
-				
+
 			}
 
-			
 		}
 
 		$this->_results = $_newResults;
@@ -126,6 +130,11 @@ class KlearMatrix_Model_MatrixResponse {
 		$ret = array();
 		$ret['title'] = $this->_title;
 		$ret['columns'] = $this->_columnWrapper->toArray();
+
+		// Probablemente no es la mejor forma de devolver los idiomas disponibles en los campos...
+		$ret['langs'] = $this->_columnWrapper->getLangs();
+        $ret['defaultLang'] = array_shift($this->_columnWrapper->getLangs());
+
 		$ret['values'] = $this->_results;
 		$ret['pk'] = $this->_pk;
 
@@ -140,11 +149,11 @@ class KlearMatrix_Model_MatrixResponse {
 		if (false !== $this->_paginator) {
 		    $ret['paginator'] = (array)$this->_paginator->getPages();
 		}
-		
+
 		if (false !== $this->_parentIden) {
 		    $ret['parentIden'] = $this->_parentIden;
 		}
-		
+
 		$ret[$this->_item->getType()] = $this->_item->getItemName();
 
 		return $ret;

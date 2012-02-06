@@ -245,7 +245,5 @@
 	});
 
 	$.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);
-	
-	console.log("KM EDIT : ",typeof $.klearmatrix.edit);
 
 })(jQuery);

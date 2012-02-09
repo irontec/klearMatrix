@@ -51,7 +51,6 @@
 			var self = this;
 			
 			this.options.theForm.on('submit',function(e) {
-				console.log($(this));
 				e.preventDefault();
 				e.stopPropagation();
 				
@@ -91,7 +90,6 @@
 								//TO-DO: FOK OFF
 							} else {
 								var $parentModule = $self.klearModule("option","parentScreen");
-								console.log($parentModule);
 								$parentModule.klearModule("reDispatch");
 							}
 	

@@ -28,11 +28,11 @@
 						file: $refParent.klearModule("option","file"),
 						type: 'dialog',
 						execute: 'delete',
-						dialog : $(this).data("dialog"),
+						dialog : $(this.element).data("dialogName"),
 						pk : _ids
 					},
 					function(data) {
-						console.log(data);
+
 						$self.moduleDialog("updateContent",data.message);
 						
 						if (data.error) {

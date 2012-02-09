@@ -135,7 +135,7 @@ class KlearMatrix_Model_MatrixResponse {
 
 		// Probablemente no es la mejor forma de devolver los idiomas disponibles en los campos...
 		$ret['langs'] = $this->_columnWrapper->getLangs();
-        $ret['defaultLang'] = array_shift($this->_columnWrapper->getLangs());
+        $ret['defaultLang'] = $this->_columnWrapper->getDefaultLang();
 
 		$ret['values'] = $this->_results;
 		$ret['pk'] = $this->_pk;

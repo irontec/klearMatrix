@@ -9,7 +9,8 @@ $.widget("ui.form",{
 			var inputs = form.find("input , select ,textarea");
 			
 			$.each(inputs,function(){
-				$(this).addClass('ui-state-default ui-corner-all');
+				$(this).addClass('ui-widget ui-state-default ui-corner-all');
+				
 				
 				if($(this).is(":checkbox"))
 				self.checkboxes(this);

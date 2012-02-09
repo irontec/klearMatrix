@@ -16,14 +16,15 @@
 				+ '\nAutoresize'  + typeof $.fn.autoResize
 				+ '\nCrypto' + typeof Crypto;
 		}
-		setTimeout(function() {console.log("111");load($);},1000);
+		setTimeout(function() {load($);},50);
 		return;
 	}
 	
 	$.widget("klearmatrix.edit", $.klearmatrix.module, {
 		options: {
 			data : null,
-			moduleName: 'edit'
+			moduleName: 'edit',
+			theForm : false
 		},
 		_super: $.klearmatrix.module.prototype,
 		_create : function() {
@@ -40,8 +41,8 @@
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
 			
 			this._applyDecorators()
-				._registerBaseEvents()
 				._initFormElements()
+				._registerBaseEvents()
 				._registerEvents()
 				._registerMainActionEvent();
 			
@@ -49,7 +50,8 @@
 		_registerMainActionEvent : function() {
 			var self = this;
 			
-			this.$theForm.on('submit',function(e) {
+			this.options.theForm.on('submit',function(e) {
+				console.log($(this));
 				e.preventDefault();
 				e.stopPropagation();
 				
@@ -61,7 +63,7 @@
 							buttons : []
 						});
 				
-				$(self.element).klearModule("getModuleDialog").moduleDialog("setAsLoading");	
+				$(self.element).klearModule("option","moduleDialog").moduleDialog("setAsLoading");	
 				
 				self._doAction.call(self);
 			});
@@ -69,69 +71,67 @@
 			return this;
 		},	
 		_doAction : function() {
-			
-			var self = this;
-			var $self = $(this.element);
-			
-			var $dialog = $self.klearModule("getModuleDialog") 
-			
-			$.klear.request(
-					{
-						file: $self.klearModule("option","file"),
-						type: 'screen',
-						execute: 'save',
-						pk: self.$theForm.data("id"),
-						screen: self.options.data.screen,
-						post : self.$theForm.serialize()
-					},
-					function(data) {
-						
-						if (data.error) {
-							//TO-DO: FOK OFF
-						} else {
-							var $parentModule = $self.klearModule("option","parentScreen");
-							$parentModule.klearModule("reDispatch");
-						}
-
-						self._initSavedValueHashes();
-						self.$theForm.trigger('updateChangedState');
-						$dialog.moduleDialog("option","title",'');
-						$dialog.moduleDialog("option","buttons",
-								 [
-								  	{
-			    						text: $.translate("Cerrar"),
-			    						click: function() {
-			    							$(this).moduleDialog("close");
-			    							$self.klearModule("close");
-			    						}
-									},
-									{
-										text: $.translate("Editar de nuevo"),
-										click: function() {
-											$(this).moduleDialog("close");
+	
+			(function(self) {
+				var $self = $(self.element);
+				var $dialog = $self.klearModule("option","moduleDialog"); 
+				
+				$.klear.request(
+						{
+							file: $self.klearModule("option","file"),
+							type: 'screen',
+							execute: 'save',
+							pk: self.options.theForm.data("id"),
+							screen: self.options.data.screen,
+							post : self.options.theForm.serialize()
+						},
+						function(data) {
+							
+							if (data.error) {
+								//TO-DO: FOK OFF
+							} else {
+								var $parentModule = $self.klearModule("option","parentScreen");
+								console.log($parentModule);
+								$parentModule.klearModule("reDispatch");
+							}
+	
+							self._initSavedValueHashes();
+							self.options.theForm.trigger('updateChangedState');
+							$dialog.moduleDialog("option","title",'');
+							$dialog.moduleDialog("option","buttons",
+									 [
+									  	{
+				    						text: $.translate("Cerrar"),
+				    						click: function() {
+				    							$(this).moduleDialog("close");
+				    							$self.klearModule("close");
+				    						}
+										},
+										{
+											text: $.translate("Editar de nuevo"),
+											click: function() {
+												$(this).moduleDialog("close");
+											}
 										}
-									}
-								]
-						);
-						
-						$dialog.moduleDialog("updateContent",data.message);
-														
-						
-					},
-					// Error from new/index/save
-					function(data) {
-						
-									
-					}
-			);			
-			
+									]
+							);
+							
+							$dialog.moduleDialog("updateContent",data.message);
+															
+							
+						},
+						// Error from new/index/save
+						function(data) {
+							
+										
+						}
+				);			
+			})(this); // Invocamos Closure
 		},
-		
-		$theForm : null,
-		
+
 		_initSavedValueHashes : function() {
 			
-			$("select,input,textarea",this.$theForm).each(function() {
+			$("select,input,textarea",this.options.theForm).each(function() {
 				var _val = (null == $(this).val())? '':$(this).val();
 				var _hash = Crypto.MD5(_val); 
 				$(this)
@@ -141,11 +141,11 @@
 		},
 		_initFormElements : function() {
 			
-			this.$theForm = $("form",$(this.element.klearModule("getPanel")));
-			this.$theForm.form();
+			this.options.theForm = $("form",$(this.element.klearModule("getPanel")));
+			this.options.theForm.form();
 			
-			if ($("select.multiselect",this.$theForm).length > 0) {
-				$("select.multiselect",this.$theForm).multiselect({
+			if ($("select.multiselect",this.options.theForm).length > 0) {
+				$("select.multiselect",this.options.theForm).multiselect({
 					container: this.element.klearModule('getPanel'),
 					selectedList: 4,
 					selectedText: $.translate("# de # seleccionados"),
@@ -157,12 +157,12 @@
 					      my: 'center',
 					      at: 'center'
 					 }
-				});
+				}).multiselectfilter();
 			}
 			
 			this._initSavedValueHashes();
 			
-			$("input, select, textarea",this.$theForm)
+			$("input, select, textarea",this.options.theForm)
 				.autoResize({
 					onStartCheck: function() {
 						// El plugin se "come" el evento :S
@@ -177,7 +177,7 @@
 			
 			var self = this;
 			
-			this.$theForm.on('updateChangedState',function() {
+			this.options.theForm.on('updateChangedState',function() {
 				if ($(".changed",$(this)).length > 0) {
 					
 					self.element.klearModule("setAsChanged", function() {
@@ -214,28 +214,28 @@
 				
 			});
 				
-			$(".generalOptionsToolbar a.action").on('click',function(e) {
+			$(".generalOptionsToolbar a.action",this.element.klearModule("getPanel")).on('click',function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				self.$theForm.trigger("submit");
+				self.options.theForm.trigger("submit");
 			});
 			
 			
-			$("select,input,textarea",this.$theForm).on('manualchange',function() {
+			$("select,input,textarea",this.options.theForm).on('manualchange',function() {
 				var _val = $(this).val()? $(this).val():'';
 				if ($(this).data("savedValue") != Crypto.MD5(_val)) {
 					$(this).addClass("changed ui-state-highlight");
 				} else {
 					$(this).removeClass("changed ui-state-highlight");					
 				}
-				self.$theForm.trigger("updateChangedState");
+				self.options.theForm.trigger("updateChangedState");
 			});
 			
-			$("select",this.$theForm).on("change",function() {
+			$("select",this.options.theForm).on("change",function() {
 				$(this).trigger("manualchange");
 			});
 			
-			$("[title]",this.$theForm).tooltip();
+			$("[title]",this.options.theForm).tooltip();
 			
 			return this;
 

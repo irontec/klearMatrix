@@ -183,9 +183,10 @@ class KlearMatrix_Model_ResponseItem {
 	    *  Buscamos las tablas dependientes, por si estuvieran *Explicitamente* declaradas en el fichero de modelo
 	    */
 		foreach ($obj->getDependentList() as $dependatConfig) {
-
+		    if (isset($blacklist[$dependatConfig['table_name']])) continue;
+		    
 		    if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {
-
+		        
 		        $col = new KlearMatrix_Model_Column;
 		        $col->setDbName($dependatConfig['table_name']);
 		        $col->setConfig($colConfig);

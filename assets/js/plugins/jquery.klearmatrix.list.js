@@ -192,13 +192,14 @@
 				
 				var $_dialog = $(self).klearModule("getModuleDialog");
 				$_dialog.moduleDialog("setAsLoading");
+				$_dialog.data("dialogName", $(this).data("dialog"));
 				
 				var _postData = (typeof data != undefined)? data:false;
 				$.klear.request(
 						{
 							file: self.klearModule("option","file"),
 							type: 'dialog',
-							dialog : $(this).data("dialog"),
+							dialog : $_dialog.data("dialogName"),
 							pk : $_parentTr.data("id"),
 							post: _postData
 						},

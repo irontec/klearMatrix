@@ -179,7 +179,8 @@ class KlearMatrix_Model_Column {
 		return $this->_type;
 	}
 
-    public function getDefaultOption() {
+    public function getDefaultOption()
+    {
         if (!$this->isOption()) return false;
         return $this->_defaultOption;
     }
@@ -190,15 +191,17 @@ class KlearMatrix_Model_Column {
      * @param mixed $value
      * @return mixed
      */
-    public function prepareValue($value) {
+    public function prepareValue($value)
+    {
         $this->_loadConfigClass();
         return $this->_fieldConfig->prepareValue($value);
     }
 
 
-    public function filterValue($value,$original) {
+    public function filterValue($value,$original)
+    {
         $this->_loadConfigClass();
-        return $this->_fieldConfig->filterValue($value,$original);
+        return $this->_fieldConfig->filterValue($value, $original);
     }
 
 
@@ -232,7 +235,8 @@ class KlearMatrix_Model_Column {
     }
 
 
-	public function toArray() {
+	public function toArray()
+	{
 
 	    $this->_loadConfigClass();
 
@@ -261,7 +265,8 @@ class KlearMatrix_Model_Column {
 		}
 
 
-		if ( ($this->_fieldConfig) && ($config = $this->_fieldConfig->toArray()) ) {
+		if (($this->_fieldConfig)
+		        && ($config = $this->_fieldConfig->toArray())) {
 		    $ret['config'] = $config;
 		}
 

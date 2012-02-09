@@ -40,7 +40,7 @@
 		_registerMainActionEvent : function() {
 			var self = this;
 			
-			this.$theForm.on('submit',function(e) {
+			this.options.theForm.on('submit',function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				
@@ -72,7 +72,7 @@
 						type: 'screen',
 						execute: 'save',
 						screen: self.options.data.screen,
-						post : self.$theForm.serialize()
+						post : self.options.theForm.serialize()
 					},
 					function(data) {
 						
@@ -86,9 +86,9 @@
 							
 							
 						}
-						$("input,select,textarea",self.$theForm).val('');
+						$("input,select,textarea",self.options.theForm).val('');
 						self._initSavedValueHashes();
-						self.$theForm.trigger('updateChangedState');
+						self.options.theForm.trigger('updateChangedState');
 
 						$dialog.moduleDialog("option","buttons",
 								 [

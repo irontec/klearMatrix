@@ -40,8 +40,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
 
     	$where = null;
-
+    	
+    	
     	if ($this->_item->isFilteredScreen()) {
+    	    
     	    $where = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
 
     	    if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
@@ -66,6 +68,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	}
 
     	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
+    	    
     	    $order = $orderField;
 
     	    $orderColumn->setAsOrdered();
@@ -116,7 +119,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 	        ->setColumnWraper($cols)
 	        ->setPK($this->_item->getPK());
 
-    	if (!$results= $mapper->fetchList($where,$order,$count,$offset)) {
+    	if (!$results= $mapper->fetchList($where, $order, $count, $offset)) {
 			// No hay resultados
 			$data->setResults(array());
 
@@ -151,6 +154,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     				// Recuperamos la configuración del screen, de la configuración general del módulo
     				// Supongo que cuando lo vea Alayn, le gustará mucho :)
     				// El "nombre" mainRouter apesta... pero... O:)
+    				
     				$screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
     				$fieldOptionsWrapper->addOption($screenOption);
     			}

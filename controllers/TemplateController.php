@@ -65,6 +65,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     			case "textarea":
     			case "select":
     			case "multiselect":
+    			case "password":
     				$this->_helper->viewRenderer('fields/' . $fieldType);
     				break;
 

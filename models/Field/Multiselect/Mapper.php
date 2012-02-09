@@ -109,7 +109,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             $relationAttributte = $model->columnNameToVar($columnName);
             
             
-            
             $retStruct = array(
                     'pk'=> $model->getPrimaryKey(),
                     'relatedId'=>$model->{'get' . $relationAttributte}()
@@ -141,7 +140,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $dataMapperName = $this->_relatedMapper;
         $dataMapper = new $dataMapperName;
         $tableRelatedName = $dataMapper->getDbTable()->getTableName();
-        
+
         $fkColumn = false;
 
         if (is_array($original)) {
@@ -158,13 +157,16 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 }
                 
                 $getter = 'get' . $fkColumn;
-                
-                if ( (is_array($value)) && ($idx = array_search($model->{$getter}(),$value)) ) {
-                    $retRelations[] = $model;
-                    unset($value[$idx]);
+                foreach($value as $idx => $idRelatedItem) {
+                    if ($idRelatedItem ==  $model->{$getter}()) {
+                        $retRelations[] = $model;
+                        unset($value[$idx]);
+                    }
                 }
+                
             }
         }
+        
         $relationMapperName = $this->_relationMapper; 
         if (is_array($value)) {
             foreach ($value as $idRelated) {

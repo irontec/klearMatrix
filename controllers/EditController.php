@@ -34,7 +34,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
 
     public function saveAction() {
-
+        
+        
 
     	$mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
@@ -56,21 +57,22 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         foreach($cols as $column) {
 			if ($column->isOption()) continue;
 			if ($column->isReadonly()) continue;
-			 
+			if (!$setter = $column->getSetterName($object)) continue;
+			if (!$getter = $column->getGetterName($object)) continue;
+			
 			if ($column->isMultilang()) {
 			    $value = array();
                 foreach($cols->getLangs() as $lang) {
-                    $value[$lang] = $this->getRequest()->getPost($column->getDbName().$lang);
+                    $value[$lang] = $this->getRequest()->getPost($column->getDbName() . $lang);
                 }
+                
 			} else {
 
 			    $value = $this->getRequest()->getPost($column->getDbName());
 
 			}
 
-
-			if (!$setter = $column->getSetterName($object)) continue;
-			if (!$getter = $column->getGetterName($object)) continue;
+			
 
 			if ($column->isMultilang()) {
 			    foreach($value as $lang => $_value) {
@@ -78,62 +80,20 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 			        $object->$setter($_value,$lang);
 			    }
 			} else {
+			    
+			    
 			    $value =  $column->filterValue($value,$object->{$getter}());
 			    $object->$setter($value,$column->isDependant());
 			    $hasDependant = $hasDependant || $column->isDependant();
+			    
 			}
 		}
 
 
 		try {
-		    
 		     if (!$pk = $object->save(false,$hasDependant)) {
+		         
 		         Throw New Zend_Exception("Error salvando el registro.");
-		     }
-
-
-		     // Recuperamos la tabla principal
-		     $primaryTable = $object->getMapper()->getDbTable()->getTableName();
-
-		     // Recorremos los campos dependientes, para proceder a salvarlos.
-		     if (false) {
-		         //foreach($cols as $column) {
-		     
-
-		         if (!$column->isDependant()) continue;
-		         if (!$getter = $column->getGetterName($object)) continue;
-
-		         $aModels = $object->$getter();
-		         if (sizeof($aModels)>0) {
-
-		             $model = $aModels[0];
-		             $relatedIdColumn = $model->getColumnForParentTable($primaryTable);
-
-
-		             // FIXME: Ya he preguntado por arriba. El campo fieldConfig de Column lo sabe WTF?
-		             // "Pregunto" por existentes en BBDD
-		             $relatedToPk = $aModels[0]->getMapper()->fetchList($relatedIdColumn . "='".$pk."'");
-
-		             // Salvo relaciones nuevas, y "anoto" las que no hay que borrar
-		             foreach ($aModels as $model) {
-		                 if (!$model->getPrimaryKey()) {
-		                     $model->{'set' .$relatedIdColumn}($pk);
-		                     $model->save();
-		                 } else {
-		                     $notToBeDeletedRels[$model->getPrimaryKey()] = true;
-		                 }
-		             }
-
-		             foreach($relatedToPk as $model) {
-		                 if (!isset($notToBeDeletedRels[$model->getPrimaryKey()])) {
-		                     $model->delete();
-		                 }
-		             }
-
-
-		         }
-
-
 		     }
 
              $data = array(
@@ -194,7 +154,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $jsonResponse->addTemplate("/template/edit/type/" . $this->_item->getType(),"klearmatrixEdit");
 	    $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
 	    $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
-
+	    
+	    
 	    $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 
 	    $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");

@@ -76,7 +76,8 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 	}
 
 	public function getMultiLangTemplateArray($path,$type) {
-	    if (false === $this->_multilangColumnIdx ) return array();
+	    if (false === $this->_multilangColumnIdx ) return false;
+	    
 	    $path .= 'multilang/item/';
 	    switch($type) {
 	        case 'list':
@@ -132,6 +133,10 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 
 	public function getLangs() {
 	    return $this->_langs;
+	}
+	
+	public function getDefaultLang() {
+	    return array_shift($this->getLangs());
 	}
 
 

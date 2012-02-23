@@ -111,22 +111,22 @@ class KlearMatrix_Model_ResponseItem {
 	public function getVisibleColumnWrapper($ignoreBlackList = false) {
 		if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
 
-		$obj = $this->_modelSpec->getInstance();
+		$model = $this->_modelSpec->getInstance();
 
 		$this->_visibleColumnWrapper =  new KlearMatrix_Model_ColumnWrapper;
 
 		//Inicializamos blackList (los campos que no se mostrarán)
 		$blacklist = array();
 
-		$pk = $obj->getPrimaryKeyName();
+		$pk = $model->getPrimaryKeyName();
 		
 		
 		/*
 		 * Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
 		*/
-		if (method_exists($obj, 'getFileObjects')) {
+		if (method_exists($model, 'getFileObjects')) {
 		    
-		    $fileObjects = $obj->getFileObjects();
+		    $fileObjects = $model->getFileObjects();
 		    foreach($fileObjects as $_fileCol) {
 		
 		        if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
@@ -138,11 +138,19 @@ class KlearMatrix_Model_ResponseItem {
 		            $col->setRouteDispatcher($this->_routeDispatcher);
 		            $this->_visibleColumnWrapper->addCol($col);
 		            
-		            $involvedFields = $col->getFieldConfig()->getInvolvedFields();
+		            $fieldSpecsGetter = "get" . $_fileCol . "Specs";
+		            $involvedFields = $model->{$fieldSpecsGetter}();
 		            
-		            foreach ($involvedFields as $_fld) {
-		                $blacklist[$_fld] = true;
+		            if (isset($involvedFields['sizeName'])) {
+		                $blacklist[$model->varNameToColumn($involvedFields['sizeName'])] = true;
 		            }
+		            if (isset($involvedFields['mimeName'])) {
+		                $blacklist[$model->varNameToColumn($involvedFields['mimeName'])] = true;
+		            }
+		            if (isset($involvedFields['baseNameName'])) {
+		                $blacklist[$model->varNameToColumn($involvedFields['baseNameName'])] = true;
+		            }
+		            
 		        }
 		
 		    }
@@ -176,10 +184,10 @@ class KlearMatrix_Model_ResponseItem {
 		}
 
 
-		$multiLangFields = $obj->getMultiLangColumnsList();
+		$multiLangFields = $model->getMultiLangColumnsList();
 
 		
-		if ( (is_array($availableLangsPerModel = $obj->getAvailableLangs())) && (sizeof($availableLangsPerModel)>0) ) {
+		if ( (is_array($availableLangsPerModel = $model->getAvailableLangs())) && (sizeof($availableLangsPerModel)>0) ) {
 		    $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
 		}
 
@@ -194,7 +202,7 @@ class KlearMatrix_Model_ResponseItem {
 
 		}
 
-		foreach($obj->getColumnsList() as $dbName => $attribute) {
+		foreach($model->getColumnsList() as $dbName => $attribute) {
 		    if ( (!$ignoreBlackList) && (isset($blacklist[$dbName])) ) continue;
 
 			$col = new KlearMatrix_Model_Column;
@@ -217,7 +225,7 @@ class KlearMatrix_Model_ResponseItem {
 	   /**
 	    *  Buscamos las tablas dependientes, por si estuvieran *Explicitamente* declaradas en el fichero de modelo
 	    */
-		foreach ($obj->getDependentList() as $dependatConfig) {
+		foreach ($model->getDependentList() as $dependatConfig) {
 		    if (isset($blacklist[$dependatConfig['table_name']])) continue;
 		    
 		    if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {

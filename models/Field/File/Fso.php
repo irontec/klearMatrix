@@ -28,12 +28,7 @@ class KlearMatrix_Model_Field_File_Fso
     
     
     public function init() {
-        $parsedValues = new Klear_Model_KConfigParser;
-        $parsedValues->setConfig($this->_config->config);
-        
-        $this->_fileName = $parsedValues->getProperty('name');
-        $this->_fileSize = $parsedValues->getProperty('size');
-        $this->_mimeType = $parsedValues->getProperty('mime');
+    
         
     }
     
@@ -46,8 +41,8 @@ class KlearMatrix_Model_Field_File_Fso
     }
 
     protected function _getSizeLimit() {
-        if (isset($this->_config->sizeLimit)) {
-            return $this->_config->sizeLimit;
+        if (isset($this->_config->size_limit)) {
+            return $this->_config->size_limit;
         } else {
             return null;
         } 

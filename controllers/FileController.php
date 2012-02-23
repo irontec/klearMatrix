@@ -71,7 +71,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $colConfig = $column->getFieldConfig()->getConfig();
             
             $allowedExtensions = explode(',', $colConfig['allowed_extensions']);
-            $sizeLimit = $colConfig['size_limit'];
+            $sizeLimit = $colConfig['size_limit'];                               
                         
             $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, 
                                                                     $sizeLimit);
@@ -113,13 +113,16 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 Throw new Zend_Exception("No se encuentra la columna solicitada.");
             }
             
+            $downloadField = $this->_item->getConfigAttribute("mainColumn");
+            $fieldSpecsGetter = "get" . $downloadField . "Specs";
+            $fileFields = $this->_model->{$fieldSpecsGetter}();
+            
             
 	        if ((bool)$this->getRequest()->getParam("download")) {
-	            $downloadField = $this->_item->getConfigAttribute("mainColumn");
+
 	            $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
 	            
-	            $fileFields = $dwColumn->getFieldConfig()->getInvolvedFields();
-	            $nameGetter = $this->_cols->getColFromDbName($fileFields['name'])->getGetterName($this->_model);
+	            $nameGetter = 'get' . $fileFields['baseNameName'];
 	            
 	            $this->_helper->sendFileToClient(
 	                                $this->_model->{$fetchGetter}()->getBinary(),
@@ -128,11 +131,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 	            exit;
 	        }
 	        
-	        $fileFields = $dwColumn->getFieldConfig()->getInvolvedFields();
-
-	        $nameGetter = $this->_cols->getColFromDbName($fileFields['name'])->getGetterName($this->_model);
-	        $sizeGetter = $this->_cols->getColFromDbName($fileFields['size'])->getGetterName($this->_model);
-	        $mimeGetter = $this->_cols->getColFromDbName($fileFields['mime'])->getGetterName($this->_model);
+	        
+	        $nameGetter = 'get' . $fileFields['baseNameName'];
+	        $sizeGetter = 'get' . $fileFields['sizeName'];
+	        $mimeGetter = 'get' . $fileFields['mimeName'];
 	        
 	        $data = array(
 	                'pk'=>$this->_pk,

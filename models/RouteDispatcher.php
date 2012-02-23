@@ -19,13 +19,20 @@ class KlearMatrix_Model_RouteDispatcher {
 	 * @var KlearMatrix_Model_Dialog
 	 */
 	protected $_dialog;
-
+	
+	/**
+	 * @var KlearMatrix_Model_Command
+	 */
+	protected $_command;
+	
+	
 	/**
 	 * @var string
 	 */
 	protected $_screenName;
 	protected $_dialogName;
-
+	protected $_commandName;
+	
 	protected $_selectedConfig;
 
 
@@ -80,6 +87,7 @@ class KlearMatrix_Model_RouteDispatcher {
 			switch($param) {
 				case 'screen':
 				case 'dialog':
+				case 'command':
 				case 'type':
 					$attrName = "_" . $param . "Name";
 					$this->{$attrName} = $value;
@@ -100,7 +108,7 @@ class KlearMatrix_Model_RouteDispatcher {
 			return $this->_params[$param];
 		}
 
-		throw new Zend_Exception('Parámetro ['+ $param+'] no encontrado.');
+		throw new Zend_Exception('Parámetro ['+ $param+'] no encontrado.',9999);
 	}
 
 
@@ -139,25 +147,47 @@ class KlearMatrix_Model_RouteDispatcher {
 		}
 		return $this->_dialog;
 	}
-
+	
+	
+	public function getCurrentCommand() {
+	
+	    if (null === $this->_command) {
+	
+	        $this->_command = new KlearMatrix_Model_Command();
+	        $this->_command->setRouteDispatcher($this);
+	        $this->_command->setCommandName($this->_commandName);
+	        $this->_command->setConfig($this->_selectedConfig);
+	        
+	    }
+	    return $this->_command;
+	}
+	
 
 
 	/**
 	 * @return Klear_Matrix_Screen
 	 */
 	public function getCurrentItem() {
+	    
 		switch($this->_typeName) {
 			case "dialog":
 				return $this->getCurrentDialog();
+			case "command":
+				return $this->getCurrentCommand();
 			default:
 				return $this->getCurrentScreen();
 		}
 	}
 
+	public function getCurrentType() {
+	    return  $this->_typeName;
+	}
 
 	protected function _resolveCurrentItem() {
 
 		switch($this->_typeName) {
+		    case "command":
+		        return $this->_resolveCurrentItemCommand();
 			case "dialog":
 				return $this->_resolveCurrentItemDialog();
 			default:
@@ -166,6 +196,13 @@ class KlearMatrix_Model_RouteDispatcher {
 
 	}
 
+	protected function _resolveCurrentItemCommand() {
+	    if ($this->_commandName == null) {
+	        $this->_commandName = $this->_config->getDefaultCommand();
+	    }
+	    return $this;
+	}
+	
 	protected function _resolveCurrentItemScreen() {
 		if ($this->_screenName == null) {
 			$this->_screenName = $this->_config->getDefaultScreen();
@@ -181,12 +218,14 @@ class KlearMatrix_Model_RouteDispatcher {
 		return $this;
 	}
 
+	
+	
 	public function _resolveCurrentConfig() {
 
 		// Aquí resolvemos a que métodos de MainConfig llamar:
 		// getScreenConfig | getDialogConfig
 		// a partir al atributo de entidad que corresponda según el type
-		// _screenName | _dialogName
+		// _screenName | _dialogName | _commandName
 
 		$configGetter = "get" . ucfirst($this->_typeName) . "Config";
 		$attrName = "_" . $this->_typeName . "Name";

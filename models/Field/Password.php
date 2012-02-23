@@ -23,9 +23,8 @@ class KlearMatrix_Model_Field_Password extends KlearMatrix_Model_Field_Abstract
 	
 	public function init()
 	{
-	    $config = $this->_column->getKlearConfig();
-	
-	    $adapterClassName = "KlearMatrix_Model_Field_Password_" . ucfirst($config->getProperty("adapter"));
+	    parent::init();
+	    $adapterClassName = "KlearMatrix_Model_Field_Password_" . ucfirst($this->_config->getProperty("adapter"));
 	
 	    $this->_adapter = new $adapterClassName;
 	    	
@@ -34,7 +33,7 @@ class KlearMatrix_Model_Field_Password extends KlearMatrix_Model_Field_Abstract
 	/*
 	 * Prepara el valor de un campo, después del getter
 	 */
-	public function prepareValue($value) {
+	public function prepareValue($value, $model) {
 	    return "********";
 	}
 	

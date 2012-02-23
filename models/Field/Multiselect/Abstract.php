@@ -12,7 +12,7 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator 
         return $value;
     }
     
-    public function prepareValue($value) {
+    public function prepareValue($value, $model) {
         return $value;
     }
     

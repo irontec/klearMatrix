@@ -11,7 +11,7 @@
 <tr>
    {{each(idx,column) columns}}
             <th data-field="${column.id}" class="ui-widget-header{{if (type == '_option') }} optionHeader{{/if}}">
-            ${column.name}
+            <span class="title">${column.name}</span>
             {{if (column.order)}}
                 {{if (column.order=='asc')}}
                     <span class="order asc ui-icon ui-icon-circle-triangle-s"></span>

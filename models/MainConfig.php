@@ -38,7 +38,7 @@ class KlearMatrix_Model_MainConfig {
 	}
 
 	protected function _getDefaultItem($itemName) {
-		if (!in_array($itemName,array("screen","dialog"))) {
+		if (!in_array($itemName,array("screen","dialog","command"))) {
 			Throw new Zend_Exception("Error accediendo a la configuración. No se ha especificado un tipo de enrutado válido.");
 		}
 		
@@ -74,6 +74,10 @@ class KlearMatrix_Model_MainConfig {
 	public function getDefaultDialog() {
 		return $this->_getDefaultItem("dialog");
 	}
+	
+	public function getDefaultCommand() {
+	    return $this->_getDefaultItem("command");
+	}
 
 	
 	public function getScreenConfig($screen)
@@ -84,7 +88,6 @@ class KlearMatrix_Model_MainConfig {
 		}
 		
 		return $this->_config->getRaw()->screens->{$screen};
-		
 	}
 	
 	
@@ -95,9 +98,17 @@ class KlearMatrix_Model_MainConfig {
 			Throw new Zend_Exception("Configuration for selected dialog not found");
 		}
 	
-		
 		return $this->_config->getRaw()->dialogs->{$dialog};
+	}
+
+	public function getCommandConfig($command)
+	{
 	
+	    if (!$this->_config->exists("commands->" . $command)) {
+	        Throw new Zend_Exception("Configuration for selected command not found");
+	    }
+	
+	    return $this->_config->getRaw()->commands->{$command};
 	}
 	
 	

@@ -1,16 +1,17 @@
 <?php
 
-class KlearMatrix_Model_ColumnWrapper implements Iterator {
+class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 
-	public $_cols = array();
+	protected $_cols = array();
 	protected $_position;
 	protected $_columnsListKeys = array();
 
 	protected $_optionColumnIdx = false;
 	protected $_defaultColumnIdx = false;
-	protected $_dependantColumnIdx = false;
-    protected $_multilangColumnIdx = false;
-
+	protected $_dependantColumnIdx = array();
+    protected $_multilangColumnIdx = array();
+    protected $_fileColumnIdx = array();
+    
 	protected $_langs = array();
 
 	protected $_types = array();
@@ -41,6 +42,11 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 		if ($col->isMultilang()) {
 		    $this->_multilangColumnIdx[] = sizeof($this->_cols) -1;
 		}
+		
+		if ($col->isFile()) {
+		    $this->_fileColumnIdx[] = sizeof($this->_cols) -1;
+		}
+		
 	}
 
 	public function toArray() {
@@ -158,29 +164,34 @@ class KlearMatrix_Model_ColumnWrapper implements Iterator {
 
 	}
 
-	public function __construct() {
-		$this->_position = 0;
-	}
+// 	public function __construct() {
+// 		$this->_position = 0;
+// 	}
 
-	public function rewind() {
-		$this->_position = 0;
-	}
+// 	public function rewind() {
+// 		$this->_position = 0;
+// 	}
 
-	public function current() {
-		return $this->_cols[$this->_position];
-	}
+// 	public function current() {
+// 		return $this->_cols[$this->_position];
+// 	}
 
-	public function key() {
-		return $this->_position;
-	}
+// 	public function key() {
+// 		return $this->_position;
+// 	}
 
-	public function next() {
-		++$this->_position;
-	}
+// 	public function next() {
+// 		++$this->_position;
+// 	}
 
-	public function valid() {
-		return isset($this->_cols[$this->_position]);
+// 	public function valid() {
+// 		return isset($this->_cols[$this->_position]);
 
+// 	}
+
+	public function getIterator()
+	{
+	    return new ArrayIterator($this->_cols);
 	}
 
 }

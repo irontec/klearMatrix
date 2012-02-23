@@ -34,7 +34,13 @@
 						text: label,
 						click : function() {
 							if (self.options.data.buttons[label].recall) {
-								self.options.caller.trigger("click",self.options.data.buttons[label].params);
+								
+								var extraData = {
+										params: self.options.data.buttons[label].params,
+										external: self.options.data.buttons[label].external
+								};
+								
+								self.options.caller.trigger("click",extraData);
 							}
 							$(this).moduleDialog("close");
 						}

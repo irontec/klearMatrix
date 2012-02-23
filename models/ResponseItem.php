@@ -35,7 +35,7 @@ class KlearMatrix_Model_ResponseItem {
 		$this->_modelFile = $this->_config->getProperty("modelFile",true);
 
 		$this->_filteredField = $this->_config->getProperty("filterField",false);
-
+		
 		$this->_title = $this->_config->getProperty("title",false);
 
 
@@ -96,6 +96,11 @@ class KlearMatrix_Model_ResponseItem {
 	public function getTitle() {
 	    return $this->_title;
 	}
+	
+	public function getConfigAttribute($attribute) {
+	    
+	    return $this->_config->getProperty($attribute,false);
+	}
 
 
 	/**
@@ -103,7 +108,7 @@ class KlearMatrix_Model_ResponseItem {
 	 *
 	 * return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
 	 */
-	public function getVisibleColumnWrapper() {
+	public function getVisibleColumnWrapper($ignoreBlackList = false) {
 		if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
 
 		$obj = $this->_modelSpec->getInstance();
@@ -114,6 +119,36 @@ class KlearMatrix_Model_ResponseItem {
 		$blacklist = array();
 
 		$pk = $obj->getPrimaryKeyName();
+		
+		
+		/*
+		 * Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
+		*/
+		if (method_exists($obj, 'getFileObjects')) {
+		    
+		    $fileObjects = $obj->getFileObjects();
+		    foreach($fileObjects as $_fileCol) {
+		
+		        if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
+		
+		            $col = new KlearMatrix_Model_Column;
+		            $col->setDbName($_fileCol);
+		            $col->setConfig($colConfig);
+		            $col->markAsFile();
+		            $col->setRouteDispatcher($this->_routeDispatcher);
+		            $this->_visibleColumnWrapper->addCol($col);
+		            
+		            $involvedFields = $col->getFieldConfig()->getInvolvedFields();
+		            
+		            foreach ($involvedFields as $_fld) {
+		                $blacklist[$_fld] = true;
+		            }
+		        }
+		
+		    }
+		}
+		
+		
 
 		// La primary Key estará por defecto en la blackList, a excepción de encontrarse en la whitelist
 		if  ($this->_config->exists("fields->whitelist->" . $pk)) {
@@ -160,7 +195,7 @@ class KlearMatrix_Model_ResponseItem {
 		}
 
 		foreach($obj->getColumnsList() as $dbName => $attribute) {
-		    if (isset($blacklist[$dbName])) continue;
+		    if ( (!$ignoreBlackList) && (isset($blacklist[$dbName])) ) continue;
 
 			$col = new KlearMatrix_Model_Column;
 			$col->setDbName($dbName);
@@ -194,8 +229,9 @@ class KlearMatrix_Model_ResponseItem {
 		        $col->setRouteDispatcher($this->_routeDispatcher);
 		        $this->_visibleColumnWrapper->addCol($col);
 		    }
-
 		}
+		
+	
 
 		if ($this->hasFieldOptions()) {
 

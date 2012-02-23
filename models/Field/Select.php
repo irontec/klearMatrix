@@ -12,9 +12,8 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
     
     public function init()
     {
-        $config = $this->_column->getKlearConfig();
-        
-        $sourceConfig = $config->getRaw()->source;
+        parent::init();
+        $sourceConfig = $this->_config->getRaw()->source;
         
         $adapterClassName = "KlearMatrix_Model_Field_Select_" . ucfirst($sourceConfig->data);
         
@@ -25,7 +24,7 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
         
     }
     
-    public function toArray() {
+    public function getConfig() {
         return $this->_adapter;
     }
 	

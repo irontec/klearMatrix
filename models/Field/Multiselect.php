@@ -24,9 +24,8 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
     
     public function init()
     {
-        $config = $this->_column->getKlearConfig();
-        
-        $sourceConfig = $config->getRaw()->source;
+        parent::init();
+        $sourceConfig = $this->_config->getRaw()->source;
         
         $adapterClassName = "KlearMatrix_Model_Field_Multiselect_" . ucfirst($sourceConfig->data);
         
@@ -45,7 +44,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         return $this->_css;
     }
     
-    public function toArray() {
+    public function getConfig() {
         return $this->_adapter;
     }
     
@@ -56,9 +55,9 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
      * Gateway hacia el adapter.
      * @see KlearMatrix_Model_Field_Abstract::filterValue()
      */
-    public function prepareValue($value) {
+    public function prepareValue($value, $model) {
         
-        return $this->_adapter->prepareValue($value);
+        return $this->_adapter->prepareValue($value, $model);
     }
     
     

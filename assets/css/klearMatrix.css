@@ -19,9 +19,6 @@ table.kMatrix th span.order {
     float:right;
 }
 
-
-
-
 table.kMatrix td {
     padding: 3px;
 }
@@ -37,6 +34,7 @@ table.kMatrix .multilangValue {
 
 table.kMatrix .multilangValue.selected {
 	display:block;
+	overflow:hidden;
 }
 
 table.kMatrix .multilangValue span.langIden {
@@ -102,6 +100,25 @@ table.kMatrix .mlTag {
 	border:0;
 }
 
+.klearMatrix_form .klearMatrix_file {
+    display:block;
+    padding:0.4em;
+    margin:0.5em 0;
+}
+
+.klearMatrix_form .newFile {
+    display:none;
+}
+
+.klearMatrix_form .qq-uploader {
+    margin:0.5em 0;
+}
+
+.klearMatrix_form .qq-upload-button {
+    padding:0.5em;
+    width:10em;
+}
+ 
 .paginator {
     clear: both;
     margin: 0.2em;

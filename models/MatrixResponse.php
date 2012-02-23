@@ -111,7 +111,7 @@ class KlearMatrix_Model_MatrixResponse {
 			        }
 			    
 			        
-			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue);
+			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue, $result);
 
 			    }
 

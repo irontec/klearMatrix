@@ -72,21 +72,36 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
 			}
 
-			
+		    switch(true) {
+		        case ($column->isMultilang()):
+		            foreach($value as $lang => $_value) {
+		                $_value =  $column->filterValue($_value,$object->{$getter}($lang));
+		                $object->$setter($_value,$lang);
+		            }
+		            break;
+		            
+		        case ($column->isDependant()):
+		            $value = $column->filterValue($value,$object->{$getter}());
+		            $object->$setter($value,true);
+		            $hasDependant = true;
+		            break;
+		            
+		        case ($column->isFile()):
+		            $value = $column->filterValue($value,$object->{$getter}());
+		            if ($value !== false) {
+		                $object->$setter($value['path'],$value['basename']);
+		            }
+		            
+		            break;
+		            
+		        
+		        default:
+		            $object->$setter($value);
+		         
+		     }
+		    
+			    
 
-			if ($column->isMultilang()) {
-			    foreach($value as $lang => $_value) {
-			        $_value =  $column->filterValue($_value,$object->{$getter}($lang));
-			        $object->$setter($_value,$lang);
-			    }
-			} else {
-			    
-			    
-			    $value =  $column->filterValue($value,$object->{$getter}());
-			    $object->$setter($value,$column->isDependant());
-			    $hasDependant = $hasDependant || $column->isDependant();
-			    
-			}
 		}
 
 

@@ -3,7 +3,15 @@
 
 abstract class KlearMatrix_Model_Field_Abstract {
 
+	/**
+	 * @var KlearMatrix_Model_Column
+	 */
 	protected $_column;
+	protected $_config;
+	
+	static protected $_propertyMaster = array("required","pattern","placeholder");
+	
+	protected $_properties = array();
 	
 	public function setColumn($column) {
 		$this->_column = $column;
@@ -13,13 +21,30 @@ abstract class KlearMatrix_Model_Field_Abstract {
 	/**
 	 * Dejar este método vacio, se invocara siempre que se genera desde Column 
 	 */
-	public function init() {
-	    
+	public function init()
+	{
+	    $this->_config = $this->_column->getKlearConfig();
+	    if (is_object($this->_config)) {
+	        foreach (self::$_propertyMaster as $_prop) {
+	            $this->_properties[$_prop] = $this->_config->getProperty($_prop);
+	        }
+	    }
+
 	    return $this;
 	}
 	
-	public function toArray() {
+	public function getConfig() {
 	  return false;	    
+	}
+	
+	
+	public function getProperties() {
+	   
+	    if (sizeof($this->_properties) <= 0) {
+	        return false;
+	    }
+
+	    return $this->_properties;
 	}
 	
 	/*
@@ -33,7 +58,12 @@ abstract class KlearMatrix_Model_Field_Abstract {
 	/*
 	 * Prepara el valor de un campo, después del getter
 	 */
-	public function prepareValue($value) {
+	/**
+	 * @param mixed $value Valor devuelto por el getter del model
+	 * @param object $model Modelo cargado
+	 * @return unknown
+	 */
+	public function prepareValue($value, $model) {
 	    return $value;
 	}
 	

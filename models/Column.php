@@ -27,44 +27,66 @@ class KlearMatrix_Model_Column {
 
 	protected $_isDependant = false;
 
+	protected $_isFile = false;
+	
 	protected $_routeDispatcher;
 
-	public function setDbName($name) {
+	public function setDbName($name)
+	{
 		$this->_dbName = $name;
 	}
 
-	public function setPublicName($name) {
+	public function setPublicName($name)
+	{
 		$this->_publicName = $name;
 	}
 
-	public function setRouteDispatcher(KlearMatrix_Model_RouteDispatcher $routeDispatcher) {
+	public function setRouteDispatcher(KlearMatrix_Model_RouteDispatcher $routeDispatcher)
+	{
 	    $this->_routeDispatcher = $routeDispatcher;
+	    return $this;
 	}
 
-	public function markAsOption() {
+	public function markAsOption()
+	{
 		$this->_isOption = true;
 	}
 
-	public function markAsDependant() {
+	public function markAsDependant()
+	{
 	    $this->_isDependant = true;
 	}
 
-	public function markAsMultilang() {
+	public function markAsMultilang()
+	{
 	    $this->_isMultilang = true;
 	}
 
-	public function isOption() {
+	public function markAsFile()
+	{
+	    $this->_isFile = true;
+	}
+	
+	public function isOption()
+	{
 		return $this->_isOption;
 	}
 
-	public function isDependant() {
+	public function isDependant()
+	{
 	    return $this->_isDependant;
 	}
 
 	public function isMultilang() {
 	    return $this->_isMultilang;
 	}
-
+	
+	public function isFile() 
+	{
+	    return $this->_isFile;
+	}
+	
+	
 	public function setConfig(Zend_Config $config) {
 
 		$this->_config = new Klear_Model_KConfigParser;
@@ -101,6 +123,8 @@ class KlearMatrix_Model_Column {
 		if (empty($this->_type)) {
 	    	$this->_type = 'text';
 		}
+		
+		$this->_loadConfigClass();
 
 	}
 
@@ -110,13 +134,25 @@ class KlearMatrix_Model_Column {
 
 	    $fieldConfigClassName = 'KlearMatrix_Model_Field_' . ucfirst($this->_type);
 
-		$this->_fieldConfig = new $fieldConfigClassName;
+	    $this->_fieldConfig = new $fieldConfigClassName;
 		$this->_fieldConfig
 		            ->setColumn($this)
 		            ->init();
 
 	}
+	
+	public function getFieldConfig() {
+	    return $this->_fieldConfig;
+	}
 
+	/**
+	 * @return KlearMatrix_Model_RouteDispatcher
+	 */
+	public function getRouteDispatcher()
+	{
+	    return $this->_routeDispatcher;
+	}
+	
 	public function getJsPaths() {
 	    $this->_loadConfigClass();
 	    return $this->_fieldConfig->getExtraJavascript();
@@ -191,10 +227,10 @@ class KlearMatrix_Model_Column {
      * @param mixed $value
      * @return mixed
      */
-    public function prepareValue($value)
+    public function prepareValue($value, $model)
     {
         $this->_loadConfigClass();
-        return $this->_fieldConfig->prepareValue($value);
+        return $this->_fieldConfig->prepareValue($value, $model);
     }
 
 
@@ -212,7 +248,10 @@ class KlearMatrix_Model_Column {
     {
         if ($this->isOption()) return false;
 
-
+        if (method_exists($this->_fieldConfig, 'getCustomGetterName')) {
+            return $this->_fieldConfig->getCustomGetterName();
+        }
+        
         if ($this->isDependant()) {
             return 'get' . $this->getDbName();
         } else {
@@ -225,6 +264,9 @@ class KlearMatrix_Model_Column {
     {
         if ($this->isOption()) return false;
 
+        if (method_exists($this->_fieldConfig, 'getCustomSetterName')) {
+            return $this->_fieldConfig->getCustomSetterName();
+        }
 
         if ($this->isDependant()) {
             return 'set' . $this->getDbName();
@@ -265,9 +307,16 @@ class KlearMatrix_Model_Column {
 		}
 
 
-		if (($this->_fieldConfig)
-		        && ($config = $this->_fieldConfig->toArray())) {
-		    $ret['config'] = $config;
+		if ($this->_fieldConfig) {
+		   
+		   if ($config = $this->_fieldConfig->getConfig()) {
+		       $ret['config'] = $config;
+		   }
+
+		   if ($props = $this->_fieldConfig->getProperties()) {
+		       $ret['properties'] = $props;
+		   }
+		   
 		}
 
 		return $ret;

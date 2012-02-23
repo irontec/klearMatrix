@@ -37,28 +37,6 @@
 				._registerMainActionEvent();
 				
 		},
-		_registerMainActionEvent : function() {
-			var self = this;
-			
-			this.options.theForm.on('submit',function(e) {
-				e.preventDefault();
-				e.stopPropagation();
-				
-				$(self.element).klearModule("showDialog",
-						'<br />',
-						{
-							title: self.options.data.title,
-							template : '<div class="ui-widget">{{html text}}</div>',
-							buttons : []
-						});
-				
-				$(self.element).klearModule("getModuleDialog").moduleDialog("setAsLoading");	
-				
-				self._doAction.call(self);
-			});
-			
-			return this;
-		},
 		_doAction : function() {
 			
 			var self = this;

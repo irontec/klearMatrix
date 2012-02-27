@@ -61,9 +61,7 @@
 									var extraConfig = column.config || false;
 									var properties = column.properties || false;
 									if (true === isNew) {
-										
 										var _value = '';
-										
 									} else {
 										if (typeof value != 'object') {
 
@@ -73,7 +71,13 @@
 											// Casos de multiselect y multiLang 
 											var _value = value;
 										}
-									}	
+									}
+									
+
+									if (this.data.parentItem == column.id) {
+										column.readonly = true;
+										_value = this.data.parentId;
+									}
 									
 									var fieldData = {
 											_elemIden: column.id + this.data.randIden,
@@ -330,14 +334,21 @@
 						screen : _menuLink.data("screen"),
 						pk 	   : _parentHolder.data("id"),
 						post : {
-							callerScreen : _self.options.data.screen
+							callerScreen : _self.options.data.screen,
 						}
 					};
+
+					// Si la pantalla llamante tiene condición (parentId -- en data --
+					// enviarlos a la nueva pantalla
+					if (_self.options.data.parentId) {
+						_dispatchOptions.post.parentId = _self.options.data.parentId;
+						_dispatchOptions.post.parentScreen = _self.options.data.parentScreen;
+					}
 					
 					
 					// hioghlight on hover
 					_menuLink.data("relatedtab",$tabLi);
-					console.log(_dispatchOptions);
+
 					$tabLi.klearModule("option","dispatchOptions",_dispatchOptions)
 						.klearModule("reload");
 						

@@ -18,8 +18,12 @@ class KlearMatrix_Model_ResponseItem {
 
 	protected $_title;
 
+	// Para listados dependientes de listados anteriores
 	protected $_filteredField;
-
+	
+	// Para pantallas New sobretodo que heredan en "2 saltos" el id de un campo.
+	protected $_parentField;
+	
 	protected $_modelSpec;
 
 	protected $_visibleColumnWrapper;
@@ -35,6 +39,9 @@ class KlearMatrix_Model_ResponseItem {
 		$this->_modelFile = $this->_config->getProperty("modelFile",true);
 
 		$this->_filteredField = $this->_config->getProperty("filterField",false);
+		
+		$this->_parentField = $this->_config->getProperty("parentField",false);
+		
 		
 		$this->_title = $this->_config->getProperty("title",false);
 
@@ -255,14 +262,28 @@ class KlearMatrix_Model_ResponseItem {
 	}
 
 
+	public function isParentDependantScreen() {
+	    return (!empty($this->_parentField));
+	}
+	
 	public function isFilteredScreen() {
 	    return (!empty($this->_filteredField));
 	}
-
+	
+	
 	public function getFilteredCondition($pkValue) {
 	    return $this->_filteredField . "='" . $pkValue . "'";
 	}
-
+	
+	public function getFilteredField() {
+	    return $this->_filteredField;
+	}
+	
+	public function getParentField() {
+	    return $this->_parentField;
+	}
+	
+	
 	public function hasFieldOptions() {
 		return ($this->_config->exists("fields->options"));
 	}

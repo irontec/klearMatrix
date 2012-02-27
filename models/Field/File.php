@@ -43,6 +43,13 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	    
 	}
 	
+	public function getCustomOrderField($model) {
+	    
+	    $fields = $model->{$this->getCustomGetterName()}();
+	    
+	    return $model->varNameToColumn($fields['baseNameName']);
+	}
+	
 	public function getConfig() {
 	  return $this->_adapter->getConfig();	    
 	}
@@ -62,10 +69,6 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	    return $this->_adapter->getFetchMethod($dbName);
 	}
 	
-	public function getInvolvedFields()
-	{
-	    return $this->_adapter->getInvolvedFields();
-	}
 	
 	public function filterValue($value,$original)
 	{
@@ -74,8 +77,8 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	        $tempFile = $tempFSystemNS->{$value};
 	        // Invocamos put[FILEIDEN] (realpath y basename)
 	        return $tempFile;
-	        
 	    }
+	    
 	    return false;
 	}
 	

@@ -38,7 +38,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$data = new KlearMatrix_Model_MatrixResponse;
     	$cols = $this->_item->getVisibleColumnWrapper();
 
-
+    	$model = $this->_item->getObjectInstance();
+    	
     	$where = null;
     	
     	
@@ -57,11 +58,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	       $defaultParentCol = $parentColWrapper->getDefaultCol();
 
     	       $parentMapper = new $parentMapperName;
-    	       $parentData = $parentMapper->find($this->_mainRouter->getParam('pk'));
+    	       $parentId = $this->_mainRouter->getParam('pk');
+    	       $parentData = $parentMapper->find($parentId);
 
     	       $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
     	       $data->setParentIden($parentData->$getter());
-
+    	       $data->setParentScreen($callerScreen);
+    	       $data->setParentId($parentId);
+    	       
     	    }
 
 
@@ -69,7 +73,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
     	    
-    	    $order = $orderField;
+    	    $order = $orderColumn->getOrderField($model);
 
     	    $orderColumn->setAsOrdered();
 

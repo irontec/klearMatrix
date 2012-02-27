@@ -188,6 +188,15 @@ class KlearMatrix_Model_Column {
 	    $this->_orderedType = $_orderType;
 	}
 
+	public function getOrderField($model) {
+	    
+	    if (method_exists($this->_fieldConfig, 'getCustomOrderField')) {
+	        return $this->_fieldConfig->getCustomOrderField($model);
+	    }
+	    
+	    return $this->_dbName;
+	    
+	}
 
 	/**
 	 * @return Klear_Model_KConfigParser
@@ -244,7 +253,7 @@ class KlearMatrix_Model_Column {
 
 
 
-    public function getGetterName($object)
+    public function getGetterName($model)
     {
         if ($this->isOption()) return false;
 
@@ -255,12 +264,12 @@ class KlearMatrix_Model_Column {
         if ($this->isDependant()) {
             return 'get' . $this->getDbName();
         } else {
-            return 'get' . $object->columnNameToVar($this->getDbName());
+            return 'get' . $model->columnNameToVar($this->getDbName());
         }
 
     }
 
-    public function getSetterName($object)
+    public function getSetterName($model)
     {
         if ($this->isOption()) return false;
 
@@ -271,7 +280,7 @@ class KlearMatrix_Model_Column {
         if ($this->isDependant()) {
             return 'set' . $this->getDbName();
         } else {
-            return 'set' . $object->columnNameToVar($this->getDbName());
+            return 'set' . $model->columnNameToVar($this->getDbName());
         }
 
     }

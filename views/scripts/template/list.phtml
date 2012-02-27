@@ -56,10 +56,10 @@
 {{if (generalOptions.length>0) }}
 <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
 {{each generalOptions}}
-	<a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${title}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+	<a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
 	<span class="ui-silk inline ${icon}"></span>
 	{{if (label) }}
-		${title}
+	    ${$item.getTitle(title,false)}
 	{{/if}}
 	</a>
 {{/each}}

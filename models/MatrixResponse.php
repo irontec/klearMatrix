@@ -9,7 +9,9 @@ class KlearMatrix_Model_MatrixResponse {
 	protected $_paginator = false;
 
 	protected $_parentIden = false;
-
+	protected $_parentId = false;
+	protected $_parentScreen = false;
+	protected $_parentItem = false;
 	protected $_title;
 
 	/**
@@ -70,6 +72,18 @@ class KlearMatrix_Model_MatrixResponse {
 
 	public function setParentIden($parentIden) {
 	    $this->_parentIden = $parentIden;
+	}
+	
+	public function setParentId($parentId) {
+	    $this->_parentId = $parentId;
+	}
+	
+	public function setParentScreen($parentScreen) {
+	    $this->_parentScreen = $parentScreen;
+	}
+	
+	public function setParentItem($parentItem) {
+	    $this->_parentItem = $parentItem;
 	}
 
 	/**
@@ -152,10 +166,14 @@ class KlearMatrix_Model_MatrixResponse {
 		    $ret['paginator'] = (array)$this->_paginator->getPages();
 		}
 
-		if (false !== $this->_parentIden) {
-		    $ret['parentIden'] = $this->_parentIden;
+		$simpleFields = array('parentIden','parentId','parentScreen','parentItem');
+		foreach ($simpleFields as $_fld)  {
+		    if (false !== $this->{'_' . $_fld})  {
+		        $ret[$_fld] = $this->{'_'. $_fld};
+		    }
 		}
 
+		
 		$ret[$this->_item->getType()] = $this->_item->getItemName();
 
 		return $ret;

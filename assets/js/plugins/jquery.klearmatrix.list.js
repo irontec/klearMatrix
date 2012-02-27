@@ -21,7 +21,8 @@
 		},
 		_init: function() {
 			
-			this.options.data.title = this.options.data.title || this.options.title; 
+			this.options.data.title = this.options.data.title || this.options.title;
+			
 			var $appliedTemplate = this._loadTemplate("klearmatrixList");
 			$(this.element.klearModule("getPanel")).append($appliedTemplate);
 			

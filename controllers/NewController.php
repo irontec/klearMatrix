@@ -35,7 +35,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     public function saveAction() {
 
-       $object = $this->_item->getObjectInstance();
+       $model = $this->_item->getObjectInstance();
        $cols = $this->_item->getVisibleColumnWrapper();
 
         
@@ -54,45 +54,45 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             }
         
         
-            if (!$setter = $column->getSetterName($object)) continue;
-            if (!$getter = $column->getGetterName($object)) continue;
+            if (!$setter = $column->getSetterName($model)) continue;
+            if (!$getter = $column->getGetterName($model)) continue;
             
             
             switch(true) {
                 case ($column->isMultilang()):
                     foreach($value as $lang => $_value) {
-                        $_value =  $column->filterValue($_value,$object->{$getter}($lang));
-                        $object->$setter($_value,$lang);
+                        $_value =  $column->filterValue($_value,$model->{$getter}($lang));
+                        $model->$setter($_value,$lang);
                     }
                     break;
             
                 case ($column->isDependant()):
-                    $value = $column->filterValue($value,$object->{$getter}());
-                    $object->$setter($value,true);
+                    $value = $column->filterValue($value,$model->{$getter}());
+                    $model->$setter($value,true);
                     $hasDependant = true;
                     break;
             
                 case ($column->isFile()):
-                    $value = $column->filterValue($value,$object->{$getter}());
+                    $value = $column->filterValue($value,$model->{$getter}());
                     if ($value !== false) {
-                        $object->$setter($value['path'],$value['basename']);
+                        $model->$setter($value['path'],$value['basename']);
                     }
             
                     break;
             
             
                 default:
-                    $object->$setter($value);
+                    $model->$setter($value);
             
             }
             
         }
 
         try {
-		     $object->save();
+		     $model->save(false,$hasDependant);
              $data = array(
     			'error'=>false,
-    			'pk'=>$object->getPrimaryKey(),
+    			'pk'=>$model->getPrimaryKey(),
     			'message'=>'Registro añadido correctamente.'
     	    );
 
@@ -126,6 +126,33 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 	        ->setTitle($this->_item->getTitle())
 	        ->setColumnWraper($cols);
 
+	    if ($this->_item->isParentDependantScreen()) {
+	        
+	        $data->setParentItem($this->_item->getParentField());
+	        
+    	    if ($parentScreenName = $this->getRequest()->getPost("parentScreen")) {
+    	    
+                $parentScreen = new KlearMatrix_Model_Screen;
+                $parentScreen->setRouteDispatcher($this->_mainRouter);
+                $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($parentScreenName));
+                $parentMapperName = $parentScreen->getMapperName();
+        
+                $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
+                $defaultParentCol = $parentColWrapper->getDefaultCol();
+        
+                $parentMapper = new $parentMapperName;
+                $parentId = $this->_mainRouter->getParam('parentId');
+                $parentData = $parentMapper->find($parentId);
+    
+                
+                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+                $data->setParentIden($parentData->$getter());
+                $data->setParentId($parentId);
+                $data->setParentScreen($parentScreenName);
+    	    }
+    	    
+	    }
+	    
 	    Zend_Json::$useBuiltinEncoderDecoder = true;
 
 	    $jsonResponse = new Klear_Model_DispatchResponse();

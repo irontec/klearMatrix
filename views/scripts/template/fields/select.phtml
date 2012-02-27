@@ -1,5 +1,6 @@
 {{if (_readonly)}}
     {{html _dataConfig[_fieldValue]}}
+    <input type="hidden" name="${_elemName}" value="${_fieldValue}" />
 {{else}}
 <select name="${_elemName}" id="${_elemIden}">
 {{each(idx,dataValue) _dataConfig}}

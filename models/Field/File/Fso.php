@@ -72,24 +72,7 @@ class KlearMatrix_Model_Field_File_Fso
         return 'fetch' . $dbName;
     }
     
-    public function getInvolvedFields() {
-        $ret = array();
-        if ($this->_fileName) {
-            $ret['name'] = $this->_fileName;
-        }
-        
-        if ($this->_fileSize) {
-            $ret['size'] = $this->_fileSize;
-        }
-        
-        if ($this->_mimeType) {
-            $ret['mime'] = $this->_mimeType;
-        }
-        
-        return $ret;
-    }
-    
-    
+      
     public function getExtraJavascript()
 	{
 	    return $this->_js;

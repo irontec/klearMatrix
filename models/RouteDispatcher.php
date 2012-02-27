@@ -108,7 +108,7 @@ class KlearMatrix_Model_RouteDispatcher {
 			return $this->_params[$param];
 		}
 
-		throw new Zend_Exception('Parámetro ['+ $param+'] no encontrado.',9999);
+		throw new Zend_Exception('Parámetro ['. $param .'] no encontrado.',9999);
 	}
 
 

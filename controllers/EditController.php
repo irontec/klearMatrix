@@ -87,6 +87,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 		            break;
 		            
 		        case ($column->isFile()):
+		            
 		            $value = $column->filterValue($value,$object->{$getter}());
 		            if ($value !== false) {
 		                $object->$setter($value['path'],$value['basename']);

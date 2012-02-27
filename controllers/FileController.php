@@ -119,9 +119,8 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             
             
 	        if ((bool)$this->getRequest()->getParam("download")) {
-
+	               
 	            $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
-	            
 	            $nameGetter = 'get' . $fileFields['baseNameName'];
 	            
 	            $this->_helper->sendFileToClient(

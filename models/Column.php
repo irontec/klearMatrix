@@ -28,7 +28,7 @@ class KlearMatrix_Model_Column {
 	protected $_isDependant = false;
 
 	protected $_isFile = false;
-	
+
 	protected $_routeDispatcher;
 
 	public function setDbName($name)
@@ -66,7 +66,7 @@ class KlearMatrix_Model_Column {
 	{
 	    $this->_isFile = true;
 	}
-	
+
 	public function isOption()
 	{
 		return $this->_isOption;
@@ -80,13 +80,13 @@ class KlearMatrix_Model_Column {
 	public function isMultilang() {
 	    return $this->_isMultilang;
 	}
-	
-	public function isFile() 
+
+	public function isFile()
 	{
 	    return $this->_isFile;
 	}
-	
-	
+
+
 	public function setConfig(Zend_Config $config) {
 
 		$this->_config = new Klear_Model_KConfigParser;
@@ -96,7 +96,8 @@ class KlearMatrix_Model_Column {
 
 
 
-		if ($this->isOption()) {
+		if ($this->_dbName == '_fieldOptions') {
+		    $this->markAsOption();
 		    $this->_parseOption();
 		} else {
 		    $this->_parseField();
@@ -123,7 +124,7 @@ class KlearMatrix_Model_Column {
 		if (empty($this->_type)) {
 	    	$this->_type = 'text';
 		}
-		
+
 		$this->_loadConfigClass();
 
 	}
@@ -140,7 +141,7 @@ class KlearMatrix_Model_Column {
 		            ->init();
 
 	}
-	
+
 	public function getFieldConfig() {
 	    return $this->_fieldConfig;
 	}
@@ -152,7 +153,7 @@ class KlearMatrix_Model_Column {
 	{
 	    return $this->_routeDispatcher;
 	}
-	
+
 	public function getJsPaths() {
 	    $this->_loadConfigClass();
 	    return $this->_fieldConfig->getExtraJavascript();
@@ -189,13 +190,13 @@ class KlearMatrix_Model_Column {
 	}
 
 	public function getOrderField($model) {
-	    
+
 	    if (method_exists($this->_fieldConfig, 'getCustomOrderField')) {
 	        return $this->_fieldConfig->getCustomOrderField($model);
 	    }
-	    
+
 	    return $this->_dbName;
-	    
+
 	}
 
 	/**
@@ -260,7 +261,7 @@ class KlearMatrix_Model_Column {
         if (method_exists($this->_fieldConfig, 'getCustomGetterName')) {
             return $this->_fieldConfig->getCustomGetterName();
         }
-        
+
         if ($this->isDependant()) {
             return 'get' . $this->getDbName();
         } else {
@@ -317,7 +318,7 @@ class KlearMatrix_Model_Column {
 
 
 		if ($this->_fieldConfig) {
-		   
+
 		   if ($config = $this->_fieldConfig->getConfig()) {
 		       $ret['config'] = $config;
 		   }
@@ -325,7 +326,7 @@ class KlearMatrix_Model_Column {
 		   if ($props = $this->_fieldConfig->getProperties()) {
 		       $ret['properties'] = $props;
 		   }
-		   
+
 		}
 
 		return $ret;

@@ -119,11 +119,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 	        if ((bool)$this->_request->getParam("download")) {
 
 	            $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
-
 	            $nameGetter = 'get' . $fileFields['baseNameName'];
 
-
-
+	            
+	            
 	            $this->_helper->sendFileToClient(
 	                                $this->_model->{$fetchGetter}()->getBinary(),
 	                                array('filename'=>$this->_model->{$nameGetter}()),

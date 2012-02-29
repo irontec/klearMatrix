@@ -40,12 +40,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     	$model = $this->_item->getObjectInstance();
     	
-    	$where = null;
+    	$where = array();
     	
     	
     	if ($this->_item->isFilteredScreen()) {
     	    
-    	    $where = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
+    	    $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
 
     	    if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
 
@@ -67,8 +67,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	       $data->setParentId($parentId);
     	       
     	    }
+    	}
+    	
+    	if ($this->_item->hasForcedValues()) {
 
-
+    	    $where = array_merge($where,$this->_item->getForcedValuesConditions());
+    	    
     	}
 
     	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
@@ -123,6 +127,23 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 	        ->setColumnWraper($cols)
 	        ->setPK($this->_item->getPK());
 
+    	if (sizeof($where) == 0) {
+
+    	    $where = null;
+    	
+    	} else {
+    	    
+    	    $values = $expresions = array(); 
+    	    foreach ($where as $condition) {
+    	        $expresions[] = $condition[0];
+    	        $values[] = $condition[1];
+    	    }
+    	    
+    	    $where = array(implode ( " and ", $expresions),$values);
+    	    
+    	    
+    	}
+    	
     	if (!$results= $mapper->fetchList($where, $order, $count, $offset)) {
 			// No hay resultados
 			$data->setResults(array());

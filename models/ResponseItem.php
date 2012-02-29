@@ -23,7 +23,10 @@ class KlearMatrix_Model_ResponseItem {
 
 	// Para pantallas New sobretodo que heredan en "2 saltos" el id de un campo.
 	protected $_parentField;
-
+	
+	// Valores "forzados" desde configuración. condiciones "duras"
+	protected $_forcedValues;
+	
 	protected $_modelSpec;
 
 	protected $_visibleColumnWrapper;
@@ -44,6 +47,7 @@ class KlearMatrix_Model_ResponseItem {
 
 		$this->_parentField = $this->_config->getProperty("parentField",false);
 
+		$this->_forcedValues = $this->_config->getProperty("forcedValues",false);
 
 		$this->_title = $this->_config->getProperty("title",false);
 
@@ -112,7 +116,8 @@ class KlearMatrix_Model_ResponseItem {
 	}
 
 
-	protected function _createCol($name,$config) {
+	protected function _createCol($name,$config)
+	{
         $col = new KlearMatrix_Model_Column;
         $col->setDbName($name);
         if ($config) {
@@ -123,7 +128,8 @@ class KlearMatrix_Model_ResponseItem {
 
 	}
 
-	protected function _createFileColumn($config, $fileColumn) {
+	protected function _createFileColumn($config, $fileColumn)
+	{
         $col = $this->_createCol($fileColumn, $config);
         $col->markAsFile();
 		return $col;
@@ -133,7 +139,8 @@ class KlearMatrix_Model_ResponseItem {
 	 * Instancia en self::_visibleColumnWrapper las columnas tipo file del modelo
 	 * @param unknown_type $model
 	 */
-	protected function _loadFileColumns($model) {
+	protected function _loadFileColumns($model)
+	{
 
 	    if (method_exists($model, 'getFileObjects')) {
 
@@ -333,7 +340,7 @@ class KlearMatrix_Model_ResponseItem {
 		    return false;
 		}
 
-        foreach($model->getFileObjects() as $_fileCol) {
+        foreach ($model->getFileObjects() as $_fileCol) {
             if ($colName == $_fileCol) {
                 if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
                     return $this->_createFileColumn($colConfig, $_fileCol);
@@ -347,20 +354,41 @@ class KlearMatrix_Model_ResponseItem {
 	}
 
 
-	public function isParentDependantScreen() {
+	public function isParentDependantScreen()
+	{
 	    return (!empty($this->_parentField));
 	}
 
-	public function isFilteredScreen() {
+	public function isFilteredScreen()
+	{
 	    return (!empty($this->_filteredField));
 	}
 
 
-	public function getFilteredCondition($pkValue) {
+	public function getFilteredCondition($_value) {
 	    return array(
-	    	$this->_filteredField . "= :pk", 
-	    	array(':pk' => $pkValue)
+	    	$this->_filteredField . " = :filtered ",
+	    	array(':filtered' => $_value)
 		);
+	}
+	
+	
+	public function hasForcedValues() {
+	    return sizeof($this->_forcedValues)>0;
+	}
+	
+	public function getForcedValuesConditions() {
+	    $forcedValueConds = array();
+	    foreach ($this->_forcedValues as $field => $value) {
+	        $valConstant = 'normal';
+	        $forcedValueConds[] = array(
+	                $field . " = :" .$valConstant,
+	                array(':'.$valConstant => $value) 
+	                );
+	    }
+	    
+	    return $forcedValueConds;
+
 	}
 
 	public function getFilteredField() {

@@ -34,6 +34,7 @@ class KlearMatrix_Model_Field_File_Fso
     
     protected function _getAllowedExtensions() {
         $exts = array();
+        if (!isset($this->_config->extensions)) return array();
         foreach($this->_config->extensions as $ext) {
             $exts[] = $ext;            
         }

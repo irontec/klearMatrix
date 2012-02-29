@@ -357,7 +357,10 @@ class KlearMatrix_Model_ResponseItem {
 
 
 	public function getFilteredCondition($pkValue) {
-	    return $this->_filteredField . "='" . $pkValue . "'";
+	    return array(
+	    	$this->_filteredField . "= :pk", 
+	    	array(':pk' => $pkValue)
+		);
 	}
 
 	public function getFilteredField() {

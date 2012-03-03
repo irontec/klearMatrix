@@ -46,6 +46,10 @@
 							tmplName,
 							this.options.data,
 							{
+								debug : function() {
+									console.log(arguments);
+									return '';
+								},
 								cleanValue : function(_value,ifNull) {
 									ifNUll = (typeof ifNULL == 'undefined')? 'no disponible':ifNUll;									
 									if(!_value) {
@@ -53,8 +57,6 @@
 									}
 									
 									return $('<div/>').text(_value).html();
-									
-									
 								},
 								getEditDataForField : function(value,column,isNew) {
 									
@@ -130,14 +132,20 @@
 									return node.html();
 									
 								},
+								getColumnName : function(columns, columnId) {
 								
-								getIndex : function(values,idx) {
-									if (!values[idx]) return 'error';
-
-									return values[idx];
+									for(var idx in columns) {
+										if (columns[idx].id == columnId) {
+											return columns[idx].name;
+										}
+									}
+									return false;
 									
 								},
-								
+								getIndex : function(values,idx) {
+									if (!values[idx]) return 'error';
+									return values[idx];
+								},
 								getMultiLangValue : function(value,langs,defaultLang) {
 									var retItem = $("<div />");
 									for (var i in langs) {

@@ -8,6 +8,7 @@ table.kMatrix {
 table.kMatrix caption {
 	text-align: left;
 	padding:.3em;
+	font-size:1.2em;
 }
 
 table.kMatrix th {
@@ -27,6 +28,9 @@ table.kMatrix td {
     background:transparent none;
 }
 
+.hidden {
+    display:none;
+}
 table.kMatrix .multilangValue {
 	display:none;
 	
@@ -137,5 +141,48 @@ table.kMatrix .mlTag {
     text-decoration:none;
 }
 
-.
-	
+.klearMatrixFiltering {
+    padding:1em;
+    overflow: hidden;
+ }
+ 
+.klearMatrixFiltering p.title {
+    margin:.5em;
+    font-size:1.1em;
+ }
+ 
+.klearMatrixFiltering input.term {
+    width:205px;
+}
+
+ .klearMatrixFiltering .filterItem {
+    margin-left: 3em;
+    width:45%;
+    display:block;
+ }
+ 
+ .klearMatrixFiltering .addTerm {
+    cursor:pointer;
+ }
+ 
+ .klearMatrixFiltering .disabled {
+    cursor:default;
+ }
+ 
+ .klearMatrixFiltering .filteredFields {
+    float:right;
+    width:50%;
+}
+ 
+ .klearMatrixFiltering .filteredFields .field {
+    padding:.6em .6em;
+    display:block;
+}
+.klearMatrixFiltering .filteredFields .field .content {
+    white-space:nowrap;
+    padding: .3em;
+    margin: .3em;
+}
+.klearMatrixFiltering .filteredFields .field .ui-silk {
+    cursor:pointer;
+}

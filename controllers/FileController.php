@@ -118,6 +118,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
 	        if ((bool)$this->_request->getParam("download")) {
 
+	            
 	            $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
 	            $nameGetter = 'get' . $fileFields['baseNameName'];
 
@@ -155,7 +156,11 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
 
 	    } catch(Exception $e) {
-
+	        if (!$this->_request->isXmlHttpRequest()) { 
+	            throw new Zend_Controller_Action_Exception('File not found.', 404);
+	            return;
+	        }
+	        
 	        $data = array(
 	                'message'=>'Error preparando la descarga.<br />('.$e->getMessage().')',
 	                'buttons'=>array(

@@ -37,7 +37,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
        $model = $this->_item->getObjectInstance();
        $cols = $this->_item->getVisibleColumnWrapper();
-
+       $hasDependant = false;
         
         foreach($cols as $column) {
             if ($column->isOption()) continue;
@@ -57,7 +57,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             if (!$setter = $column->getSetterName($model)) continue;
             if (!$getter = $column->getGetterName($model)) continue;
             
-            
             switch(true) {
                 case ($column->isMultilang()):
                     foreach($value as $lang => $_value) {
@@ -73,6 +72,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                     break;
             
                 case ($column->isFile()):
+                    
                     $value = $column->filterValue($value,$model->{$getter}());
                     if ($value !== false) {
                         $model->$setter($value['path'],$value['basename']);
@@ -88,8 +88,25 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             
         }
 
+        if ($this->_item->hasForcedValues()) {
+            
+            foreach($this->_item->getForcedValues() as $field => $value) {
+            
+                try {
+                    $varName = $model->columnNameToVar($field);
+                    $model->{'set' . $varName}($value);
+                    
+                } catch (Exception $e) {
+                    // Nothing to do... condition not found in model... :S
+                    // Debemos morir??
+                }
+            }
+            
+        }
+        
+        
         try {
-		     $model->save(false,$hasDependant);
+             $model->save(false,$hasDependant);
              $data = array(
     			'error'=>false,
     			'pk'=>$model->getPrimaryKey(),

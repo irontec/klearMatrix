@@ -46,8 +46,13 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	public function getCustomOrderField($model) {
 	    
 	    $fields = $model->{$this->getCustomGetterName()}();
-	    
 	    return $model->varNameToColumn($fields['baseNameName']);
+	}
+	
+	public function getCustomSearchField($model) {
+	    $fields = $model->{$this->getCustomGetterName()}();
+	    return $model->varNameToColumn($fields['baseNameName']);
+	    
 	}
 	
 	public function getConfig() {
@@ -72,6 +77,9 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	
 	public function filterValue($value,$original)
 	{
+	    if (empty($value)) return false;
+	    
+	    
 	    $tempFSystemNS = new Zend_Session_Namespace('File_Controller');
 	    if (isset($tempFSystemNS->{$value})) {
 	        $tempFile = $tempFSystemNS->{$value};

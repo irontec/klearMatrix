@@ -222,7 +222,7 @@ class KlearMatrix_Model_ResponseItem {
 
 
 		/*
-		 * Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
+		* Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
 		*/
         $this->_loadFileColumns($model);
 
@@ -247,6 +247,19 @@ class KlearMatrix_Model_ResponseItem {
 		if ($this->isFilteredScreen()) {
 		    $this->_blacklist[$this->_filteredField] = true;
 		}
+		
+		/*
+		 * Si es una pantalla con valores forzados, y éstos no están en la lista blanca
+		 * no serán mostrados por defecto.
+		*/
+		if ($this->hasForcedValues()) {
+		    foreach($this->getForcedValues() as $field => $value) {
+		        if  (!$this->_config->exists("fields->whitelist->" . $field)) {
+		            $this->_blacklist[$field] = true;
+		        }
+		    }		        
+		}
+		
 
 
 		/*
@@ -380,7 +393,7 @@ class KlearMatrix_Model_ResponseItem {
 	public function getForcedValuesConditions() {
 	    $forcedValueConds = array();
 	    foreach ($this->_forcedValues as $field => $value) {
-	        $valConstant = 'normal';
+	        $valConstant = 'v' . rand(1000,9999);
 	        $forcedValueConds[] = array(
 	                $field . " = :" .$valConstant,
 	                array(':'.$valConstant => $value) 
@@ -388,7 +401,14 @@ class KlearMatrix_Model_ResponseItem {
 	    }
 	    
 	    return $forcedValueConds;
-
+	}
+	
+	public function getForcedValues() {
+	    $ret = array();
+	    foreach ($this->_forcedValues as $field=> $value) {
+	        $ret[$field] = $value;
+	    }
+	    return $ret;
 	}
 
 	public function getFilteredField() {

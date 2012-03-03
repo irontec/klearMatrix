@@ -133,20 +133,24 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 		return $this->_cols[$this->_defaultColumnIdx];
 	}
 
-	public function setLangs($langs) {
+	public function setLangs($langs)
+	{
 	    $this->_langs = $langs;
 	}
 
-	public function getLangs() {
+	public function getLangs()
+	{
 	    return $this->_langs;
 	}
 	
-	public function getDefaultLang() {
+	public function getDefaultLang()
+	{
 	    return array_shift($this->getLangs());
 	}
 
 
-	public function resetWrapper() {
+	public function resetWrapper()
+	{
 		$this->_cols = array();
 		$this->_types = array();
 		$this->_defaultColumnIdx = false;
@@ -154,7 +158,8 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 		return $this;
 	}
 
-	public function getOptionColumn() {
+	public function getOptionColumn()
+	{
 
 		if (false === $this->_optionColumnsIdx) {
 			return false;
@@ -163,31 +168,6 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 		return $this->_cols[$this->_optionColumnsIdx];
 
 	}
-
-// 	public function __construct() {
-// 		$this->_position = 0;
-// 	}
-
-// 	public function rewind() {
-// 		$this->_position = 0;
-// 	}
-
-// 	public function current() {
-// 		return $this->_cols[$this->_position];
-// 	}
-
-// 	public function key() {
-// 		return $this->_position;
-// 	}
-
-// 	public function next() {
-// 		++$this->_position;
-// 	}
-
-// 	public function valid() {
-// 		return isset($this->_cols[$this->_position]);
-
-// 	}
 
 	public function getIterator()
 	{

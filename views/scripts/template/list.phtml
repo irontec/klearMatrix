@@ -1,3 +1,38 @@
+<div class="ui-widget-content ui-corner-all klearMatrixFiltering">
+<p class="title"><span class="ui-silk inline ui-silk-zoom"></span>Filtrado de Campos</p>
+    <p class="filteredFields">
+    {{each(field,searchValues) searchFields}}
+    
+        {{if (($item.getColumnName(columns,field))) }}
+        
+        <span data-field="${field}" class="field">
+            <strong>${$item.getColumnName(columns,field,searchValues)}</strong>:
+            {{each(_valIdx,_val) searchValues}}
+                <span class="ui-widget-content ui-corner-all content">
+                    <span data-idx="${_valIdx}" class="ui-silk inline ui-silk-cancel"></span>
+                    ${$item.cleanValue(_val)}
+                </span>
+            {{/each}}
+        </span>
+        {{/if}}
+    {{/each}}    
+    </p>    
+    <p class="filterItem">
+    <input type="text" class="term">
+    <select name="searchFiled">
+     {{each(idx,column) columns}}
+         {{if (type != '_option') }}
+             <option value="${column.id}">${column.name}</option>
+         {{/if}}
+     {{/each}}
+    </select>
+    <span class="ui-silk inline ui-silk-add addTerm"></span>
+    </p>
+        
+    
+</div>
+
+
 {{if ($item.data.paginator)}}
     {{if (paginator.pageCount>1)}}
         {{tmpl(paginator) $item.getPaginatorTemplate()}}

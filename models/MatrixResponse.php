@@ -14,6 +14,8 @@ class KlearMatrix_Model_MatrixResponse {
 	protected $_parentItem = false;
 	protected $_title;
 
+	protected $_searchFields = array();
+	
 	/**
 	 * Enter description here ...
 	 * @var KlearMatrix_Model_ResponseItem;
@@ -86,6 +88,11 @@ class KlearMatrix_Model_MatrixResponse {
 	    $this->_parentItem = $parentItem;
 	}
 
+	
+	public function addSearchField($field,$values) {
+	    $this->_searchFields[$field] = $values;
+	}
+	
 	/**
 	 * Si los resultados (de data) son objetos, los pasa a array (para JSON)
 	 * Se eliminan los campos no presentes en el column-wrapper
@@ -166,6 +173,10 @@ class KlearMatrix_Model_MatrixResponse {
 		    $ret['paginator'] = (array)$this->_paginator->getPages();
 		}
 
+		if (sizeof($this->_searchFields)>0) {
+		    $ret['searchFields'] = $this->_searchFields;
+		}
+		
 		$simpleFields = array('parentIden','parentId','parentScreen','parentItem');
 		foreach ($simpleFields as $_fld)  {
 		    if (false !== $this->{'_' . $_fld})  {

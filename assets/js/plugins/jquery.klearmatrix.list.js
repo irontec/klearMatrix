@@ -153,8 +153,65 @@
 				e.stopPropagation();
 			});
 			
+			
+			$(".klearMatrixFiltering span.addTerm",this.element.klearModule("getPanel")).on('click',function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				var $holder = $(this).parents(".klearMatrixFiltering");
+				var $_term = $("input.term",$holder);
+				var $_field = $("select[name=searchFiled]",$holder);
+				
+				if ($_term.val() == '') {
+					$(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
+					return;
+				}
+				
+				$_term.attr("disabled","disabled");
+				$_field.attr("disabled","disabled");
+				
+				var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+				var fieldName = $_field.val();
+				
+				_dispatchOptions.post = _dispatchOptions.post || {};
+				_dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
+				_dispatchOptions.post.searchFields[fieldName] = _dispatchOptions.post.searchFields[fieldName] || [];
+				_dispatchOptions.post.searchFields[fieldName].push($_term.val());
+				_dispatchOptions.post.page = 1;
+
+				$(self)
+					.klearModule("option","dispatchOptions",_dispatchOptions)
+					.klearModule("reDispatch");
+				
+				
+			});
+			
+			$(".klearMatrixFiltering input.term",this.element.klearModule("getPanel")).on('keydown',function(e) {
+				if (e.keyCode == 13) {
+					$("span.addTerm",$(this).parents(".klearMatrixFiltering")).trigger("click");	
+				}
+			});
+			
+			$(".klearMatrixFiltering .filteredFields",this.element.klearModule("getPanel")).on('click','.ui-silk-cancel',function(e) {
+				
+				var fieldName = $(this).parents("span.field:eq(0)").data("field");
+				var idxToRemove = $(this).data("idx");
+				var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+
+				if (!_dispatchOptions.post.searchFields[fieldName]) {
+					return;
+				}
+				_dispatchOptions.post.searchFields[fieldName].splice(idxToRemove,1);
+				_dispatchOptions.post.page = 1;
+
+				$(self)
+					.klearModule("option","dispatchOptions",_dispatchOptions)
+					.klearModule("reDispatch");				
+			
+			});
+			
 			return this;
-		}		
+		}
 	});
 	
 	$.widget.bridge("klearMatrixList", $.klearmatrix.list);

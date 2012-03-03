@@ -32,6 +32,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        
         $mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
 
@@ -39,7 +40,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$cols = $this->_item->getVisibleColumnWrapper();
 
     	$model = $this->_item->getObjectInstance();
-    	
+        
     	$where = array();
     	
     	
@@ -70,11 +71,18 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	}
     	
     	if ($this->_item->hasForcedValues()) {
-
     	    $where = array_merge($where,$this->_item->getForcedValuesConditions());
-    	    
     	}
 
+    	if ($searchFields = $this->getRequest()->getPost("searchFields")) {
+    	    foreach ($searchFields as $field => $values) {
+    	        if ($col = $cols->getColFromDbName($field)) {
+    	            $where[] = $col->getSearchCondition($values,$model,$cols->getLangs());
+    	            $data->addSearchField($field,$values);
+    	        }
+    	    }
+    	}
+    	
     	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
     	    
     	    $order = $orderColumn->getOrderField($model);
@@ -136,7 +144,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	    $values = $expresions = array(); 
     	    foreach ($where as $condition) {
     	        $expresions[] = $condition[0];
-    	        $values[] = $condition[1];
+    	        $values = array_merge($values,$condition[1]);
     	    }
     	    
     	    $where = array(implode ( " and ", $expresions),$values);
@@ -205,7 +213,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     		$data->fixResults($this->_item);
     	}
-
 
     	$generalOptionsWrapper = new KlearMatrix_Model_GeneralOptionsWrapper;
 

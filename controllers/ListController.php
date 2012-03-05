@@ -32,7 +32,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        
+
         $mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
 
@@ -40,12 +40,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$cols = $this->_item->getVisibleColumnWrapper();
 
     	$model = $this->_item->getObjectInstance();
-        
+
     	$where = array();
-    	
-    	
+
+
     	if ($this->_item->isFilteredScreen()) {
-    	    
+
     	    $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
 
     	    if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
@@ -66,25 +66,42 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	       $data->setParentIden($parentData->$getter());
     	       $data->setParentScreen($callerScreen);
     	       $data->setParentId($parentId);
-    	       
+
     	    }
     	}
-    	
+
     	if ($this->_item->hasForcedValues()) {
     	    $where = array_merge($where,$this->_item->getForcedValuesConditions());
     	}
 
     	if ($searchFields = $this->getRequest()->getPost("searchFields")) {
+    	    $_searchWhere = array();
+
     	    foreach ($searchFields as $field => $values) {
     	        if ($col = $cols->getColFromDbName($field)) {
-    	            $where[] = $col->getSearchCondition($values,$model,$cols->getLangs());
+    	            $_searchWhere[] = $col->getSearchCondition($values,$model,$cols->getLangs());
     	            $data->addSearchField($field,$values);
     	        }
     	    }
+
+    	    $expresions = $values = array();
+    	    foreach ($_searchWhere as $condition) {
+    	        $expresions[] = $condition[0];
+    	        $values = array_merge($values,$condition[1]);
+    	    }
+
+    	    if ($this->getRequest()->getPost("searchAddModifier") == '1') {
+    	        $data->addSearchAddModifier(true);
+    	        $where[] = array(implode ( " or ", $expresions),$values);
+
+    	    } else {
+
+                $where[] = array(implode ( " and ", $expresions),$values);
+    	    }
     	}
-    	
+
     	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
-    	    
+
     	    $order = $orderColumn->getOrderField($model);
 
     	    $orderColumn->setAsOrdered();
@@ -138,20 +155,20 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	if (sizeof($where) == 0) {
 
     	    $where = null;
-    	
+
     	} else {
-    	    
-    	    $values = $expresions = array(); 
+
+    	    $values = $expresions = array();
     	    foreach ($where as $condition) {
     	        $expresions[] = $condition[0];
     	        $values = array_merge($values,$condition[1]);
     	    }
-    	    
+
     	    $where = array(implode ( " and ", $expresions),$values);
-    	    
-    	    
+
+
     	}
-    	
+
     	if (!$results= $mapper->fetchList($where, $order, $count, $offset)) {
 			// No hay resultados
 			$data->setResults(array());
@@ -187,7 +204,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     				// Recuperamos la configuración del screen, de la configuración general del módulo
     				// Supongo que cuando lo vea Alayn, le gustará mucho :)
     				// El "nombre" mainRouter apesta... pero... O:)
-    				
+
     				$screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
     				$fieldOptionsWrapper->addOption($screenOption);
     			}
@@ -236,7 +253,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     	$jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
     	$jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
     	$jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
-
+        $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
     	$jsonResponse->addCssFile("/css/klearMatrix.css");

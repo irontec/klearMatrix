@@ -46,11 +46,23 @@ $.widget("ui.form",{
 			$(element).addClass("ui-helper-hidden");
 			parent.css({width:16,height:16,display:"block"});
 			parent.wrap("<span class='ui-state-default ui-corner-all' style='display:inline-block;width:16px;height:16px;margin-right:5px;'/>");
+			
+			if ($(element).is(":checked")) {
+				parent.parent("span").addClass("ui-state-active");
+				parent.addClass("ui-icon ui-icon-check");
+			}
+			
 			parent.parent("span").on('click', function(event){
 				$(this).toggleClass("ui-state-active");
 				parent.toggleClass("ui-icon ui-icon-check");
-				$(element).trigger('click');
+				if ($(this).hasClass("ui-state-active")) {
+					$(element).prop("checked",true);
+				} else {
+					$(element).prop("checked",false);
+				}
+				$(element).trigger('change');
 			});
+			
 		},
 		
 		radio:function(element){

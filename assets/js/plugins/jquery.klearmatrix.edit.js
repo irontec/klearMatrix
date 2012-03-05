@@ -3,7 +3,8 @@
 	this.count = this.count || 0;
 	
 
-	if ( (typeof $.klearmatrix.module != 'function') 
+	if ( (typeof $.klearmatrix.module != 'function')
+		|| (typeof $.ui.form != 'function')
 		|| (typeof $.fn.autoResize != 'function')
 		|| (typeof $.fn.h5Validate != 'function')
 		|| (typeof Crypto != 'object')

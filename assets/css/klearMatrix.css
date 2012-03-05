@@ -156,23 +156,30 @@ table.kMatrix .mlTag {
 }
 
  .klearMatrixFiltering .filterItem {
-    margin-left: 3em;
-    width:45%;
-    display:block;
+	margin-left: 3em;
+	padding-top:.5em;
+	float:left;
+    clear: both;
  }
  
  .klearMatrixFiltering .addTerm {
     cursor:pointer;
  }
  
+ .klearMatrixFiltering .addToggle {
+ 	padding-top:.8em;
+ 	display:inline-block;
+ }
  .klearMatrixFiltering .disabled {
     cursor:default;
  }
  
  .klearMatrixFiltering .filteredFields {
-    float:right;
-    width:50%;
+    float: left;
+    margin-left: 3em;
 }
+
+
  
  .klearMatrixFiltering .filteredFields .field {
     padding:.6em .6em;

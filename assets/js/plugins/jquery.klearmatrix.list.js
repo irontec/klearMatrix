@@ -2,7 +2,10 @@
 
 	this.count = this.count || 0;
 	
-	if ( (!$.klearmatrix) || (typeof $.klearmatrix.module != 'function') ) {
+	if ( (!$.klearmatrix)
+			|| (typeof $.klearmatrix.module != 'function') 
+			|| (typeof $.ui.form != 'function')
+	) {
 		if (++this.count == 40) {
 			throw "JS Dependency error!";
 		}
@@ -52,9 +55,10 @@
 			
 			var self = this.element;
 			var _self = this;
+			var panel = this.element.klearModule("getPanel");
 			
 			// highlight effect on tr
-			$('table.kMatrix tr',this.element.klearModule("getPanel")).on('mouseenter mouseleave',function() {
+			$('table.kMatrix tr',panel).on('mouseenter mouseleave',function() {
 				$("td",$(this)).toggleClass("ui-state-highlight");
 				
 				if ($("a.option.default",$(this)).length>0) {
@@ -67,11 +71,12 @@
 				// Haciendo toda la tupla clickable para la default option
 				e.stopPropagation();
 				e.preventDefault();
-				$.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(),$("a.option.default",$(this)));
+				$.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default",$(this)));
+
 				$("a.option.default",$(this)).trigger("mouseup");
 			});
 			
-			$('a._fieldOption', this.element.klearModule("getPanel")).on('mouseenter',function(e) {
+			$('a._fieldOption', panel).on('mouseenter',function(e) {
 				if ($(this).data("relatedtab")) {
 					$(this).data("relatedtab").klearModule("highlightOn");
 				}				
@@ -83,7 +88,7 @@
 			
 			
 			
-			$(".paginator a",this.element.klearModule("getPanel")).on('click',function(e) {
+			$(".paginator a",panel).on('click',function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				
@@ -104,7 +109,7 @@
 			});
 			
 			// Orden de columnas
-			$("th:not(.optionHeader)",this.element.klearModule("getPanel")).on("click",function(e) {
+			$("th:not(.optionHeader)",panel).on("click",function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				
@@ -127,13 +132,13 @@
 					.klearModule("reDispatch");
 			}).css("cursor","pointer");
 
-			$("th:not(.optionHeader) span.filter",this.element.klearModule("getPanel")).on("click",function(e) {
+			$("th:not(.optionHeader) span.filter",panel).on("click",function(e) {
 				e.stopPropagation();
 				e.preventDefault();
 				
 			});
 			
-			$("span.mlTag",this.element.klearModule("getPanel")).on("click",function(e) {
+			$("span.mlTag",panel).on("click",function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 				var $td = $(this).parent("td");
@@ -154,7 +159,7 @@
 			});
 			
 			
-			$(".klearMatrixFiltering span.addTerm",this.element.klearModule("getPanel")).on('click',function(e) {
+			$(".klearMatrixFiltering span.addTerm",panel).on('click',function(e,noNewValue) {
 				e.preventDefault();
 				e.stopPropagation();
 				
@@ -162,21 +167,27 @@
 				var $_term = $("input.term",$holder);
 				var $_field = $("select[name=searchFiled]",$holder);
 				
-				if ($_term.val() == '') {
-					$(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
-					return;
-				}
-				
-				$_term.attr("disabled","disabled");
-				$_field.attr("disabled","disabled");
-				
 				var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
 				var fieldName = $_field.val();
 				
 				_dispatchOptions.post = _dispatchOptions.post || {};
 				_dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
 				_dispatchOptions.post.searchFields[fieldName] = _dispatchOptions.post.searchFields[fieldName] || [];
-				_dispatchOptions.post.searchFields[fieldName].push($_term.val());
+				
+				
+				if (noNewValue !== true) {
+					if ($_term.val() == '') {
+						$(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
+						return;
+					}
+				
+					$_term.attr("disabled","disabled");
+					$_field.attr("disabled","disabled");
+				
+					_dispatchOptions.post.searchFields[fieldName].push($_term.val());
+				}
+				
+				_dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
 				_dispatchOptions.post.page = 1;
 
 				$(self)
@@ -186,13 +197,20 @@
 				
 			});
 			
-			$(".klearMatrixFiltering input.term",this.element.klearModule("getPanel")).on('keydown',function(e) {
+			$(".klearMatrixFiltering input.term",panel).on('keydown',function(e) {
 				if (e.keyCode == 13) {
 					$("span.addTerm",$(this).parents(".klearMatrixFiltering")).trigger("click");	
 				}
 			});
 			
-			$(".klearMatrixFiltering .filteredFields",this.element.klearModule("getPanel")).on('click','.ui-silk-cancel',function(e) {
+			$(".klearMatrixFiltering input[name=addFilters]",panel).on('change',function(e) {
+				if ($(".klearMatrixFiltering .filteredFields .field",panel).length<=1) {
+					return;
+				}
+				$("span.addTerm",panel).trigger("click",true);
+			});
+			
+			$(".klearMatrixFiltering .filteredFields",panel).on('click','.ui-silk-cancel',function(e) {
 				
 				var fieldName = $(this).parents("span.field:eq(0)").data("field");
 				var idxToRemove = $(this).data("idx");
@@ -209,7 +227,7 @@
 					.klearModule("reDispatch");				
 			
 			});
-			
+			$(".klearMatrixFilteringForm",panel).form();
 			return this;
 		}
 	});

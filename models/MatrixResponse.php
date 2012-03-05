@@ -15,7 +15,8 @@ class KlearMatrix_Model_MatrixResponse {
 	protected $_title;
 
 	protected $_searchFields = array();
-	
+    protected $_searchAddModifier = false;
+
 	/**
 	 * Enter description here ...
 	 * @var KlearMatrix_Model_ResponseItem;
@@ -75,24 +76,28 @@ class KlearMatrix_Model_MatrixResponse {
 	public function setParentIden($parentIden) {
 	    $this->_parentIden = $parentIden;
 	}
-	
+
 	public function setParentId($parentId) {
 	    $this->_parentId = $parentId;
 	}
-	
+
 	public function setParentScreen($parentScreen) {
 	    $this->_parentScreen = $parentScreen;
 	}
-	
+
 	public function setParentItem($parentItem) {
 	    $this->_parentItem = $parentItem;
 	}
 
-	
+
 	public function addSearchField($field,$values) {
 	    $this->_searchFields[$field] = $values;
 	}
-	
+
+	public function addSearchAddModifier($toggle) {
+	    $this->_searchAddModifier = $toggle;
+	}
+
 	/**
 	 * Si los resultados (de data) son objetos, los pasa a array (para JSON)
 	 * Se eliminan los campos no presentes en el column-wrapper
@@ -130,8 +135,8 @@ class KlearMatrix_Model_MatrixResponse {
 			        } else {
 			            $rValue = $result->{$getter}();
 			        }
-			    
-			        
+
+
 			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue, $result);
 
 			    }
@@ -175,8 +180,9 @@ class KlearMatrix_Model_MatrixResponse {
 
 		if (sizeof($this->_searchFields)>0) {
 		    $ret['searchFields'] = $this->_searchFields;
+		    $ret['searchAddModifier'] = $this->_searchAddModifier;
 		}
-		
+
 		$simpleFields = array('parentIden','parentId','parentScreen','parentItem');
 		foreach ($simpleFields as $_fld)  {
 		    if (false !== $this->{'_' . $_fld})  {
@@ -184,7 +190,7 @@ class KlearMatrix_Model_MatrixResponse {
 		    }
 		}
 
-		
+
 		$ret[$this->_item->getType()] = $this->_item->getItemName();
 
 		return $ret;

@@ -172,12 +172,7 @@ class KlearMatrix_Model_Column {
 
 	    if ($this->isOption()) return false;
 
-	    switch ($this->_routeDispatcher->getControllerName()) {
-	        case "new":
-	            return false;
-	        default:
-	            return $this->_isReadonly;
-	    }
+        return $this->_isReadonly;
 
 	}
 
@@ -271,44 +266,44 @@ class KlearMatrix_Model_Column {
     }
 
     public function getSearchCondition(array $values,$model, $langs) {
-        
+
         if (method_exists($this->_fieldConfig, 'getCustomSearchField')) {
             $searchField = $this->_fieldConfig->getCustomSearchField($model);
         } else {
             $searchField = $this->_dbName;
         }
-        
+
         if ($this->isMultilang()) {
             $searchFields = array();
             foreach($langs as $_lang) {
                 $searchFields[] = $searchField .'_' . $_lang;
             }
-            
+
         } else {
             $searchFields = array($searchField);
         }
-        
+
         $vals = $_fieldValues = array();
-        
+
         foreach ($searchFields as $searchField) {
             $cont = 1;
 
             foreach ($values as $_val) {
                 $template = ':' . $searchField . $cont;
-                
+
                 $vals[] = 'concat('.$searchField .') like ' . $template;
                 $_fieldValues[$template] = '%'. $_val .'%';
                 $cont++;
             }
         }
-        
+
         return array(
                 '(' . implode(' or ',$vals). ')',
                 $_fieldValues
         );
-        
+
     }
-    
+
     public function getSetterName($model)
     {
         if ($this->isOption()) return false;

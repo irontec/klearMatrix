@@ -1,4 +1,5 @@
 <span class="klearMatrix_file" id="current_${_elemIden}">
+{{if (_fieldValue.name)}}
     ${_fieldValue.name}
     <a title="Descargar Fichero" href=""
     {{if (_dataConfig.downloadDialog)}}
@@ -7,12 +8,15 @@
     >
         <span class="ui-icon ui-icon-disk inline"></span>
     </a>
+{{else}}
+No disponible
+{{/if}}
 </span>
 
-    <span class="klearMatrix_file newFile" id="new_${_elemIden}"></span>
+<span class="klearMatrix_file newFile" id="new_${_elemIden}"></span>
 
-{{if (!_readonly)}} 
-    <input type="hidden" name="${_elemName}" value="${_fieldValue.name}"  
+{{if (!_readonly)}}
+    <input type="hidden" name="${_elemName}" value="${_fieldValue.name}"
     {{if (_properties.required)}}required="" {{/if}}
     {{if (_dataConfig.allowed_extensions)}} data-extensions="${_dataConfig.allowed_extensions}"{{/if}}
     {{if (_dataConfig.uploadCommnad)}} data-upload="command" data-command="${_dataConfig.uploadCommnad}"{{/if}}

@@ -92,6 +92,11 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $this->view->code = $result['filename'];
 
     }
+    
+    public function forcedwAction() {
+        $this->getRequest()->setParam("download",true);
+        return $this->downloadAction();
+    }
 
     public function downloadAction()
     {

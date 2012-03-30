@@ -1,25 +1,39 @@
+<span class="klearMatrix_file newFile" id="new_${_elemIden}"></span>
 <span class="klearMatrix_file" id="current_${_elemIden}">
+
 {{if (_fieldValue.name)}}
     ${_fieldValue.name}
-    <a title="Descargar Fichero" href=""
-    {{if (_dataConfig.downloadDialog)}}
-        class="option dialog" data-dialog="${_dataConfig.downloadDialog}"
+{{else}}
+    No disponible
+{{/if}}    
+    
+{{each(idx,option) _dataConfig.options}}
+    <a rel="${_elemIden}" href="#"
+    {{if (option.title)}} title="${option.title}" {{/if}}
+    class="option
+     {{if (option.class)}}
+         ${option.class}
+    {{/if}}
+    {{if (option.type)}} 
+        ${option.type}" data-${option.type}="${option.target}"
+    {{/if}}
+    {{if (option.external)}}
+         data-external="true"
     {{/if}}
     >
-        <span class="ui-icon ui-icon-disk inline"></span>
+    {{if (option.icon)}}
+        <span class="ui-silk inline ${option.icon}"></span>
+    {{/if}}
     </a>
-{{else}}
-No disponible
-{{/if}}
+{{/each}}
+
 </span>
-
-<span class="klearMatrix_file newFile" id="new_${_elemIden}"></span>
-
+    
 {{if (!_readonly)}}
     <input type="hidden" name="${_elemName}" value="${_fieldValue.name}"
     {{if (_properties.required)}}required="" {{/if}}
     {{if (_dataConfig.allowed_extensions)}} data-extensions="${_dataConfig.allowed_extensions}"{{/if}}
     {{if (_dataConfig.uploadCommnad)}} data-upload="command" data-command="${_dataConfig.uploadCommnad}"{{/if}}
     id="${_elemIden}" />
-    <span class="qq-uploader" rel="${_elemIden}"></span>
+    
 {{/if}}

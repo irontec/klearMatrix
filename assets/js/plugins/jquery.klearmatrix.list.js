@@ -38,7 +38,7 @@
 		_applyDecorators : function() {
 			$container = $(this.element.klearModule("getPanel"));
 			
-			$(".generalOptionsToolbar a",$container).button();
+			$(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
 			
 			if ($("td.multilang",$container).length>0) {
 				
@@ -204,11 +204,13 @@
 			});
 			
 			$(".klearMatrixFiltering input[name=addFilters]",panel).on('change',function(e) {
+				console.log($(".klearMatrixFiltering .filteredFields .field",panel).length);
 				if ($(".klearMatrixFiltering .filteredFields .field",panel).length<=1) {
 					return;
 				}
 				$("span.addTerm",panel).trigger("click",true);
 			});
+			
 			
 			$(".klearMatrixFiltering .filteredFields",panel).on('click','.ui-silk-cancel',function(e) {
 				

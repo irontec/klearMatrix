@@ -96,13 +96,20 @@
 							
 							if (data.error) {
 								//TO-DO: FOK OFF
+								// Mostrar errores desde arriba
 							} else {
 								var $parentModule = $self.klearModule("option","parentScreen");
 								$parentModule.klearModule("reDispatch");
+								
+								self._initSavedValueHashes();
+								self.options.theForm.trigger('updateChangedState');
+								if ($("input[name=autoclose]",$self.klearModule("getPanel")).is(":checked")) {
+									$dialog.moduleDialog("close");
+									$self.klearModule("close");
+									return;
+								}
 							}
-	
-							self._initSavedValueHashes();
-							self.options.theForm.trigger('updateChangedState');
+							
 							$dialog.moduleDialog("option","title",'');
 							$dialog.moduleDialog("option","buttons",
 									 [
@@ -186,20 +193,74 @@
 				});
 			}
 			
+			if ($(".jmedia",this.options.theForm).length>0) {
+				$(".jmedia",this.options.theForm).each(function() {
+					
+					var requestData = {
+							file: _self.klearModule("option","file"),
+							pk: $(this).parents("form:eq(0)").data("id"),
+							type : 'command',
+							post : 'foo=1',
+							command : $(this).data('command')
+					};
+					
+
+					var item = $("<div />");
+					$(this).replaceWith(item);
+					var controlId = 'controls' + Math.round(Math.random(1,1000)*1000);
+					var controls = $('<div id="'+controlId+'" class="ui-button ui-widget ui-state-default ui-corner-all controls">' +
+							'<a href="#" class="jp-play" tabindex="1"><span class="ui-icon ui-icon-play inline"></span></a>'+
+							'<a href="#" class="jp-pause" tabindex="2"><span class="ui-icon ui-icon-pause inline"></span></a>' + 
+							'<div class="jp-progress ui-widget ui-state-default ui-corner-all" ><div class="ui-widget ui-state-active ui-corner-all jp-seek-bar"><div class="ui-widget ui-widget-header jp-play-bar"></div></div></div>'+
+							'<div class="jp-volume-bar ui-widget ui-state-active ui-corner-all"><div class="jp-volume-bar-value ui-widget ui-state-active ui-corner-all"></div></div>'+
+							'<div class="jp-volumenCtrl">' + 
+							'<span class="jp-mute"><span class="ui-icon ui-icon-volume-on inline"></span></span>' +
+							'<span class="jp-unmute"><span class="ui-icon ui-icon-volume-off inline"></span></span></div>' + 
+							'<div class="jp-timers"><span class="jp-current-time"></span> / <span class="jp-duration"></span></div>'+
+							'</div>');
+
+					controls.insertAfter(item);
+					var request = $.klear.buildRequest(requestData);
+					item.jPlayer({
+									ready : function() {
+										item.jPlayer("setMedia", {
+											mp3 : encodeURI(request.action)
+										}).jPlayer("pause");				
+									},
+									play: function() {
+										 item.jPlayer("pauseOthers");
+									},
+									cssSelectorAncestor : '#' + controlId,
+									swfPath : '../klearMatrix/bin/',
+									solution:'html,flash',
+									supplied: "mp3",
+									oggSupport: false,
+									wmode:"window"		
+								});
+					
+				});
+				
+			}
+					
 			
 			if ($(".qq-uploader",this.options.theForm).length>0) {
 				$(".qq-uploader",this.options.theForm).each(function() {
 					
-					var _hiddenField = $("#" + $(this).attr("rel"));
+					var item = $("<div />");
+					item
+						.attr("rel",$(this).attr("rel"))
+						.data("command",$(this).data("command"));
+					
+					$(this).replaceWith(item);
+					
+					var _hiddenField = $("#" + item.attr("rel"));
 					
 					_hiddenField.on("postmanualchange",function() {
-						var _id = $(this).attr("id");
-						var $shownFDesc = $('#new_'+_id);
+						var $shownFDesc = $('#new_'+ $(this).attr("id"));
 						if ($(this).hasClass("changed")) {
 							$shownFDesc
 								.html($(this).data("fileDescription"))
 								.css("display","block");
-							$('#current_'+_id).hide();
 							$shownFDesc.addClass("changed ui-state-highlight");
 						} else {
 							$shownFDesc.removeClass("changed ui-state-highlight");
@@ -208,14 +269,9 @@
 					
 					var requestData = {
 							file: _self.klearModule("option","file"),
-							pk: $(this).parents("form:eq(0)").data("id")
-					};
-					
-					switch(_hiddenField.data("upload")) {
-						case 'command':
-							requestData['type'] = _hiddenField.data("upload");
-							requestData[requestData['type']] = _hiddenField.data(requestData['type']);
-							break;
+							pk: $(this).parents("form:eq(0)").data("id"),
+							type : 'command',
+							command : item.data('command')
 					};
 					
 					if (_hiddenField.val() == '') {
@@ -224,7 +280,7 @@
 					var request = $.klear.buildRequest(requestData);
 					
 					var qqOptions = {
-							element: $(this)[0],
+							element: item[0],
 							action: request.action,
 							params: request.data,
 							multiple: false,

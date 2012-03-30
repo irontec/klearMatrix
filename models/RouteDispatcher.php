@@ -157,7 +157,6 @@ class KlearMatrix_Model_RouteDispatcher {
 	        $this->_command->setRouteDispatcher($this);
 	        $this->_command->setCommandName($this->_commandName);
 	        $this->_command->setConfig($this->_selectedConfig);
-	        
 	    }
 	    return $this->_command;
 	}

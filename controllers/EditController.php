@@ -111,6 +111,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 		         
 		         Throw New Zend_Exception("Error salvando el registro.");
 		     }
+		     
+		     
 
              $data = array(
     			'error'=>false,

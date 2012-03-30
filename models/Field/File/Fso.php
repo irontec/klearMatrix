@@ -14,10 +14,14 @@ class KlearMatrix_Model_Field_File_Fso
     protected $_mimeType;
     
     protected $_js = array(
+            
+            "/js/plugins/jquery.jplayer.min.js",
+            "/js/plugins/jquery.jplayer.inspector.js",
             "/js/plugins/qq-fileuploader.js"
     );
     
     protected $_css = array(
+            "/css/jquery.jplayer.css",
             "/css/qq-fileuploader.css"
     );
     
@@ -54,18 +58,14 @@ class KlearMatrix_Model_Field_File_Fso
         $ret['allowed_extensions'] = $this->_getAllowedExtensions();
         $ret['size_limit'] = $this->_getSizeLimit();
         
-        if ($downloadMethod = $this->_config->download) {
-            if (isset($downloadMethod->dialog)) {
-                $ret['downloadDialog'] = $downloadMethod->dialog;
+        if ($fileOptions = $this->_config->options) {
+            $ret['options'] = array();
+            foreach ($fileOptions as $option => $opObject) {
+                
+                $ret['options'][$option] = $opObject;
             }
+            
         }
-        
-        if ($uploadMethod = $this->_config->upload) {
-            if (isset($uploadMethod->command)) {
-                $ret['uploadCommnad'] = $uploadMethod->command;
-            }
-        }
-        
         return $ret;        
     }
 

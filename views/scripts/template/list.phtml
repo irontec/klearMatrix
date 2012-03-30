@@ -11,14 +11,13 @@
      {{/each}}
     </select>
     <span class="ui-silk inline ui-silk-add addTerm"></span>
-    <br /><span class="addToggle" title="Devuelve los registros que cumplan alguno de los filtros"><label>Sumar todos los filtros
-
+    <br /><span class="addToggle" title="Devuelve los registros que cumplan alguno de los filtros">Sumar todos los filtros
     <input type="checkbox" name="addFilters"
     {{if (searchAddModifier) }}
         checked="checked"
     {{/if}}
     />
-    </label></span>
+    </span>
     <p class="filteredFields">
     {{each(field,searchValues) searchFields}}
 

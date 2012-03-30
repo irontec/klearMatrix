@@ -141,6 +141,12 @@ table.kMatrix .mlTag {
     text-decoration:none;
 }
 
+.klearMatrix_form .autoClose {
+    font-size: 0.8em;
+    margin-top: .3em;
+    padding:.5em;
+}
+
 .klearMatrixFiltering {
     padding:1em;
     overflow: hidden;

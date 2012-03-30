@@ -440,6 +440,59 @@
 				e.stopPropagation();
 			});
 			
+			/*
+			 * Capturar opciones de command (Siempre request externo -- no callback available!
+			 * TO-DO: Callback JS? when-ever need will be implemented
+			 */
+			
+			$('a.option.command',this.element.klearModule("getPanel")).on('click.commandAction',function(e,data) {
+				
+				e.preventDefault();
+				e.stopPropagation();
+				console.log("hola?",$(this));
+				var external = data && data.external || false;
+				external = $(this).data("external")? true: external;
+				
+				var _container = self.klearModule("getContainer");
+				
+				switch (_self.options.moduleName) {
+					case 'list':
+						var _parentHolder = $(this).parents("tr:eq(0)");
+						$(this).on('mouseup',function(e) {
+							// Paramos el evento mouseup, para no llegar al tr
+							e.preventDefault();
+							e.stopPropagation();
+						});
+						
+					break;
+					case 'new':
+					case 'edit':
+						var _parentHolder = $(this).parents("form:eq(0)");
+					break;
+				}
+			
+			
+				var _postData = (data && typeof data.params != undefined)? data.params:false;
+				$.klear.request(
+						{
+							file: self.klearModule("option","file"),
+							type: 'command',
+							command : $(this).data("command"),
+							pk : _parentHolder.data("id"),
+							post: _postData,
+							external: external
+						},
+						function(response) {
+							
+						},
+						function() {
+							console.log(arguments);
+										
+						}
+				);
+				
+				
+			});
 			
 			return this;
 		}

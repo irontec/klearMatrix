@@ -1,0 +1,36 @@
+.controls {
+    width:200px;
+    overflow: hidden;
+}
+
+.jp-progress {
+    height: 8px;
+    margin: 1px 2px 1px 20px;
+    padding: 5px 5px 1px;
+    width: 165px;   
+}
+
+.jp-seek-bar {
+    
+}
+
+.jp-play-bar {
+    
+}
+
+.jp-volume-bar {
+    float: right;
+    height: 5px;
+    margin: 3px;
+    padding: 4px 3px 1px;
+    width: 41px
+}
+.jp-timers {
+    float: left;
+    font-size: 0.8em;
+    margin: 2px 0 0 22px;
+}
+
+.jp-volumenCtrl {
+    float:right;
+}

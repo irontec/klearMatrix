@@ -42,7 +42,12 @@
 			var self = this;
 			var $self = $(this.element);
 			
-			var $dialog = $self.klearModule("getModuleDialog") 
+			var $dialog = $self.klearModule("getModuleDialog")
+			var postData = self.options.theForm.serializeArray();
+			
+			if (typeof this.options.data.parentId != 'undefined') {
+				postData.push({ name:this.options.data.parentItem, value:this.options.data.parentId});
+			}
 			
 			$.klear.request(
 					{
@@ -50,7 +55,7 @@
 						type: 'screen',
 						execute: 'save',
 						screen: self.options.data.screen,
-						post : self.options.theForm.serialize()
+						post : postData
 					},
 					function(data) {
 						
@@ -58,15 +63,21 @@
 						
 						if (data.error) {
 							//TO-DO: FOK OFF
+							// Mostrar errores desde arriba
 						} else {
 							var $parentModule = $self.klearModule("option","parentScreen");
 							$parentModule.klearModule("reDispatch");
 							
-							
+							$("input,select,textarea",self.options.theForm).val('');
+							self._initSavedValueHashes();
+							self.options.theForm.trigger('updateChangedState');
+							if ($("input[name=autoclose]",$self.klearModule("getPanel")).is(":checked")) {
+								$dialog.moduleDialog("close");
+								$self.klearModule("close");
+								return
+							}
 						}
-						$("input,select,textarea",self.options.theForm).val('');
-						self._initSavedValueHashes();
-						self.options.theForm.trigger('updateChangedState');
+						
 
 						$dialog.moduleDialog("option","buttons",
 								 [

@@ -36,10 +36,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
     public function saveAction() {
 
        $model = $this->_item->getObjectInstance();
+       // Cargamos las columnas visibles, ignorando blacklist
        $cols = $this->_item->getVisibleColumnWrapper();
        $hasDependant = false;
-        
-        foreach($cols as $column) {
+ 
+       foreach($cols as $column) {
             if ($column->isOption()) continue;
         
             if ($column->isMultilang()) {
@@ -89,7 +90,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         if ($this->_item->hasForcedValues()) {
-            
+
             foreach($this->_item->getForcedValues() as $field => $value) {
             
                 try {
@@ -104,7 +105,19 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             
         }
         
-        
+        // Si la pantalla esta filtrada, debemos setearla en la "nueva"
+        if ($this->_item->isFilteredScreen()) {
+
+            $filteredField = $this->_item->getFilteredField();
+            
+            $filteredValue = $this->_mainRouter->getParam($filteredField);
+            // TODO: Para el screename del parent, recuperar mapper, fetchById, y comprobar que existe el parámetro recibido.
+            
+            $filterFieldSetter = 'set' . $model->columnNameToVar($filteredField);
+            $model->{$filterFieldSetter}($filteredValue);
+        } 
+            
+                
         try {
              $model->save(false,$hasDependant);
              $data = array(
@@ -143,12 +156,16 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 	        ->setTitle($this->_item->getTitle())
 	        ->setColumnWraper($cols);
 
-	    if ($this->_item->isParentDependantScreen()) {
+	    // La pantalla "nuevo" tiene filtro? cae de otro listado?
+	    if ($this->_item->isFilteredScreen()) {
 	        
-	        $data->setParentItem($this->_item->getParentField());
+	        // Informamos a la respuesta de que campo es el "padre"
+	        $data->setParentItem($this->_item->getFilteredField());
 	        
+	        // A partir del nombre de pantalla (de nuestro .yaml principal...
     	    if ($parentScreenName = $this->getRequest()->getPost("parentScreen")) {
     	    
+    	        // Instanciamos pantalla
                 $parentScreen = new KlearMatrix_Model_Screen;
                 $parentScreen->setRouteDispatcher($this->_mainRouter);
                 $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($parentScreenName));
@@ -157,12 +174,16 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
                 $defaultParentCol = $parentColWrapper->getDefaultCol();
         
+                // Recuperamos mapper, para recuperar datos principales (default value)
                 $parentMapper = new $parentMapperName;
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
-    
+                
                 
                 $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+                
+                // Se añaden los datos a la respuesta
+                // Se recogerán en el new, y se mostrará información por pantalla
                 $data->setParentIden($parentData->$getter());
                 $data->setParentId($parentId);
                 $data->setParentScreen($parentScreenName);

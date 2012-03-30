@@ -59,11 +59,14 @@ class KlearMatrix_Model_ResponseItem {
 	}
 
 	protected function _parseModelFile() {
-		$filePath = $this->_routeDispatcher->getConfig()->getConfigPath() . 'model/' . $this->_modelFile;
-
+		$filePath = 'klear.yaml:///model/' . $this->_modelFile;
+		
 		$modelConfig = new Zend_Config_Yaml(
 				$filePath,
-				APPLICATION_ENV
+				APPLICATION_ENV,
+		        array(
+		                "yamldecoder"=>"yaml_parse"
+		        )
 		);
 
 		$this->_modelSpec = new KlearMatrix_Model_ModelSpecification;
@@ -116,7 +119,7 @@ class KlearMatrix_Model_ResponseItem {
 	}
 
 
-	protected function _createCol($name,$config)
+	protected function _createCol($name, $config)
 	{
         $col = new KlearMatrix_Model_Column;
         $col->setDbName($name);
@@ -203,7 +206,7 @@ class KlearMatrix_Model_ResponseItem {
 
 	/**
 	 * El método filtrará las columnas del modelo con el fichero de configuración de modelo y la whitelist/blacklist de la configuración
-	 *
+	 * FIXME: lazyload no vale ni para tomar por culo
 	 * return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
 	 */
 	public function getVisibleColumnWrapper($ignoreBlackList = false, $lazyload = false) {
@@ -233,7 +236,7 @@ class KlearMatrix_Model_ResponseItem {
 		if ($this->_config->exists("fields->blacklist")) {
 			if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
 
-				foreach($_blacklistConfig as $field => $value) {
+			    foreach($_blacklistConfig as $field => $value) {
 					if ((bool)$value) {
 						$this->_blacklist[$field] = true;
 					}

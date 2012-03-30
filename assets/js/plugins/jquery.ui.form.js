@@ -41,26 +41,28 @@ $.widget("ui.form",{
  			});
 		},
 		checkboxes:function(element) {
-			$(element).parent("label").after("<span />");
-			var parent =  $(element).parent("label").next();
-			$(element).addClass("ui-helper-hidden");
-			parent.css({width:16,height:16,display:"block"});
-			parent.wrap("<span class='ui-state-default ui-corner-all' style='display:inline-block;width:16px;height:16px;margin-right:5px;'/>");
+			var parent = $("<span />");
+			var $input = $(element);
+			$input.after(parent);
+			$input.addClass("ui-helper-hidden");
+			parent.css({width:15,height:15,display:"block"});
+			parent.wrap("<span class='ui-state-default ui-corner-all' style='display:inline-block;width:15px;height:15px;margin:0 3px;'/>");
 			
-			if ($(element).is(":checked")) {
+			if ($input.is(":checked")) {
 				parent.parent("span").addClass("ui-state-active");
 				parent.addClass("ui-icon ui-icon-check");
 			}
 			
-			parent.parent("span").on('click', function(event){
-				$(this).toggleClass("ui-state-active");
+			parent.parent().on('click', function(event){
+				
 				parent.toggleClass("ui-icon ui-icon-check");
-				if ($(this).hasClass("ui-state-active")) {
-					$(element).prop("checked",true);
+				
+				if (parent.hasClass("ui-icon")) {
+					$input.prop("checked",true);
 				} else {
-					$(element).prop("checked",false);
+					$input.prop("checked",false);
 				}
-				$(element).trigger('change');
+				$input.trigger('change');
 			});
 			
 		},

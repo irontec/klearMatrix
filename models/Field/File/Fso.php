@@ -16,7 +16,6 @@ class KlearMatrix_Model_Field_File_Fso
     protected $_js = array(
             
             "/js/plugins/jquery.jplayer.min.js",
-            "/js/plugins/jquery.jplayer.inspector.js",
             "/js/plugins/qq-fileuploader.js"
     );
     

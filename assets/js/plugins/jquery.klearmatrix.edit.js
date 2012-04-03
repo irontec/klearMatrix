@@ -274,9 +274,6 @@
 							command : item.data('command')
 					};
 					
-					if (_hiddenField.val() == '') {
-						$('#current_'+ _hiddenField.attr("id")).hide();
-					}
 					var request = $.klear.buildRequest(requestData);
 					
 					var qqOptions = {

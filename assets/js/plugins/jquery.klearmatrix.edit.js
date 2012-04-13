@@ -1,25 +1,9 @@
 ;(function load($) {
 
-	this.count = this.count || 0;
-	
-
-	if ( (typeof $.klearmatrix.module != 'function')
-		|| (typeof $.ui.form != 'function')
-		|| (typeof $.fn.autoResize != 'function')
-		|| (typeof $.fn.h5Validate != 'function')
-		|| (typeof Crypto != 'object')
-		) {
-		
-		if (++this.count == 30) {
-			throw "JS Dependency error! (" +this.count+")"
-				+ '\nklearmatrix.module: ' + typeof $.klearmatrix.module  
-				+ '\nh5Validate'  + typeof $.fn.h5Validate
-				+ '\nAutoresize'  + typeof $.fn.autoResize
-				+ '\nCrypto' + typeof Crypto;
-		}
-		setTimeout(function() {load($);},50);
+	if (!$.klear.checkDeps(['$.klearmatrix.module','$.ui.form','$.fn.autoResize','$.fn.h5Validate','Crypto'],load)) {
 		return;
 	}
+	
 	
 	$.widget("klearmatrix.edit", $.klearmatrix.module, {
 		options: {

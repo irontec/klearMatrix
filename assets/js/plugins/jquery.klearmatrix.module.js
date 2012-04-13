@@ -52,7 +52,7 @@
 								},
 								cleanValue : function(_value,ifNull) {
 									ifNUll = (typeof ifNULL == 'undefined')? 'no disponible':ifNUll;									
-									if(!_value) {
+									if(typeof _value == 'undefined') {
 										return ifNUll;
 									}
 									
@@ -164,7 +164,7 @@
 								},
 								getIndexFromColumn : function(values,column) {
 										
-									if (!values[column.id]) {
+									if (typeof values[column.id] == 'undefined') {
 										switch(column.type) {
 											default:
 												return "no disponible";

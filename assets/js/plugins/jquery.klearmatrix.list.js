@@ -1,17 +1,9 @@
 ;(function load($) {
-
-	this.count = this.count || 0;
 	
-	if ( (!$.klearmatrix)
-			|| (typeof $.klearmatrix.module != 'function') 
-			|| (typeof $.ui.form != 'function')
-	) {
-		if (++this.count == 40) {
-			throw "JS Dependency error!";
-		}
-		setTimeout(function() {load($);},20);
+	if (!$.klear.checkDeps(['$.klearmatrix.module','$.ui.form'],load)) {
 		return;
 	}
+
 	
 	$.widget("klearmatrix.list", $.klearmatrix.module,  {
 		options: {

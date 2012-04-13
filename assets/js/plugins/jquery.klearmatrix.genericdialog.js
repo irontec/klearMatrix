@@ -1,12 +1,6 @@
 ;(function load($) {
 
-	this.count = this.count || 0;
-	
-	if ( (!$.klearmatrix) || (typeof $.klearmatrix.module != 'function') ) {
-		if (++this.count == 20) {
-			throw "JS Dependency error!";
-		}
-		setTimeout(function() {load($);},20);
+	if (!$.klear.checkDeps(['$.klearmatrix.module'],load)) {
 		return;
 	}
 	

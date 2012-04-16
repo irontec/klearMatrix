@@ -1,5 +1,5 @@
 <select class="multiselect" multiple name="${_elemName}[]" id="${_elemIden}">
-{{each(idx,dataValue) _dataConfig}}
+{{each(idx,dataValue) _dataConfig.values}}
     {{if (idx != '__className')}}
 
         <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][idx]) )}}

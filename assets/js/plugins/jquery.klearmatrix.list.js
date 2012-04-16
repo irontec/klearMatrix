@@ -150,7 +150,6 @@
 				e.stopPropagation();
 			});
 			
-			
 			$(".klearMatrixFiltering span.addTerm",panel).on('click',function(e,noNewValue) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -168,15 +167,17 @@
 				
 				
 				if (noNewValue !== true) {
-					if ($_term.val() == '') {
-						$(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
-						return;
+					if ( (($_term.data('autocomplete')) && (!$_term.data('idItem')) ) || 
+							($_term.val() == '') ) {
+						
+							$(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
+							return;
 					}
-				
+
 					$_term.attr("disabled","disabled");
 					$_field.attr("disabled","disabled");
-				
-					_dispatchOptions.post.searchFields[fieldName].push($_term.val());
+					var _newVal = ($_term.data('autocomplete'))? $_term.data('idItem') : $_term.val();
+					_dispatchOptions.post.searchFields[fieldName].push(_newVal);
 				}
 				
 				_dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
@@ -191,7 +192,13 @@
 			
 			$(".klearMatrixFiltering input.term",panel).on('keydown',function(e) {
 				if (e.keyCode == 13) {
-					$("span.addTerm",$(this).parents(".klearMatrixFiltering")).trigger("click");	
+					// Wait for select event to happed (autocomplete)
+					var $target = $(this);
+					setTimeout(function() {
+						$("span.addTerm",$target.parents(".klearMatrixFiltering")).trigger("click");
+					},10);
+					e.preventDefault();
+					e.stopPropagation();
 				}
 			});
 			
@@ -221,6 +228,46 @@
 					.klearModule("reDispatch");				
 			
 			});
+			
+			$(".klearMatrixFiltering select[name=searchFiled]",panel).on('change',function(e) {
+				
+				var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns,$(this).val());
+				var availableValues = {};
+				var searchField = $(".klearMatrixFiltering input.term",panel);
+				
+				if ( (column)
+						&& (availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column))
+						){
+					
+					var sourcedata = [];
+					$.each(availableValues,function(i,val) {
+						sourcedata.push({label:val,id:i});
+					})
+					
+					searchField.autocomplete({
+						minLength: 0,
+						source: sourcedata,
+						select: function(event, ui) {
+							searchField.val( ui.item.label );
+							searchField.data('idItem',ui.item.id);
+							return false;
+						} 
+					}).data( "autocomplete" )._renderItem = function( ul, item ) {
+						
+						return $( "<li></li>" )
+							.data( "item.autocomplete", item )
+							.append( "<a>" + item.label + "</a>" )
+							.appendTo( ul );
+					};
+
+				} else {
+					if (searchField.data('autocomplete')) {
+						searchField.autocomplete("destroy").data("idItem",null);
+					}
+				}
+
+			});
+			
 			$(".klearMatrixFilteringForm",panel).form();
 			return this;
 		}

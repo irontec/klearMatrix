@@ -24,11 +24,11 @@
         {{if (($item.getColumnName(columns,field))) }}
 
         <span data-field="${field}" class="field">
-            <strong>${$item.getColumnName(columns,field,searchValues)}</strong>:
+            <strong>${$item.getColumnName(columns,field)}</strong>:
             {{each(_valIdx,_val) searchValues}}
                 <span class="ui-widget-content ui-corner-all content">
                     <span data-idx="${_valIdx}" class="ui-silk inline ui-silk-cancel"></span>
-                    ${$item.cleanValue(_val)}
+                    ${$item.getValuesFromSelectColumn($item.getColumn(columns,field),_val)}
                 </span>
             {{/each}}
         </span>

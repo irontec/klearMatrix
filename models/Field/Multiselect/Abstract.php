@@ -47,5 +47,15 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator 
     
     }
     
-    
+    /**
+     * Devuelve un listado de campos a editar para cada relación
+     *     Tipos Soportados:
+     *         - radio
+     *         - 
+     * @return array:
+     */
+    public function getEditableFieldsConfig() {
+        return array();
+        
+    }
 }

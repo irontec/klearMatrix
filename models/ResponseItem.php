@@ -76,7 +76,6 @@ class KlearMatrix_Model_ResponseItem {
 
 	protected function _checkClasses(array $properties) {
 
-
 		foreach ($properties as $property) {
 			if (!class_exists($this->{$property})) {
 				Throw new Zend_Exception( $this->{$property} . " no es una entidad instanciable.");
@@ -150,12 +149,9 @@ class KlearMatrix_Model_ResponseItem {
 	        $fileObjects = $model->getFileObjects();
 
 	        foreach($fileObjects as $_fileCol) {
-
+	            
 		        if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
-
-                    $col = $this->_createFileColumn($colConfig, $_fileCol);
-		            $this->_visibleColumnWrapper->addCol($col);
-
+		            
 		            $fieldSpecsGetter = "get" . $_fileCol . "Specs";
 		            $involvedFields = $model->{$fieldSpecsGetter}();
 
@@ -168,6 +164,12 @@ class KlearMatrix_Model_ResponseItem {
 		            if (isset($involvedFields['baseNameName'])) {
 		                $this->_blacklist[$model->varNameToColumn($involvedFields['baseNameName'])] = true;
 		            }
+
+		            if (isset($this->_blacklist[$_fileCol])) continue;
+		            
+		            $col = $this->_createFileColumn($colConfig, $_fileCol);
+		            $this->_visibleColumnWrapper->addCol($col);
+		            
 
 		        }
 
@@ -224,12 +226,6 @@ class KlearMatrix_Model_ResponseItem {
 		}
 
 
-		/*
-		* Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
-		*/
-        $this->_loadFileColumns($model);
-
-
 	   /*
 	    * LLenamos el array blacklist en base al fichero de configuración
 	    */
@@ -243,7 +239,13 @@ class KlearMatrix_Model_ResponseItem {
 				}
 			}
 		}
-
+ 		
+		/*
+		 * Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
+		*/
+		$this->_loadFileColumns($model);
+		
+		
 		/*
 		 * Si es una pantalla con filtro de ventana padre, no mostraremos por defecto el campo de filtrado
 		 */

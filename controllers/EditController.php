@@ -180,6 +180,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	    $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
 	    $jsonResponse->addJsArray($cols->getColsJsArray());
+	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
 	    $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 	    $jsonResponse->addCssFile("/css/klearMatrixEdit.css");

@@ -203,7 +203,7 @@
 			});
 			
 			$(".klearMatrixFiltering input[name=addFilters]",panel).on('change',function(e) {
-				console.log($(".klearMatrixFiltering .filteredFields .field",panel).length);
+				
 				if ($(".klearMatrixFiltering .filteredFields .field",panel).length<=1) {
 					return;
 				}

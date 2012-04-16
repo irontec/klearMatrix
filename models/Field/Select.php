@@ -20,6 +20,7 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
         $this->_adapter = new $adapterClassName;
         $this->_adapter
                     ->setConfig($sourceConfig)
+                    ->setColumn($this->_column)
                     ->init();
         
     }

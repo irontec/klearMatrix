@@ -155,13 +155,14 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 	        ->setResponseItem($this->_item);
 
 	    if (!$model = $mapper->find($pk)) {
-	    	exit;// Error
+	    	
+	        exit;// Error
 
 	    } else {
 	        
 	        
 	    	$data->setResults($model)
-	    	        ->fixResults($this->_item);
+	    	    ->fixResults($this->_item);
 	    }
 
 	    Zend_Json::$useBuiltinEncoderDecoder = true;

@@ -7,7 +7,9 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements Iterator {
     protected $_items;
     protected $_keys;
     protected $_position;
-       
+
+    protected $_column;
+    
     public function __construct() {
         $this->rewind();
     }
@@ -16,6 +18,11 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements Iterator {
     public function setConfig(Zend_Config $config) {
         $this->_config = $config;
         return $this;
+    }
+    
+    public function setColumn($column) {
+        $this->_column = $column;
+        return $this;        
     }
     
     public function rewind() {

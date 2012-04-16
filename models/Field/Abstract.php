@@ -18,6 +18,10 @@ abstract class KlearMatrix_Model_Field_Abstract {
 		return $this;
 	}
 	
+	public function getColumn($column) {
+	    return $this->_column;
+	}
+	
 	/**
 	 * Dejar este método vacio, se invocara siempre que se genera desde Column 
 	 */

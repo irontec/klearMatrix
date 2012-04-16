@@ -269,6 +269,23 @@
 			});
 			
 			$(".klearMatrixFilteringForm",panel).form();
+			
+			$(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
+				var $searchForm = $(this).parents("form:eq(0)");
+				if ($searchForm.hasClass("not-loaded")) {
+					$(this).animate({margin:'.5em'},2000);
+					$(".filterItem",$searchForm).slideDown(function() {
+						$searchForm.removeClass("not-loaded");	
+					});					
+				} else {
+					$(this).animate({margin:'0 0 0 90%'},2000);
+					$(".filterItem",$searchForm).slideUp(function() {
+						$searchForm.addClass("not-loaded");	
+					});
+					
+				}
+				
+			});
 			return this;
 		}
 	});

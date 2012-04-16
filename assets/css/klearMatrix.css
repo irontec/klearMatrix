@@ -141,6 +141,10 @@ table.kMatrix .mlTag {
     text-decoration:none;
 }
 
+a.ui-state-nojump {
+    border: 1px solid transparent;
+}
+
 .klearMatrix_form .autoClose {
     font-size: 0.8em;
     margin-top: .3em;
@@ -151,10 +155,19 @@ table.kMatrix .mlTag {
     padding:1em;
     overflow: hidden;
  }
- 
+
+.klearMatrixFiltering form.not-loaded .filterItem, .klearMatrixFiltering form.not-loaded .filteredFields{
+    display:none;
+}
+
+.klearMatrixFiltering form.not-loaded .title {
+    margin:0 0 0 90%;
+}    
+
 .klearMatrixFiltering p.title {
     margin:.5em;
     font-size:1.1em;
+    cursor:pointer;
  }
  
 .klearMatrixFiltering input.term {

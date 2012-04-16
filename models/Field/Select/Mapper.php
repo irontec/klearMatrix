@@ -13,6 +13,17 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $_mapper = $parsedValues->getProperty("mapperName");
         $_fieldConf = $parsedValues->getProperty("fieldName");
 
+        $_where = null;
+        if ($filterClassName = $parsedValues->getProperty("filterClass")) {
+            
+            $filter = new $filterClassName;
+            
+            if ($filter->setRouteDispatcher($this->_column->getRouteDispatcher())) {
+                $_where = $filter->getCondition();
+                
+            }
+        }
+        
         $_order = $parsedValues->getProperty("order"); 
         
         if (is_object($_fieldConf)) {
@@ -31,10 +42,6 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $fieldTemplate = '%' . $_fieldName . '%';
         }
 
-
-        //TODO: Meter el where y order en .yaml si fuera necesario
-        //TODO: Control de errores?
-        $_where = null;
 
         $dataMapper = new $_mapper;
 

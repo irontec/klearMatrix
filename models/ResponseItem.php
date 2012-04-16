@@ -122,10 +122,13 @@ class KlearMatrix_Model_ResponseItem {
 	{
         $col = new KlearMatrix_Model_Column;
         $col->setDbName($name);
+        $col->setRouteDispatcher($this->_routeDispatcher);
+        
         if ($config) {
 		    $col->setConfig($config);
         }
-        $col->setRouteDispatcher($this->_routeDispatcher);
+        
+        
         return $col;
 
 	}
@@ -295,6 +298,7 @@ class KlearMatrix_Model_ResponseItem {
 		    if ( (!$ignoreBlackList) && (isset($this->_blacklist[$dbName])) ) continue;
 
 		    $config = $this->_modelSpec->getField($dbName);
+		    
 			$col = $this->_createCol($dbName, $config);
 
 			if (isset($multiLangFields[$dbName])) {

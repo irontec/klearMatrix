@@ -1,5 +1,5 @@
 <div class="ui-widget-content ui-corner-all klearMatrixFiltering">
-<form class="klearMatrixFilteringForm">
+<form class="klearMatrixFilteringForm {{if (typeof searchFields == 'undefined') }} not-loaded {{/if}} ">
 <p class="title"><span class="ui-silk inline ui-silk-zoom"></span>Filtrado de Campos</p>
     <p class="filterItem">
     <input type="text" class="term">
@@ -77,7 +77,7 @@
 		{{else}}
 			<td class="ui-widget-content options">
 			{{each fieldOptions}}
-				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx)}{{/if}}</a>
+				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx)}{{/if}}</a>
 			{{/each}}
 			</td>
 		{{/if}}

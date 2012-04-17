@@ -358,6 +358,25 @@
 				self.options.theForm.trigger("submit");
 			});
 			
+			$("select.visualFilter").on('manualchange.visualFilter',function(e,manual) {
+				var curOption = $("option[value="+$(this).val()+"]",$(this));
+				$.each(curOption.data("hide").split(","),function(i,val) {
+					var fName = $.trim(val);
+					if (fName == '') return;
+					var field = $("[name="+fName+"]:eq(0)",self.options.theForm).parents("p:eq(0)");
+					if (manual) field.hide();
+					else field.slideUp();
+				});
+				
+				$.each(curOption.data("show").split(","),function(i,val) {
+					var fName = $.trim(val);
+					if (fName == '') return;
+					var field = $("[name="+fName+"]:eq(0)",self.options.theForm).parents("p:eq(0)");
+					if (manual) field.show();
+					else field.slideDown();
+				});
+				
+			}).trigger("manualchange.visualFilter",true);
 			
 			$("select,input,textarea",this.options.theForm).on('manualchange',function() {
 				var _val = $(this).val()? $(this).val():'';

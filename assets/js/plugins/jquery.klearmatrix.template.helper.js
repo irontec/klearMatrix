@@ -28,8 +28,9 @@
 						var _value = this.cleanValue(value,'');
 
 					} else {
-						// Casos de multiselect y multiLang 
-						var _value = value;
+						// Casos de multiselect y multiLang
+						console.log(value,this.getValuesFromSelectColumn(column));
+						var _value = this.getValuesFromSelectColumn(column);
 					}
 				}
 				
@@ -135,13 +136,13 @@
 			getValuesFromSelectColumn : function(column,idx) {
 				switch(column.type){
 					case 'select':
-						if (column.config['__className']) {
-							delete column.config['__className'];
+						if (column.config.values['__className']) {
+							delete column.config.values['__className'];
 						}
-						if ( (typeof idx != 'undefined') && column.config[idx] ){
-							return column.config[idx];
+						if ( (typeof idx != 'undefined') && column.config.values[idx] ){
+							return column.config.values[idx];
 						} else {
-							return column.config;
+							return column.config.values;
 						}
 					break;
 					case 'multiselect':

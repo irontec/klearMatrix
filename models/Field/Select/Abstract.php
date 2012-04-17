@@ -16,8 +16,20 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements Iterator {
     
     
     public function setConfig(Zend_Config $config) {
-        $this->_config = $config;
+        
+        $this->_config = new Klear_Model_KConfigParser;
+        
+        $this->_config->setConfig($config);
+        if ($this->_config->getProperty("null")) {
+            $this->_keys[] = '__null__';
+            $this->_items[] = $this->_config->getProperty("null"); 
+        }
+        
         return $this;
+    }
+    
+    public function getExtraConfigArray() {
+        return array();
     }
     
     public function setColumn($column) {

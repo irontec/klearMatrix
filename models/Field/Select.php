@@ -9,27 +9,27 @@
 class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
 
     protected $_adapter;
-    
+
     public function init()
     {
         parent::init();
         $sourceConfig = $this->_config->getRaw()->source;
-        
+
         $adapterClassName = "KlearMatrix_Model_Field_Select_" . ucfirst($sourceConfig->data);
-        
+
         $this->_adapter = new $adapterClassName;
         $this->_adapter
                     ->setConfig($sourceConfig)
                     ->setColumn($this->_column)
                     ->init();
-        
+
     }
-    
+
     public function getConfig() {
         return array_merge(
                 $this->_adapter->getExtraConfigArray(),
-                array('values'=>$this->_adapter)
+                array('values'=>$this->_adapter->toArray())
                 );
     }
-	
+
 }

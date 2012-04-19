@@ -14,18 +14,18 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $_where = null;
         if ($filterClassName = $this->_config->getProperty('config')->filterClass) {
-            
+
             $filter = new $filterClassName;
-            
+
             if ($filter->setRouteDispatcher($this->_column->getRouteDispatcher())) {
                 $_where = $filter->getCondition();
-                
+
             }
         }
-        
-        
-        $_order = $this->_config->getProperty('config')->order; 
-        
+
+
+        $_order = $this->_config->getProperty('config')->order;
+
         if (is_object($_fieldConf)) {
             $_fieldConfig = new Klear_Model_KConfigParser;
             $_fieldConfig->setConfig($_fieldConf);

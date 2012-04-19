@@ -4,26 +4,24 @@
 {{else}}
 <select name="${_elemName}" id="${_elemIden}" {{if (_dataConfig.visualFilter)}}class="visualFilter"{{/if}}>
 {{each(idx,dataValue) _dataConfig.values}}
-    {{if (idx != '__className')}}
-        <option{{if (_fieldValue && idx == _fieldValue)}} selected="selected"{{/if}}
-        
-        {{if (idx != '__null__') }} value="${idx}" {{/if}}
-        {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[idx]) }}
-            data-show="{{each(idxField,showField) _dataConfig.visualFilter.show[idx]}}
-            {{if (idxField != '__className')}}
-                ${showField},
-            {{/if}}
-            {{/each}}"
+    <option{{if (_fieldValue && dataValue.key == _fieldValue)}} selected="selected"{{/if}}
+
+    {{if (dataValue.key != '__null__') }} value="${dataValue.key}" {{/if}}
+    {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[dataValue.key]) }}
+        data-show="{{each(idxField,showField) _dataConfig.visualFilter.show[dataValue.key]}}
+        {{if (idxField != '__className')}}
+            ${showField},
         {{/if}}
-        {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.hide[idx]) }}
-            data-hide="{{each(idxField,hideField) _dataConfig.visualFilter.hide[idx]}} 
-                {{if (idxField != '__className')}}
-                    ${hideField},
-                {{/if}}
-            {{/each}}"
-        {{/if}}
-        >${dataValue}</option>
+        {{/each}}"
     {{/if}}
+    {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.hide[dataValue.key]) }}
+        data-hide="{{each(idxField,hideField) _dataConfig.visualFilter.hide[dataValue.key]}}
+            {{if (idxField != '__className')}}
+                ${hideField},
+            {{/if}}
+        {{/each}}"
+    {{/if}}
+    >${dataValue.item}</option>
 {{/each}}
 </select>
 {{/if}}

@@ -27,6 +27,10 @@
 
 						var _value = this.cleanValue(value,'');
 
+					} else if (column.type == 'file') {
+
+					    var _value = value;
+
 					} else {
 						// Casos de multiselect y multiLang
 

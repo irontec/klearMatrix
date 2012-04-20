@@ -6,7 +6,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
-    	$this->_helper->layout->disableLayout();
+        $this->_helper->layout->disableLayout();
 
     }
 
@@ -18,7 +18,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
 
 
 
-	public function editAction()
+    public function editAction()
     {
 
     }
@@ -43,13 +43,13 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
 
         if ($templateItem = $this->getRequest()->getParam("item")) {
 
-    		switch($templateItem) {
-    		    case "list":
-    			case "field":
-    			    $this->_helper->viewRenderer('multilang/' . $templateItem);
-    				break;
+            switch($templateItem) {
+                case "list":
+                case "field":
+                    $this->_helper->viewRenderer('multilang/' . $templateItem);
+                    break;
 
-    		}
+            }
         }
 
 
@@ -58,21 +58,22 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
 
     public function fieldAction()
     {
-    	if ($fieldType = $this->getRequest()->getParam("type")) {
+        if ($fieldType = $this->getRequest()->getParam("type")) {
 
-    		switch($fieldType) {
-    			case "text":
-    			case "textarea":
-    			case "select":
-    			case "multiselect":
-    			case "password":
-    			case "number":
-    			case "file":
-    				$this->_helper->viewRenderer('fields/' . $fieldType);
-    				break;
+            switch($fieldType) {
+                case "text":
+                case "textarea":
+                case "select":
+                case "multiselect":
+                case "password":
+                case "number":
+                case "file":
+                case "datepicker":
+                    $this->_helper->viewRenderer('fields/' . $fieldType);
+                    break;
 
-    		}
-    	}
+            }
+        }
 
 
     }

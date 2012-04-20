@@ -152,7 +152,6 @@
 
             this._initSavedValueHashes();
 
-
             if ($("select.multiselect",this.options.theForm).length > 0) {
                 $("select.multiselect",this.options.theForm).multiselect({
                     container: this.element.klearModule('getPanel'),
@@ -169,14 +168,26 @@
                 }).multiselectfilter();
             }
 
-            if ($("input.number",this.options.theForm).length > 0) {
-                $("input.number",this.options.theForm).each(function() {
+            if ($("input.auto",this.options.theForm).length > 0) {
+                $("input.auto",this.options.theForm).each(function() {
                     if ($(this).data("plugin")) {
-                        $(this)[$(this).data("plugin")]();
+
+                        var plgSettings = {};
+
+                        $.each($(this).data(),function(idx, value) {
+                            if (idx.match(/setting-*/)) {
+
+                                idx = idx.replace('setting', '');
+                                idx = idx.charAt(0).toLowerCase() + idx.substr(1); //lcfirst
+
+                                plgSettings[idx] = value;
+                            }
+                        });
+
+                        $(this)[$(this).data("plugin")](plgSettings);
                     }
                 });
             }
-
             if ($(".jmedia",this.options.theForm).length>0) {
                 $(".jmedia",this.options.theForm).each(function() {
 

@@ -77,8 +77,6 @@ class KlearMatrix_Model_Field_File_Fso
 
                     $ret['options'][$option] = $opObject;
                 }
-
-
             }
         }
 

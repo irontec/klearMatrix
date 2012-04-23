@@ -77,7 +77,7 @@
 		{{else}}
 			<td class="ui-widget-content options">
 			{{each fieldOptions}}
-				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx)}{{/if}}</a>
+				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
 			{{/each}}
 			</td>
 		{{/if}}

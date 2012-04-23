@@ -243,8 +243,10 @@
             getPaginatorTemplate : function() {
                 return $.template['klearmatrixPaginator'];
             },
-            getTitle : function(title,idx) {
+            getTitle : function(title,idx,replaceParentPerItem) {
 
+            	
+            	
                 if (false !== idx) {
                     var defaultColumn = this.data.columns[0];
 
@@ -267,8 +269,14 @@
                     var defaultColumn = '';
                 }
 
+                // Si el método es invocado con replaceParentPerItem, éste viene de un listado
+                // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
+                var parentValue = (replaceParentPerItem)?
+                						this.cleanValue(defaultValue) :
+                							this.cleanValue(this.data.parentIden);
+                
                 return title
-                        .replace(/\%parent\%/,this.cleanValue(this.data.parentIden))
+                        .replace(/\%parent\%/,parentValue)
                         .replace(/\%item\%/,this.cleanValue(defaultValue));
 
 

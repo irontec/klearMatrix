@@ -223,12 +223,10 @@
                         break;
                         default:
                             if (column.multilang) {
-
                                 return this.getMultiLangValue(values[column.id],this.data.langs,this.data.defaultLang);
 
                             } else {
-
-                                return this.cleanValue(values[column.id]);
+                                return '' + this.cleanValue(values[column.id]);
                             }
                         break;
                     }
@@ -245,8 +243,8 @@
             },
             getTitle : function(title,idx,replaceParentPerItem) {
 
-            	
-            	
+
+
                 if (false !== idx) {
                     var defaultColumn = this.data.columns[0];
 
@@ -272,9 +270,9 @@
                 // Si el método es invocado con replaceParentPerItem, éste viene de un listado
                 // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
                 var parentValue = (replaceParentPerItem)?
-                						this.cleanValue(defaultValue) :
-                							this.cleanValue(this.data.parentIden);
-                
+                                        this.cleanValue(defaultValue) :
+                                            this.cleanValue(this.data.parentIden);
+
                 return title
                         .replace(/\%parent\%/,parentValue)
                         .replace(/\%item\%/,this.cleanValue(defaultValue));

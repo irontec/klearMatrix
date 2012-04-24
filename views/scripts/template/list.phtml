@@ -72,16 +72,16 @@
 {{each(idx,row) values}}
 <tr data-id="${$item.getIndex(row,pk)}">
    {{each columns}}
-   		{{if (type != '_option') }}
-			<td class="ui-widget-content{{if ($value.default)}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
-		{{else}}
-			<td class="ui-widget-content options">
-			{{each fieldOptions}}
-				<a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
-			{{/each}}
-			</td>
-		{{/if}}
-	{{/each}}
+       {{if (type != '_option') }}
+            <td class="ui-widget-content{{if ($value.default)}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
+        {{else}}
+            <td class="ui-widget-content options">
+            {{each fieldOptions}}
+                <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
+            {{/each}}
+            </td>
+        {{/if}}
+    {{/each}}
 </tr>
 {{/each}}
 </table>
@@ -97,12 +97,12 @@
 {{if (generalOptions.length>0) }}
 <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
 {{each generalOptions}}
-	<a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
-	<span class="ui-silk inline ${icon}"></span>
-	{{if (label) }}
-	    ${$item.getTitle(title,false)}
-	{{/if}}
-	</a>
+    <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+    <span class="ui-silk inline ${icon}"></span>
+    {{if (label) }}
+        ${$item.getTitle(title,false)}
+    {{/if}}
+    </a>
 {{/each}}
 </div>
 {{/if}}

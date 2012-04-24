@@ -28,19 +28,13 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
-
     }
 
-
-
-    public function saveAction() {
-
-
-
+    public function saveAction()
+    {
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
         $pk = $this->_mainRouter->getParam("pk");
-
 
         // TO-DO traducir mensaje?
         // TO-DO lanzar excepción ?
@@ -55,6 +49,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $hasDependant = false;
 
         foreach($cols as $column) {
+
             if ($column->isOption()) continue;
             if ($column->isReadonly()) continue;
             if (!$setter = $column->getSetterName($object)) continue;
@@ -73,7 +68,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             }
 
             switch(true) {
+
                 case ($column->isMultilang()):
+
                     foreach($value as $lang => $_value) {
                         $_value =  $column->filterValue($_value,$object->{$getter}($lang));
                         $object->$setter($_value,$lang);
@@ -81,6 +78,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                     break;
 
                 case ($column->isDependant()):
+
                     $value = $column->filterValue($value,$object->{$getter}());
                     $object->$setter($value,true);
                     $hasDependant = true;
@@ -95,7 +93,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
                     break;
 
-
                 default:
 
                     if (method_exists($column, 'filterValue')) {
@@ -105,19 +102,14 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
                     $object->$setter($value);
              }
-
-
-
         }
 
-
         try {
+
              if (!$pk = $object->save(false,$hasDependant)) {
 
                  Throw New Zend_Exception("Error salvando el registro.");
              }
-
-
 
              $data = array(
                 'error'=>false,
@@ -131,20 +123,15 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                     'error'=>true,
                     'message'=> $exception->getMessage()
             );
-
-
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
-
     }
-
 
     public function indexAction()
     {
-
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
@@ -165,9 +152,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         } else {
 
-
             $data->setResults($model)
-                ->fixResults($this->_item);
+                 ->fixResults($this->_item);
         }
 
         Zend_Json::$useBuiltinEncoderDecoder = true;
@@ -175,10 +161,20 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->setPlugin('edit');
-        $jsonResponse->addTemplate("/template/edit/type/" . $this->_item->getType(),"klearmatrixEdit");
+
+        $customTemplate = $this->_item->getCustomTemplate();
+
+        if (isset($customTemplate->module) and isset($customTemplate->name))
+        {
+            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, "klearmatrixEdit", $customTemplate->module);
+
+        } else {
+
+            $jsonResponse->addTemplate("/template/edit/type/" . $this->_item->getType(),"klearmatrixEdit");
+        }
+
         $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
-
 
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 
@@ -193,7 +189,5 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addCssArray($cols->getColsCssArray());
         $jsonResponse->setData($data->toArray());
         $jsonResponse->attachView($this->view);
-
     }
-
 }

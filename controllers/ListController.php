@@ -19,14 +19,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
-    	$this->_helper->layout->disableLayout();
+        $this->_helper->layout->disableLayout();
 
-    	$this->_helper->ContextSwitch()
-    		->addActionContext('index', 'json')
-    		->initContext('json');
+        $this->_helper->ContextSwitch()
+            ->addActionContext('index', 'json')
+            ->initContext('json');
 
-    	$this->_mainRouter = $this->getRequest()->getParam("mainRouter");
-    	$this->_item = $this->_mainRouter->getCurrentItem();
+        $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+        $this->_item = $this->_mainRouter->getCurrentItem();
     }
 
 
@@ -34,233 +34,232 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     {
 
         $mapperName = $this->_item->getMapperName();
-    	$mapper = new $mapperName;
+        $mapper = new $mapperName;
 
-    	$data = new KlearMatrix_Model_MatrixResponse;
-    	$cols = $this->_item->getVisibleColumnWrapper();
+        $data = new KlearMatrix_Model_MatrixResponse;
+        $cols = $this->_item->getVisibleColumnWrapper();
 
-    	$model = $this->_item->getObjectInstance();
+        $model = $this->_item->getObjectInstance();
 
-    	$where = array();
+        $where = array();
 
 
-    	if ($this->_item->isFilteredScreen()) {
+        if ($this->_item->isFilteredScreen()) {
 
-    	    $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
+            $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
 
-    	    if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
+            if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
 
-    	       $parentScreen = new KlearMatrix_Model_Screen;
-    	       $parentScreen->setRouteDispatcher($this->_mainRouter);
-    	       $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
-    	       $parentMapperName = $parentScreen->getMapperName();
+               $parentScreen = new KlearMatrix_Model_Screen;
+               $parentScreen->setRouteDispatcher($this->_mainRouter);
+               $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
+               $parentMapperName = $parentScreen->getMapperName();
 
-    	       $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
-    	       $defaultParentCol = $parentColWrapper->getDefaultCol();
+               $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
+               $defaultParentCol = $parentColWrapper->getDefaultCol();
 
-    	       $parentMapper = new $parentMapperName;
-    	       $parentId = $this->_mainRouter->getParam('pk');
-    	       $parentData = $parentMapper->find($parentId);
+               $parentMapper = new $parentMapperName;
+               $parentId = $this->_mainRouter->getParam('pk');
+               $parentData = $parentMapper->find($parentId);
 
-    	       $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
-    	       $data->setParentIden($parentData->$getter());
-    	       $data->setParentScreen($callerScreen);
-    	       $data->setParentId($parentId);
+               $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+               $data->setParentIden($parentData->$getter());
+               $data->setParentScreen($callerScreen);
+               $data->setParentId($parentId);
 
-    	    }
-    	}
+            }
+        }
 
-    	if ($this->_item->hasForcedValues()) {
-    	    $where = array_merge($where,$this->_item->getForcedValuesConditions());
-    	}
+        if ($this->_item->hasForcedValues()) {
+            $where = array_merge($where,$this->_item->getForcedValuesConditions());
+        }
 
-    	if ($searchFields = $this->getRequest()->getPost("searchFields")) {
-    	    $_searchWhere = array();
+        if ($searchFields = $this->getRequest()->getPost("searchFields")) {
+            $_searchWhere = array();
 
-    	    foreach ($searchFields as $field => $values) {
-    	        if ($col = $cols->getColFromDbName($field)) {
-    	            $_searchWhere[] = $col->getSearchCondition($values,$model,$cols->getLangs());
-    	            $data->addSearchField($field,$values);
-    	        }
-    	    }
+            foreach ($searchFields as $field => $values) {
+                if ($col = $cols->getColFromDbName($field)) {
+                    $_searchWhere[] = $col->getSearchCondition($values,$model,$cols->getLangs());
+                    $data->addSearchField($field,$values);
+                }
+            }
 
-    	    $expresions = $values = array();
-    	    foreach ($_searchWhere as $condition) {
-    	        $expresions[] = $condition[0];
-    	        $values = array_merge($values,$condition[1]);
-    	    }
+            $expresions = $values = array();
+            foreach ($_searchWhere as $condition) {
+                $expresions[] = $condition[0];
+                $values = array_merge($values,$condition[1]);
+            }
 
-    	    if ($this->getRequest()->getPost("searchAddModifier") == '1') {
-    	        $data->addSearchAddModifier(true);
-    	        $where[] = array(implode ( " or ", $expresions),$values);
+            if ($this->getRequest()->getPost("searchAddModifier") == '1') {
+                $data->addSearchAddModifier(true);
+                $where[] = array(implode ( " or ", $expresions),$values);
 
-    	    } else {
+            } else {
 
                 $where[] = array(implode ( " and ", $expresions),$values);
-    	    }
-    	}
+            }
+        }
 
-    	if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
+        if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
 
-    	    $order = $orderColumn->getOrderField($model);
+            $order = $orderColumn->getOrderField($model);
 
-    	    $orderColumn->setAsOrdered();
+            $orderColumn->setAsOrdered();
 
-    	    if (in_array($this->getRequest()->getPost("orderType"),array("asc","desc")) ){
+            if (in_array($this->getRequest()->getPost("orderType"),array("asc","desc")) ){
 
-    	        $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));
-    	        $order .= ' ' . $this->getRequest()->getPost("orderType");
+                $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));
+                $order .= ' ' . $this->getRequest()->getPost("orderType");
 
-    	    } else {
-    	        $order .= ' asc';
-    	    }
+            } else {
+                $order .= ' asc';
+            }
 
-    	} else {
-    	    $order = $this->_item->getPK(); // Por defecto ordenamos por PK
-    	}
-
-
-    	if ($paginationConfig = $this->_item->getPaginationConfig()) {
-
-    	    $configCount = $paginationConfig->getproperty('items');
-
-    	    if ($currentCount = (int)$this->getRequest()->getPost("count")) {
-    	        $count = $currentCount;
-    	    } else {
-    	        $count = $configCount;
-    	    }
-
-    	    if ($currentPage = (int)$this->getRequest()->getPost("page")) {
-    	        $page = ($currentPage<1)? 1:$currentPage;
-    	    } else {
-    	        $page = 1;
-    	    }
-
-    	    $offset = ($page-1)*$count;
+        } else {
+            $order = $this->_item->getPK(); // Por defecto ordenamos por PK
+        }
 
 
-    	} else {
-    	    $count = NULL;
-    	    $offset = NULL;
-    	}
+        if ($paginationConfig = $this->_item->getPaginationConfig()) {
+
+            $configCount = $paginationConfig->getproperty('items');
+
+            if ($currentCount = (int)$this->getRequest()->getPost("count")) {
+                $count = $currentCount;
+            } else {
+                $count = $configCount;
+            }
+
+            if ($currentPage = (int)$this->getRequest()->getPost("page")) {
+                $page = ($currentPage<1)? 1:$currentPage;
+            } else {
+                $page = 1;
+            }
+
+            $offset = ($page-1)*$count;
+
+
+        } else {
+            $count = NULL;
+            $offset = NULL;
+        }
 
 
 
-    	$data
-    	    ->setResponseItem($this->_item)
-	        ->setTitle($this->_item->getTitle())
-	        ->setColumnWraper($cols)
-	        ->setPK($this->_item->getPK());
+        $data
+            ->setResponseItem($this->_item)
+            ->setTitle($this->_item->getTitle())
+            ->setColumnWraper($cols)
+            ->setPK($this->_item->getPK());
 
-    	if (sizeof($where) == 0) {
+        if (sizeof($where) == 0) {
 
-    	    $where = null;
+            $where = null;
 
-    	} else {
+        } else {
 
-    	    $values = $expresions = array();
-    	    foreach ($where as $condition) {
-    	        $expresions[] = $condition[0];
-    	        $values = array_merge($values,$condition[1]);
-    	    }
+            $values = $expresions = array();
+            foreach ($where as $condition) {
+                $expresions[] = $condition[0];
+                $values = array_merge($values,$condition[1]);
+            }
 
-    	    $where = array(implode ( " and ", $expresions),$values);
+            $where = array(implode ( " and ", $expresions),$values);
 
 
-    	}
+        }
 
-    	if (!$results= $mapper->fetchList($where, $order, $count, $offset)) {
-			// No hay resultados
-			$data->setResults(array());
+        if (!$results= $mapper->fetchList($where, $order, $count, $offset)) {
+            // No hay resultados
+            $data->setResults(array());
 
-    	} else {
+        } else {
 
-    	    if (!is_null($count) && !is_null($offset) ) {
+            if (!is_null($count) && !is_null($offset) ) {
 
-    	        $totalItems = $mapper->countByQuery($where);
-    	        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
+                $totalItems = $mapper->countByQuery($where);
+                $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
                 $paginator->setCurrentPageNumber($page);
                 $paginator->setItemCountPerPage($count);
 
                 $data->setPaginator($paginator);
-    	    }
+            }
 
-     		$data->setResults($results);
+             $data->setResults($results);
 
-    		if ($this->_item->hasFieldOptions()) {
+            if ($this->_item->hasFieldOptions()) {
 
-    		    $defaultOption = $cols->getOptionColumn()->getDefaultOption();
+                $defaultOption = $cols->getOptionColumn()->getDefaultOption();
 
-    			$fieldOptionsWrapper = new KlearMatrix_Model_FieldOptionsWrapper;
+                $fieldOptionsWrapper = new KlearMatrix_Model_FieldOptionsWrapper;
 
-    			foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
+                foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
 
-    				$screenOption = new KlearMatrix_Model_ScreenFieldOption;
-    				$screenOption->setScreenName($_screen);
-    				if ($_screen === $defaultOption) {
-    				    $screenOption->setAsDefault();
-    				    $defaultOption = false;
-    				}
-    				// Recuperamos la configuración del screen, de la configuración general del módulo
-    				// Supongo que cuando lo vea Alayn, le gustará mucho :)
-    				// El "nombre" mainRouter apesta... pero... O:)
+                    $screenOption = new KlearMatrix_Model_ScreenFieldOption;
+                    $screenOption->setScreenName($_screen);
+                    if ($_screen === $defaultOption) {
+                        $screenOption->setAsDefault();
+                        $defaultOption = false;
+                    }
+                    // Recuperamos la configuración del screen, de la configuración general del módulo
+                    // Supongo que cuando lo vea Alayn, le gustará mucho :)
+                    // El "nombre" mainRouter apesta... pero... O:)
 
-    				$screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
-    				$fieldOptionsWrapper->addOption($screenOption);
-    			}
+                    $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
+                    $fieldOptionsWrapper->addOption($screenOption);
+                }
 
-    			foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
-    				$dialogOption = new KlearMatrix_Model_DialogFieldOption;
-    				$dialogOption->setDialogName($_dialog);
+                foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
+                    $dialogOption = new KlearMatrix_Model_DialogFieldOption;
+                    $dialogOption->setDialogName($_dialog);
 
-    				if ($_dialog === $defaultOption) {
-    				    $dialogOption->setAsDefault();
-    				    $defaultOption = false;
-    				}
+                    if ($_dialog === $defaultOption) {
+                        $dialogOption->setAsDefault();
+                        $defaultOption = false;
+                    }
 
-    				$dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($_dialog));
-    				$fieldOptionsWrapper->addOption($dialogOption);
+                    $dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($_dialog));
+                    $fieldOptionsWrapper->addOption($dialogOption);
 
-    			}
-
-
-    			$data->setFieldOptions($fieldOptionsWrapper);
-
-    		}
-
-    		$data->fixResults($this->_item);
-    	}
-
-    	$generalOptionsWrapper = new KlearMatrix_Model_GeneralOptionsWrapper;
-
-    	foreach($this->_item->getScreensGeneralOptionsConfig() as $_screen) {
-    		$screenOption = new KlearMatrix_Model_ScreenGeneralOption;
-    		$screenOption->setScreenName($_screen);
-    		$screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
-    		$generalOptionsWrapper->addOption($screenOption);
-    	}
-
-    	// TO-DO > Opciones generales de dialogo y comprobar checkboxes
-
-    	$data->setGeneralOptions($generalOptionsWrapper);
+                }
 
 
-    	Zend_Json::$useBuiltinEncoderDecoder = true;
+                $data->setFieldOptions($fieldOptionsWrapper);
 
-    	$jsonResponse = new Klear_Model_DispatchResponse;
-    	$jsonResponse->setModule('klearMatrix');
-    	$jsonResponse->setPlugin('list');
-    	$jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
-    	$jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
-    	$jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
+            }
+
+            $data->fixResults($this->_item);
+        }
+
+        $generalOptionsWrapper = new KlearMatrix_Model_GeneralOptionsWrapper;
+
+        foreach($this->_item->getScreensGeneralOptionsConfig() as $_screen) {
+            $screenOption = new KlearMatrix_Model_ScreenGeneralOption;
+            $screenOption->setScreenName($_screen);
+            $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
+            $generalOptionsWrapper->addOption($screenOption);
+        }
+
+        // TO-DO > Opciones generales de dialogo y comprobar checkboxes
+
+        $data->setGeneralOptions($generalOptionsWrapper);
+
+
+        Zend_Json::$useBuiltinEncoderDecoder = true;
+
+        $jsonResponse = new Klear_Model_DispatchResponse;
+        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse->setPlugin('list');
+        $jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
+        $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
+        $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
-    	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
-    	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
-    	$jsonResponse->addCssFile("/css/klearMatrix.css");
-    	$jsonResponse->setData($data->toArray());
-    	$jsonResponse->attachView($this->view);
-
+        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
+        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
+        $jsonResponse->addCssFile("/css/klearMatrix.css");
+        $jsonResponse->setData($data->toArray());
+        $jsonResponse->attachView($this->view);
     }
 
 

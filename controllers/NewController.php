@@ -2,7 +2,6 @@
 
 class KlearMatrix_NewController extends Zend_Controller_Action
 {
-
     /**
      * Route Dispatcher desde klear/index/dispatch
      * @var KlearMatrix_Model_RouteDispatcher
@@ -14,7 +13,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
      * @var KlearMatrix_Model_ResponseItem
      */
     protected $_item;
-
 
     public function init()
     {
@@ -28,13 +26,10 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
-
     }
 
-
-
-    public function saveAction() {
-
+    public function saveAction()
+    {
        $model = $this->_item->getObjectInstance();
        // Cargamos las columnas visibles, ignorando blacklist
        $cols = $this->_item->getVisibleColumnWrapper();
@@ -142,13 +137,10 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
-
     }
-
 
     public function indexAction()
     {
-
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
@@ -200,7 +192,18 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->setPlugin('klearMatrixNew');
-        $jsonResponse->addTemplate("/template/new/type/" . $this->_item->getType(),"klearmatrixNew");
+
+        $customTemplate = $this->_item->getCustomTemplate();
+
+        if (isset($customTemplate->module) and isset($customTemplate->name))
+        {
+            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, "klearmatrixNew", $customTemplate->module);
+
+        } else {
+
+            $jsonResponse->addTemplate("/template/new/type/" . $this->_item->getType(),"klearmatrixNew");
+        }
+
         $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
 

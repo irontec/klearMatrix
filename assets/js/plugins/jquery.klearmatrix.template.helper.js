@@ -9,8 +9,10 @@
                 return '';
             },
             cleanValue : function(_value,ifNull) {
-                ifNull = (typeof ifNuLL == undefined)? 'no disponible':ifNull;
+                ifNull = (typeof ifNuLL == undefined  || _value == '')? 'no disponible' : ifNull;
+
                 if(typeof _value == 'undefined' || _value == '') {
+
                     return ifNull;
                 }
 
@@ -226,7 +228,8 @@
                                 return this.getMultiLangValue(values[column.id],this.data.langs,this.data.defaultLang);
 
                             } else {
-                                return '' + this.cleanValue(values[column.id]);
+
+                                return this.cleanValue(values[column.id]);
                             }
                         break;
                     }

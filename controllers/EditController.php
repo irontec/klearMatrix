@@ -163,7 +163,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->setPlugin('edit');
 
         $customTemplate = $this->_item->getCustomTemplate();
-
         if (isset($customTemplate->module) and isset($customTemplate->name))
         {
             $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, "klearmatrixEdit", $customTemplate->module);
@@ -185,6 +184,13 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
+
+        $customScripts = $this->_item->getCustomScripts();
+        if (isset($customScripts->module) and isset($customScripts->name))
+        {
+            $jsonResponse->addTemplate("/bin/script/" . $customScripts->name, $customScripts->module);
+        }
+
         $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
         $jsonResponse->addCssArray($cols->getColsCssArray());
         $jsonResponse->setData($data->toArray());

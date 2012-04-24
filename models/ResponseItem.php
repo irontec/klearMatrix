@@ -19,6 +19,7 @@ class KlearMatrix_Model_ResponseItem
     protected $_title;
 
     protected $_customTemplate;
+    protected $_customScripts;
 
     // Para listados dependientes de listados anteriores
     protected $_filteredField;
@@ -54,6 +55,8 @@ class KlearMatrix_Model_ResponseItem
         $this->_title = $this->_config->getProperty("title",false);
 
         $this->_customTemplate = $this->_config->getProperty("template", false);
+
+        $this->_customScripts = $this->_config->getProperty("scripts", false);
 
         $this->_parseModelFile();
         $this->_checkClasses(array("_mapper"));
@@ -118,6 +121,11 @@ class KlearMatrix_Model_ResponseItem
     public function getCustomTemplate()
     {
         return $this->_customTemplate;
+    }
+
+    public function getCustomScripts()
+    {
+        return $this->_customScripts;
     }
 
     public function getConfigAttribute($attribute)

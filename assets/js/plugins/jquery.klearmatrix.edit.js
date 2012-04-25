@@ -4,7 +4,6 @@
         return;
     }
 
-
     $.widget("klearmatrix.edit", $.klearmatrix.module, {
         options: {
             data : null,
@@ -354,11 +353,10 @@
                                 ]
                         });
 
-
-
                         return true;
 
                     });
+
                 } else {
                     self.element.klearModule("setAsUnChanged");
                 }

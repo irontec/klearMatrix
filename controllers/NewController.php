@@ -189,7 +189,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');
-        $jsonResponse->setPlugin('klearMatrixNew');
+        $jsonResponse->setPlugin($this->_item->getPlugin('klearMatrixNew'));
 
         $customTemplate = $this->_item->getCustomTemplate();
 
@@ -218,7 +218,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $customScripts = $this->_item->getCustomScripts();
         if (isset($customScripts->module) and isset($customScripts->name))
         {
-            $jsonResponse->addJsFile("/bin/script/" . $customScripts->name, $customScripts->module);
+            $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
         $jsonResponse->addCssFile("/css/klearMatrixNew.css");

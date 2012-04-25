@@ -16,6 +16,8 @@ class KlearMatrix_Model_ResponseItem
     protected $_modelFile;
     protected $_routeDispatcher;
 
+    protected $_plugin;
+
     protected $_title;
 
     protected $_customTemplate;
@@ -51,6 +53,8 @@ class KlearMatrix_Model_ResponseItem
         $this->_parentField = $this->_config->getProperty("parentField",false);
 
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
+
+        $this->_plugin = $this->_config->getProperty("plugin", false);
 
         $this->_title = $this->_config->getProperty("title",false);
 
@@ -112,6 +116,16 @@ class KlearMatrix_Model_ResponseItem
     public function getModelName()
     {
         return $this->_modelSpec->getClassName();
+    }
+
+    public function getPlugin($defaultValue = '')
+    {
+        if ($this->_plugin === false) {
+
+           return $defaultValue;
+        }
+
+        return $this->_plugin;
     }
 
     public function getTitle() {

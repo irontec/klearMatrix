@@ -31,13 +31,14 @@
 
                 var extraConfig = column.config || false;
                 var properties = column.properties || false;
+                
                 if (true === isNew) {
                     var _value = '';
                 } else {
 
                     if (typeof value != 'object') {
-
-                        var _value = this.cleanValue(value,'', column.properties.pattern);
+                    	var pattern = column.properties && column.properties.pattern || '';
+                        var _value = this.cleanValue(value,'', pattern);
 
                     } else if (column.type == 'select' || column.type == 'multiselect') {
 

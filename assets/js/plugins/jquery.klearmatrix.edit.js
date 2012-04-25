@@ -21,7 +21,9 @@
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
 
-            var $appliedTemplate = this._loadTemplate("klearmatrixEdit");
+            var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixEdit";
+
+            var $appliedTemplate = this._loadTemplate(tplName);
 
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 

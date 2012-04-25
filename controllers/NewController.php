@@ -175,7 +175,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 
-
                 $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
 
                 // Se añaden los datos a la respuesta
@@ -184,7 +183,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $data->setParentId($parentId);
                 $data->setParentScreen($parentScreenName);
             }
-
         }
 
         Zend_Json::$useBuiltinEncoderDecoder = true;
@@ -197,7 +195,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         if (isset($customTemplate->module) and isset($customTemplate->name))
         {
-            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, "klearmatrixNew", $customTemplate->module);
+            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, $customTemplate->name, $customTemplate->module);
 
         } else {
 
@@ -216,11 +214,17 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->addJsArray($cols->getColsJsArray());
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js"); // klearmatrix.new hereda de klearmatrix.edit
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.new.js");
+
+        $customScripts = $this->_item->getCustomScripts();
+        if (isset($customScripts->module) and isset($customScripts->name))
+        {
+            $jsonResponse->addJsFile("/bin/script/" . $customScripts->name, $customScripts->module);
+        }
+
         $jsonResponse->addCssFile("/css/klearMatrixNew.css");
         $jsonResponse->addCssArray($cols->getColsCssArray());
+
         $jsonResponse->setData($data->toArray());
         $jsonResponse->attachView($this->view);
-
     }
-
 }

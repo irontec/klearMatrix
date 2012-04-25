@@ -45,7 +45,6 @@
         },
         _loadTemplate : function(tmplName) {
 
-
             var $tmplObj = $.tmpl(
                             tmplName,
                             this.options.data,

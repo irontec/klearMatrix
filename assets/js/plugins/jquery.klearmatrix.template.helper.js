@@ -8,8 +8,17 @@
                 console.log(arguments);
                 return '';
             },
-            cleanValue : function(_value,ifNull) {
+            cleanValue : function(_value,ifNull, pattern) {
+
                 ifNull = (typeof ifNuLL == undefined  || _value == '')? 'no disponible' : ifNull;
+
+                if (pattern) {
+
+                    if( ! ifNull.match(pattern)) {
+
+                        ifNull = '';
+                    }
+                }
 
                 if(typeof _value == 'undefined' || _value == '') {
 
@@ -26,10 +35,9 @@
                     var _value = '';
                 } else {
 
-
                     if (typeof value != 'object') {
 
-                        var _value = this.cleanValue(value,'');
+                        var _value = this.cleanValue(value,'', column.properties.pattern);
 
                     } else if (column.type == 'select' || column.type == 'multiselect') {
 
@@ -245,8 +253,6 @@
                 return $.template['klearmatrixPaginator'];
             },
             getTitle : function(title,idx,replaceParentPerItem) {
-
-
 
                 if (false !== idx) {
                     var defaultColumn = this.data.columns[0];

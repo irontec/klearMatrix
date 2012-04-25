@@ -165,7 +165,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $customTemplate = $this->_item->getCustomTemplate();
         if (isset($customTemplate->module) and isset($customTemplate->name))
         {
-            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, "klearmatrixEdit", $customTemplate->module);
+            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, $customTemplate->name, $customTemplate->module);
 
         } else {
 

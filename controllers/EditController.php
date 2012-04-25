@@ -188,7 +188,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $customScripts = $this->_item->getCustomScripts();
         if (isset($customScripts->module) and isset($customScripts->name))
         {
-            $jsonResponse->addTemplate("/bin/script/" . $customScripts->name, $customScripts->module);
+            $jsonResponse->addJsFile("/bin/script/" . $customScripts->name, $customScripts->module);
         }
 
         $jsonResponse->addCssFile("/css/klearMatrixEdit.css");

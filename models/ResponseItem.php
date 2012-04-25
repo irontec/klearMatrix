@@ -120,7 +120,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function getPlugin($defaultValue = '')
     {
-        if ($this->_plugin === false) {
+        if (empty($this->_plugin)) {
 
            return $defaultValue;
         }

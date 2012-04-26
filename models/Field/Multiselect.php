@@ -46,7 +46,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
     public function getConfig() {
         return array(
-                'values'=>$this->_adapter,
+                'values'=>$this->_adapter->toArray(),
                 'editableFields'=>$this->_adapter->getEditableFieldsConfig()
                 );
     }

@@ -1,12 +1,11 @@
 <select class="multiselect" multiple name="${_elemName}[]" id="${_elemIden}">
 {{each(idx,dataValue) _dataConfig.values}}
-    {{if (idx != '__className')}}
-
-        <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][idx]) )}}
-                selected="selected"
+${$item.debug(_fieldValue,dataValue)}
+        <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
+                 selected="selected"
             {{/if}}
 
-        value="${idx}">${dataValue}</option>
-    {{/if}}
+        value="${dataValue.key}">${dataValue.item}</option>
+
 {{/each}}
 </select>

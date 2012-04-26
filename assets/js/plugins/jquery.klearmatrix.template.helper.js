@@ -35,24 +35,14 @@
                 if (true === isNew) {
                     var _value = '';
                 } else {
-
+                	
                     if (typeof value != 'object') {
                     	var pattern = column.properties && column.properties.pattern || '';
                         var _value = this.cleanValue(value,'', pattern);
 
-                    } else if (column.type == 'select' || column.type == 'multiselect') {
-
-                        // Casos de multiselect y multiLang
-                        var _value = this.getValuesFromSelectColumn(column);
-
-                    } else if (typeof value == "object") {
-
-
-                        var _value = value;
-
                     } else {
-
-                        var _value = value;
+                    	
+                    	var _value = value;
                     }
                 }
 
@@ -116,8 +106,7 @@
                     $.tmpl('klearmatrixMultiLangField',mlData).appendTo(node);
 
                 } else {
-
-                    $.tmpl(this.getTemplateNameForType(column.type),fieldData, _templateHelpers).appendTo(node);
+                	$.tmpl(this.getTemplateNameForType(column.type),fieldData, _templateHelpers).appendTo(node);
                 }
 
                 return node.html();
@@ -180,10 +169,15 @@
                         if (column.config.values['__className']) {
                             delete column.config.values['__className'];
                         }
+                        var ret = {};
+                        for (var index in column.config.values) {
+                            ret[column.config.values[index].key] = column.config.values[index].item;
+                        }
+                        // Multiselect bugs ahead!!
                         if ( (typeof idx != 'undefined') && column.config.values[idx] ){
-                            return column.config.values[idx];
+                            return ret[idx];
                         } else {
-                            return column.config.values;
+                            return ret;
                         }
 
                     break;
@@ -214,12 +208,13 @@
                             }
                         break;
                         case 'multiselect':
+                        	var fixedValues = this.getValuesFromSelectColumn(column);
 
                             var returnValue = [];
                             for(var i in values[column.id]['relStruct']) {
                                 var relId = values[column.id]['relStruct'][i]['relatedId'];
-                                if (this.getValuesFromSelectColumn(column)[relId]) {
-                                    returnValue.push(this.getValuesFromSelectColumn(column)[relId]);
+                                if (fixedValues[relId]) {
+                                    returnValue.push(fixedValues[relId]);
                                 }
                             }
                             if (returnValue.length == 0) {

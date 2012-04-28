@@ -23,6 +23,9 @@ class KlearMatrix_Model_Column {
     protected $_defaultOption;
     protected $_type ='text';
 
+    protected $_hasFieldOptions = false;
+    protected $_options = false;
+
     protected $_isMultilang = false;
 
     protected $_isDependant = false;
@@ -115,10 +118,14 @@ class KlearMatrix_Model_Column {
         $this->_isDefault = (bool)$this->_config->getProperty("default",false);
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
 
-
         $this->_type = $this->_config->getProperty("type",false);
         if (empty($this->_type)) {
             $this->_type = 'text';
+        }
+
+        if ($this->_config->getProperty("options",false)) {
+            $this->_hasFieldOptions = true;
+            $this->_parseColumnOptions();
         }
 
         $this->_loadConfigClass();
@@ -241,7 +248,30 @@ class KlearMatrix_Model_Column {
         return $this->_fieldConfig->filterValue($value, $original);
     }
 
+    public function _parseColumnOptions() {
 
+        if ($this->_config->getProperty("options",false)) {
+            $this->_options  = new KlearMatrix_Model_OptionsWrapper;
+
+            foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
+                if (!(bool)$enabled) continue;
+
+                $screenOption = new KlearMatrix_Model_ScreenOption;
+                $screenOption->setScreenName($_screen);
+                $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
+
+                if ( ($this->_routeDispatcher->getCurrentItem()->isFilteredScreen()) &&
+                        ( $screenOption->getFilterField() !=
+                        $this->_routeDispatcher->getCurrentItem()->getFilterField()) ) {
+                    continue;
+                }
+
+                $this->_options->addOption($screenOption);
+            }
+
+            //TO-DO : Opciones de dialogo para campos??? El no va a más!!! LOCURA!!
+        }
+    }
 
 
 
@@ -346,6 +376,9 @@ class KlearMatrix_Model_Column {
             $ret['order'] = $this->_orderedType;
         }
 
+        if ($this->_hasFieldOptions) {
+            $ret['options'] = $this->_options->toArray();
+        }
 
         if ($this->_fieldConfig) {
 

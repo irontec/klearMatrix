@@ -185,6 +185,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             }
         }
 
+        $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
+
+
         Zend_Json::$useBuiltinEncoderDecoder = true;
 
         $jsonResponse = new Klear_Model_DispatchResponse();

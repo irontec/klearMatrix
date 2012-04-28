@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
 * @author jabi
 *
 */
-class KlearMatrix_Model_ScreenFieldOption {
+class KlearMatrix_Model_DialogOption {
 
 	protected $_config;
-	protected $_screen;
+	protected $_dialog;
 	protected $_class;
 	protected $_title;
 
@@ -16,8 +15,8 @@ class KlearMatrix_Model_ScreenFieldOption {
 
 	protected $_noLabel = true;
 
-	public function setScreenName($screen) {
-		$this->_screen = $screen;
+	public function setDialogName($dialog) {
+		$this->_dialog = $dialog;
 	}
 
 	public function setConfig(Zend_Config $config) {
@@ -33,12 +32,11 @@ class KlearMatrix_Model_ScreenFieldOption {
 
 
 	public function getTitle() {
-		if (null !== $this->_title) {
+		if (null != $this->_title) {
 			return $this->_title;
 		}
 
-		// o_O pues eso.... MAL!
-		return 'unnamed screen';
+		return 'unnamed option';
 
 	}
 
@@ -53,9 +51,10 @@ class KlearMatrix_Model_ScreenFieldOption {
 	public function toArray() {
 		$ret = array(
 			'icon'=>$this->_class,
-			'type'=>'screen',
-			'screen'=>$this->_screen,
+			'type'=>'dialog',
+			'dialog'=>$this->_dialog,
 			'title'=>$this->getTitle(),
+		    'defaultOption'=>$this->isDefault(),
 			'label'=>$this->_label
 		);
 

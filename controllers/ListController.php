@@ -116,7 +116,16 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
 
         } else {
-            $order = $this->_item->getPK(); // Por defecto ordenamos por PK
+            if ( ($orderConfig = $this->_item->getOrderConfig()) &&
+                ($orderConfig->getProperty('field')) ) {
+                    $order = $orderConfig->getProperty('field');
+                    if ($orderConfig->getProperty('type')) {
+                        $order .= ' '. $orderConfig->getProperty('type');
+                    }
+
+            } else {
+                $order = $this->_item->getPK(); // Por defecto ordenamos por PK
+            }
         }
 
 
@@ -191,11 +200,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
                 $defaultOption = $cols->getOptionColumn()->getDefaultOption();
 
-                $fieldOptionsWrapper = new KlearMatrix_Model_FieldOptionsWrapper;
+                $fieldOptionsWrapper = new KlearMatrix_Model_OptionsWrapper;
 
                 foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
 
-                    $screenOption = new KlearMatrix_Model_ScreenFieldOption;
+                    $screenOption = new KlearMatrix_Model_ScreenOption;
                     $screenOption->setScreenName($_screen);
                     if ($_screen === $defaultOption) {
                         $screenOption->setAsDefault();
@@ -210,7 +219,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 }
 
                 foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
-                    $dialogOption = new KlearMatrix_Model_DialogFieldOption;
+                    $dialogOption = new KlearMatrix_Model_DialogOption;
                     $dialogOption->setDialogName($_dialog);
 
                     if ($_dialog === $defaultOption) {
@@ -231,18 +240,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $data->fixResults($this->_item);
         }
 
-        $generalOptionsWrapper = new KlearMatrix_Model_GeneralOptionsWrapper;
 
-        foreach($this->_item->getScreensGeneralOptionsConfig() as $_screen) {
-            $screenOption = new KlearMatrix_Model_ScreenGeneralOption;
-            $screenOption->setScreenName($_screen);
-            $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
-            $generalOptionsWrapper->addOption($screenOption);
-        }
-
-        // TO-DO > Opciones generales de dialogo y comprobar checkboxes
-
-        $data->setGeneralOptions($generalOptionsWrapper);
+        $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
 
 
         Zend_Json::$useBuiltinEncoderDecoder = true;

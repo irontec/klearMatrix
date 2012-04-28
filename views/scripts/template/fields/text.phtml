@@ -1,5 +1,9 @@
-<input type="text" name="${_elemName}" 
-{{if (_properties.required)}}required="" {{/if}}  
-{{if (_properties.placeholder)}}placeholder="${_properties.placeholder}" {{/if}} 
-{{if (_properties.pattern)}}pattern="${_properties.pattern}" {{/if}} 
-id="${_elemIden}" value="${_fieldValue}"{{if (_readonly)}} disabled="disabled"{{/if}} />
+{{if (_readonly)}}
+    {{html _fieldValue}}
+{{else}}
+<input type="text" name="${_elemName}"
+{{if (_properties.required)}}required="" {{/if}}
+{{if (_properties.placeholder)}}placeholder="${_properties.placeholder}" {{/if}}
+{{if (_properties.pattern)}}pattern="${_properties.pattern}" {{/if}}
+id="${_elemIden}" value="${_fieldValue}" />
+{{/if}}

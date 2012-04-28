@@ -25,17 +25,45 @@
             var $appliedTemplate = this._loadTemplate(tplName);
 
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
-
+            
             this._applyDecorators()
+            	._registerReDispatchSavers()
                 ._initFormElements()
                 ._registerBaseEvents()
                 ._registerEvents()
                 ._registerMainActionEvent();
 
         },
-        _registerMainActionEvent : function() {
+        _registerReDispatchSavers : function() {	
             var self = this;
 
+            this.element.klearModule("option","PreDispatchMethod",function() {
+            	// Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
+            	this.savedValues = {};
+            	var _selfklear = this;
+            	
+            	$("select.changed,input.changed,textarea.changed",self.options.theForm).each(function() {
+            		_selfklear.savedValues[$(this).attr("name")] = $(this).val();
+            	});
+            	
+            });
+            
+            this.element.klearModule("option","PostDispatchMethod",function() {
+            	if (!this.savedValues) return;
+            	$.each(this.savedValues,function(name,value) {
+                	$("[name="+name+"]",self.options.theForm).val(value).trigger("manualchange");
+            	});
+            	this.savedValues = {};
+            });
+            
+            return this;
+            
+    	},
+        _registerMainActionEvent : function() {
+        	
+        	var self = this;
+            	
+            
             this.options.theForm.on('submit',function(e) {
                 e.preventDefault();
                 e.stopPropagation();

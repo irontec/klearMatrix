@@ -50,7 +50,7 @@ class KlearMatrix_Model_ResponseItem
 
         $this->_filteredField = $this->_config->getProperty("filterField",false);
 
-        $this->_parentField = $this->_config->getProperty("parentField",false);
+      //  $this->_parentField = $this->_config->getProperty("parentField",false);
 
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
 
@@ -71,11 +71,11 @@ class KlearMatrix_Model_ResponseItem
         $filePath = 'klear.yaml:///model/' . $this->_modelFile;
 
         $modelConfig = new Zend_Config_Yaml(
-                $filePath,
-                APPLICATION_ENV,
-                array(
-                        "yamldecoder"=>"yaml_parse"
-                )
+            $filePath,
+            APPLICATION_ENV,
+            array(
+                    "yamldecoder"=>"yaml_parse"
+            )
         );
 
         $this->_modelSpec = new KlearMatrix_Model_ModelSpecification;
@@ -396,6 +396,10 @@ class KlearMatrix_Model_ResponseItem
         return (!empty($this->_filteredField));
     }
 
+    public function getFilterField() {
+        return $this->_filteredField;
+    }
+
 
     public function getFilteredCondition($_value)
     {
@@ -467,16 +471,29 @@ class KlearMatrix_Model_ResponseItem
     }
 
 
-    public function getScreensGeneralOptionsConfig()
+    public function getScreenOptionsWrapper()
     {
+        $generalOptionsWrapper = new KlearMatrix_Model_OptionsWrapper;
 
         if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
-            return array();
+            return $generalOptionsWrapper;
         }
 
         $parent = new Klear_Model_KConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
-        return $this->_getItemFieldsOptionsConfig('screen',$parent);
+        $options = $this->_getItemFieldsOptionsConfig('screen',$parent);
+
+
+
+        foreach($options as $_screen) {
+            $screenOption = new KlearMatrix_Model_ScreenOption;
+            $screenOption->setScreenName($_screen);
+            $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
+            $generalOptionsWrapper->addOption($screenOption);
+        }
+
+        return $generalOptionsWrapper;
+
     }
 
     public function getDialogsGeneralOptionsConfig()
@@ -501,6 +518,18 @@ class KlearMatrix_Model_ResponseItem
         return $pagination;
     }
 
+    public function getOrderConfig()
+    {
+        if (!$this->_config->exists("order")) {
+            return false;
+        }
+
+        $orderConfig = new Klear_Model_KConfigParser();
+        $orderConfig->setConfig($this->_config->getRaw()->order);
+        return $orderConfig;
+    }
+
+
     public function _getItemFieldsOptionsConfig($type,$parent)
     {
         $retArray = array();
@@ -517,7 +546,6 @@ class KlearMatrix_Model_ResponseItem
             break;
         }
 
-        $optionColumn = $this->_visibleColumnWrapper->getOptionColumn();
 
         $_items = $parent->getProperty($property,false);
 

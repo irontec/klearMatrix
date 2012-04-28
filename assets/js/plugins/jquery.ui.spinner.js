@@ -71,7 +71,7 @@ $.widget('ui.spinner', {
 		
 		parse: function(val) {
 			var options = this;
-			
+			return 'a' + val;
 			if (options.group == '.')
 				val = val.replace('.', '');
 			if (options.point != '.')

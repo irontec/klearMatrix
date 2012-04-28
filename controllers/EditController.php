@@ -156,6 +156,43 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                  ->fixResults($this->_item);
         }
 
+        //TODO: Fix!! c/p from NewController >> Quiero devolver los datos de su padre, para las opciones de columna
+        if ($this->_item->isFilteredScreen()) {
+
+            // Informamos a la respuesta de que campo es el "padre"
+            $data->setParentItem($this->_item->getFilteredField());
+
+            // A partir del nombre de pantalla (de nuestro .yaml principal...
+            if ($parentScreenName = $this->getRequest()->getPost("parentScreen")) {
+
+                // Instanciamos pantalla
+                $parentScreen = new KlearMatrix_Model_Screen;
+                $parentScreen->setRouteDispatcher($this->_mainRouter);
+                $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($parentScreenName));
+                $parentMapperName = $parentScreen->getMapperName();
+
+                $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
+                $defaultParentCol = $parentColWrapper->getDefaultCol();
+
+                // Recuperamos mapper, para recuperar datos principales (default value)
+                $parentMapper = new $parentMapperName;
+                $parentId = $this->_mainRouter->getParam('parentId');
+                $parentData = $parentMapper->find($parentId);
+
+                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+
+                // Se añaden los datos a la respuesta
+                // Se recogerán en el new, y se mostrará información por pantalla
+                $data->setParentIden($parentData->$getter());
+                $data->setParentId($parentId);
+                $data->setParentScreen($parentScreenName);
+            }
+        }
+
+
+        $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
+
+
         Zend_Json::$useBuiltinEncoderDecoder = true;
 
         $jsonResponse = new Klear_Model_DispatchResponse();

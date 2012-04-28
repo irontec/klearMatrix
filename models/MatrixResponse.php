@@ -47,18 +47,18 @@ class KlearMatrix_Model_MatrixResponse {
 
 	/**
 	 * Opciones "generales" de pantalla
-	 * @param KlearMatrix_Model_ScreenOptionsWrapper $screenOptsWrapper
+	 * @param KlearMatrix_Model_OptionsWrapper $screenOptsWrapper
 	 */
-	public function setGeneralOptions(KlearMatrix_Model_GeneralOptionsWrapper $generalOptsWrapper) {
+	public function setGeneralOptions(KlearMatrix_Model_OptionsWrapper $generalOptsWrapper) {
 		$this->_generalOptionsWrapper = $generalOptsWrapper;
 		return $this;
 	}
 
 	/**
 	 * Opciones por fila
-	 * @param KlearMatrix_Model_FieldOptionsWrapper $fieldOptsWrapper
+	 * @param KlearMatrix_Model_OptionsWrapper $fieldOptsWrapper
 	 */
-	public function setFieldOptions(KlearMatrix_Model_FieldOptionsWrapper $fieldOptsWrapper) {
+	public function setFieldOptions(KlearMatrix_Model_OptionsWrapper $fieldOptsWrapper) {
 		$this->_fieldOptionsWrapper = $fieldOptsWrapper;
 		return $this;
 	}

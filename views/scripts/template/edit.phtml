@@ -8,6 +8,15 @@
         <p class="ui-widget-content ui-corner-all">
             <label for="${id}${randIden}">${name}:</label>
             {{html $item.getEditDataForField(row[id],column)}}
+            {{if (column.options)}}
+                {{each column.options}}
+                <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
+                href=""
+                data-${type}="${$item.getIndex($value,type)}"
+                title="${$item.getTitle(title,idx,true)}">
+                <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
+                {{/each}}
+            {{/if}}
 		</p>
 		{{/each}}
 	</fieldset>
@@ -16,6 +25,18 @@
         <a class="closeTab" href="" title="Cerrar"><span class="ui-silk inline ui-silk-cross"></span>Cerrar</a>
         <a class="action" href="" title="Guardar"><span class="ui-silk inline ui-silk-bullet-disk"></span>Guardar</a>
         <span class="action autoClose "><span><input type="checkbox" name="autoclose" />Cerrar automáticamente después de guardar</span></span>
+
+{{if (generalOptions.length>0) }}
+    <br /><br />
+{{each generalOptions}}
+
+    <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+    <span class="ui-silk inline ${icon}"></span>
+    ${$item.getTitle(title,idx,true)}
+    </a>
+{{/each}}
+{{/if}}
+
     </div>
 
 </form>

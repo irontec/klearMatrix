@@ -26,6 +26,7 @@
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 
             this._applyDecorators()
+            	._registerReDispatchSavers()
                 ._registerBaseEvents()
                 ._initFormElements()
                 ._registerEvents()

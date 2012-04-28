@@ -1,12 +1,21 @@
 {{if (_readonly)}}
-    {{html _dataConfig.values[_fieldValue]}}
-    <input type="hidden" name="${_elemName}" value="${_fieldValue}" />
+    {{each(idx,dataValue) _dataConfig.values}}
+        {{if (_fieldValue && dataValue.key == _fieldValue)}}
+            {{html dataValue.item }}
+            <input type="hidden" name="${_elemName}" value="${_fieldValue}" />
+        {{/if}}
+    {{/each}}
+
 {{else}}
 <select name="${_elemName}" id="${_elemIden}" {{if (_dataConfig.visualFilter)}}class="visualFilter"{{/if}}>
 {{each(idx,dataValue) _dataConfig.values}}
     <option{{if (_fieldValue && dataValue.key == _fieldValue)}} selected="selected"{{/if}}
 
-    {{if (dataValue.key != '__null__') }} value="${dataValue.key}" {{/if}}
+    {{if (dataValue.key != '__null__')}}
+        value="${dataValue.key}"
+    {{else}}
+        value="__NULL__"
+    {{/if}}
     {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[dataValue.key]) }}
         data-show="{{each(idxField,showField) _dataConfig.visualFilter.show[dataValue.key]}}
         {{if (idxField != '__className')}}

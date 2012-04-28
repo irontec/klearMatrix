@@ -273,6 +273,17 @@ class KlearMatrix_Model_RouteDispatcher {
     }
 
 
+    public function getCurrentItemName() {
+        switch($this->_typeName) {
+            case "dialog":
+                return $this->_dialogName;
+            case "command":
+                return $this->_commandName;
+            default:
+                return $this->_screenName;
+        }
+    }
+
     public function resolveDispatch() {
 
         $this

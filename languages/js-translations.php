@@ -1,13 +1,13 @@
 <?php
 
 return array (
-  0 => 'Campo disponible en multi-lenguaje',
-  1 => 'Deseleccionar todo',
-  2 => '# seleccionados',
-  3 => '# de # seleccionados',
-  4 => 'Selecciona una opción',
-  5 => 'Seleccionar todo',
-  6 => 'Subir Fichero',
+  0 => 'Field available in multi-language',
+  1 => 'Select all',
+  2 => 'Upload File',
+  3 => 'Select an option',
+  4 => 'Unselect all',
+  5 => '# selected',
+  6 => '# of # selected',
   7 => 'Field available in multi-language',
   8 => 'Select all',
   9 => 'Unselect all',

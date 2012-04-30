@@ -46,7 +46,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
         }
 
-        //TODO: Meter el where en .yaml si fuera necesario
         //TODO: Control de errores?
         $_where = null;
 

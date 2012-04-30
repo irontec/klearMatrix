@@ -32,6 +32,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         $this->_adapter = new $adapterClassName;
         $this->_adapter
                     ->setConfig($sourceConfig)
+                    ->setColumn($this->_column)
                     ->init();
 
     }

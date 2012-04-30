@@ -8,6 +8,8 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator 
     protected $_keys;
     protected $_position;
 
+    protected $_column;
+
     public function filterValue($value,$original) {
         return $value;
     }
@@ -27,6 +29,11 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator 
 
     public function __construct() {
         $this->rewind();
+    }
+
+    public function setColumn($column) {
+        $this->_column = $column;
+        return $this;
     }
 
     public function setConfig(Zend_Config $config) {

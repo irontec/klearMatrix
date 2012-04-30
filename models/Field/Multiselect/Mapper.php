@@ -10,7 +10,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     protected $_fieldConfig;
 
     protected $_editableFields;
-    
+
     public function init() {
 
         $parsedValues = new Klear_Model_KConfigParser;
@@ -24,7 +24,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $this->_fieldName = $parsedValues->getProperty("relatedFieldName");
 
         $_order = $parsedValues->getProperty("relatedOrder");
-        
+
         if (is_object($this->_fieldName)) {
             $_fieldConfig = new Klear_Model_KConfigParser;
             $_fieldConfig->setConfig($this->_fieldName);
@@ -45,10 +45,20 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 $this->_editableFields[] = $this->_parseEditableField($_name, $_editableField);
             }
         }
-           
+
         //TODO: Meter el where en .yaml si fuera necesario
         //TODO: Control de errores?
         $_where = null;
+
+        if ($filterClassName = $parsedValues->getProperty("filterClass")) {
+
+            $filter = new $filterClassName;
+
+            if ($filter->setRouteDispatcher($this->_column->getRouteDispatcher())) {
+                $_where = $filter->getCondition();
+
+            }
+        }
 
         $dataMapperName = $this->_relatedMapper;
         $dataMapper = new $dataMapperName;
@@ -66,22 +76,22 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 $this->_keys[] = $dataModel->getPrimaryKey();
                 $this->_items[] = str_replace(array_keys($replace),$replace,$fieldTemplate);
-                
+
             }
         }
 
     }
-    
+
     protected function _parseEditableField($name, Zend_Config $editableField) {
         $_editFieldConfig = new Klear_Model_KConfigParser;
         $_editFieldConfig->setConfig($editableField);
-        
+
         $_field = array(
                 'name'=>$name,
                 'type'=>$_editFieldConfig->getProperty("type"),
                 'label'=>$_editFieldConfig->getProperty("label")
         );
-        
+
         return $_field;
     }
 
@@ -210,7 +220,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     }
 
-    
+
     public function getEditableFieldsConfig()
     {
         return $this->_editableFields;

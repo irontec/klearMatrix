@@ -50,6 +50,8 @@ class KlearMatrix_Model_ResponseItem
 
         $this->_filteredField = $this->_config->getProperty("filterField",false);
 
+        $this->_filterClass = $this->_config->getProperty("filterClass",false);
+
       //  $this->_parentField = $this->_config->getProperty("parentField",false);
 
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
@@ -395,6 +397,23 @@ class KlearMatrix_Model_ResponseItem
     {
         return (!empty($this->_filteredField));
     }
+
+
+
+    public function hasFilterClass()
+    {
+        return (!empty($this->_filterClass));
+    }
+
+    public function getFilterClassCondition()
+    {
+
+        $filterClass = new $this->_filterClass;
+        $filterClass->setRouteDispatcher($this->_routeDispatcher);
+
+        return array($filterClass->getCondition(),array());
+    }
+
 
     public function getFilterField() {
         return $this->_filteredField;

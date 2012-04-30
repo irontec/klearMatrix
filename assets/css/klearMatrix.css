@@ -64,7 +64,7 @@ table.kMatrix .mlTag {
 }
 
 .klearMatrix_form select.multiselect {
-    width:70%;
+    width:350px;
 }
 
 .klearMatrix_form fieldset {
@@ -161,7 +161,7 @@ a.ui-state-nojump {
 }
 
 .klearMatrixFiltering form.not-loaded .title {
-    margin:0 0 0 90%;
+    margin:0;
 }    
 
 .klearMatrixFiltering p.title {

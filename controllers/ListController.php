@@ -44,6 +44,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $where = array();
 
 
+        if ($this->_item->hasFilterClass()) {
+            $where[] = $this->_item->getFilterClassCondition();
+        }
+
+
         if ($this->_item->isFilteredScreen()) {
 
             $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));

@@ -4,6 +4,8 @@
         return;
     }
 
+    var __namespace__ = "klearmatrix.new";
+    
     $.widget("klearmatrix.new", $.klearmatrix.edit, {
         options: {
             data : null,
@@ -14,8 +16,6 @@
             this._super._create.apply(this);
         },
         _init: function() {
-
-            $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
 
@@ -78,14 +78,14 @@
                         $dialog.moduleDialog("option","buttons",
                                  [
                                       {
-                                        text: $.translate("Cerrar"),
+                                        text: $.translate("Close", [__namespace__]),
                                         click: function() {
                                             $(this).moduleDialog("close");
                                             $self.klearModule("close");
                                         }
                                     },
                                     {
-                                        text: $.translate("Añadir otro registro"),
+                                        text: $.translate("Add another record", [__namespace__]),
                                         click: function() {
                                             $(this).moduleDialog("close");
                                         }

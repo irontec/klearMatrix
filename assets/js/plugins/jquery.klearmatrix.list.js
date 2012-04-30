@@ -4,7 +4,9 @@
         return;
     }
 
-
+    
+    var __namespace__ = "klearmatrix.list";
+    
     $.widget("klearmatrix.list", $.klearmatrix.module,  {
         options: {
             data : null,
@@ -33,9 +35,9 @@
             $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
 
             if ($("td.multilang",$container).length>0) {
-
-                var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Campo disponible en multi-lenguaje"));
-
+                
+                var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Field available in multi-language", [__namespace__]));
+                
                 $("td.multilang",$container).each(function() {
                     $(this).prepend($mlSelector.clone().tooltip());
                 });

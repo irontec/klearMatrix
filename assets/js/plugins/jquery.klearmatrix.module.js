@@ -1,9 +1,7 @@
-;(function load($) {
-
-    if (!$.klear.checkDeps(['$.klearmatrix.template.helper','$.ui.form'],load)) {
-        return;
-    }
-
+;(function($) {
+    
+    var __namespace__ = "klearmatrix.module";
+    
     $.widget("klearmatrix.module", {
         options: {
             moduleName: 'module'

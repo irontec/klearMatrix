@@ -219,6 +219,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
         $jsonResponse->addJsArray($cols->getColsJsArray());
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
+        $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 

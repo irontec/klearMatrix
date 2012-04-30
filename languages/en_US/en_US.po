@@ -1,0 +1,87 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: KlearMatrix\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-30 12:57+0100\n"
+"PO-Revision-Date: 2012-04-30 12:57+0100\n"
+"Last-Translator: Lander Ontoria <lander@irontec.com>\n"
+"Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;translate;plural:1,2\n"
+"X-Poedit-Basepath: /home/landerog/workspace/klear-core/klearMatrix\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: assets/js/plugins/jquery.klearmatrix.new.js:80
+#: assets/js/plugins/jquery.klearmatrix.edit.js:104
+msgid "Close"
+msgstr "Close"
+
+#: assets/js/plugins/jquery.klearmatrix.new.js:87
+msgid "Add another record"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.list.js:39
+msgid "Field available in multi-language"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:111
+msgid "Edit again"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:162
+msgid "# of # selected"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:163
+msgid "Select all"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:164
+msgid "Unselect all"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:165
+msgid "Select an option"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:166
+msgid "# selected"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:284
+msgid "Upload File"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:335
+msgid "There is unsaved content."
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:337
+msgid "Close the screen?"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:339
+msgid "Attention!"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:343
+msgid "Cancel"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.edit.js:349
+msgid "Ignore changes and close"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.template.helper.js:221
+msgid "There are not associated elements"
+msgstr ""
+
+#~ msgid "Cerrar"
+#~ msgstr "Close"

@@ -254,6 +254,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
+        $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
         $jsonResponse->addCssFile("/css/klearMatrix.css");

@@ -67,6 +67,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$jsonResponse->addTemplate("/template/delete/type/" . $this->_item->getType(),"klearmatrixDelete");
     	$jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","clearMatrixFields"));
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
+    	$jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
     	$jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.delete.js");
     	$jsonResponse->addCssFile("/css/klearMatrixEdit.css");

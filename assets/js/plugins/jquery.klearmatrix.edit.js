@@ -3,6 +3,8 @@
     if (!$.klear.checkDeps(['$.klearmatrix.module','$.ui.form','$.fn.autoResize','$.fn.h5Validate','Crypto'],load)) {
         return;
     }
+    
+    var __namespace__ = "klearmatrix.edit";
 
     $.widget("klearmatrix.edit", $.klearmatrix.module, {
         options: {
@@ -127,14 +129,14 @@
                             $dialog.moduleDialog("option","buttons",
                                      [
                                           {
-                                            text: $.translate("Cerrar"),
+                                            text: $.translate("Close", [__namespace__]),
                                             click: function() {
                                                 $(this).moduleDialog("close");
                                                 $self.klearModule("close");
                                             }
                                         },
                                         {
-                                            text: $.translate("Editar de nuevo"),
+                                            text: $.translate("Edit again", [__namespace__]),
                                             click: function() {
                                                 $(this).moduleDialog("close");
                                             }
@@ -185,11 +187,11 @@
                 $("select.multiselect",this.options.theForm).multiselect({
                     container: this.element.klearModule('getPanel'),
                     selectedList: 4,
-                    selectedText: $.translate("# de # seleccionados"),
-                    checkAllText: $.translate('Seleccionar todo'),
-                    uncheckAllText: $.translate('Deseleccionar todo'),
-                    noneSelectedText: $.translate('Selecciona una opción'),
-                    selectedText: $.translate('# seleccionados'),
+                    selectedText: $.translate("# of # selected", [__namespace__]),
+                    checkAllText: $.translate('Select all', [__namespace__]),
+                    uncheckAllText: $.translate('Unselect all', [__namespace__]),
+                    noneSelectedText: $.translate('Select an option', [__namespace__]),
+                    selectedText: $.translate('# selected', [__namespace__]),
                     position: {
                           my: 'center',
                           at: 'center'
@@ -307,7 +309,7 @@
                             multiple: false,
                             template: '<div class="qq-uploader">' +
                                 '<div class="qq-upload-drop-area"><span></span></div>' +
-                                '<div class="qq-upload-button ui-button ui-widget ui-state-default ui-corner-all"><span class="ui-icon ui-icon-folder-open inline"></span>'+$.translate("Subir Fichero")+'</div>' +
+                                '<div class="qq-upload-button ui-button ui-widget ui-state-default ui-corner-all"><span class="ui-icon ui-icon-folder-open inline"></span>'+$.translate("Upload File", [__namespace__])+'</div>' +
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
@@ -358,21 +360,21 @@
 
                     self.element.klearModule("setAsChanged", function() {
                         self.element.klearModule('showDialog',
-                            $.translate("Existe contenido no guardado.") +
+                            $.translate("There is unsaved content.", [__namespace__]) +
                             '<br />' +
-                            $.translate("¿Desea cerrar la pantalla?")
+                            $.translate("Close the screen?", [__namespace__])
                             ,{
-                            title : $.translate("Cuidado!"),
+                            title : $.translate("Attention!", [__namespace__]),
                             buttons :
                                  [
                                       {
-                                        text: $.translate("Cancelar"),
+                                        text: $.translate("Cancel", [__namespace__]),
                                         click: function() {
                                             $(this).moduleDialog("close");
                                         }
                                     },
                                     {
-                                        text: $.translate("Omitir Cambios y Cerrar"),
+                                        text: $.translate("Ignore changes and close", [__namespace__]),
                                         click: function() {
                                             self.element.klearModule("setAsUnChanged");
                                             self.element.klearModule("close");

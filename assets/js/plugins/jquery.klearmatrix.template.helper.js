@@ -218,7 +218,7 @@
                                 }
                             }
                             if (returnValue.length == 0) {
-                                return '<em>' + $.translate('no hay elementos asociados') + '</em>';
+                                return '<em>' + $.translate('There are not associated elements') + '</em>';
                             } else {
                                 return returnValue.join(', ');
                             }

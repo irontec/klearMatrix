@@ -208,7 +208,7 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _createDependantColumn($colConfig, $dependantConfig)
     {
-        $col = $this->_createCol($dependantConfig['table_name'], $colConfig);
+        $col = $this->_createCol($dependantConfig['property'], $colConfig);
         $col->markAsDependant();
         return $col;
     }
@@ -221,9 +221,9 @@ class KlearMatrix_Model_ResponseItem
     {
         foreach ($model->getDependentList() as $dependatConfig) {
 
-            if (isset($this->_blacklist[$dependatConfig['table_name']])) continue;
+            if (isset($this->_blacklist[$dependatConfig['property']])) continue;
 
-            if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {
+            if ($colConfig = $this->_modelSpec->getField($dependatConfig['property'])) {
                 $col = $this->_createDependantColumn($colConfig, $dependatConfig);
                 $this->_visibleColumnWrapper->addCol($col);
             }

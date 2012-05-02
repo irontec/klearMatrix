@@ -3,7 +3,7 @@
     if (!$.klear.checkDeps(['$.klearmatrix.module','$.ui.form','$.fn.autoResize','$.fn.h5Validate','Crypto'],load)) {
         return;
     }
-    
+
     var __namespace__ = "klearmatrix.edit";
 
     $.widget("klearmatrix.edit", $.klearmatrix.module, {
@@ -27,7 +27,7 @@
             var $appliedTemplate = this._loadTemplate(tplName);
 
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
-            
+
             this._applyDecorators()
             	._registerReDispatchSavers()
                 ._initFormElements()
@@ -36,20 +36,20 @@
                 ._registerMainActionEvent();
 
         },
-        _registerReDispatchSavers : function() {	
+        _registerReDispatchSavers : function() {
             var self = this;
 
             this.element.klearModule("option","PreDispatchMethod",function() {
             	// Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
             	this.savedValues = {};
             	var _selfklear = this;
-            	
+
             	$("select.changed,input.changed,textarea.changed",self.options.theForm).each(function() {
             		_selfklear.savedValues[$(this).attr("name")] = $(this).val();
             	});
-            	
+
             });
-            
+
             this.element.klearModule("option","PostDispatchMethod",function() {
             	if (!this.savedValues) return;
             	$.each(this.savedValues,function(name,value) {
@@ -57,15 +57,15 @@
             	});
             	this.savedValues = {};
             });
-            
+
             return this;
-            
+
     	},
         _registerMainActionEvent : function() {
-        	
+
         	var self = this;
-            	
-            
+
+
             this.options.theForm.on('submit',function(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -404,7 +404,7 @@
                 $.each(curOption.data("hide").split(","),function(i,val) {
                     var fName = $.trim(val);
                     if (fName == '') return;
-                    var field = $("[name="+fName+"]:eq(0)",self.options.theForm).parents("p:eq(0)");
+                    var field = $("[name='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
                     if (manual) field.hide();
                     else field.slideUp();
                 });
@@ -412,7 +412,7 @@
                 $.each(curOption.data("show").split(","),function(i,val) {
                     var fName = $.trim(val);
                     if (fName == '') return;
-                    var field = $("[name="+fName+"]:eq(0)",self.options.theForm).parents("p:eq(0)");
+                    var field = $("[name='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
                     if (manual) field.show();
                     else field.slideDown();
                 });

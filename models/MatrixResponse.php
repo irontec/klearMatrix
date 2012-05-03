@@ -109,6 +109,7 @@ class KlearMatrix_Model_MatrixResponse {
 
 		$primaryKeyName = $screen->getPK();
 
+
 		if (!is_array($this->_results)) $this->_results = array($this->_results);
 
 		$_newResults = array();
@@ -123,7 +124,9 @@ class KlearMatrix_Model_MatrixResponse {
 
 			    foreach($this->_columnWrapper as $column) {
 
-			        if (!$getter = $column->getGetterName($result)) continue;
+			        if (!$getter = $column->getGetterName($result)) {
+                        continue;
+			        }
 
 			        if ($column->isMultilang()) {
 
@@ -131,11 +134,14 @@ class KlearMatrix_Model_MatrixResponse {
 			            foreach($this->_columnWrapper->getLangs() as $_lang) {
 			                $rValue[$_lang] = $result->{$getter}($_lang);
 			            }
-
+			        } elseif ($column->isGhost()) {
+			            $class = $column->getKlearConfig()->getProperty('source')->class;
+			            $method = $column->getKlearConfig()->getProperty('source')->method;
+                        $ghost = new $class;
+                        $rValue = $ghost->{$method}($result->getPrimaryKey());
 			        } else {
 			            $rValue = $result->{$getter}();
 			        }
-
 
 			        $_newResult[$column->getDbName()] = $column->prepareValue($rValue, $result);
 

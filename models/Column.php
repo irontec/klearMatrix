@@ -28,6 +28,8 @@ class KlearMatrix_Model_Column {
 
     protected $_isMultilang = false;
 
+    protected $_isGhost = false;
+
     protected $_isDependant = false;
 
     protected $_isFile = false;
@@ -65,6 +67,11 @@ class KlearMatrix_Model_Column {
         $this->_isMultilang = true;
     }
 
+    public function markAsGhost()
+    {
+        $this->_isGhost = true;
+    }
+
     public function markAsFile()
     {
         $this->_isFile = true;
@@ -82,6 +89,10 @@ class KlearMatrix_Model_Column {
 
     public function isMultilang() {
         return $this->_isMultilang;
+    }
+
+    public function isGhost() {
+        return $this->_isGhost;
     }
 
     public function isFile()
@@ -273,24 +284,6 @@ class KlearMatrix_Model_Column {
         }
     }
 
-
-
-    public function getGetterName($model)
-    {
-        if ($this->isOption()) return false;
-
-        if (method_exists($this->_fieldConfig, 'getCustomGetterName')) {
-            return $this->_fieldConfig->getCustomGetterName();
-        }
-
-        if ($this->isDependant()) {
-            return 'get' . $this->getDbName();
-        } else {
-            return 'get' . $model->columnNameToVar($this->getDbName());
-        }
-
-    }
-
     public function getSearchCondition(array $values,$model, $langs) {
 
         if (method_exists($this->_fieldConfig, 'getCustomSearchField')) {
@@ -330,9 +323,29 @@ class KlearMatrix_Model_Column {
 
     }
 
+    public function getGetterName($model)
+    {
+        if ($this->isOption()) {
+            return false;
+        }
+
+        if (method_exists($this->_fieldConfig, 'getCustomGetterName')) {
+            return $this->_fieldConfig->getCustomGetterName();
+        }
+
+        if ($this->isDependant()) {
+            return 'get' . $this->getDbName();
+        } else {
+            return 'get' . $model->columnNameToVar($this->getDbName());
+        }
+
+    }
+
     public function getSetterName($model)
     {
-        if ($this->isOption()) return false;
+        if ($this->isOption()) {
+            return false;
+        }
 
         if (method_exists($this->_fieldConfig, 'getCustomSetterName')) {
             return $this->_fieldConfig->getCustomSetterName();
@@ -363,9 +376,12 @@ class KlearMatrix_Model_Column {
             $ret['default'] = true;
         }
 
-
         if ($this->isMultilang()) {
             $ret['multilang'] = true;
+        }
+
+        if ($this->isGhost()) {
+            $ret['ghost'] = true;
         }
 
         if ($this->isReadonly()) {

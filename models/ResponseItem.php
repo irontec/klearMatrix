@@ -308,12 +308,31 @@ class KlearMatrix_Model_ResponseItem
         }
 
         /*
+         * Buscamos los campos ghost y los añadimos si no están en blacklist
+         */
+        foreach ($this->_modelSpec->getFields() as $key => $field) {
+            if ($field->type == 'ghost' && !isset($this->_blacklist[$key])) {
+                $col = $this->_createCol($key, $field);
+                $col->markAsGhost();
+                $this->_visibleColumnWrapper->addCol($col);
+            }
+        }
+
+        /*
          * Iteramos sobre todos los campos
          */
         foreach($model->getColumnsList() as $dbName => $attribute) {
-            if ( (!$ignoreBlackList) && (isset($this->_blacklist[$dbName])) ) continue;
+
+            if ( (!$ignoreBlackList) && (isset($this->_blacklist[$dbName])) ) {
+                continue;
+            }
 
             $config = $this->_modelSpec->getField($dbName);
+
+            //Si es un campo ghost, pasamos de él. Ya estaba metido antes
+            if (isset($config->type) && $config->type == 'ghost') {
+                continue;
+            }
 
             $col = $this->_createCol($dbName, $config);
 

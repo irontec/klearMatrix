@@ -5,32 +5,45 @@
 * @author jabi
 *
 */
-class KlearMatrix_Model_ModelSpecification {
-	
+class KlearMatrix_Model_ModelSpecification
+{
+
 	protected $_config;
 	protected $_class;
-	
-	public function setConfig(Zend_Config $config) {
+
+	public function setConfig(Zend_Config $config)
+	{
 		$this->_config = new Klear_Model_KConfigParser;
 		$this->_config->setConfig($config);
-		
+
 		$this->_class = $this->_config->getProperty("class",true);
 		$this->_instance = new $this->_class;
 	}
-	
-	public function getInstance() {
+
+	public function getInstance()
+	{
 		return $this->_instance;
 	}
-	
-	public function getClassName() {
-		return $this->_class;	
+
+	public function getClassName()
+	{
+		return $this->_class;
 	}
-	
-	public function getField($fName) {
+
+	public function getField($fName)
+	{
 		if ($this->_config->exists("fields->" . $fName)) {
-			return $this->_config->getRaw()->fields->{$fName};			
+			return $this->_config->getRaw()->fields->{$fName};
 		}
 		return false;
 	}
-	
+
+	public function getFields()
+	{
+	    $fields = array();
+        foreach ($this->_config->getRaw()->fields as $key => $field) {
+            $fields[$key] = $field;
+        }
+        return $fields;
+	}
 }

@@ -14,4 +14,9 @@ return array (
   10 => '# of # selected',
   11 => 'Select an option',
   12 => '# selected',
+  13 => 'There is unsaved content.',
+  14 => 'Cancel',
+  15 => 'Ignore changes and close',
+  16 => 'Attention!',
+  17 => 'Close the screen?',
 );

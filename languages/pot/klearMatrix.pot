@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 18:11+0100\n"
-"PO-Revision-Date: 2012-05-03 18:12+0100\n"
+"POT-Creation-Date: 2012-05-03 18:48+0100\n"
+"PO-Revision-Date: 2012-05-03 18:48+0100\n"
 "Last-Translator: Lander Ontoria <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: \n"
@@ -18,9 +18,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: assets/js/plugins/jquery.klearmatrix.new.js:81
-#: assets/js/plugins/jquery.klearmatrix.edit.js:132
+#: controllers/FileController.php:148
+msgid "Cancel"
+msgstr ""
+
+#: controllers/FileController.php:151
+msgid "Download"
+msgstr ""
+
+#: controllers/FileController.php:170
+#, php-format
+msgid "Error preparing download.<br />(%s)"
+msgstr ""
+
+#: views/scripts/template/list.phtml:3
+msgid "Filter fields"
+msgstr ""
+
+#: views/scripts/template/list.phtml:14
+msgid "Returns records that satisfy any of filters"
+msgstr ""
+
+#: views/scripts/template/list.phtml:14
+msgid "Add all filters"
+msgstr ""
+
+#: views/scripts/template/new.phtml:22
+#: views/scripts/template/edit.phtml:25
 msgid "Close"
+msgstr ""
+
+#: views/scripts/template/new.phtml:23
+#: views/scripts/template/edit.phtml:26
+msgid "Save"
+msgstr ""
+
+#: views/scripts/template/new.phtml:24
+#: views/scripts/template/edit.phtml:27
+msgid "Close automatically after save"
+msgstr ""
+
+#: views/scripts/template/delete.phtml:4
+msgid "Do you want delete this record?"
+msgstr ""
+
+#: views/scripts/template/fields/file.phtml:7
+msgid "Not available"
+msgstr ""
+
+#: assets/js/plugins/jquery.klearmatrix.delete.js:81
+msgid "Delete"
 msgstr ""
 
 #: assets/js/plugins/jquery.klearmatrix.new.js:88
@@ -71,15 +118,11 @@ msgstr ""
 msgid "Attention!"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:371
-msgid "Cancel"
-msgstr ""
-
 #: assets/js/plugins/jquery.klearmatrix.edit.js:377
 msgid "Ignore changes and close"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.template.helper.js:221
+#: assets/js/plugins/jquery.klearmatrix.template.helper.js:223
 msgid "There are not associated elements"
 msgstr ""
 

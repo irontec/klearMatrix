@@ -4,6 +4,8 @@
         return;
     }
 
+    var __namespace__ = "klearmatrix.genericdialog";
+    
     $.widget("klearmatrix.genericdialog", $.klearmatrix.module,  {
         options: {
             data : null,

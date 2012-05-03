@@ -1,5 +1,8 @@
 ;(function($) {
 	
+	var __namespace__ = "klearmatrix.delete";
+	
+	
 	$.widget("klearmatrix.delete", $.klearmatrix.module, {
 		options: {
 			data : null,
@@ -50,7 +53,7 @@
 						$self.moduleDialog("option","buttons",
 								 [
 								  	{
-			    						text: "Cerrar",
+			    						text: $.translate("Close", [__namespace__]),
 			    						click: function() { $(this).moduleDialog("close"); }
 									}
 								]
@@ -71,11 +74,11 @@
 			$(this.element).moduleDialog("option","buttons",
 					 [
 					  	{
-    						text: "Cancelar",
+    						text: $.translate("Cancel", [__namespace__]),
     						click: function() { $(this).moduleDialog("close"); }
 						},
 					    {
-					        text: "Eliminar",
+					        text: $.translate("Delete", [__namespace__]),
 					        click: function() {
 					        	self._doAction.apply(self,[this]);
 					        }

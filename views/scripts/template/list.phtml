@@ -1,6 +1,6 @@
 <div class="ui-widget-content ui-corner-all klearMatrixFiltering">
 <form class="klearMatrixFilteringForm {{if (typeof searchFields == 'undefined') }} not-loaded {{/if}} ">
-<p class="title"><span class="ui-silk inline ui-silk-zoom"></span>Filtrado de Campos</p>
+<p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Filter fields'); ?></p>
     <p class="filterItem">
     <input type="text" class="term">
     <select name="searchFiled">
@@ -11,7 +11,7 @@
      {{/each}}
     </select>
     <span class="ui-silk inline ui-silk-add addTerm"></span>
-    <br /><span class="addToggle" title="Devuelve los registros que cumplan alguno de los filtros">Sumar todos los filtros
+    <br /><span class="addToggle" title="<?php echo $this->translate('Returns records that satisfy any of filters'); ?>"><?php echo $this->translate('Add all filters'); ?>
     <input type="checkbox" name="addFilters"
     {{if (searchAddModifier) }}
         checked="checked"

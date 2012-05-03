@@ -145,10 +145,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 	                'pk'=>$this->_pk,
 	                'message'=> $this->_model->{$nameGetter}().'<br />('.$this->_model->{$sizeGetter}().')' ,
 	                'buttons'=>array(
-	                        'Cancelar' => array(
+	                        $this->view->translate('Cancel') => array(
 	                                'recall'=>false,
 	                        ),
-	                        'Descargar' => array(
+	                        $this->view->translate('Download') => array(
 	                                'recall'=>true,
 	                                'external'=>true,
 	                                'params'=>array(
@@ -167,7 +167,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 	        }
 	        
 	        $data = array(
-	                'message'=>'Error preparando la descarga.<br />('.$e->getMessage().')',
+	                'message'=>sprintf($this->view->translate('Error preparing download.<br />(%s)'), $e->getMessage()),
 	                'buttons'=>array(
 	                        'Aceptar' => array(
 	                                'recall'=>false,

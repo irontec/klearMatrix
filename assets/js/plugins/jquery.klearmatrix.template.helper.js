@@ -3,6 +3,8 @@
     $.klearmatrix = $.klearmatrix || {};
     $.klearmatrix.template  = $.klearmatrix.template || {};
 
+    var __namespace__ = "klearmatrix.templatehelper";
+    
     $.klearmatrix.template.helper = {
             debug : function() {
                 console.log(arguments);
@@ -10,7 +12,7 @@
             },
             cleanValue : function(_value,ifNull, pattern) {
 
-                ifNull = (typeof ifNuLL == undefined  || _value == '')? 'no disponible' : ifNull;
+                ifNull = (typeof ifNuLL == undefined  || _value == '')? $.translate('Not available', [__namespace__]) : ifNull;
 
                 if (pattern) {
 
@@ -194,7 +196,7 @@
                 if (typeof values[column.id] == 'undefined') {
                     switch(column.type) {
                         default:
-                            return "no disponible";
+                            return $.translate("Not available", [__namespace__]);
                     }
 
                 } else {
@@ -218,7 +220,7 @@
                                 }
                             }
                             if (returnValue.length == 0) {
-                                return '<em>' + $.translate('There are not associated elements') + '</em>';
+                                return '<em>' + $.translate('There are not associated elements', [__namespace__]) + '</em>';
                             } else {
                                 return returnValue.join(', ');
                             }

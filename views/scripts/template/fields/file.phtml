@@ -4,7 +4,7 @@
 {{if (_fieldValue.name)}}
     ${_fieldValue.name}
 {{else}}
-    No disponible
+    <?php echo $this->translate('Not available'); ?>
 {{/if}}    
     
 {{each(idx,option) _dataConfig.options}}

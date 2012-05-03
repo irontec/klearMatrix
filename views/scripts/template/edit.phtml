@@ -22,9 +22,9 @@
 	</fieldset>
 
     <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
-        <a class="closeTab" href="" title="Cerrar"><span class="ui-silk inline ui-silk-cross"></span>Cerrar</a>
-        <a class="action" href="" title="Guardar"><span class="ui-silk inline ui-silk-bullet-disk"></span>Guardar</a>
-        <span class="action autoClose "><span><input type="checkbox" name="autoclose" />Cerrar automáticamente después de guardar</span></span>
+        <a class="closeTab" href="" title="<?php echo $this->translate('Close'); ?>"><span class="ui-silk inline ui-silk-cross"></span><?php echo $this->translate('Close'); ?></a>
+        <a class="action" href="" title="<?php echo $this->translate('Save'); ?>"><span class="ui-silk inline ui-silk-bullet-disk"></span><?php echo $this->translate('Save'); ?></a>
+        <span class="action autoClose "><span><input type="checkbox" name="autoclose" /><?php echo $this->translate('Close automatically after save'); ?></span></span>
 
 {{if (generalOptions.length>0) }}
     <br /><br />

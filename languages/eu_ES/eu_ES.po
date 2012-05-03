@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-30 12:54+0100\n"
-"PO-Revision-Date: 2012-04-30 12:57+0100\n"
+"POT-Creation-Date: 2012-05-03 18:11+0100\n"
+"PO-Revision-Date: 2012-05-03 18:14+0100\n"
 "Last-Translator: Lander Ontoria <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: \n"
@@ -11,71 +11,71 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;translate;plural:1,2\n"
-"X-Poedit-Basepath: /home/landerog/workspace/klear-core/klearMatrix\n"
-"X-Poedit-Language: Spanish\n"
+"X-Poedit-Basepath: /opt/ektcentrex/klear-core/klearMatrix\n"
+"X-Poedit-Language: English\n"
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: assets/js/plugins/jquery.klearmatrix.new.js:80
-#: assets/js/plugins/jquery.klearmatrix.edit.js:104
+#: assets/js/plugins/jquery.klearmatrix.new.js:81
+#: assets/js/plugins/jquery.klearmatrix.edit.js:132
 msgid "Close"
-msgstr "Itxi"
+msgstr "Close"
 
-#: assets/js/plugins/jquery.klearmatrix.new.js:87
+#: assets/js/plugins/jquery.klearmatrix.new.js:88
 msgid "Add another record"
-msgstr "Beste erregistro bat sartu"
+msgstr ""
 
 #: assets/js/plugins/jquery.klearmatrix.list.js:39
 msgid "Field available in multi-language"
-msgstr "Eremuak hainbat hizkuntzetan eskugai"
+msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:111
+#: assets/js/plugins/jquery.klearmatrix.edit.js:139
 msgid "Edit again"
-msgstr "Berriz editatu"
+msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:162
+#: assets/js/plugins/jquery.klearmatrix.edit.js:190
 msgid "# of # selected"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:163
+#: assets/js/plugins/jquery.klearmatrix.edit.js:191
 msgid "Select all"
-msgstr "Danak aukeratu"
+msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:164
+#: assets/js/plugins/jquery.klearmatrix.edit.js:192
 msgid "Unselect all"
-msgstr "Danak desaukeratu"
+msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:165
+#: assets/js/plugins/jquery.klearmatrix.edit.js:193
 msgid "Select an option"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:166
+#: assets/js/plugins/jquery.klearmatrix.edit.js:194
 msgid "# selected"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:284
+#: assets/js/plugins/jquery.klearmatrix.edit.js:312
 msgid "Upload File"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:335
+#: assets/js/plugins/jquery.klearmatrix.edit.js:363
 msgid "There is unsaved content."
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:337
+#: assets/js/plugins/jquery.klearmatrix.edit.js:365
 msgid "Close the screen?"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:339
+#: assets/js/plugins/jquery.klearmatrix.edit.js:367
 msgid "Attention!"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:343
+#: assets/js/plugins/jquery.klearmatrix.edit.js:371
 msgid "Cancel"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:349
+#: assets/js/plugins/jquery.klearmatrix.edit.js:377
 msgid "Ignore changes and close"
 msgstr ""
 
@@ -83,5 +83,3 @@ msgstr ""
 msgid "There are not associated elements"
 msgstr ""
 
-#~ msgid "Cerrar"
-#~ msgstr "Itxi"

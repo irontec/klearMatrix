@@ -28,8 +28,6 @@ class KlearMatrix_Model_Column {
 
     protected $_isMultilang = false;
 
-    protected $_isGhost = false;
-
     protected $_isDependant = false;
 
     protected $_isFile = false;
@@ -67,11 +65,6 @@ class KlearMatrix_Model_Column {
         $this->_isMultilang = true;
     }
 
-    public function markAsGhost()
-    {
-        $this->_isGhost = true;
-    }
-
     public function markAsFile()
     {
         $this->_isFile = true;
@@ -89,10 +82,6 @@ class KlearMatrix_Model_Column {
 
     public function isMultilang() {
         return $this->_isMultilang;
-    }
-
-    public function isGhost() {
-        return $this->_isGhost;
     }
 
     public function isFile()
@@ -323,14 +312,14 @@ class KlearMatrix_Model_Column {
 
     }
 
-    public function getGetterName($model)
+    public function getGetterName($model, $default = false)
     {
         if ($this->isOption()) {
             return false;
         }
 
-        if (method_exists($this->_fieldConfig, 'getCustomGetterName')) {
-            return $this->_fieldConfig->getCustomGetterName();
+        if (method_exists($this->_fieldConfig, 'getCustomGetterName') && $default === false) {
+            return $this->_fieldConfig->getCustomGetterName($model);
         }
 
         if ($this->isDependant()) {
@@ -341,14 +330,14 @@ class KlearMatrix_Model_Column {
 
     }
 
-    public function getSetterName($model)
+    public function getSetterName($model, $default = false)
     {
         if ($this->isOption()) {
             return false;
         }
 
-        if (method_exists($this->_fieldConfig, 'getCustomSetterName')) {
-            return $this->_fieldConfig->getCustomSetterName();
+        if (method_exists($this->_fieldConfig, 'getCustomSetterName') && $default === false) {
+            return $this->_fieldConfig->getCustomSetterName($model);
         }
 
         if ($this->isDependant()) {
@@ -371,17 +360,12 @@ class KlearMatrix_Model_Column {
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
 
-
         if ($this->isDefault()) {
             $ret['default'] = true;
         }
 
         if ($this->isMultilang()) {
             $ret['multilang'] = true;
-        }
-
-        if ($this->isGhost()) {
-            $ret['ghost'] = true;
         }
 
         if ($this->isReadonly()) {

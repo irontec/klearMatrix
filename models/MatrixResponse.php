@@ -134,11 +134,7 @@ class KlearMatrix_Model_MatrixResponse {
 			            foreach($this->_columnWrapper->getLangs() as $_lang) {
 			                $rValue[$_lang] = $result->{$getter}($_lang);
 			            }
-			        } elseif ($column->isGhost()) {
-			            $class = $column->getKlearConfig()->getProperty('source')->class;
-			            $method = $column->getKlearConfig()->getProperty('source')->method;
-                        $ghost = new $class;
-                        $rValue = $ghost->{$method}($result->getPrimaryKey());
+
 			        } else {
 			            $rValue = $result->{$getter}();
 			        }

@@ -313,7 +313,6 @@ class KlearMatrix_Model_ResponseItem
         foreach ($this->_modelSpec->getFields() as $key => $field) {
             if ($field->type == 'ghost' && !isset($this->_blacklist[$key])) {
                 $col = $this->_createCol($key, $field);
-                $col->markAsGhost();
                 $this->_visibleColumnWrapper->addCol($col);
             }
         }

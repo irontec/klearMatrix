@@ -9,11 +9,17 @@
 class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 {
 
+    protected $_cache = array();
+
     public function getCustomGetterName($model)
     {
-        //Si existe el parámetro field, devolvemos el getter del campo
-        if ($this->_config->getProperty('source')->field) {
+        if ($this->_config->getProperty('source')->default) {
+            //Si existe el parámetro default, devolvemos el getter default
             return $this->_column->getGetterName($model, true);
+
+        } elseif ($this->_config->getProperty('source')->field) {
+            //Si existe el parámetro field, devolvemos el getter para ese campo
+            return 'get' . $model->columnNameToVar($this->_config->getProperty('source')->field);
         }
 
         //Si no existe field, devolvemos para coger el primaryKey

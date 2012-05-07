@@ -54,7 +54,7 @@
                     _value = this.data.parentId;
                 }
 
-                var randIden = (this.data && this.data.randIden)? this.data.randIden:Math.random(10000);
+                var randIden = (this.data && this.data.randIden)? this.data.randIden:Math.round(Math.random(10000)*10000);
 
                 var fieldData = {
                         _elemIden: column.id + randIden,

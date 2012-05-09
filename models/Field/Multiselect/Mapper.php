@@ -174,7 +174,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         $fkColumn = false;
 
-        if (is_array($original)) {
+        if (is_array($original) && is_array($value)) {
 
             foreach ($original as $model) {
                 if ( (!is_object($model)) ||
@@ -194,7 +194,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                         unset($value[$idx]);
                     }
                 }
-
             }
         }
 

@@ -114,7 +114,9 @@
                                 // Mostrar errores desde arriba
                             } else {
                                 var $parentModule = $self.klearModule("option","parentScreen");
-                                $parentModule.klearModule("reDispatch");
+                                if ($parentModule) {
+                                    $parentModule.klearModule("reDispatch");
+                                }
 
                                 self._initSavedValueHashes();
                                 self.options.theForm.trigger('updateChangedState');

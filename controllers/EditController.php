@@ -135,7 +135,12 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
-        $pk = $this->_mainRouter->getParam("pk");
+        if ($this->_item->getForcedPk()) {
+            $pk = $this->_item->getForcedPk();
+        } else {
+            $pk = $this->_mainRouter->getParam("pk");
+        }
+
         $cols = $this->_item->getVisibleColumnWrapper();
 
         $data = new KlearMatrix_Model_MatrixResponse;
@@ -230,6 +235,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
         $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
+        $jsonResponse->addCssFile("/css/klearMatrix.css");
         $jsonResponse->addCssArray($cols->getColsCssArray());
         $jsonResponse->setData($data->toArray());
         $jsonResponse->attachView($this->view);

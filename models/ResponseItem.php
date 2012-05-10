@@ -32,6 +32,8 @@ class KlearMatrix_Model_ResponseItem
     // Valores "forzados" desde configuración. condiciones "duras"
     protected $_forcedValues;
 
+    protected $_forcedPk;
+
     protected $_modelSpec;
 
     protected $_visibleColumnWrapper;
@@ -55,6 +57,8 @@ class KlearMatrix_Model_ResponseItem
       //  $this->_parentField = $this->_config->getProperty("parentField",false);
 
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
+
+        $this->_forcedPk = $this->_config->getProperty("forcedPk",false);
 
         $this->_plugin = $this->_config->getProperty("plugin", false);
 
@@ -472,6 +476,11 @@ class KlearMatrix_Model_ResponseItem
             $ret[$field] = $value;
         }
         return $ret;
+    }
+
+    public function getForcedPk()
+    {
+        return $this->_forcedPk;
     }
 
     public function getFilteredField()

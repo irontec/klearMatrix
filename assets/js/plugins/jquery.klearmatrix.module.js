@@ -189,6 +189,13 @@
                     case 'new':
                     case 'edit':
                         var _parentHolder = $(this).parents("form:eq(0)");
+                    default:
+                    	//Custom extended module
+                    	if ($(this).data("parentHolderSelector")) {
+                    		var _parentHolder = $(this).parents($(this).data("parentHolderSelector"));
+                    	} else {
+                    		throw 'no parentHolder found for option';
+                    	}
                     break;
                 }
 
@@ -196,15 +203,31 @@
                 $(self).klearModule("showDialog",
                         '<br />',
                         {
-                            title: $(this).attr("title"),
+                            title: $(this).attr("title") || '',
                             template : '<div class="ui-widget">{{html text}}</div>'
                         });
 
                 var $_dialog = $(self).klearModule("getModuleDialog");
                 $_dialog.moduleDialog("setAsLoading");
                 $_dialog.data("dialogName", $(this).data("dialog"));
-
-                var _postData = (data && typeof data.params != undefined)? data.params:false;
+                var _postData = {
+                    callerScreen : _self.options.data.screen,
+                };
+                
+                // Si la pantalla llamante tiene condición (parentId -- en data --
+	            // enviarlos a la nueva pantalla
+                console.log(_self.options.data);
+                
+                
+	            if (_self.options.data.parentId) {
+	            	_postData.parentId = _self.options.data.parentId;
+	            	_postData.parentScreen = _self.options.data.parentScreen;
+	            }
+	            
+	            if (data && typeof data.params != undefined) {
+		            $.extend(_postData,data.params);
+	            }
+                
                 $.klear.request(
                         {
                             file: self.klearModule("option","file"),
@@ -265,8 +288,21 @@
                     break;
                 }
 
-
-                var _postData = (data && typeof data.params != undefined)? data.params:false;
+                var _postData = {
+                    callerScreen : _self.options.data.screen,
+                };
+                
+                // Si la pantalla llamante tiene condición (parentId -- en data --
+	            // enviarlos a la nueva pantalla
+	            if (_self.options.data.parentId) {
+	            	_postData.parentId = _self.options.data.parentId;
+	            	_postData.parentScreen = _self.options.data.parentScreen;
+	            }
+	            
+	            if (data && typeof data.params != undefined) {
+		            $.extend(_postData,data.params);
+	            }
+	            
                 $.klear.request(
                         {
                             file: self.klearModule("option","file"),

@@ -1,1 +1,13 @@
-<textarea name="${_elemName}" id="${_elemIden}" {{if (_readonly)}}disabled="disabled"{{/if}}>${_fieldValue}</textarea>
+<textarea 
+
+{{if (_dataConfig.plugin)}}  data-plugin="${_dataConfig.plugin}" {{/if}}
+
+class="auto" 
+
+name="${_elemName}" 
+
+{{each(attribute, value) _dataConfig.settings}}
+    ${$item.dataParser(attribute, value)}
+{{/each}}
+
+id="${_elemIden}" {{if (_readonly)}}disabled="disabled"{{/if}}>${_fieldValue}</textarea>

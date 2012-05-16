@@ -102,7 +102,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 	    foreach ($this->_cols as $col) {
 	        if ($aJs = $col->getJsPaths()) {
 	            foreach ($aJs as $script) {
-	                $retJs[crc32($script)] = $script;
+	                $retJs['jsFile_' . crc32($script)] = $script;
 	            }
 	        }
 	    }
@@ -117,7 +117,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 	    foreach ($this->_cols as $col) {
 	        if ($aCss = $col->getCssPaths()) {
 	            foreach ($aCss as $css) {
-	                $retCss[crc32($css)] = $css;
+	                $retCss['cssFile_' . crc32($css)] = $css;
 	            }
 	        }
 	    }

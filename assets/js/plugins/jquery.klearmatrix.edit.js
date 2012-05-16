@@ -201,8 +201,8 @@
                 }).multiselectfilter();
             }
 
-            if ($("input.auto",this.options.theForm).length > 0) {
-                $("input.auto",this.options.theForm).each(function() {
+            if ($("input.auto, textarea.auto",this.options.theForm).length > 0) {
+                $("input.auto, textarea.auto",this.options.theForm).each(function() {
                     if ($(this).data("plugin")) {
 
                         var plgSettings = {};

@@ -19,7 +19,6 @@
 	            	_self.element.trigger('manualchange');
 	            	wym._box.addClass('ui-state-highlight');
 	            });
-	            
 	            try {
 	            	wym.hovertools();
 		            wym.resizable();

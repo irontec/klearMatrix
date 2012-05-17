@@ -234,6 +234,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
+
         $jsonResponse->addCssFile("/css/klearMatrix.css");
         $jsonResponse->addCssArray($cols->getColsCssArray());
         $jsonResponse->setData($data->toArray());

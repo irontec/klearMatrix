@@ -4,7 +4,7 @@
     $.klearmatrix.template  = $.klearmatrix.template || {};
 
     var __namespace__ = "klearmatrix.templatehelper";
-    
+
     $.klearmatrix.template.helper = {
             debug : function() {
                 console.log(arguments);
@@ -33,17 +33,17 @@
 
                 var extraConfig = column.config || false;
                 var properties = column.properties || false;
-                
+
                 if (true === isNew) {
                     var _value = '';
                 } else {
-                	
+
                     if (typeof value != 'object') {
                     	var pattern = column.properties && column.properties.pattern || '';
                         var _value = this.cleanValue(value,'', pattern);
 
                     } else {
-                    	
+
                     	var _value = value;
                     }
                 }
@@ -261,7 +261,6 @@
                             break;
                         }
                     }
-
 
                     var defaultValue = this.data.values[idx][defaultColumn.id];
 

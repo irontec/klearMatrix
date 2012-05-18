@@ -11,7 +11,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 	protected $_dependantColumnIdx = array();
     protected $_multilangColumnIdx = array();
     protected $_fileColumnIdx = array();
-    
+
 	protected $_langs = array();
 
 	protected $_types = array();
@@ -42,17 +42,18 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 		if ($col->isMultilang()) {
 		    $this->_multilangColumnIdx[] = sizeof($this->_cols) -1;
 		}
-		
+
 		if ($col->isFile()) {
 		    $this->_fileColumnIdx[] = sizeof($this->_cols) -1;
 		}
-		
+
 	}
 
 	public function toArray() {
 		$retArray = array();
 		foreach ($this->_cols as $col) {
-			$retArray[] = $col->toArray();
+			$retArray[$col->getDbName()] = $col->toArray();
+			//$retArray[] = $col->toArray();
 		}
 		return $retArray;
 	}
@@ -83,7 +84,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 
 	public function getMultiLangTemplateArray($path,$type) {
 	    if (false === $this->_multilangColumnIdx ) return false;
-	    
+
 	    $path .= 'multilang/item/';
 	    switch($type) {
 	        case 'list':
@@ -142,7 +143,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate {
 	{
 	    return $this->_langs;
 	}
-	
+
 	public function getDefaultLang()
 	{
 	    return array_shift($this->getLangs());

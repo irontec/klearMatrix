@@ -253,11 +253,18 @@
             getTitle : function(title,idx,replaceParentPerItem) {
 
                 if (false !== idx) {
-                    var defaultColumn = this.data.columns[0];
+
+                    var count = false;
+                    var defaultColumn;
 
                     for(var i in this.data.columns) {
+                        if (count === false) {
+                            defaultColumn = this.data.columns[i];
+                            count = true;
+                        }
+
                         if (this.data.columns[i].default) {
-                            var defaultColumn = this.data.columns[i];
+                            defaultColumn = this.data.columns[i];
                             break;
                         }
                     }
@@ -266,7 +273,6 @@
 
                     if (defaultColumn.multilang) {
                         defaultValue = defaultValue[this.data.defaultLang];
-
                     }
 
                 } else {

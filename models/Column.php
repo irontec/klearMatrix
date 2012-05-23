@@ -70,6 +70,11 @@ class KlearMatrix_Model_Column {
         $this->_isFile = true;
     }
 
+    public function markAsReadOnly()
+    {
+        $this->_isReadonly = true;
+    }
+
     public function isOption()
     {
         return $this->_isOption;

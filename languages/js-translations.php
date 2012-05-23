@@ -25,4 +25,5 @@ return array (
   21 => 'Edit again',
   22 => 'Close',
   23 => 'Add another record',
+  24 => 'Error',
 );

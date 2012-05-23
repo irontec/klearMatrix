@@ -41,9 +41,11 @@ class KlearMatrix_Model_ModelSpecification
 	public function getFields()
 	{
 	    $fields = array();
-        foreach ($this->_config->getRaw()->fields as $key => $field) {
-            $fields[$key] = $field;
-        }
+	    if (is_array($this->_config->getRaw()->fields)) {
+            foreach ($this->_config->getRaw()->fields as $key => $field) {
+                $fields[$key] = $field;
+            }
+	    }
         return $fields;
 	}
 }

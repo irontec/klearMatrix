@@ -313,7 +313,7 @@
                             external: external
                         },
                         function(response) {
-
+                        		
                         },
                         function() {
                             console.log(arguments);
@@ -324,6 +324,28 @@
             });
 
             return this;
+        },
+        standardError : function(data) {
+        	var self = this;
+        	
+            var $_dialog = $(self.element).klearModule("getModuleDialog");
+            
+            
+            $_dialog.moduleDialog("option","buttons",
+                     [
+                          {
+                            text: $.translate("Close", [__namespace__]),
+                            click: function() {
+                                $(this).moduleDialog("close");
+                                $self.klearModule("close");
+                            }
+                        }
+                    ]
+            );
+            
+            $_dialog.moduleDialog("option","title",$.translate("Error", [__namespace__])); 
+            $_dialog.moduleDialog("updateContent",data.message);
+            
         }
 
     });

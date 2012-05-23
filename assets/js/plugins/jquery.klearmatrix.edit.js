@@ -152,8 +152,7 @@
                         },
                         // Error from new/index/save
                         function(data) {
-
-
+                        	self.standardError(data);
                         }
                 );
             })(this); // Invocamos Closure

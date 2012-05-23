@@ -165,7 +165,7 @@ a.ui-state-nojump {
 }    
 
 .klearMatrixFiltering p.title {
-    margin:.5em;
+    margin:0em;
     font-size:1em;
     cursor:pointer;
  }
@@ -217,4 +217,29 @@ a.ui-state-nojump {
 }
 .klearMatrixFiltering .filteredFields .field .ui-silk {
     cursor:pointer;
+}
+
+
+.fieldInfo-tooltip {
+    cursor:help;
+}
+
+.fieldInfo-box {
+    cursor:pointer;
+}
+
+.fieldInfo-boxinfo {
+    margin: 0.2em 0 0.4em;
+}
+
+
+
+.fieldInfo-position-left {
+        float: left;
+        margin: -0.2em 0.2em 0 0;
+    
+}
+.fieldInfo-position-right {
+        float: right;
+    
 }

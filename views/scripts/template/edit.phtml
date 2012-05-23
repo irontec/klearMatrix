@@ -6,7 +6,23 @@
 
 	 	{{each(colIdx,column) columns}}
         <p class="ui-widget-content ui-corner-all">
-            <label for="${id}${randIden}">${name}:</label>
+            {{if column.fieldInfo}}
+                <span 
+                    class="
+                        ui-silk 
+                        ui-silk-${column.fieldInfo.icon} 
+                        fieldInfo-${column.fieldInfo.type}
+                        fieldInfo-position-${column.fieldInfo.position}
+                        " 
+                    title="${column.fieldInfo.text}"
+                ></span>
+            {{/if}}
+            <label for="${id}${randIden}">
+            
+            ${name}:
+            
+            </label>
+            
             {{html $item.getEditDataForField(row[id],column)}}
             {{if (column.options)}}
                 {{each column.options}}

@@ -11,6 +11,9 @@ class KlearMatrix_Model_Column {
     protected $_publicName;
     protected $_isDefault = false;
     protected $_isReadonly = false;
+    
+    protected $_hasInfo = false;
+    protected $_fieldInfo = false;
 
     protected $_ordered = false;
     protected $_orderedType = 'asc';
@@ -122,6 +125,9 @@ class KlearMatrix_Model_Column {
 
         $this->_isDefault = (bool)$this->_config->getProperty("default",false);
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
+        
+        $this->_hasInfo = (bool)$this->_config->getProperty("info",false);
+        
 
         $this->_type = $this->_config->getProperty("type",false);
         if (empty($this->_type)) {
@@ -182,6 +188,23 @@ class KlearMatrix_Model_Column {
 
         return $this->_isReadonly;
 
+    }
+    
+    public function hasInfo() {
+    
+        if ($this->isOption()) return false;
+        if ($this->_hasInfo === false) {
+            return false;
+        }
+        $info = $this->_config->getProperty("info",false);
+        $infoConfig = new Klear_Model_KConfigParser();
+        $infoConfig->setConfig($info);
+        $this->_fieldInfo = array();
+        $this->_fieldInfo['type'] = $infoConfig->getProperty('type')? $infoConfig->getProperty('type'):'tooltip';
+        $this->_fieldInfo['text'] = $infoConfig->getProperty('text');
+        $this->_fieldInfo['position'] = $infoConfig->getProperty('position')? $infoConfig->getProperty('position'):'left';
+        $this->_fieldInfo['icon'] = $infoConfig->getProperty('icon')? $infoConfig->getProperty('icon'):'help';
+        return $this->_hasInfo;
     }
 
     public function setAsOrdered() {
@@ -364,7 +387,7 @@ class KlearMatrix_Model_Column {
         $ret["id"] = $this->_dbName;
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
-
+        
         if ($this->isDefault()) {
             $ret['default'] = true;
         }
@@ -376,7 +399,11 @@ class KlearMatrix_Model_Column {
         if ($this->isReadonly()) {
             $ret['readonly'] = true;
         }
-
+        
+        if ($this->hasInfo()) {
+            $ret['fieldInfo'] = $this->_fieldInfo;
+        }
+        
         if ($this->_ordered) {
             $ret['order'] = $this->_orderedType;
         }
@@ -396,6 +423,7 @@ class KlearMatrix_Model_Column {
            }
 
         }
+        
 
         return $ret;
     }

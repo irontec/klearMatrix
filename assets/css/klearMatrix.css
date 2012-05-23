@@ -8,7 +8,7 @@ table.kMatrix {
 table.kMatrix caption {
 	text-align: left;
 	padding:.3em;
-	font-size:1.2em;
+	font-size:1.1em;
 }
 
 table.kMatrix th {
@@ -152,7 +152,7 @@ a.ui-state-nojump {
 }
 
 .klearMatrixFiltering {
-    padding:1em;
+    padding:.8em;
     overflow: hidden;
  }
 
@@ -166,9 +166,15 @@ a.ui-state-nojump {
 
 .klearMatrixFiltering p.title {
     margin:.5em;
-    font-size:1.1em;
+    font-size:1em;
     cursor:pointer;
  }
+ 
+ .klearMatrixFiltering span.ui-silk {
+    margin: 0 .5em;
+ }
+ 
+ 
  
 .klearMatrixFiltering input.term {
     width:205px;

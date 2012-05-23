@@ -359,6 +359,12 @@ class KlearMatrix_Model_ResponseItem
             $this->_visibleColumnWrapper->addCol($col);
         }
 
+        //Ordenamos los campos si existe la configuración
+        if ($this->_config->exists("fields->order")) {
+
+            $this->_visibleColumnWrapper->sortCols($this->_config->getRaw()->fields->order);
+        }
+
         return $this->_visibleColumnWrapper;
     }
 

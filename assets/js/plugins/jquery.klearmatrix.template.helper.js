@@ -202,7 +202,7 @@
                 } else {
                     switch(column.type){
                         case 'select':
-                            var _curVal = this.cleanValue(values[column.id]);
+                            var _curVal = values[column.id];
                             if (this.getValuesFromSelectColumn(column)[_curVal]) {
                                 return this.getValuesFromSelectColumn(column)[_curVal];
                             } else {

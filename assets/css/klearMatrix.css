@@ -243,3 +243,18 @@ a.ui-state-nojump {
         float: right;
     
 }
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 680px){
+    .klearMatrix_form fieldset {
+        width:92%;
+    }
+}
+

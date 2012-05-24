@@ -19,15 +19,31 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 {
 
     protected $_cache = array();
-
+    protected $_canBeSearched = false;
+    protected $_customOrderField = false;
+    
     public function init()
     {
         $ret = parent::init();
         $this->_column->markAsReadOnly();
 
+        if ($this->_config->getProperty('source')->order) {
+            $this->_customOrderField = $this->_config->getProperty('source')->order; 
+        }
+        
         return $ret;
     }
-
+    
+    public function getCustomOrderField()
+    {
+         return $this->_customOrderField;   
+    }
+    
+    public function canBeSearched() {
+        return $this->_canBeSearched;
+    }
+    
+    
     public function getCustomGetterName($model)
     {
 

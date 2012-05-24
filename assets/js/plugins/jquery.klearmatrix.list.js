@@ -268,7 +268,7 @@
                     }
                 }
 
-            });
+            }).trigger('change');
 
             $(".klearMatrixFilteringForm",panel).form();
 

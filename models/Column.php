@@ -413,7 +413,11 @@ class KlearMatrix_Model_Column {
         }
 
         if ($this->_fieldConfig) {
-
+           
+            if (!$this->_fieldConfig->canBeSearched()) {
+                $ret['notsearchable'] = true;
+            }
+            
            if ($config = $this->_fieldConfig->getConfig()) {
                $ret['config'] = $config;
            }

@@ -79,5 +79,9 @@ abstract class KlearMatrix_Model_Field_Abstract {
         return false;
     }
 
+    public function canBeSearched() {
+        return true;
+    }
+
 
 }

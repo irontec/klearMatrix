@@ -5,7 +5,7 @@
     <input type="text" class="term">
     <select name="searchFiled">
      {{each(idx,column) columns}}
-         {{if (type != '_option') }}
+         {{if ( (type != '_option') && (!column.notsearchable) ) }}
              <option value="${column.id}">${column.name}</option>
          {{/if}}
      {{/each}}

@@ -41,8 +41,9 @@ class KlearMatrix_Model_ModelSpecification
 	public function getFields()
 	{
 	    $fields = array();
-	    if (is_array($this->_config->getRaw()->fields)) {
-            foreach ($this->_config->getRaw()->fields as $key => $field) {
+	    $aFields = $this->_config->getRaw()->fields;
+	    if (is_array($aFields) || $aFields instanceof Zend_Config) {
+            foreach ($aFields as $key => $field) {
                 $fields[$key] = $field;
             }
 	    }

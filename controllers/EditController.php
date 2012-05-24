@@ -163,7 +163,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         if ($this->_item->isFilteredScreen()) {
 
             // Informamos a la respuesta de que campo es el "padre"
-            $data->setParentItem($this->_item->getFilteredField());
+            $data->setParentItem($this->_item->getFilterField());
 
             // A partir del nombre de pantalla (de nuestro .yaml principal...
             if ($parentScreenName = $this->getRequest()->getPost("parentScreen")) {

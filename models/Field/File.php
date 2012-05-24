@@ -50,7 +50,9 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	}
 
 	public function getCustomSearchField($model) {
-	    $fields = $model->{$this->getCustomGetterName()}();
+	    
+	    $fields = $model->{$this->getCustomGetterName($model)}();
+	    
 	    return $model->varNameToColumn($fields['baseNameName']);
 
 	}

@@ -4,9 +4,9 @@
         return;
     }
 
-    
+
     var __namespace__ = "klearmatrix.list";
-    
+
     $.widget("klearmatrix.list", $.klearmatrix.module,  {
         options: {
             data : null,
@@ -35,9 +35,9 @@
             $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
 
             if ($("td.multilang",$container).length>0) {
-                
+
                 var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Field available in multi-language", [__namespace__]));
-                
+
                 $("td.multilang",$container).each(function() {
                     $(this).prepend($mlSelector.clone().tooltip());
                 });
@@ -103,7 +103,7 @@
             });
 
             // Orden de columnas
-            $("th:not(.optionHeader)",panel).on("click",function(e) {
+            $("th:not(.notSortable)",panel).on("click",function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -126,10 +126,9 @@
                     .klearModule("reDispatch");
             }).css("cursor","pointer");
 
-            $("th:not(.optionHeader) span.filter",panel).on("click",function(e) {
+            $("th:not(.notSortable) span.filter",panel).on("click",function(e) {
                 e.stopPropagation();
                 e.preventDefault();
-
             });
 
             $("span.mlTag",panel).on("click",function(e) {

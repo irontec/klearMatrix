@@ -1,24 +1,28 @@
 <?php
 
-
-abstract class KlearMatrix_Model_Field_Abstract {
+abstract class KlearMatrix_Model_Field_Abstract
+{
 
     /**
      * @var KlearMatrix_Model_Column
      */
     protected $_column;
     protected $_config;
+    protected $_canBeSearched = true;
+    protected $_canBeSorted = true;
 
     static protected $_propertyMaster = array("required","pattern","placeholder");
 
     protected $_properties = array();
 
-    public function setColumn($column) {
+    public function setColumn($column)
+    {
         $this->_column = $column;
         return $this;
     }
 
-    public function getColumn($column) {
+    public function getColumn($column)
+    {
         return $this->_column;
     }
 
@@ -37,13 +41,13 @@ abstract class KlearMatrix_Model_Field_Abstract {
         return $this;
     }
 
-    public function getConfig() {
-      return false;
+    public function getConfig()
+    {
+        return false;
     }
 
-
-    public function getProperties() {
-
+    public function getProperties()
+    {
         if (sizeof($this->_properties) <= 0) {
             return false;
         }
@@ -55,7 +59,8 @@ abstract class KlearMatrix_Model_Field_Abstract {
      * Filtra (y adecua) el valor del campo antes del setter
      *
      */
-    public function filterValue($value,$original) {
+    public function filterValue($value,$original)
+    {
         return $value;
     }
 
@@ -67,21 +72,34 @@ abstract class KlearMatrix_Model_Field_Abstract {
      * @param object $model Modelo cargado
      * @return unknown
      */
-    public function prepareValue($value, $model) {
+    public function prepareValue($value, $model)
+    {
         return $value;
     }
 
-    public function getExtraJavascript() {
+    public function getExtraJavascript()
+    {
         return false;
     }
 
-    public function getExtraCss() {
+    public function getExtraCss()
+    {
         return false;
     }
 
-    public function canBeSearched() {
+    public function canBeSearched()
+    {
+        return $this->_canBeSearched;
+    }
+
+    //Si existe sortable en la configuración del campo en el model de yaml, lo devuelve. Sino, devuelve true.
+    public function canBeSorted()
+    {
+        if ($this->_config->exists("sortable")) {
+
+            return $this->_config->getProperty("sortable");
+        }
+
         return true;
     }
-
-
 }

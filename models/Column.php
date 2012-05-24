@@ -11,7 +11,7 @@ class KlearMatrix_Model_Column {
     protected $_publicName;
     protected $_isDefault = false;
     protected $_isReadonly = false;
-    
+
     protected $_hasInfo = false;
     protected $_fieldInfo = false;
 
@@ -125,9 +125,9 @@ class KlearMatrix_Model_Column {
 
         $this->_isDefault = (bool)$this->_config->getProperty("default",false);
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
-        
+
         $this->_hasInfo = (bool)$this->_config->getProperty("info",false);
-        
+
 
         $this->_type = $this->_config->getProperty("type",false);
         if (empty($this->_type)) {
@@ -189,9 +189,9 @@ class KlearMatrix_Model_Column {
         return $this->_isReadonly;
 
     }
-    
+
     public function hasInfo() {
-    
+
         if ($this->isOption()) return false;
         if ($this->_hasInfo === false) {
             return false;
@@ -207,22 +207,23 @@ class KlearMatrix_Model_Column {
         return $this->_hasInfo;
     }
 
-    public function setAsOrdered() {
+    public function setAsOrdered()
+    {
         $this->_ordered = true;
     }
 
-    public function setOrderedType($_orderType) {
+    public function setOrderedType($_orderType)
+    {
         $this->_orderedType = $_orderType;
     }
 
-    public function getOrderField($model) {
-
+    public function getOrderField($model)
+    {
         if (method_exists($this->_fieldConfig, 'getCustomOrderField')) {
             return $this->_fieldConfig->getCustomOrderField($model);
         }
 
         return $this->_dbName;
-
     }
 
     /**
@@ -233,14 +234,12 @@ class KlearMatrix_Model_Column {
 
     }
 
-
     public function getPublicName() {
         if (null !== $this->_publicName) {
             return $this->_publicName;
         }
 
         return $this->_dbName;
-
     }
 
     public function getDbName() {
@@ -387,7 +386,7 @@ class KlearMatrix_Model_Column {
         $ret["id"] = $this->_dbName;
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
-        
+
         if ($this->isDefault()) {
             $ret['default'] = true;
         }
@@ -399,11 +398,11 @@ class KlearMatrix_Model_Column {
         if ($this->isReadonly()) {
             $ret['readonly'] = true;
         }
-        
+
         if ($this->hasInfo()) {
             $ret['fieldInfo'] = $this->_fieldInfo;
         }
-        
+
         if ($this->_ordered) {
             $ret['order'] = $this->_orderedType;
         }
@@ -413,21 +412,18 @@ class KlearMatrix_Model_Column {
         }
 
         if ($this->_fieldConfig) {
-           
-            if (!$this->_fieldConfig->canBeSearched()) {
-                $ret['notsearchable'] = true;
+
+            $ret['searchable'] = (bool)$this->_fieldConfig->canBeSearched();
+            $ret['sortable'] = (bool)$this->_fieldConfig->canBeSorted();
+
+            if ($config = $this->_fieldConfig->getConfig()) {
+                $ret['config'] = $config;
             }
-            
-           if ($config = $this->_fieldConfig->getConfig()) {
-               $ret['config'] = $config;
-           }
 
-           if ($props = $this->_fieldConfig->getProperties()) {
-               $ret['properties'] = $props;
-           }
-
+            if ($props = $this->_fieldConfig->getProperties()) {
+                $ret['properties'] = $props;
+            }
         }
-        
 
         return $ret;
     }

@@ -5,7 +5,7 @@
     <input type="text" class="term">
     <select name="searchFiled">
      {{each(idx,column) columns}}
-         {{if ( (type != '_option') && (!column.notsearchable) ) }}
+         {{if ( (type != '_option') && (column.searchable) ) }}
              <option value="${column.id}">${column.name}</option>
          {{/if}}
      {{/each}}
@@ -51,20 +51,21 @@
 
 <tr>
    {{each(idx,column) columns}}
-            <th data-field="${column.id}" class="ui-widget-header{{if (type == '_option') }} optionHeader{{/if}}">
+            <th data-field="${column.id}" class="ui-widget-header{{if (type == '_option') ||  !(column.sortable)}} notSortable{{/if}}">
             <span class="title">${column.name}</span>
-            {{if (column.order)}}
-                {{if (column.order=='asc')}}
-                    <span class="order asc ui-icon ui-icon-circle-triangle-s"></span>
+            {{if (column.sortable)}}
+                {{if (column.order)}}
+                    {{if (column.order=='asc')}}
+                        <span class="order asc ui-icon ui-icon-circle-triangle-s"></span>
+                    {{else}}
+                        <span class="order desc ui-icon ui-icon-circle-triangle-n"></span>
+                    {{/if}}
                 {{else}}
-                    <span class="order desc ui-icon ui-icon-circle-triangle-n"></span>
-                {{/if}}
-            {{else}}
-                {{if (type != '_option') }}
-                <span class="order ui-icon ui-icon-circle-triangle-s ui-state-disabled"></span>
+                    {{if (type != '_option') }}
+                    <span class="order ui-icon ui-icon-circle-triangle-s ui-state-disabled"></span>
+                    {{/if}}
                 {{/if}}
             {{/if}}
-
             </td>
    {{/each}}
 </tr>

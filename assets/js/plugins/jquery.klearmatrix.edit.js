@@ -110,8 +110,8 @@
                         function(data) {
 
                             if (data.error) {
-                                //TO-DO: FOK OFF
-                                // Mostrar errores desde arriba
+                            	self.standardError(data.error);
+                            	
                             } else {
                                 var $parentModule = $self.klearModule("option","parentScreen");
                                 if ($parentModule) {
@@ -308,12 +308,26 @@
                             action: request.action,
                             params: request.data,
                             multiple: false,
+                            messages: {
+                                typeError: $.translate("{file} has invalid extension. Only {extensions} are allowed.",[__namespace__]),
+                                sizeError: $.translate("{file} is too large, maximum file size is {sizeLimit}.",[__namespace__]),
+                                minSizeError: $.translate("{file} is too small, minimum file size is {minSizeLimit}.",[__namespace__]),
+                                emptyError: $.translate("{file} is empty, please select files again without it.",[__namespace__]),
+                                onLeave: $.translate("The files are being uploaded, if you leave now the upload will be cancelled.",[__namespace__])            
+                            },
                             template: '<div class="qq-uploader">' +
                                 '<div class="qq-upload-drop-area"><span></span></div>' +
                                 '<div class="qq-upload-button ui-button ui-widget ui-state-default ui-corner-all"><span class="ui-icon ui-icon-folder-open inline"></span>'+$.translate("Upload File", [__namespace__])+'</div>' +
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
+                            	
+                            	if (result.error) {
+                            		$(_self).klearModule("showDialogError",result.error_msg, {title : $.translate("ERROR",[__namespace__])});
+                            		return;
+                            	}
+                            	
+                            	
                                 var $list = $(".qq-upload-list",$(this.element));
                                 var fName = $(".qq-upload-file",$list).html();
                                 var fSize = $(".qq-upload-size",$list).html();
@@ -324,18 +338,32 @@
                                     .trigger("manualchange")
                                 $list.html('');
                             },
-
-                            onError : function() {
-                                console.log("error",arguments);
-
+                            
+                            showMessage : function(message) {
+                            	$(_self).klearModule("showDialogError",message, {title : $.translate("ERROR",[__namespace__])});
+                            	
+                            	
                             }
+                            
                     };
 
                     if (_hiddenField.data("extensions")) {
                         qqOptions.allowedExtensions = _hiddenField.data("extensions").split(',');
                     }
+                    
+                    (function lazyQQLoad() {
+                    	if (!qq || !qq.FileUploader) {
+                    		this.count++;
+                    		if (this.count > 10) {
+                    			return; 
+                    		}
+                    		setTimeout(lazyQQLoad,50);
+                    		return;
+                    	}
+                    	var uploader = new qq.FileUploader(qqOptions);
+                    })();
 
-                    var uploader = new qq.FileUploader(qqOptions);
+                    
 
                 });
             }

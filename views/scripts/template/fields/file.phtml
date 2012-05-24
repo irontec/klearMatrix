@@ -5,27 +5,36 @@
     ${_fieldValue.name}
 {{else}}
     <?php echo $this->translate('Not available'); ?>
-{{/if}}    
+{{/if}}  
     
-{{each(idx,option) _dataConfig.options}}
-    <a rel="${_elemIden}" href="#"
-    {{if (option.title)}} title="${option.title}" {{/if}}
-    class="option
-     {{if (option.class)}}
-         ${option.class}
-    {{/if}}
-    {{if (option.type)}} 
-        ${option.type}" data-${option.type}="${option.target}"
-    {{/if}}
-    {{if (option.external)}}
-         data-external="true"
-    {{/if}}
-    >
-    {{if (option.icon)}}
-        <span class="ui-silk inline ${option.icon}"></span>
-    {{/if}}
-    </a>
-{{/each}}
+    
+    
+    {{each(idx,option) _dataConfig.options}}
+    
+        {{if (!(option.onNull == 'hide' && !_fieldValue.name))}}
+        
+            <a rel="${_elemIden}" href="#"
+            {{if (option.title)}} title="${option.title}" {{/if}}
+            class="option
+             {{if (option.class)}}
+                 ${option.class}
+            {{/if}}
+            {{if (option.type)}} 
+                ${option.type}" data-${option.type}="${option.target}"
+            {{/if}}
+            {{if (option.external)}}
+                 data-external="true"
+            {{/if}}
+            >
+            {{if (option.icon)}}
+                <span class="ui-silk inline ${option.icon}"></span>
+            {{/if}}
+            </a>
+        {{/if}}
+    {{/each}}
+
+  
+
 
 </span>
     

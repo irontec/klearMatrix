@@ -26,4 +26,10 @@ return array (
   22 => 'Close',
   23 => 'Add another record',
   24 => 'Error',
+  25 => 'ERROR',
+  26 => '{file} is too large, maximum file size is {sizeLimit}.',
+  27 => '{file} is empty, please select files again without it.',
+  28 => '{file} is too small, minimum file size is {minSizeLimit}.',
+  29 => '{file} has invalid extension. Only {extensions} are allowed.',
+  30 => 'The files are being uploaded, if you leave now the upload will be cancelled.',
 );

@@ -33,6 +33,9 @@ class KlearMatrix_Model_ResponseItem
     protected $_forcedValues;
 
     protected $_forcedPk;
+    
+    protected $_calculatedPk;
+    protected $_calculatedPkConfig;
 
     protected $_modelSpec;
 
@@ -59,7 +62,9 @@ class KlearMatrix_Model_ResponseItem
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
 
         $this->_forcedPk = $this->_config->getProperty("forcedPk",false);
-
+        
+        $this->_calculatedPkConfig = $this->_config->getProperty("calculatedPk",false);
+        
         $this->_plugin = $this->_config->getProperty("plugin", false);
 
         $this->_title = $this->_config->getProperty("title",false);
@@ -483,15 +488,55 @@ class KlearMatrix_Model_ResponseItem
         }
         return $ret;
     }
+    
+    
+    
+    
+    /**
+     * Devuelve el primary Key especifico,
+     * Comprueba forced y calculated PK
+     * o consulta con mainRouter
+     * @return false|integer
+     */
+    public function getCurrentPk() {
+        // Devuelve el PK para la pantalla de edit.
+        if ($pk = $this->getForcedPk()) return $pk;
+        
+        if ($pk = $this->getCalculatedPk()) return $pk;
+        
+        return $this->_routeDispatcher->getParam("pk");
+        
+    }
 
     public function getForcedPk()
     {
         return $this->_forcedPk;
     }
 
-    public function getFilteredField()
-    {
-        return $this->_filteredField;
+    public function getCalculatedPk() {
+        
+        if (is_null($this->_calculatedPkConfig)) {
+            return false;
+        }
+        
+        if (!$class = $this->_calculatedPkConfig->class) {
+            return false;
+        }
+        
+        if (!$method = $this->_calculatedPkConfig->method) {
+            return false;
+        }
+        
+        $pkCalculator = new $class;
+        
+        if (!$this->_calculatedPk =
+                   $pkCalculator->{$method}($this->_routeDispatcher)) {
+            return false;
+        }  
+        
+        return $this->_calculatedPk;
+        
+        
     }
 
     public function getParentField()
@@ -615,6 +660,7 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
+     * TODO: Renombrar este método... joder... getPkName por lo menos :S
      * gateway hacia modelo específico, para devolver el nombre de la PK
      */
     public function getPK()

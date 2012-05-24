@@ -71,12 +71,13 @@ $.widget('ui.spinner', {
 		
 		parse: function(val) {
 			var options = this;
-			return 'a' + val;
+			
 			if (options.group == '.')
 				val = val.replace('.', '');
 			if (options.point != '.')
 				val = val.replace(options.point, '.');
-			return parseFloat(val.replace(/[^0-9\-\.]/g, ''));
+			var f = parseFloat(val.replace(/[^0-9\-\.]/g, ''));
+			return f;
 		}
 	},
 	
@@ -250,7 +251,6 @@ $.widget('ui.spinner', {
 							
 						case end:
 							limit = self.options.max;
-							limit = self.options.max;
 							if (limit != null) self._setValue(limit);
 							return false;
 					}
@@ -289,12 +289,13 @@ $.widget('ui.spinner', {
 				})
 				
 			.bind('keypress' + eventNamespace, function(e) {
+					self._change();
 					if (invalidKey(e.keyCode, e.charCode)) return false;
 				})
 				
 			.bind('change' + eventNamespace, function() { self._change(); })
 			
-			.bind('focus' + eventNamespace, function() {
+			.bind('focusin' + eventNamespace, function() {
 					function selectAll() {
 						self.element.select();
 					}
@@ -306,7 +307,7 @@ $.widget('ui.spinner', {
 						self.showButtons();
 				})
 				
-			.bind('blur' + eventNamespace, function() {
+			.bind('focusout' + eventNamespace, function() {
 					self.focused = false;
 					if (!hovered && (showOn == 'focus' || showOn == 'both')) // hovered will only be set if hover affects show
 						self.hideButtons();

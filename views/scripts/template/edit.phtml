@@ -24,7 +24,8 @@
             </label>
             
             {{html $item.getEditDataForField(row[id],column)}}
-            {{if (column.options)}}
+            
+            {{if (row[id] && column.options)}}
                 {{each column.options}}
                 <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
                 href=""

@@ -326,8 +326,17 @@ class KlearMatrix_Model_Column {
             foreach ($values as $_val) {
                 $template = ':' . $searchField . $cont;
 
-                $vals[] = 'concat('.$searchField .') like ' . $template;
-                $_fieldValues[$template] = '%'. $_val .'%';
+                //Para los select no hacemos like, porque son Ids
+                if ($this->_type == 'select') {
+
+                    $vals[] = $searchField .' = ' . $template;
+                    $_fieldValues[$template] = intval($_val);
+
+                } else {
+
+                    $vals[] = 'concat('.$searchField .') like ' . $template;
+                    $_fieldValues[$template] = '%'. $_val .'%';
+                }
                 $cont++;
             }
         }

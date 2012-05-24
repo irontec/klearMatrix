@@ -97,11 +97,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             if ($this->getRequest()->getPost("searchAddModifier") == '1') {
                 $data->addSearchAddModifier(true);
-                $where[] = array(implode ( " or ", $expresions),$values);
+                $where[] = array('(' . implode ( " or ", $expresions) . ')', $values);
 
             } else {
 
-                $where[] = array(implode ( " and ", $expresions),$values);
+                $where[] = array('(' . implode ( " and ", $expresions) . ')', $values);
             }
         }
 

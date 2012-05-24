@@ -95,9 +95,10 @@ abstract class KlearMatrix_Model_Field_Abstract
     //Si existe sortable en la configuración del campo en el model de yaml, lo devuelve. Sino, devuelve true.
     public function canBeSorted()
     {
-        if ($this->_config->exists("sortable")) {
+        if (is_object($this->_config)
+            && $this->_config->exists("sortable")) {
 
-            return $this->_config->getProperty("sortable");
+                return $this->_config->getProperty("sortable");
         }
 
         return true;

@@ -326,11 +326,13 @@ class KlearMatrix_Model_Column {
             foreach ($values as $_val) {
                 $template = ':' . $searchField . $cont;
 
-                //Para los select no hacemos like, porque son Ids
-                if ($this->_type == 'select') {
+                //Para los select tipo mapper no hacemos like, porque son Ids
+                if ($this->_type == 'select'
+                    and is_object($this->_config->getProperty("source", false))
+                    and $this->_config->getProperty("source", false)->data == 'mapper') {
 
-                    $vals[] = $searchField .' = ' . $template;
-                    $_fieldValues[$template] = intval($_val);
+                        $vals[] = $searchField .' = ' . $template;
+                        $_fieldValues[$template] = intval($_val);
 
                 } else {
 

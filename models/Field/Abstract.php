@@ -11,7 +11,7 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_canBeSearched = true;
     protected $_canBeSorted = true;
 
-    static protected $_propertyMaster = array("required","pattern","placeholder");
+    static protected $_propertyMaster = array("required","pattern","placeholder","nullIfEmpty");
 
     protected $_properties = array();
 
@@ -61,6 +61,16 @@ abstract class KlearMatrix_Model_Field_Abstract
      */
     public function filterValue($value,$original)
     {
+        
+        if (isset($this->_properties['nullIfEmpty']) &&
+                (bool)$this->_properties['nullIfEmpty']) {
+            
+            if (empty($value)) {
+                return NULL;
+            }
+            
+        }
+        
         return $value;
     }
 

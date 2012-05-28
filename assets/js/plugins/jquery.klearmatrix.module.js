@@ -337,8 +337,7 @@
                           {
                             text: $.translate("Close", [__namespace__]),
                             click: function() {
-                                $(this).moduleDialog("close");
-                                $self.klearModule("close");
+                                $_dialog.moduleDialog("close");
                             }
                         }
                     ]

@@ -97,7 +97,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 default:
 
                     if (method_exists($column, 'filterValue')) {
-
                         $value = $column->filterValue($value,$object->{$getter}());
                     }
 

@@ -33,9 +33,11 @@ class KlearMatrix_Model_ResponseItem
     protected $_forcedValues;
 
     protected $_forcedPk;
-    
+
     protected $_calculatedPk;
     protected $_calculatedPkConfig;
+
+    protected $_actionMessages;
 
     protected $_modelSpec;
 
@@ -62,9 +64,9 @@ class KlearMatrix_Model_ResponseItem
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
 
         $this->_forcedPk = $this->_config->getProperty("forcedPk",false);
-        
+
         $this->_calculatedPkConfig = $this->_config->getProperty("calculatedPk",false);
-        
+
         $this->_plugin = $this->_config->getProperty("plugin", false);
 
         $this->_title = $this->_config->getProperty("title",false);
@@ -72,6 +74,8 @@ class KlearMatrix_Model_ResponseItem
         $this->_customTemplate = $this->_config->getProperty("template", false);
 
         $this->_customScripts = $this->_config->getProperty("scripts", false);
+
+        $this->_actionMessages = $this->_config->getProperty("messages", false);
 
         $this->_parseModelFile();
         $this->_checkClasses(array("_mapper"));
@@ -488,10 +492,10 @@ class KlearMatrix_Model_ResponseItem
         }
         return $ret;
     }
-    
-    
-    
-    
+
+
+
+
     /**
      * Devuelve el primary Key especifico,
      * Comprueba forced y calculated PK
@@ -501,11 +505,10 @@ class KlearMatrix_Model_ResponseItem
     public function getCurrentPk() {
         // Devuelve el PK para la pantalla de edit.
         if ($pk = $this->getForcedPk()) return $pk;
-        
         if ($pk = $this->getCalculatedPk()) return $pk;
-        
+
         return $this->_routeDispatcher->getParam("pk");
-        
+
     }
 
     public function getForcedPk()
@@ -514,29 +517,29 @@ class KlearMatrix_Model_ResponseItem
     }
 
     public function getCalculatedPk() {
-        
+
         if (is_null($this->_calculatedPkConfig)) {
             return false;
         }
-        
+
         if (!$class = $this->_calculatedPkConfig->class) {
             return false;
         }
-        
+
         if (!$method = $this->_calculatedPkConfig->method) {
             return false;
         }
-        
+
         $pkCalculator = new $class;
-        
+
         if (!$this->_calculatedPk =
                    $pkCalculator->{$method}($this->_routeDispatcher)) {
             return false;
-        }  
-        
+        }
+
         return $this->_calculatedPk;
-        
-        
+
+
     }
 
     public function getParentField()
@@ -591,6 +594,34 @@ class KlearMatrix_Model_ResponseItem
 
         return $generalOptionsWrapper;
 
+    }
+
+
+    public function getActionMessages()
+    {
+        $msgs = array();
+
+        if ($this->_actionMessages->before) {
+
+            foreach($this->_actionMessages->before as $message) {
+                $msg = new KlearMatrix_Model_ActionMessage();
+                $msg->setType('before');
+                $msg->setConfig($message);
+                $msgs[] = $msg;
+            }
+        }
+
+        if ($this->_actionMessages->after) {
+
+            foreach($this->_actionMessages->after as $message) {
+                $msg = new KlearMatrix_Model_ActionMessage();
+                $msg->setType('after');
+                $msg->setConfig($message);
+                $msgs[] = $msg;
+            }
+        }
+
+        return $msgs;
     }
 
     public function getDialogsGeneralOptionsConfig()

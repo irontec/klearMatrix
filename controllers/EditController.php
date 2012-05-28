@@ -34,9 +34,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
     {
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
-        
+
         $pk = $this->_item->getCurrentPk();
-        
+
         // TO-DO traducir mensaje?
         // TO-DO lanzar excepción ?
         // Recuperamos el objeto y realizamos la acción de borrar
@@ -136,9 +136,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
-        
+
         $pk = $this->_item->getCurrentPk();
-        
+
         $cols = $this->_item->getVisibleColumnWrapper();
 
         $data = new KlearMatrix_Model_MatrixResponse;
@@ -194,6 +194,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
 
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
+
+        $data->setActionMessage($this->_item->getActionMessages());
 
 
         Zend_Json::$useBuiltinEncoderDecoder = true;

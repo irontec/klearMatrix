@@ -77,17 +77,84 @@
                     return;
                 }
 
-                $(self.element).klearModule("showDialog",
-                        '<br />',
-                        {
-                            title: self.options.data.title,
-                            template : '<div class="ui-widget">{{html text}}</div>',
-                            buttons : []
-                        });
+                
+                var _launchAction = function() {
+                	$(self.element).klearModule("showDialog",
+                            '<br />',
+                            {
+                                title: self.options.data.title,
+                                template : '<div class="ui-widget">{{html text}}</div>',
+                                buttons : []
+                            });
 
-                $(self.element).klearModule("option","moduleDialog").moduleDialog("setAsLoading");
+                    $(self.element).klearModule("option","moduleDialog").moduleDialog("setAsLoading");
 
-                self._doAction.call(self);
+                    self._doAction.call(self);
+                };
+                
+                
+                if (self.options.data.actionMessages && 
+                		self.options.data.actionMessages.before) {
+                	
+                	var curMsg = 0;
+                	
+                	(function showMessage() {
+                		
+                		
+                		// Si se invoca showMessage y no hay más mensajes pendientes, ejecutamos acción
+                		if (!self.options.data.actionMessages.before[curMsg]) {
+                			_launchAction();
+                			return;
+                		}
+                		var _msg = self.options.data.actionMessages.before[curMsg];
+                		
+                		curMsg++;
+                		
+                    	$(self.element).klearModule("showDialog",
+                                '<br />',
+                                {
+                                    title: _msg.title,
+                                    template : '<div class="ui-widget">{{html text}}</div>',
+                                    buttons : []
+                                });
+                    	var $dialog = $(self.element).klearModule("getModuleDialog")
+                    	var buttons = [];
+                    	for(var i in _msg.action) {
+                    		var _ac = _msg.action[i];
+                    		buttons.push((function(_ac) {
+                    			return {
+                    				text: _ac.label,
+                    				click: function() {
+                    					
+                    					if (_ac.return === true) {
+                            				// Volvemos a showMessage por si hubiera más mensajes de "before"
+                            				// o lanzar _launchAction()
+                            				showMessage();
+                            				$dialog.moduleDialog("close");
+                            				return;
+                            			} else{
+                            				$dialog.moduleDialog("close");
+                            				return;
+                            				
+                            			}
+                            		}
+                    			};
+                    		
+                    		})(_ac));
+                    		
+                    		
+                    	}
+
+                    	$dialog.moduleDialog("option","buttons",buttons);
+                    	$dialog.moduleDialog("updateContent",_msg.message);
+                    	
+                	})();
+                	
+                } else {
+                	_launchAction();
+                }
+                
+                
             });
 
             return this;

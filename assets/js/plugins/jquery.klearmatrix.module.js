@@ -344,6 +344,18 @@
                     ]
             );
             
+            if (typeof data.code != 'undefined') {
+            	var errorDesc;
+            	if (errorDesc = $.klear.fetchErrorByCode(data.code)) {
+            		var _oldMessage = data.message;
+            		data.message = errorDesc;
+            		
+            		data.message = data.message.replace(/%message%/,_oldMessage); 
+            	}
+            	
+            }
+            
+            
             $_dialog.moduleDialog("option","title",$.translate("Error", [__namespace__])); 
             $_dialog.moduleDialog("updateContent",data.message);
             

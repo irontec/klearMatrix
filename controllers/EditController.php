@@ -195,7 +195,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
 
-        $data->setActionMessage($this->_item->getActionMessages());
+        $data->setActionMessages($this->_item->getActionMessages());
 
 
         Zend_Json::$useBuiltinEncoderDecoder = true;

@@ -7,6 +7,8 @@ class KlearMatrix_Model_MatrixResponse
     protected $_fieldOptionsWrapper = false;
     protected $_generalOptionsWrapper = false;
 
+    protected $_messages;
+    
     protected $_paginator = false;
 
     protected $_parentIden = false;
@@ -113,6 +115,18 @@ class KlearMatrix_Model_MatrixResponse
         $this->_searchAddModifier = $toggle;
     }
 
+     
+    /**
+     * Setea para su procesamiento el array de mensajes de confirmación y error predefinidos
+     * @param KlearMatrix_Model_ActionMessageWrapper $msgs
+     */
+    public function setActionMessages(KlearMatrix_Model_ActionMessageWrapper $msgs)
+    {
+        $this->_messages = $msgs;    
+        
+    }
+    
+    
     /**
      * Si los resultados (de data) son objetos, los pasa a array (para JSON)
      * Se eliminan los campos no presentes en el column-wrapper
@@ -209,7 +223,12 @@ class KlearMatrix_Model_MatrixResponse
             }
         }
 
-
+        if (sizeof($this->_messages) > 0) {
+            
+            $ret['actionMessages'] = $this->_messages->toArray();
+            
+        }
+        
         $ret[$this->_item->getType()] = $this->_item->getItemName();
 
         return $ret;

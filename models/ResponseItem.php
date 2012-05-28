@@ -75,7 +75,7 @@ class KlearMatrix_Model_ResponseItem
 
         $this->_customScripts = $this->_config->getProperty("scripts", false);
 
-        $this->_actionMessages = $this->_config->getProperty("messages", false);
+        $this->_actionMessages = $this->_config->getProperty("actionMessages", false);
 
         $this->_parseModelFile();
         $this->_checkClasses(array("_mapper"));
@@ -599,26 +599,19 @@ class KlearMatrix_Model_ResponseItem
 
     public function getActionMessages()
     {
-        $msgs = array();
+        $msgs = new KlearMatrix_Model_ActionMessageWrapper;
 
-        if ($this->_actionMessages->before) {
-
-            foreach($this->_actionMessages->before as $message) {
-                $msg = new KlearMatrix_Model_ActionMessage();
-                $msg->setType('before');
-                $msg->setConfig($message);
-                $msgs[] = $msg;
-            }
+        if (!$this->_actionMessages) {
+            
+            return $msgs;
+            
         }
-
-        if ($this->_actionMessages->after) {
-
-            foreach($this->_actionMessages->after as $message) {
-                $msg = new KlearMatrix_Model_ActionMessage();
-                $msg->setType('after');
-                $msg->setConfig($message);
-                $msgs[] = $msg;
-            }
+        
+        foreach($this->_actionMessages as $_type => $msgConfig) {
+            $msg = new KlearMatrix_Model_ActionMessage();
+            $msg->setType($_type);
+            $msg->setConfig($msgConfig);
+            $msgs->addMessage($msg);
         }
 
         return $msgs;

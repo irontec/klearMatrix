@@ -302,6 +302,13 @@ class KlearMatrix_Model_Column {
 
     public function getSearchCondition(array $values,$model, $langs) {
 
+        
+        if ( (method_exists($this->_fieldConfig, 'getCustomSearchCondition')) && 
+                ($searchCondition = $this->_fieldConfig->getCustomSearchCondition($values, $model)) ) {
+
+            return $searchCondition;
+        }
+        
         if (method_exists($this->_fieldConfig, 'getCustomSearchField')) {
             $searchField = $this->_fieldConfig->getCustomSearchField($model);
         } else {

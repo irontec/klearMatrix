@@ -91,8 +91,17 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             $expresions = $values = array();
             foreach ($_searchWhere as $condition) {
-                $expresions[] = $condition[0];
-                $values = array_merge($values,$condition[1]);
+                
+                if (is_array($condition)) {
+                
+                    $expresions[] = $condition[0];
+                    $values = array_merge($values,$condition[1]);
+                    
+                } else {
+                    
+                    $expresions[] = $condition;
+                    
+                }
             }
 
             if ($this->getRequest()->getPost("searchAddModifier") == '1') {

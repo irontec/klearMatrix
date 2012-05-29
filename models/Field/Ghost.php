@@ -28,11 +28,37 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         if ($this->_config->getProperty('order')) {
             $this->_customOrderField = $this->_config->getProperty('order');
         }
-
-        $this->_canBeSearched = false;
-
+        if (!$this->_config->getRaw('source')->searchMethod) {
+            $this->_canBeSearched = true;
+        } else {
+            $this->_canBeSearched = false;
+        }
+        
         return $ret;
     }
+
+    
+    public function getCustomSearchCondition($values, $model) {
+        
+        if (!$this->_config->getRaw()->source->searchMethod) {
+            return false;
+        }
+        
+        
+        
+        $class = $this->_config->getRaw()->source->class;
+        $searchMethod = $this->_config->getRaw()->source->searchMethod;
+        
+        $ghostObject = new $class;
+        
+        if ($searchCondition = $ghostObject->{$searchMethod}($values, $model)) {
+            $this->_canBeSearched = true;
+            return $searchCondition;
+        }
+        
+        return false;
+    }
+
 
     public function getCustomGetterName($model)
     {

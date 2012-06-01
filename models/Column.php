@@ -35,6 +35,13 @@ class KlearMatrix_Model_Column {
 
     protected $_isFile = false;
 
+    
+    /**
+     * Opciones para campos deshabilitados (condicionantes, etc)
+     * @var mixed
+     */
+    protected $_disabledOptions = false;
+    
     protected $_routeDispatcher;
 
     public function setDbName($name)
@@ -126,9 +133,15 @@ class KlearMatrix_Model_Column {
         $this->_isDefault = (bool)$this->_config->getProperty("default",false);
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
 
-        $this->_hasInfo = (bool)$this->_config->getProperty("info",false);
+        $this->_hasInfo = (bool)$this->_config->getProperty("info", false);
 
-
+        $this->_disabledOptions = $this->_config->getProperty("disabled", false);
+        
+        if ($this->_disabledOptions) {
+            
+            $this->_parseDisabledOptions();
+        }
+        
         $this->_type = $this->_config->getProperty("type",false);
         if (empty($this->_type)) {
             $this->_type = 'text';
@@ -300,6 +313,33 @@ class KlearMatrix_Model_Column {
         }
     }
 
+    
+    /**
+     * Lo se... re-utilizo la variable self::_disabledOptions, primero para Zend_Config, luego para el array a JSONear
+     * Y lo se, el método carece de consistencia...
+     * Establece que valor tiene que tener un campo para que éste aparezca con disabled con un label determinado...
+     * 
+     * A ver si aparecen más casos y podemos articular algo mejor todo esto O:)
+     */
+    public function _parseDisabledOptions() {
+        
+        $disabledConfig = new Klear_Model_KConfigParser;
+        $disabledConfig->setConfig($this->_disabledOptions);
+        
+        $disabledOptions = array();
+        // Valor del campo para que éste sea disabled
+        if ($disabledConfig->getProperty('valueCondition', false)) {
+            $disabledOptions['valuesCondition'] = $disabledConfig->getProperty('valueCondition', false); 
+        }
+        
+        
+        if ($disabledConfig->getProperty('label', false)) {
+            $disabledOptions['label'] = $disabledConfig->getProperty('label');
+        }
+
+        $this->_disabledOptions = $disabledOptions;
+    }
+    
     public function getSearchCondition(array $values,$model, $langs) {
 
         
@@ -429,6 +469,10 @@ class KlearMatrix_Model_Column {
             $ret['options'] = $this->_options->toArray();
         }
 
+        if ($this->_disabledOptions) {
+            $ret['disabledOptions'] = $this->_disabledOptions;
+        }
+        
         if ($this->_fieldConfig) {
 
             $ret['searchable'] = (bool)$this->_fieldConfig->canBeSearched();

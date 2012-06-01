@@ -31,6 +31,8 @@
             },
             getEditDataForField : function(value,column,isNew) {
 
+            	
+            	
                 var extraConfig = column.config || false;
                 var properties = column.properties || false;
 
@@ -48,7 +50,23 @@
                     }
                 }
 
-
+                // Tengo prisa...
+                if (column.disabledOptions) {
+                	
+                	if (column.disabledOptions['valuesCondition']) {
+                		if (column.disabledOptions['valuesCondition'] == 'null') {
+                			column.disabledOptions['valuesCondition'] = null;
+                		}
+                		
+                		if (_value == column.disabledOptions['valuesCondition']) {
+                			return column.disabledOptions['label'];
+                		}
+                		
+                	}
+                	
+                }
+                
+                
                 if ( (this.data) && (this.data.parentItem == column.id) ) {
                     column.readonly = true;
                     _value = this.data.parentId;

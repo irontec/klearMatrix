@@ -284,7 +284,6 @@ class KlearMatrix_Model_Column {
         return $this->_fieldConfig->prepareValue($value, $model);
     }
 
-
     public function filterValue($value,$original)
     {
         $this->_loadConfigClass();
@@ -304,8 +303,11 @@ class KlearMatrix_Model_Column {
                 $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
 
                 if ( ($this->_routeDispatcher->getCurrentItem()->isFilteredScreen()) &&
-                        ( $screenOption->getFilterField() !=
-                        $this->_routeDispatcher->getCurrentItem()->getFilterField()) ) {
+                     ( $screenOption->getFilterField()) &&
+                     ( $screenOption->getFilterField() !=
+                     $this->_routeDispatcher->getCurrentItem()->getFilterField())
+                ) {
+
                     continue;
                 }
 
@@ -334,7 +336,6 @@ class KlearMatrix_Model_Column {
         if ($disabledConfig->getProperty('valueCondition', false)) {
             $disabledOptions['valuesCondition'] = $disabledConfig->getProperty('valueCondition', false);
         }
-
 
         if ($disabledConfig->getProperty('label', false)) {
             $disabledOptions['label'] = $disabledConfig->getProperty('label');
@@ -397,7 +398,6 @@ class KlearMatrix_Model_Column {
                 '(' . implode(' or ',$vals). ')',
                 $_fieldValues
         );
-
     }
 
     public function getGetterName($model, $default = false)

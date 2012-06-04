@@ -91,16 +91,16 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             $expresions = $values = array();
             foreach ($_searchWhere as $condition) {
-                
+
                 if (is_array($condition)) {
-                
+
                     $expresions[] = $condition[0];
                     $values = array_merge($values,$condition[1]);
-                    
+
                 } else {
-                    
+
                     $expresions[] = $condition;
-                    
+
                 }
             }
 
@@ -130,11 +130,30 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
 
         } else {
-            if ( ($orderConfig = $this->_item->getOrderConfig()) &&
-                ($orderConfig->getProperty('field')) ) {
+
+            $orderConfig = $this->_item->getOrderConfig();
+
+            if (
+                $orderConfig && $orderConfig->getProperty('field')
+            ) {
                     $order = $orderConfig->getProperty('field');
+
+                    if ($order instanceof Zend_Config) {
+
+                        $order = $order->toArray();
+                    }
+
+                    if (! is_array($order)) {
+
+                        $order = array($order);
+                    }
+
                     if ($orderConfig->getProperty('type')) {
-                        $order .= ' '. $orderConfig->getProperty('type');
+
+                        foreach ($order as $key => $val) {
+
+                            $order[$key] .= ' '. $orderConfig->getProperty('type');
+                        }
                     }
 
             } else {
@@ -208,7 +227,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 $data->setPaginator($paginator);
             }
 
-             $data->setResults($results);
+            $data->setResults($results);
 
             if ($this->_item->hasFieldOptions()) {
 

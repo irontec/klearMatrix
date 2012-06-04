@@ -31,8 +31,8 @@
             },
             getEditDataForField : function(value,column,isNew) {
 
-            	
-            	
+
+
                 var extraConfig = column.config || false;
                 var properties = column.properties || false;
 
@@ -40,7 +40,7 @@
                     var _value = '';
                 } else {
 
-                    if (typeof value != 'object') {
+                    if (typeof value != 'object' && !column.dirty) {
                     	var pattern = column.properties && column.properties.pattern || '';
                         var _value = this.cleanValue(value,'', pattern);
 
@@ -52,21 +52,18 @@
 
                 // Tengo prisa...
                 if (column.disabledOptions) {
-                	
+
                 	if (column.disabledOptions['valuesCondition']) {
                 		if (column.disabledOptions['valuesCondition'] == 'null') {
                 			column.disabledOptions['valuesCondition'] = null;
                 		}
-                		
+
                 		if (_value == column.disabledOptions['valuesCondition']) {
                 			return column.disabledOptions['label'];
                 		}
-                		
                 	}
-                	
                 }
-                
-                
+
                 if ( (this.data) && (this.data.parentItem == column.id) ) {
                     column.readonly = true;
                     _value = this.data.parentId;
@@ -253,7 +250,13 @@
 
                             } else {
 
-                                return this.cleanValue(values[column.id]);
+                                if (column.dirty) {
+
+                                    return values[column.id];
+                                } else {
+
+                                    return this.cleanValue(values[column.id]);
+                                }
                             }
                         break;
                     }

@@ -1,7 +1,10 @@
 <?php
-class KlearMatrix_Model_Field_Datepicker_Abstract
+class KlearMatrix_Model_Field_Picker_Abstract
 {
     private $_locale;
+
+    protected $_css = array();
+    protected $_js = array();
 
     protected $_settings = array(
 
@@ -20,6 +23,7 @@ class KlearMatrix_Model_Field_Datepicker_Abstract
         'constrainInput' => null,
         'currentText' => null,
         'dateFormat' => null,
+        'timeFormat' => null,
         'dayNames' => null,
         'dayNamesMin' => null,
         'dayNamesShort' => null,
@@ -124,6 +128,8 @@ class KlearMatrix_Model_Field_Datepicker_Abstract
         'zh-TW' => 'yy/mm/dd',
     );
 
+    protected $_timeFormats = 'hh:mm:ss';
+
     public function __construct()
     {
         $bootstrap = \Zend_Controller_Front::getInstance()->getParam('bootstrap');
@@ -148,8 +154,11 @@ class KlearMatrix_Model_Field_Datepicker_Abstract
         }
 
         $this->_locale = Zend_Registry::get($langKey);
+    }
 
-        $this->_settings['dateFormat'] = $this->getDateFormat($this->_locale);
+    protected function getLocale()
+    {
+        return $this->_locale;
     }
 
     public function setConfig($config) {
@@ -180,7 +189,12 @@ class KlearMatrix_Model_Field_Datepicker_Abstract
         return $filteredSettings;
     }
 
-    public function getDateFormat($locale = null)
+    public function getPhpFormat()
+    {
+        return $this->getFormat();
+    }
+
+    public function getFormat($locale = null)
     {
         if (empty($locale)) {
 
@@ -193,5 +207,13 @@ class KlearMatrix_Model_Field_Datepicker_Abstract
         }
 
         return null;
+    }
+
+    public function getExtraJavascript() {
+        return $this->_js;
+    }
+
+    public function getExtraCss() {
+        return $this->_css;
     }
 }

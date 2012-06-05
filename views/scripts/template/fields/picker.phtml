@@ -1,0 +1,14 @@
+<input type="text" class="auto" name="${_elemName}"
+{{if (_properties.required)}}required="" {{/if}}
+{{if (_properties.placeholder)}}placeholder="${_properties.placeholder}" {{/if}}
+{{if (_properties.pattern)}}pattern="${_properties.pattern}" {{/if}}
+{{if (_dataConfig.plugin)}}  data-plugin="${_dataConfig.plugin}" {{/if}}
+
+{{each(attribute, value) _dataConfig.settings}}
+    ${$item.dataParser(attribute, value)}
+{{/each}}
+
+{{each(idx,attrValue) _dataConfig.attributes}}
+    ${idx}="${attrValue}"
+{{/each}}
+id="${_elemIden}" value="${_fieldValue}"{{if (_readonly)}} disabled="disabled"{{/if}} />

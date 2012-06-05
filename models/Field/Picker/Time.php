@@ -5,11 +5,11 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
     protected $_config;
 
     protected $_css = array(
-            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
+        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
     );
 
     protected $_js = array(
-            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
+        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
     );
 
     public function __construct()
@@ -21,6 +21,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
     public function setConfig($config)
     {
         parent::setConfig($config);
+
         return $this;
     }
 
@@ -29,16 +30,16 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         return $this;
     }
 
-    public function getConfig() {
-
+    public function getConfig()
+    {
         $baseSettings = parent::getConfig();
 
         $config = array(
-                    "plugin"=>'timepicker',
-                    "settings" => $baseSettings,
-                );
+            "plugin" => 'timepicker',
+            "settings" => $baseSettings,
+        );
 
-         return $config;
+        return $config;
     }
 
     public function getPhpFormat()
@@ -51,12 +52,15 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         return 'hh:mm:ss';
     }
 
-    public function getExtraJavascript() {
+    public function getExtraJavascript()
+    {
         return $this->_js;
     }
 
-    public function getExtraCss() {
+    public function getExtraCss()
+    {
         return $this->_css;
-
     }
 }
+
+//EOF

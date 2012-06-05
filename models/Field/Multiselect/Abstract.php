@@ -1,7 +1,7 @@
 <?php
 
-
-abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator {
+abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator
+{
 
     protected $_config;
     protected $_items;
@@ -10,56 +10,70 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator 
 
     protected $_column;
 
-    public function filterValue($value,$original) {
+    public function filterValue($value,$original)
+    {
         return $value;
     }
 
-    public function prepareValue($value, $model) {
+    public function prepareValue($value, $model)
+    {
         return $value;
     }
 
     public function toArray()
     {
         $ret = array();
+
         foreach ($this as $key => $value) {
+
             $ret[] = array('key' => $key, 'item' => $value);
         }
+
         return $ret;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->rewind();
     }
 
-    public function setColumn($column) {
+    public function setColumn($column)
+    {
         $this->_column = $column;
+
         return $this;
     }
 
-    public function setConfig(Zend_Config $config) {
+    public function setConfig(Zend_Config $config)
+    {
         $this->_config = $config;
+
         return $this;
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         $this->_position = 0;
     }
 
-    public function current() {
+    public function current()
+    {
         return $this->_items[$this->_position];
     }
 
-    public function key() {
+    public function key()
+    {
         return $this->_keys[$this->_position];
     }
 
-    public function next() {
+    public function next()
+    {
         ++$this->_position;
     }
 
-    public function valid() {
+    public function valid()
+    {
         return isset($this->_items[$this->_position]);
-
     }
 
     /**
@@ -69,8 +83,11 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator 
      *         -
      * @return array:
      */
-    public function getEditableFieldsConfig() {
+    public function getEditableFieldsConfig()
+    {
         return array();
-
     }
+
 }
+
+//EOF

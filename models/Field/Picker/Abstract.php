@@ -161,8 +161,8 @@ class KlearMatrix_Model_Field_Picker_Abstract
         return $this->_locale;
     }
 
-    public function setConfig($config) {
-
+    public function setConfig($config)
+    {
         foreach ($config->settings as $key => $value) {
 
             if (array_key_exists($key, $this->_settings)) {
@@ -174,8 +174,8 @@ class KlearMatrix_Model_Field_Picker_Abstract
         return $this;
     }
 
-    public function getConfig() {
-
+    public function getConfig()
+    {
         $filteredSettings = array();
 
         foreach ($this->_settings as $key => $val) {
@@ -209,11 +209,15 @@ class KlearMatrix_Model_Field_Picker_Abstract
         return null;
     }
 
-    public function getExtraJavascript() {
+    public function getExtraJavascript()
+    {
         return $this->_js;
     }
 
-    public function getExtraCss() {
+    public function getExtraCss()
+    {
         return $this->_css;
     }
 }
+
+//EOF

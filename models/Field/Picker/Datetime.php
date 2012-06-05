@@ -5,17 +5,18 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
     protected $_config;
 
     protected $_css = array(
-            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
+        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
     );
 
     protected $_js = array(
-            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
+        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
     );
 
     public function setConfig($config)
     {
         parent::setConfig($config);
         $this->_config = $config;
+
         return $this;
     }
 
@@ -24,21 +25,23 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
         return $this;
     }
 
-    public function getConfig() {
-
+    public function getConfig()
+    {
         $baseSettings = parent::getConfig();
 
         $config = array(
-                    "plugin"=>'datetimepicker',
-                    "settings" => $baseSettings,
-                );
+            "plugin"=>'datetimepicker',
+            "settings" => $baseSettings,
+        );
 
          return $config;
     }
 
     public function getPhpDateFormat()
     {
-        return str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->getFormat());
+        $ret = str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->getFormat());
+
+        return $ret;
     }
 
     public function getDateFormat($locale = null)
@@ -46,12 +49,16 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
         return parent::getFormat();
     }
 
-    public function getExtraJavascript() {
+    public function getExtraJavascript()
+    {
         return $this->_js;
     }
 
-    public function getExtraCss() {
+    public function getExtraCss()
+    {
         return $this->_css;
-
     }
+
 }
+
+//EOF

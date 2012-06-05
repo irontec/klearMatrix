@@ -14,6 +14,7 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
     {
         parent::setConfig($config);
         $this->_config = $config;
+
         return $this;
     }
 
@@ -27,20 +28,25 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
         $baseSettings = parent::getConfig();
 
         $config = array(
-                    "plugin"=>'datepicker',
-                    "settings" => $baseSettings,
-                );
+            "plugin"=>'datepicker',
+            "settings" => $baseSettings,
+        );
 
-         return $config;
+        return $config;
     }
 
     public function getPhpFormat()
     {
-        return str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->getFormat());
+        $ret = str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->getFormat());
+
+        return $ret;
     }
 
     public function getFormat($locale = null)
     {
         return parent::getFormat();
     }
+
 }
+
+//EOF

@@ -12,43 +12,53 @@ class KlearMatrix_Model_Field_File_Fso
     protected $_mimeType;
 
     protected $_js = array(
-
-            "/js/plugins/jquery.jplayer.min.js",
-            "/js/plugins/qq-fileuploader.js"
+        "/js/plugins/jquery.jplayer.min.js",
+        "/js/plugins/qq-fileuploader.js"
     );
 
     protected $_css = array(
-            "/css/jquery.jplayer.css",
-            "/css/qq-fileuploader.css"
+        "/css/jquery.jplayer.css",
+        "/css/qq-fileuploader.css"
     );
 
     public function setConfig($config)
     {
         $this->_config = $config;
+
         return $this;
     }
 
-
-    public function init() {
-
-
+    public function init()
+    {
     }
 
-    protected function _getAllowedExtensions() {
+    protected function _getAllowedExtensions()
+    {
         $exts = array();
-        if (!isset($this->_config->extensions)) return array();
+
+        if (!isset($this->_config->extensions)) {
+
+            return array();
+        }
+
         foreach($this->_config->extensions as $ext) {
+
             $exts[] = $ext;
         }
-        return implode(',',$exts);
+
+        $ret = implode(',', $exts);
+
+        return $ret;
     }
 
-    protected function _getSizeLimit() {
+    protected function _getSizeLimit()
+    {
         if (isset($this->_config->size_limit)) {
+
             return $this->_config->size_limit;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function getConfig()
@@ -68,11 +78,11 @@ class KlearMatrix_Model_Field_File_Fso
                 if ($opObject instanceof Zend_Config) {
 
                     $parser->setConfig($opObject);
+
                     foreach ($opObject as $k => $v) {
 
                         $ret['options'][$option][$k] = $parser->getProperty($k); //$v;
                     }
-
                 } else {
 
                     $ret['options'][$option] = $opObject;
@@ -80,23 +90,24 @@ class KlearMatrix_Model_Field_File_Fso
             }
         }
 
-        //Throw new Exception(var_export($ret , true));
-
         return $ret;
     }
 
-    public function getFetchMethod($dbName) {
+    public function getFetchMethod($dbName)
+    {
         return 'fetch' . $dbName;
     }
-
 
     public function getExtraJavascript()
     {
         return $this->_js;
     }
 
-    public function getExtraCss() {
+    public function getExtraCss()
+    {
         return $this->_css;
     }
 
 }
+
+//EOF

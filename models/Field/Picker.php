@@ -45,8 +45,6 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      */
     public function filterValue($value,$original)
     {
-
-        var_dump($value, $this->getFormat(true)); die;
         $value = new Zend_Date($value, $this->getFormat(true));
         return $value;
     }

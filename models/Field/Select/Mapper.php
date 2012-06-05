@@ -4,7 +4,6 @@
 class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Select_Abstract
 {
 
-
     public function init() {
 
 

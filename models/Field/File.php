@@ -24,7 +24,6 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	    $this->_adapter
 	        ->setConfig($sourceConfig)
 	        ->init();
-
 	}
 
 	/*
@@ -35,30 +34,32 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	    // Debemos devolver un array con size / mime / name del fichero
 	    // value nos ha devuelto las specs del campo file
 
-	    return array(
-	            'size' => $model->{'get' . $value['sizeName']}(),
-	            'mime' => $model->{'get' . $value['mimeName']}(),
-	            'name' => $model->{'get' . $value['baseNameName']}()
-	    );
+	    $ret = array(
+            'size' => $model->{'get' . $value['sizeName']}(),
+            'mime' => $model->{'get' . $value['mimeName']}(),
+            'name' => $model->{'get' . $value['baseNameName']}()
+        );
 
+	    return $ret;
 	}
 
-	public function getCustomOrderField($model) {
-
+	public function getCustomOrderField($model)
+	{
 	    $fields = $model->{$this->getCustomGetterName()}();
+
 	    return $model->varNameToColumn($fields['baseNameName']);
 	}
 
-	public function getCustomSearchField($model) {
-	    
+	public function getCustomSearchField($model)
+	{
 	    $fields = $model->{$this->getCustomGetterName($model)}();
-	    
-	    return $model->varNameToColumn($fields['baseNameName']);
 
+	    return $model->varNameToColumn($fields['baseNameName']);
 	}
 
-	public function getConfig() {
-	  return $this->_adapter->getConfig();
+	public function getConfig()
+	{
+        return $this->_adapter->getConfig();
 	}
 
 	public function getCustomGetterName($model)
@@ -76,14 +77,16 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	    return $this->_adapter->getFetchMethod($dbName);
 	}
 
-
 	public function filterValue($value,$original)
 	{
-	    if (empty($value)) return false;
+	    if (empty($value)) {
 
+            return false;
+	    }
 
 	    $tempFSystemNS = new Zend_Session_Namespace('File_Controller');
 	    if (isset($tempFSystemNS->{$value})) {
+
 	        $tempFile = $tempFSystemNS->{$value};
 	        // Invocamos put[FILEIDEN] (realpath y basename)
 	        return $tempFile;
@@ -98,9 +101,11 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 	    return $this->_adapter->getExtraJavascript();
 	}
 
-	public function getExtraCss() {
+	public function getExtraCss()
+	{
 	    return $this->_adapter->getExtraCss();
 	}
 
-
 }
+
+//EOF

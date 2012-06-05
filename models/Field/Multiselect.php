@@ -6,21 +6,20 @@
 *
 */
 
-class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstract {
+class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstract
+{
 
     protected $_adapter;
 
     protected $_js = array(
-           "/js/plugins/jquery.multiselect.filter.js",
-           "/js/plugins/jquery.multiselect.js"
+       "/js/plugins/jquery.multiselect.filter.js",
+       "/js/plugins/jquery.multiselect.js"
     );
 
     protected $_css = array(
-           "/css/jquery.multiselect.css",
-           "/css/jquery.multiselect.filter.css"
+       "/css/jquery.multiselect.css",
+       "/css/jquery.multiselect.filter.css"
     );
-
-
 
     public function init()
     {
@@ -34,24 +33,27 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
                     ->setConfig($sourceConfig)
                     ->setColumn($this->_column)
                     ->init();
-
     }
 
-    public function getExtraJavascript() {
+    public function getExtraJavascript()
+    {
         return $this->_js;
     }
 
-    public function getExtraCss() {
+    public function getExtraCss()
+    {
         return $this->_css;
     }
 
-    public function getConfig() {
-        return array(
-                'values'=>$this->_adapter->toArray(),
-                'editableFields'=>$this->_adapter->getEditableFieldsConfig()
-                );
-    }
+    public function getConfig()
+    {
+        $ret = array(
+            'values'=>$this->_adapter->toArray(),
+            'editableFields'=>$this->_adapter->getEditableFieldsConfig()
+        );
 
+        return $ret;
+    }
 
     /*
      * Multiselect, recibe un array con modelos de relación
@@ -59,17 +61,16 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
      * Gateway hacia el adapter.
      * @see KlearMatrix_Model_Field_Abstract::filterValue()
      */
-    public function prepareValue($value, $model) {
-
+    public function prepareValue($value, $model)
+    {
         return $this->_adapter->prepareValue($value, $model);
     }
 
-
-    public function filterValue($value,$original) {
+    public function filterValue($value,$original)
+    {
         return $this->_adapter->filterValue($value,$original);
     }
 
-
-
-
 }
+
+//EOF

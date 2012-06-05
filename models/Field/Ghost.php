@@ -38,9 +38,8 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         return $ret;
     }
 
-
-    public function getCustomSearchCondition($values, $model) {
-
+    public function getCustomSearchCondition($values, $model)
+    {
         if (!$this->_config->getRaw()->source->searchMethod) {
             return false;
         }
@@ -58,7 +57,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         return false;
     }
 
-
     public function getCustomGetterName($model)
     {
         if ($this->_config->getProperty('source')->field) {
@@ -73,7 +71,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     public function prepareValue($rValue, $model)
     {
-
         //Comprobamos si se cumplean las condiciones para hacer el ghost
         if ($this->_config->getProperty('source')->conditions) {
 

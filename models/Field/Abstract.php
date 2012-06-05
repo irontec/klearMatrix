@@ -11,7 +11,7 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_canBeSearched = true;
     protected $_canBeSorted = true;
 
-    static protected $_propertyMaster = array("required","pattern","placeholder","nullIfEmpty");
+    static protected $_propertyMaster = array("required", "pattern", "placeholder", "nullIfEmpty");
 
     protected $_properties = array();
 
@@ -33,7 +33,9 @@ abstract class KlearMatrix_Model_Field_Abstract
     {
         $this->_config = $this->_column->getKlearConfig();
         if (is_object($this->_config)) {
+
             foreach (self::$_propertyMaster as $_prop) {
+
                 $this->_properties[$_prop] = $this->_config->getProperty($_prop);
             }
         }
@@ -61,16 +63,16 @@ abstract class KlearMatrix_Model_Field_Abstract
      */
     public function filterValue($value,$original)
     {
-        
-        if (isset($this->_properties['nullIfEmpty']) &&
-                (bool)$this->_properties['nullIfEmpty']) {
-            
-            if (empty($value)) {
-                return NULL;
-            }
-            
+
+        if (isset($this->_properties['nullIfEmpty'])
+            && (bool)$this->_properties['nullIfEmpty']) {
+
+                if (empty($value)) {
+
+                    return NULL;
+                }
         }
-        
+
         return $value;
     }
 
@@ -114,3 +116,5 @@ abstract class KlearMatrix_Model_Field_Abstract
         return true;
     }
 }
+
+//EOF

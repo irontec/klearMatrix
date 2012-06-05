@@ -31,7 +31,9 @@ class KlearMatrix_Model_Field_Datepicker extends KlearMatrix_Model_Field_Abstrac
 
     private function getDateFormat()
     {
-        return str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->_control->getDateFormat());
+        $ret = str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->_control->getDateFormat());
+
+        return $ret;
     }
 
     /*
@@ -62,3 +64,5 @@ class KlearMatrix_Model_Field_Datepicker extends KlearMatrix_Model_Field_Abstrac
         return $zendDateValue->toString($format);
     }
 }
+
+//EOF

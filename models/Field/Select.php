@@ -6,7 +6,8 @@
 *
 */
 
-class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
+class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
+{
 
     protected $_adapter;
 
@@ -22,19 +23,28 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract {
                     ->setConfig($sourceConfig)
                     ->setColumn($this->_column)
                     ->init();
-
     }
 
-    public function filterValue($value,$original) {
-        if ($value == '__NULL__') return NULL;
+    public function filterValue($value,$original)
+    {
+        if ($value == '__NULL__') {
+
+            return NULL;
+        }
+
         return $value;
     }
 
-    public function getConfig() {
-        return array_merge(
-                $this->_adapter->getExtraConfigArray(),
-                array('values'=>$this->_adapter->toArray())
-                );
+    public function getConfig()
+    {
+        $ret = array_merge(
+            $this->_adapter->getExtraConfigArray(),
+            array('values' => $this->_adapter->toArray())
+        );
+
+        return $ret;
     }
 
 }
+
+//EOF

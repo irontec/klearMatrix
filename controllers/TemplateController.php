@@ -69,7 +69,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
                 case "number":
                 case "ghost":
                 case "file":
-                case "datepicker":
+                case "picker":
                     $this->_helper->viewRenderer('fields/' . $fieldType);
                     break;
 

@@ -7,8 +7,6 @@
     <?php echo $this->translate('Not available'); ?>
 {{/if}}  
     
-    
-    
     {{each(idx,option) _dataConfig.options}}
     
         {{if (!(option.onNull == 'hide' && !_fieldValue.name))}}

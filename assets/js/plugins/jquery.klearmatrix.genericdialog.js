@@ -35,7 +35,15 @@
                                         params: self.options.data.buttons[label].params,
                                         external: self.options.data.buttons[label].external
                                 };
-
+                                
+                                var configuredParams = {};
+                                // Metemos en la petición todos los campos del formulario.
+                                $.each($("input,select,textarea",$(self.element)), function() {
+                                	configuredParams[$(this).attr("name")] = $(this).val();
+                                });
+                                
+                                $.extend(extraData.params,configuredParams);
+                                
                                 self.options.caller.trigger("click",extraData);
                             }
                             $(this).moduleDialog("close");

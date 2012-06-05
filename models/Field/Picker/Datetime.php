@@ -1,5 +1,5 @@
 <?php
-// TODO: Crear clase abstracta
+
 class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Picker_Abstract
 {
     protected $_config;
@@ -9,7 +9,7 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
     );
 
     protected $_js = array(
-        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
+        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"        
     );
 
     public function setConfig($config)
@@ -22,6 +22,9 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 
     public function init()
     {
+        //TODO: lang global getter (lander donde andaba eso¿)
+        $lang = 'es';
+        $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$lang.".js";
         return $this;
     }
 

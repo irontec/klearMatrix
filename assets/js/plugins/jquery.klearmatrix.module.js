@@ -72,14 +72,18 @@
             var self = this.element;
             var _self = this;
 
-            $(self.klearModule("getPanel")).on('click','.closeTab',function(e) {
+            $(self.klearModule("getPanel"))
+            	.off('click.closeTab')
+            	.on('click.closeTab','.closeTab',function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 self.klearModule("close");
             });
 
-            $('a.option.screen',this.element.klearModule("getPanel")).on('mouseup',function(e) {
+            $('a.option.screen',this.element.klearModule("getPanel"))
+            	.on('mouseup.screenOption')
+            	.on('mouseup.screenOption',function(e) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -163,7 +167,9 @@
 
                 _container.tabs( "add", _iden, tabTitle,_newIndex);
 
-            }).on('click',function(e) {
+            })
+            	.off('click.screenOption')
+            	.on('click.screenOption',function(e) {
                 // Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
                 e.preventDefault();
                 e.stopPropagation();
@@ -174,7 +180,9 @@
             /*
              * Capturar opciones de diálogo.
              */
-            $('a.option.dialog',this.element.klearModule("getPanel")).on('click',function(e,data) {
+            $('a.option.dialog',this.element.klearModule("getPanel"))
+            	.off('click.dialogOptions')
+            	.on('click.dialogOptions',function(e,data) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -217,8 +225,6 @@
                 
                 // Si la pantalla llamante tiene condición (parentId -- en data --
 	            // enviarlos a la nueva pantalla
-                console.log(_self.options.data);
-                
                 
 	            if (_self.options.data.parentId) {
 	            	_postData.parentId = _self.options.data.parentId;
@@ -229,6 +235,11 @@
 		            $.extend(_postData,data.params);
 	            }
                 
+	            if ($(this).data("params")) {
+	            	$.extend(_postData,$(this).data("params"));
+	            }
+	            
+	            
                 $.klear.request(
                         {
                             file: self.klearModule("option","file"),
@@ -252,7 +263,9 @@
                 );
 
 
-            }).on('mouseup',function(e) {
+            })
+            	.off('mouseup.dialogOptions')
+                .on('mouseup.dialogOptions',function(e) {
                 // Paramos el evento mouseup, para no llegar al tr
                 e.preventDefault();
                 e.stopPropagation();
@@ -263,7 +276,9 @@
              * TO-DO: Callback JS? when-ever need will be implemented
              */
 
-            $('a.option.command',this.element.klearModule("getPanel")).on('click.commandAction',function(e,data) {
+            $('a.option.command',this.element.klearModule("getPanel"))
+            	.off('click.commandAction')
+            	.on('click.commandAction',function(e,data) {
 
                 e.preventDefault();
                 e.stopPropagation();

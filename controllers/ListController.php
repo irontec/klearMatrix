@@ -287,7 +287,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse = new Klear_Model_DispatchResponse;
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->setPlugin($this->_item->getPlugin('list'));
-        
+
         $jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
         $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
@@ -296,19 +296,19 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
-        
+
         $customScripts = $this->_item->getCustomScripts();
         if (isset($customScripts->module) and isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
-        
+
         $jsonResponse->addCssFile("/css/klearMatrix.css");
 
         //setData hook
         if ($this->_item->getHook('setData')) {
 
-            $method = $this->_item->getHook('setData');
-            $data = $this->_helper->hooks->$method($data, $parentData);
+            $hook = $this->_item->getHook('setData');
+            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
 
         } else {
 
@@ -319,8 +319,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         //attachView hook
         if ($this->_item->getHook('attachView')) {
 
-            $method = $this->_item->getHook('attachView');
-            $this->_helper->hooks->$method($this->view);
+            $hook = $this->_item->getHook('attachView');
+            $this->_helper->{$hook->helper}->{$hook->action}($this->view);
         }
 
         $jsonResponse->attachView($this->view);

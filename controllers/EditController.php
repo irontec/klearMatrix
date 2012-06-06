@@ -226,8 +226,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         //addJsArray hook
         if ($this->_item->getHook('addJsArray')) {
 
-            $method = $this->_item->getHook('addJsArray');
-            $js = $this->_helper->hooks->$method($cols);
+            $hook = $this->_item->getHook('addJsArray');
+            $js = $this->_helper->{$hook->helper}->{$hook->action}($cols);
 
         } else {
 
@@ -252,8 +252,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         //addCssArray hook
         if ($this->_item->getHook('addCssArray')) {
 
-            $method = $this->_item->getHook('addCssArray');
-            $css = $this->_helper->hooks->$method($cols);
+            $hook = $this->_item->getHook('addCssArray');
+            $css = $this->_helper->{$hook->helper}->{$hook->action}($cols);
 
         } else {
 
@@ -265,8 +265,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         //setData hook
         if ($this->_item->getHook('setData')) {
 
-            $method = $this->_item->getHook('setData');
-            $data = $this->_helper->hooks->$method($data, $parentData);
+            $hook = $this->_item->getHook('setData');
+            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
 
         } else {
 
@@ -278,8 +278,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         //attachView hook
         if ($this->_item->getHook('attachView')) {
 
-            $method = $this->_item->getHook('attachView');
-            $this->_helper->hooks->$method($this->view);
+            $hook = $this->_item->getHook('attachView');
+            $this->_helper->{$hook->helper}->{$hook->action}($this->view);
         }
 
         $jsonResponse->attachView($this->view);

@@ -47,6 +47,9 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_blacklist = array();
 
+    protected $_hasInfo = false;
+    protected $_fieldInfo;
+    
     public function setConfig(Zend_Config $config)
     {
         $this->_config = new Klear_Model_KConfigParser;
@@ -58,8 +61,6 @@ class KlearMatrix_Model_ResponseItem
         $this->_filteredField = $this->_config->getProperty("filterField",false);
 
         $this->_filterClass = $this->_config->getProperty("filterClass",false);
-
-      //  $this->_parentField = $this->_config->getProperty("parentField",false);
 
         $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
 
@@ -77,6 +78,12 @@ class KlearMatrix_Model_ResponseItem
 
         $this->_actionMessages = $this->_config->getProperty("actionMessages", false);
 
+        $this->_hasInfo = (bool)$this->_config->getProperty("info", false);
+        if ($this->_hasInfo) {
+            $this->_fieldInfo = new KlearMatrix_Model_Info;
+            $this->_fieldInfo->setConfig($this->_config->getProperty("info",false));
+        }
+        
         $this->_parseModelFile();
         $this->_checkClasses(array("_mapper"));
     }
@@ -639,6 +646,21 @@ class KlearMatrix_Model_ResponseItem
         return $pagination;
     }
 
+    /**
+     * Devuelve el Objeto info (ayuda inline), resuelto a array para JSON-ear.
+     * Listo para ser enchufado a Matrixresponse.
+     * @return boolean
+     */
+    public function getInfo() {
+        if ($this->_hasInfo) {
+            return $this->_fieldInfo->getJSONArray();
+        }
+        
+        return false;
+        
+    }
+    
+    
     public function getOrderConfig()
     {
         if (!$this->_config->exists("order")) {

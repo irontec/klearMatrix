@@ -1,3 +1,17 @@
+{{if (info) }}
+
+<div class="ui-widget-content ui-corner-all assistant">
+<span class="
+ui-silk 
+ui-silk-${info.icon} 
+fieldInfo-${info.type}
+fieldInfo-position-${info.position}
+" 
+title="${info.text}"
+></span>{{if (info.label)}} ${info.label} {{/if}}
+</div>
+{{/if}}
+
 <div class="ui-widget-content ui-corner-all klearMatrixFiltering">
 <form class="klearMatrixFilteringForm {{if (typeof searchFields == 'undefined') }} not-loaded {{/if}} ">
 <p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Filter fields'); ?></p>

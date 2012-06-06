@@ -530,30 +530,7 @@
                 $(this).trigger("manualchange");
             });
 
-            $("[title]:not(.fieldInfo-box)",this.options.theForm).tooltip();
 
-            $(".fieldInfo-box",this.options.theForm).toggle(function(){
-            	var $self = $(this);
-            	
-            	var $box = $self.parent('p').find('.fieldInfo-boxinfo');
-            	if ($box.length<=0) {
-            		$box = $('<div />', {
-                		'class' : 'fieldInfo-boxinfo ui-state-highlight ui-corner-all',
-                		html: '<p>' + $self.attr('title') + '</p>'
-                	});
-                	$box.hide();
-                	$self.parent('p').prepend($box);	
-            	}
-            	$box.slideDown('slow');
-            },
-            function(){
-            	var $self = $(this);
-            	var $box = $self.parent('p').find('.fieldInfo-boxinfo');
-            	$box.slideUp('slow', function(){
-            		$(this).remove();
-            	});
-            });
-            
             
             return this;
 

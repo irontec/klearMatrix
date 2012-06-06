@@ -20,6 +20,8 @@ class KlearMatrix_Model_MatrixResponse
     protected $_searchFields = array();
     protected $_searchAddModifier = false;
 
+    protected $_info = false;
+    
     /**
      * Enter description here ...
      * @var KlearMatrix_Model_ResponseItem;
@@ -103,7 +105,18 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_parentItem = $parentItem;
     }
-
+    
+    /**
+     * Ayuda contextual seteada
+     * @param boolean|array $info
+     */
+    public function setInfo($info) {
+        if (false === $info) {
+            return;
+        }
+        
+        $this->_info = $info;
+    }
 
     public function addSearchField($field,$values)
     {
@@ -216,6 +229,10 @@ class KlearMatrix_Model_MatrixResponse
             $ret['searchAddModifier'] = $this->_searchAddModifier;
         }
 
+        if (false !== $this->_info) {
+            $ret['info'] = $this->_info;
+        }
+        
         $simpleFields = array('parentIden','parentId','parentScreen','parentItem');
         foreach ($simpleFields as $_fld)  {
             if (false !== $this->{'_' . $_fld})  {

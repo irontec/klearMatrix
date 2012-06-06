@@ -244,11 +244,16 @@ a.ui-state-nojump {
     
 }
 
+.assistant {
+	font-size: 0.8em;
+    margin-bottom: 0.5em;
+    padding: 0.6em 1em;
+}
 
-
-
-
-
+.assistant p {
+	padding:1em;
+	width:auto;
+}
 
 
 

@@ -2,7 +2,7 @@
 
 /**
  * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
-* @author jabi
+ * @author jabi
 *
 */
 class KlearMatrix_Model_Column {
@@ -135,7 +135,11 @@ class KlearMatrix_Model_Column {
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
 
         $this->_hasInfo = (bool)$this->_config->getProperty("info", false);
-
+        if ($this->_hasInfo) {
+            $this->_fieldInfo = new KlearMatrix_Model_Info;
+            $this->_fieldInfo->setConfig($this->_config->getProperty("info",false));
+        }
+        
         $this->_disabledOptions = $this->_config->getProperty("disabled", false);
 
         if ($this->_disabledOptions) {
@@ -209,17 +213,7 @@ class KlearMatrix_Model_Column {
     public function hasInfo() {
 
         if ($this->isOption()) return false;
-        if ($this->_hasInfo === false) {
-            return false;
-        }
-        $info = $this->_config->getProperty("info",false);
-        $infoConfig = new Klear_Model_KConfigParser();
-        $infoConfig->setConfig($info);
-        $this->_fieldInfo = array();
-        $this->_fieldInfo['type'] = $infoConfig->getProperty('type')? $infoConfig->getProperty('type'):'tooltip';
-        $this->_fieldInfo['text'] = $infoConfig->getProperty('text');
-        $this->_fieldInfo['position'] = $infoConfig->getProperty('position')? $infoConfig->getProperty('position'):'left';
-        $this->_fieldInfo['icon'] = $infoConfig->getProperty('icon')? $infoConfig->getProperty('icon'):'help';
+        
         return $this->_hasInfo;
     }
 
@@ -447,8 +441,11 @@ class KlearMatrix_Model_Column {
         $ret["id"] = $this->_dbName;
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
-        $ret["dirty"] = $this->_dirty; //Para mostrar el valor con html si está a true
-
+        
+        if ($this->_dirty) {
+            $ret["dirty"] = true; //Para mostrar el valor con html si está a true
+        }
+        
         if ($this->isDefault()) {
             $ret['default'] = true;
         }
@@ -462,7 +459,7 @@ class KlearMatrix_Model_Column {
         }
 
         if ($this->hasInfo()) {
-            $ret['fieldInfo'] = $this->_fieldInfo;
+            $ret['fieldInfo'] = $this->_fieldInfo->getJSONArray();
         }
 
         if ($this->_ordered) {

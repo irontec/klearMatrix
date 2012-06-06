@@ -273,7 +273,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $data->fixResults($this->_item);
         }
 
-
+        
+        $data->setInfo($this->_item->getInfo());
+        
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
 
 

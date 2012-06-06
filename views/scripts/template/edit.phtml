@@ -1,5 +1,19 @@
-{{each(idx,row) values}}
+{{if (info) }}
 
+<div class="ui-widget-content ui-corner-all assistant">
+<span class="
+ui-silk 
+ui-silk-${info.icon} 
+fieldInfo-${info.type}
+fieldInfo-position-${info.position}
+" 
+title="${info.text}"
+></span>{{if (info.label)}} ${info.label} {{/if}}
+</div>
+{{/if}}
+
+
+{{each(idx,row) values}}
 <form class="klearMatrix_form" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
 	<fieldset class="ui-widget-content ui-corner-all">
 		<legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>

@@ -77,7 +77,7 @@
                     return;
                 }
 
-                
+
                 var _launchAction = function() {
                 	$(self.element).klearModule("showDialog",
                             '<br />',
@@ -91,25 +91,25 @@
 
                     self._doAction.call(self);
                 };
-                
-                
-                if (self.options.data.actionMessages && 
+
+
+                if (self.options.data.actionMessages &&
                 		self.options.data.actionMessages.before) {
-                	
+
                 	var curMsg = 0;
-                	
+
                 	(function showMessage() {
-                		
-                		
+
+
                 		// Si se invoca showMessage y no hay más mensajes pendientes, ejecutamos acción
                 		if (!self.options.data.actionMessages.before[curMsg]) {
                 			_launchAction();
                 			return;
                 		}
                 		var _msg = self.options.data.actionMessages.before[curMsg];
-                		
+
                 		curMsg++;
-                		
+
                     	$(self.element).klearModule("showDialog",
                                 '<br />',
                                 {
@@ -125,7 +125,7 @@
                     			return {
                     				text: _ac.label,
                     				click: function() {
-                    					
+
                     					if (_ac.return === true) {
                             				// Volvemos a showMessage por si hubiera más mensajes de "before"
                             				// o lanzar _launchAction()
@@ -135,26 +135,26 @@
                             			} else{
                             				$dialog.moduleDialog("close");
                             				return;
-                            				
+
                             			}
                             		}
                     			};
-                    		
+
                     		})(_ac));
-                    		
-                    		
+
+
                     	}
 
                     	$dialog.moduleDialog("option","buttons",buttons);
                     	$dialog.moduleDialog("updateContent",_msg.message);
-                    	
+
                 	})();
-                	
+
                 } else {
                 	_launchAction();
                 }
-                
-                
+
+
             });
 
             return this;
@@ -164,6 +164,7 @@
             (function(self) {
                 var $self = $(self.element);
                 var $dialog = $self.klearModule("option","moduleDialog");
+                var postData = self.options.theForm.serializeArray();
 
                 $.klear.request(
                         {
@@ -172,13 +173,13 @@
                             execute: 'save',
                             pk: self.options.theForm.data("id"),
                             screen: self.options.data.screen,
-                            post : self.options.theForm.serialize()
+                            post : postData
                         },
                         function(data) {
 
                             if (data.error) {
                             	self.standardError(data.error);
-                            	
+
                             } else {
                                 var $parentModule = $self.klearModule("option","parentScreen");
                                 if ($parentModule) {
@@ -215,6 +216,8 @@
 
                             $dialog.moduleDialog("updateContent",data.message);
 
+                            var triggerData = {'data': data, 'postData': postData};
+                            $self.trigger('postMainActionHook', triggerData);
 
                         },
                         // Error from new/index/save
@@ -380,7 +383,7 @@
                                 sizeError: $.translate("{file} is too large, maximum file size is {sizeLimit}.",[__namespace__]),
                                 minSizeError: $.translate("{file} is too small, minimum file size is {minSizeLimit}.",[__namespace__]),
                                 emptyError: $.translate("{file} is empty, please select files again without it.",[__namespace__]),
-                                onLeave: $.translate("The files are being uploaded, if you leave now the upload will be cancelled.",[__namespace__])            
+                                onLeave: $.translate("The files are being uploaded, if you leave now the upload will be cancelled.",[__namespace__])
                             },
                             template: '<div class="qq-uploader">' +
                                 '<div class="qq-upload-drop-area"><span></span></div>' +
@@ -388,13 +391,13 @@
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
-                            	
+
                             	if (result.error) {
                             		$(_self).klearModule("showDialogError",result.error_msg, {title : $.translate("ERROR",[__namespace__])});
                             		return;
                             	}
-                            	
-                            	
+
+
                                 var $list = $(".qq-upload-list",$(this.element));
                                 var fName = $(".qq-upload-file",$list).html();
                                 var fSize = $(".qq-upload-size",$list).html();
@@ -405,24 +408,24 @@
                                     .trigger("manualchange")
                                 $list.html('');
                             },
-                            
+
                             showMessage : function(message) {
                             	$(_self).klearModule("showDialogError",message, {title : $.translate("ERROR",[__namespace__])});
-                            	
-                            	
+
+
                             }
-                            
+
                     };
 
                     if (_hiddenField.data("extensions")) {
                         qqOptions.allowedExtensions = _hiddenField.data("extensions").split(',');
                     }
-                    
+
                     (function lazyQQLoad() {
                     	if (!qq || !qq.FileUploader) {
                     		this.count++;
                     		if (this.count > 10) {
-                    			return; 
+                    			return;
                     		}
                     		setTimeout(lazyQQLoad,50);
                     		return;
@@ -430,7 +433,7 @@
                     	var uploader = new qq.FileUploader(qqOptions);
                     })();
 
-                    
+
 
                 });
             }
@@ -531,7 +534,7 @@
             });
 
 
-            
+
             return this;
 
         },

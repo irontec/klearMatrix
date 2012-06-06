@@ -5,7 +5,7 @@
     }
 
     var __namespace__ = "klearmatrix.new";
-    
+
     $.widget("klearmatrix.new", $.klearmatrix.edit, {
         options: {
             data : null,
@@ -95,6 +95,8 @@
 
                         $dialog.moduleDialog("updateContent",data.message);
 
+                        var triggerData = {'data': data, 'postData': postData};
+                        $self.trigger('postMainActionHook', triggerData);
 
                     },
                     // Error from new/index/save

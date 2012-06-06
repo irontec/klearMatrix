@@ -87,7 +87,8 @@
                 	
                 break;
                 default:
-                	if ($(this).data("parentHolderSelector")) {
+                	
+                	if ($(element).data("parentHolderSelector")) {
                 		return $(element).parents($(element).data("parentHolderSelector"));
                 	} else {
                 		throw 'no parentHolder found for option';

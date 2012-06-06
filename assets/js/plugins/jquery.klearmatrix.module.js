@@ -47,7 +47,7 @@
         	if (!this.options.data.title) return;
         	
             var defaultValue, defaultColumn, count = false;
-            if (this.options.data.values) {
+            if (this.options.data.values && this.options.data.values.length && this.options.data.values>0) {
             	 for(var i in this.options.data.columns) {
             		 if (count === false) {
             			 defaultColumn = this.options.data.columns[i];

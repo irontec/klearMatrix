@@ -49,6 +49,11 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
         $ghostObject = new $class;
 
+        if ( method_exists($ghostObject, 'setConfig') ) {
+
+            $ghostObject->setConfig($this->_config->getRaw());
+        }
+
         if ($searchCondition = $ghostObject->{$searchMethod}($values, $model)) {
             $this->_canBeSearched = true;
             return $searchCondition;
@@ -111,6 +116,12 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         }
 
         $ghost = new $class;
+
+        if ( method_exists($ghost, 'setConfig') ) {
+
+            $ghost->setConfig($this->_config->getRaw());
+        }
+
         $value = $ghost->{$method}($model);
 
         if ($this->_config->getProperty('source')->cache) {

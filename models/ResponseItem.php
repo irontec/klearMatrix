@@ -20,6 +20,8 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_title;
 
+    protected $_hooks = array();
+
     protected $_customTemplate;
     protected $_customScripts;
 
@@ -49,7 +51,7 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_hasInfo = false;
     protected $_fieldInfo;
-    
+
     public function setConfig(Zend_Config $config)
     {
         $this->_config = new Klear_Model_KConfigParser;
@@ -72,6 +74,8 @@ class KlearMatrix_Model_ResponseItem
 
         $this->_title = $this->_config->getProperty("title",false);
 
+        $this->_hooks = $this->_config->getProperty("hooks", array());
+
         $this->_customTemplate = $this->_config->getProperty("template", false);
 
         $this->_customScripts = $this->_config->getProperty("scripts", false);
@@ -83,7 +87,7 @@ class KlearMatrix_Model_ResponseItem
             $this->_fieldInfo = new KlearMatrix_Model_Info;
             $this->_fieldInfo->setConfig($this->_config->getProperty("info",false));
         }
-        
+
         $this->_parseModelFile();
         $this->_checkClasses(array("_mapper"));
     }
@@ -152,6 +156,24 @@ class KlearMatrix_Model_ResponseItem
 
     public function getTitle() {
         return $this->_title;
+    }
+
+    public function getHooks()
+    {
+        return $this->_hooks;
+    }
+
+    /**
+     * @return false | string $methodName
+     */
+    public function getHook($hookName = null)
+    {
+        if (is_null( $hookName ) or ! isset( $this->_hooks->$hookName )) {
+
+            return false;
+        }
+
+        return $this->_hooks->$hookName;
     }
 
     public function getCustomTemplate()
@@ -609,11 +631,11 @@ class KlearMatrix_Model_ResponseItem
         $msgs = new KlearMatrix_Model_ActionMessageWrapper;
 
         if (!$this->_actionMessages) {
-            
+
             return $msgs;
-            
+
         }
-        
+
         foreach($this->_actionMessages as $_type => $msgConfig) {
             $msg = new KlearMatrix_Model_ActionMessage();
             $msg->setType($_type);
@@ -655,12 +677,12 @@ class KlearMatrix_Model_ResponseItem
         if ($this->_hasInfo) {
             return $this->_fieldInfo->getJSONArray();
         }
-        
+
         return false;
-        
+
     }
-    
-    
+
+
     public function getOrderConfig()
     {
         if (!$this->_config->exists("order")) {

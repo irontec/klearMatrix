@@ -157,7 +157,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
             // Informamos a la respuesta de que campo es el "padre"
             $data->setParentItem($this->_item->getFilterField());
-            
+
             // A partir del nombre de pantalla (de nuestro .yaml principal...
             if ($parentScreenName = $this->getRequest()->getPost("parentScreen")) {
 
@@ -183,13 +183,15 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $data->setParentId($parentId);
                 $data->setParentScreen($parentScreenName);
             }
+        } else {
+
+            $parentData = null;
         }
 
         $data->setInfo($this->_item->getInfo());
-        
+
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
         $data->setActionMessages($this->_item->getActionMessages());
-        
 
         Zend_Json::$useBuiltinEncoderDecoder = true;
 
@@ -218,7 +220,20 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
-        $jsonResponse->addJsArray($cols->getColsJsArray());
+
+        //addJsArray hook
+        if ($this->_item->getHook('addJsArray')) {
+
+            $method = $this->_item->getHook('addJsArray');
+            $js = $this->_helper->hooks->$method($cols);
+
+        } else {
+
+            $js = $cols->getColsJsArray();
+        }
+
+        $jsonResponse->addJsArray($js);
+
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js"); // klearmatrix.new hereda de klearmatrix.edit
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.new.js");
 
@@ -229,9 +244,37 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         $jsonResponse->addCssFile("/css/klearMatrixNew.css");
-        $jsonResponse->addCssArray($cols->getColsCssArray());
 
-        $jsonResponse->setData($data->toArray());
+        //addCssArray hook
+        if ($this->_item->getHook('addCssArray')) {
+
+            $method = $this->_item->getHook('addCssArray');
+            $css = $this->_helper->hooks->$method($cols);
+
+        } else {
+
+            $css = $cols->getColsCssArray();
+        }
+        $jsonResponse->addCssArray($css);
+
+        //setData hook
+        if ($this->_item->getHook('setData')) {
+
+            $method = $this->_item->getHook('setData');
+            $data = $this->_helper->hooks->$method($data, $parentData);
+
+        } else {
+
+            $data = $data->toArray();
+        }
+        $jsonResponse->setData($data);
+
+        //attachView hook
+        if ($this->_item->getHook('attachView')) {
+
+            $method = $this->_item->getHook('attachView');
+            $this->_helper->hooks->$method($this->view);
+        }
         $jsonResponse->attachView($this->view);
     }
 }

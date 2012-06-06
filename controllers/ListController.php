@@ -73,6 +73,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                $data->setParentId($parentId);
 
             }
+        } else {
+
+            $parentData = null;
         }
 
         if ($this->_item->hasForcedValues()) {
@@ -273,9 +276,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $data->fixResults($this->_item);
         }
 
-        
+
         $data->setInfo($this->_item->getInfo());
-        
+
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
 
 
@@ -293,10 +296,26 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
         $jsonResponse->addCssFile("/css/klearMatrix.css");
-        $jsonResponse->setData($data->toArray());
+
+        //setData hook
+        if ($this->_item->getHook('setData')) {
+
+            $method = $this->_item->getHook('setData');
+            $data = $this->_helper->hooks->$method($data, $parentData);
+
+        } else {
+
+            $data = $data->toArray();
+        }
+        $jsonResponse->setData($data);
+
+        //attachView hook
+        if ($this->_item->getHook('attachView')) {
+
+            $method = $this->_item->getHook('attachView');
+            $this->_helper->hooks->$method($this->view);
+        }
+
         $jsonResponse->attachView($this->view);
     }
-
-
 }
-

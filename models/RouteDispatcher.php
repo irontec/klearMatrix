@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
 * @author jabi
@@ -257,7 +256,6 @@ class KlearMatrix_Model_RouteDispatcher {
         return $this;
     }
 
-
     protected function _resolveAction() {
         if (isset($this->_params['execute'])) {
             $this->_action = $this->_params['execute'];
@@ -271,7 +269,6 @@ class KlearMatrix_Model_RouteDispatcher {
         $this->_resolveCurrentProperty('action', false);
         return $this;
     }
-
 
     public function getCurrentItemName() {
         switch($this->_typeName) {

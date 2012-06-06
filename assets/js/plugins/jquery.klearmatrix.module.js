@@ -67,6 +67,36 @@
             }
 
         },
+        
+        _resolveParentHolder : function(element) {
+        	
+        	// Si es un módulo con parent
+        	if (this.options.moduleParent) {
+        		var modulecheck = this.options.moduleParent; 
+        	} else {
+        		var modulecheck = this.options.moduleName;
+        	}
+        	
+            switch (modulecheck) {
+                case 'list':
+                	return $(element).parents("tr:eq(0)");
+                break;
+                case 'new':
+                case 'edit':
+                	return $(element).parents("form:eq(0)");
+                	
+                break;
+                default:
+                	if ($(this).data("parentHolderSelector")) {
+                		return $(element).parents($(element).data("parentHolderSelector"));
+                	} else {
+                		throw 'no parentHolder found for option';
+                	}
+                break;
+            }
+        	
+        },
+        
         _registerBaseEvents : function() {
 
             var self = this.element;
@@ -106,17 +136,9 @@
 
                 var _newIndex = self.klearModule("option","tabIndex")+1;
                 var _menuLink = $(this);
-                switch (_self.options.moduleName) {
-                    case 'list':
-                        var _parentHolder = $(this).parents("tr:eq(0)");
-                    break;
-                    case 'new':
-                    case 'edit':
-                    	var _parentHolder = $(this).parents("form:eq(0)");
-                    	
-                    break;
-                }
-
+                
+                var _parentHolder = _self._resolveParentHolder(this);
+                
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
@@ -191,22 +213,7 @@
 
                 var _container = self.klearModule("getContainer");
 
-                switch (_self.options.moduleName) {
-                    case 'list':
-                        var _parentHolder = $(this).parents("tr:eq(0)");
-                    break;
-                    case 'new':
-                    case 'edit':
-                        var _parentHolder = $(this).parents("form:eq(0)");
-                    default:
-                    	//Custom extended module
-                    	if ($(this).data("parentHolderSelector")) {
-                    		var _parentHolder = $(this).parents($(this).data("parentHolderSelector"));
-                    	} else {
-                    		throw 'no parentHolder found for option';
-                    	}
-                    break;
-                }
+                var _parentHolder = _self._resolveParentHolder(this);
 
                 var $caller = $(this);
                 $(self).klearModule("showDialog",

@@ -286,7 +286,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $jsonResponse = new Klear_Model_DispatchResponse;
         $jsonResponse->setModule('klearMatrix');
-        $jsonResponse->setPlugin('list');
+        $jsonResponse->setPlugin($this->_item->getPlugin('list'));
+        
         $jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
         $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
@@ -295,6 +296,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
+        
+        $customScripts = $this->_item->getCustomScripts();
+        if (isset($customScripts->module) and isset($customScripts->name)) {
+            $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
+        }
+        
         $jsonResponse->addCssFile("/css/klearMatrix.css");
 
         //setData hook

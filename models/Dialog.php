@@ -11,5 +11,13 @@ class KlearMatrix_Model_Dialog extends KlearMatrix_Model_ResponseItem {
 	
 	public function setDialogName($name) {
 		$this->setItemName($name);
-	}	
+	}
+	
+	public function setConfig(Zend_Config $config)
+	{
+	    $this->_config = new Klear_Model_KConfigParser;
+	    $this->_config->setConfig($config);
+	
+	    $this->_title = $this->_config->getProperty("title",false);
+	}
 }

@@ -21,7 +21,7 @@ class KlearMatrix_Model_ResponseItem
     protected $_title;
 
     protected $_hooks = array();
-
+    
     protected $_customTemplate;
     protected $_customScripts;
 
@@ -51,47 +51,7 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_hasInfo = false;
     protected $_fieldInfo;
-
-    public function setConfig(Zend_Config $config)
-    {
-        $this->_config = new Klear_Model_KConfigParser;
-        $this->_config->setConfig($config);
-
-        $this->_mapper = $this->_config->getProperty("mapper",true);
-        $this->_modelFile = $this->_config->getProperty("modelFile",true);
-
-        $this->_filteredField = $this->_config->getProperty("filterField",false);
-
-        $this->_filterClass = $this->_config->getProperty("filterClass",false);
-
-        $this->_forcedValues = $this->_config->getProperty("forcedValues",false);
-
-        $this->_forcedPk = $this->_config->getProperty("forcedPk",false);
-
-        $this->_calculatedPkConfig = $this->_config->getProperty("calculatedPk",false);
-
-        $this->_plugin = $this->_config->getProperty("plugin", false);
-
-        $this->_title = $this->_config->getProperty("title",false);
-
-        $this->_hooks = $this->_config->getProperty("hooks", array());
-
-        $this->_customTemplate = $this->_config->getProperty("template", false);
-
-        $this->_customScripts = $this->_config->getProperty("scripts", false);
-
-        $this->_actionMessages = $this->_config->getProperty("actionMessages", false);
-
-        $this->_hasInfo = (bool)$this->_config->getProperty("info", false);
-        if ($this->_hasInfo) {
-            $this->_fieldInfo = new KlearMatrix_Model_Info;
-            $this->_fieldInfo->setConfig($this->_config->getProperty("info",false));
-        }
-
-        $this->_parseModelFile();
-        $this->_checkClasses(array("_mapper"));
-    }
-
+    
     protected function _parseModelFile()
     {
         $filePath = 'klear.yaml:///model/' . $this->_modelFile;
@@ -156,24 +116,6 @@ class KlearMatrix_Model_ResponseItem
 
     public function getTitle() {
         return $this->_title;
-    }
-
-    public function getHooks()
-    {
-        return $this->_hooks;
-    }
-
-    /**
-     * @return false | string $methodName
-     */
-    public function getHook($hookName = null)
-    {
-        if (is_null( $hookName ) or ! isset( $this->_hooks->$hookName )) {
-
-            return false;
-        }
-
-        return $this->_hooks->$hookName;
     }
 
     public function getCustomTemplate()
@@ -610,9 +552,8 @@ class KlearMatrix_Model_ResponseItem
 
         $parent = new Klear_Model_KConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
+        
         $options = $this->_getItemFieldsOptionsConfig('screen',$parent);
-
-
 
         foreach($options as $_screen) {
             $screenOption = new KlearMatrix_Model_ScreenOption;
@@ -621,6 +562,16 @@ class KlearMatrix_Model_ResponseItem
             $generalOptionsWrapper->addOption($screenOption);
         }
 
+        $options = $this->_getItemFieldsOptionsConfig('dialog',$parent);
+        
+        foreach($options as $_dialog) {
+            $dialogOption = new KlearMatrix_Model_DialogOption;
+            $dialogOption->setDialogName($_dialog);
+            $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
+            $generalOptionsWrapper->addOption($dialogOption);
+        }
+        
+        
         return $generalOptionsWrapper;
 
     }
@@ -631,11 +582,11 @@ class KlearMatrix_Model_ResponseItem
         $msgs = new KlearMatrix_Model_ActionMessageWrapper;
 
         if (!$this->_actionMessages) {
-
+            
             return $msgs;
-
+            
         }
-
+        
         foreach($this->_actionMessages as $_type => $msgConfig) {
             $msg = new KlearMatrix_Model_ActionMessage();
             $msg->setType($_type);
@@ -677,12 +628,12 @@ class KlearMatrix_Model_ResponseItem
         if ($this->_hasInfo) {
             return $this->_fieldInfo->getJSONArray();
         }
-
+        
         return false;
-
+        
     }
-
-
+    
+    
     public function getOrderConfig()
     {
         if (!$this->_config->exists("order")) {

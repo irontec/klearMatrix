@@ -39,6 +39,16 @@
                                 var configuredParams = {};
                                 // Metemos en la petición todos los campos del formulario.
                                 $.each($("input,select,textarea",$(self.element)), function() {
+                                	if ($(this).attr("type") == 'radio' || 
+                                			$(this).attr("type") == 'checkbox') {
+                                			
+                                		if (!$(this).is(":checked")) {
+                                			return;
+                                		}
+                                		
+                                	}
+                                	
+                                		
                                 	configuredParams[$(this).attr("name")] = $(this).val();
                                 });
                                 

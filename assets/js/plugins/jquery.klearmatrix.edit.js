@@ -286,7 +286,22 @@
                             }
                         });
 
-                        $(this)[$(this).data("plugin")](plgSettings);
+                        
+                        (function lazyPluginLoad(target, pluginName, settings) {
+                        	if (!$.fn[pluginName]) {
+                        		this.count++;
+                        		if (this.count > 20) {
+                        			return;
+                        		}
+                        		setTimeout(function() {
+                        			lazyPluginLoad(target,pluginName,settings);
+                        		},50);
+                        	}
+                        	
+                        	target[pluginName](settings);
+                        })($(this), $(this).data("plugin"),plgSettings);
+
+
                     }
                 });
             }
@@ -437,7 +452,8 @@
 
                 });
             }
-
+            
+            var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
 
             $("input, select, textarea",this.options.theForm)
                 .autoResize({
@@ -446,7 +462,10 @@
                         $(this).trigger("manualchange");
                     }
                 })
+                .filter("[required]").before(_required.clone())
+                .end()
                 .find(":not(:disabled):eq(0)").trigger("focusin").select();
+            	
             return this;
 
         },

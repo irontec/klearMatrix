@@ -41,6 +41,39 @@
         _setOption : function(key, value) {
             $.Widget.prototype._setOption.apply(this,arguments)
         },
+
+        _parseDefaultItems : function() {
+        	
+        	if (!this.options.data.title) return;
+        	
+            var defaultValue, defaultColumn, count = false;
+            if (this.options.data.values) {
+            	 for(var i in this.options.data.columns) {
+            		 if (count === false) {
+            			 defaultColumn = this.options.data.columns[i];
+            			 count = true;
+            		 }
+
+            		 if (this.options.data.columns[i].default) {
+            			 defaultColumn = this.options.data.columns[i];
+            			 break;
+            		 }
+            	 }
+            	 
+            	 var defaultValue = this.options.data.values[0][defaultColumn.id];
+
+            	 if (defaultColumn.multilang) {
+            		 defaultValue = defaultValue[this.options.data.defaultLang];
+            	 }
+             } else {
+            	 defaultValue = '';
+             }
+             this.options.data.title =  this.options.data.title
+             								.replace(/\%parent\%/,this.options.parentIden)
+             								.replace(/\%item\%/,defaultValue);
+
+
+        },
         _loadTemplate : function(tmplName) {
 
             var $tmplObj = $.tmpl(
@@ -48,6 +81,8 @@
                             this.options.data,
                             $.klearmatrix.template.helper
                             );
+            
+            this._parseDefaultItems();
             return $tmplObj;
 
         },

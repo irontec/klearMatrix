@@ -1,10 +1,9 @@
 <?php
-
 /**
- * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
+* De esta clase extienden Screen, Dialog y Command
 * @author jabi
-*
 */
+
 class KlearMatrix_Model_ResponseItem
 {
     const module = 'klearMatrix';
@@ -20,8 +19,6 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_title;
 
-    protected $_hooks = array();
-    
     protected $_customTemplate;
     protected $_customScripts;
 
@@ -51,7 +48,69 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_hasInfo = false;
     protected $_fieldInfo;
-    
+
+    //Configuraciones comunes para todos los tipos de ResponseItem
+    protected $_configOptions = array(
+        '_mapper' => array('mapper', true),
+        '_modelFile' => array('modelFile', true),
+        '_filteredField' => array('filterField', false),
+        '_filterClass' => array('filterClass', false),
+        '_forcedValues' => array('forcedValues', false),
+        '_forcedPk' => array('forcedPk', false),
+        '_calculatedPkConfig' => array('calculatedPk', false),
+        '_plugin' => array('plugin', false),
+        '_title' => array('title', false),
+        '_customTemplate' => array('template', false),
+        '_customScripts' => array('scripts', false),
+        '_actionMessages' => array('actionMessages', false)
+    );
+
+    protected $_configOptionsCustom = array();
+
+    //Guardamos en $this->_config un objeto Klear_Model_KConfigParser
+    public function setConfig(Zend_Config $config)
+    {
+        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config->setConfig($config);
+
+        //Añadimos las configuraciones personalizadas
+        foreach ($this->_configOptionsCustom as $config => $option) {
+
+            $this->_configOptions[$config] = $option;
+        }
+
+        //Guardamos la configuración de cada propiedad
+        foreach ($this->_configOptions as $option => $default) {
+
+            $this->$option = $this->_config->getProperty($default[0], $default[1]);
+        }
+
+        //Si hay modelFile, lo parseamos
+        if ($this->_modelFile) {
+
+            $this->_parseModelFile();
+        }
+
+        //Si hay mapper, lo checkeamos a ver si es válido
+        if ($this->_mapper) {
+
+            $this->_checkClasses(array("_mapper"));
+        }
+    }
+
+    //Setea la info de ayuda si existe
+    public function setInfo()
+    {
+        //Cogemos la info del ResponseItem
+        $info = $this->_config->getProperty("info", false);
+        if ($this->_hasInfo !== false) {
+
+            $this->_fieldInfo = new KlearMatrix_Model_Info;
+            $this->_fieldInfo->setConfig($info);
+            $this->_hasInfo = true;
+        }
+    }
+
     protected function _parseModelFile()
     {
         $filePath = 'klear.yaml:///model/' . $this->_modelFile;
@@ -68,11 +127,13 @@ class KlearMatrix_Model_ResponseItem
         $this->_modelSpec->setConfig($modelConfig);
     }
 
+
     protected function _checkClasses(array $properties)
     {
         foreach ($properties as $property) {
 
             if (!class_exists($this->{$property})) {
+
                 Throw new Zend_Exception( $this->{$property} . " no es una entidad instanciable.");
             }
         }
@@ -81,6 +142,7 @@ class KlearMatrix_Model_ResponseItem
     public function setItemName($name)
     {
         $this->_itemName = $name;
+
         return $this;
     }
 
@@ -114,7 +176,8 @@ class KlearMatrix_Model_ResponseItem
         return $this->_plugin;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->_title;
     }
 
@@ -140,9 +203,9 @@ class KlearMatrix_Model_ResponseItem
         $col->setRouteDispatcher($this->_routeDispatcher);
 
         if ($config) {
+
             $col->setConfig($config);
         }
-
 
         return $col;
     }
@@ -151,6 +214,7 @@ class KlearMatrix_Model_ResponseItem
     {
         $col = $this->_createCol($fileColumn, $config);
         $col->markAsFile();
+
         return $col;
     }
 
@@ -172,16 +236,24 @@ class KlearMatrix_Model_ResponseItem
                     $involvedFields = $model->{$fieldSpecsGetter}();
 
                     if (isset($involvedFields['sizeName'])) {
+
                         $this->_blacklist[$model->varNameToColumn($involvedFields['sizeName'])] = true;
                     }
+
                     if (isset($involvedFields['mimeName'])) {
+
                         $this->_blacklist[$model->varNameToColumn($involvedFields['mimeName'])] = true;
                     }
+
                     if (isset($involvedFields['baseNameName'])) {
+
                         $this->_blacklist[$model->varNameToColumn($involvedFields['baseNameName'])] = true;
                     }
 
-                    if (isset($this->_blacklist[$_fileCol])) continue;
+                    if (isset($this->_blacklist[$_fileCol])) {
+
+                        continue;
+                    }
 
                     $col = $this->_createFileColumn($colConfig, $_fileCol);
                     $this->_visibleColumnWrapper->addCol($col);
@@ -194,6 +266,7 @@ class KlearMatrix_Model_ResponseItem
     {
         $col = $this->_createCol($dependantConfig['property'], $colConfig);
         $col->markAsDependant();
+
         return $col;
     }
 
@@ -205,9 +278,13 @@ class KlearMatrix_Model_ResponseItem
     {
         foreach ($model->getDependentList() as $dependatConfig) {
 
-            if (isset($this->_blacklist[$dependatConfig['property']])) continue;
+            if (isset($this->_blacklist[$dependatConfig['property']])) {
+
+                continue;
+            }
 
             if ($colConfig = $this->_modelSpec->getField($dependatConfig['property'])) {
+
                 $col = $this->_createDependantColumn($colConfig, $dependatConfig);
                 $this->_visibleColumnWrapper->addCol($col);
             }
@@ -221,7 +298,10 @@ class KlearMatrix_Model_ResponseItem
      */
     public function getVisibleColumnWrapper($ignoreBlackList = false, $lazyload = false)
     {
-        if (isset($this->_visibleColumnWrapper)) return $this->_visibleColumnWrapper;
+        if (isset($this->_visibleColumnWrapper)) {
+
+            return $this->_visibleColumnWrapper;
+        }
 
         $model = $this->_modelSpec->getInstance();
 
@@ -231,6 +311,7 @@ class KlearMatrix_Model_ResponseItem
 
         // La primary Key estará por defecto en la blackList, a excepción de encontrarse en la whitelist
         if  (!$this->_config->exists("fields->whitelist->" . $pk)) {
+
             $this->_blacklist[$pk] = true;
         }
 
@@ -238,10 +319,13 @@ class KlearMatrix_Model_ResponseItem
         * LLenamos el array blacklist en base al fichero de configuración
         */
         if ($this->_config->exists("fields->blacklist")) {
+
             if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
 
                 foreach($_blacklistConfig as $field => $value) {
+
                     if ((bool)$value) {
+
                         $this->_blacklist[$field] = true;
                     }
                 }
@@ -257,6 +341,7 @@ class KlearMatrix_Model_ResponseItem
          * Si es una pantalla con filtro de ventana padre, no mostraremos por defecto el campo de filtrado
          */
         if ($this->isFilteredScreen()) {
+
             $this->_blacklist[$this->_filteredField] = true;
         }
 
@@ -265,8 +350,11 @@ class KlearMatrix_Model_ResponseItem
          * no serán mostrados por defecto.
         */
         if ($this->hasForcedValues()) {
+
             foreach($this->getForcedValues() as $field => $value) {
+
                 if  (!$this->_config->exists("fields->whitelist->" . $field)) {
+
                     $this->_blacklist[$field] = true;
                 }
             }
@@ -277,7 +365,8 @@ class KlearMatrix_Model_ResponseItem
          */
         $multiLangFields = $model->getMultiLangColumnsList();
 
-        if ( (is_array($availableLangsPerModel = $model->getAvailableLangs())) && (sizeof($availableLangsPerModel)>0) ) {
+        if ( (is_array($availableLangsPerModel = $model->getAvailableLangs())) && (count($availableLangsPerModel)>0) ) {
+
             $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
         }
 
@@ -285,6 +374,7 @@ class KlearMatrix_Model_ResponseItem
          * Metemos en la lista negra los campos multi-idioma. Preguntaremos a sus getter genéricos con argumento de idioma.
          */
         foreach($multiLangFields as $dbName=>$columnName) {
+
             foreach($availableLangsPerModel as $langIden) {
 
                 $this->_blacklist[$dbName . '_'. $langIden] = true;
@@ -295,7 +385,9 @@ class KlearMatrix_Model_ResponseItem
          * Buscamos los campos ghost y los añadimos si no están en blacklist
          */
         foreach ($this->_modelSpec->getFields() as $key => $field) {
+
             if ($field->type == 'ghost' && !isset($this->_blacklist[$key])) {
+
                 $col = $this->_createCol($key, $field);
                 $this->_visibleColumnWrapper->addCol($col);
             }
@@ -307,6 +399,7 @@ class KlearMatrix_Model_ResponseItem
         foreach($model->getColumnsList() as $dbName => $attribute) {
 
             if ( (!$ignoreBlackList) && (isset($this->_blacklist[$dbName])) ) {
+
                 continue;
             }
 
@@ -314,12 +407,14 @@ class KlearMatrix_Model_ResponseItem
 
             //Si es un campo ghost, pasamos de él. Ya estaba metido antes
             if (isset($config->type) && $config->type == 'ghost') {
+
                 continue;
             }
 
             $col = $this->_createCol($dbName, $config);
 
             if (isset($multiLangFields[$dbName])) {
+
                 $col->markAsMultilang();
             }
 
@@ -357,17 +452,23 @@ class KlearMatrix_Model_ResponseItem
         $model = $this->_modelSpec->getInstance();
 
         foreach ($model->getColumnsList() as $dbName => $attribute) {
+
             if ($colName == $dbName) {
+
                 $col = $this->_createCol($dbName, $this->_modelSpec->getField($dbName));
+
                 return $col;
             }
         }
 
         foreach ($model->getDependentList() as $dependatConfig) {
+
             if ($colName == $dependatConfig['table_name']) {
+
                 if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {
 
                     $col = $this->_createDependantColumn($colConfig, $dependantConfig);
+
                     return $col;
 
                 } else {
@@ -379,14 +480,20 @@ class KlearMatrix_Model_ResponseItem
 
 
         if (!method_exists($model, 'getFileObjects')) {
+
             return false;
         }
 
         foreach ($model->getFileObjects() as $_fileCol) {
+
             if ($colName == $_fileCol) {
+
                 if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
+
                     return $this->_createFileColumn($colConfig, $_fileCol);
+
                 } else {
+
                     return false;
                 }
             }
@@ -394,7 +501,6 @@ class KlearMatrix_Model_ResponseItem
 
         return false;
     }
-
 
     public function isParentDependantScreen()
     {
@@ -406,8 +512,6 @@ class KlearMatrix_Model_ResponseItem
         return (!empty($this->_filteredField));
     }
 
-
-
     public function hasFilterClass()
     {
         return (!empty($this->_filterClass));
@@ -415,25 +519,25 @@ class KlearMatrix_Model_ResponseItem
 
     public function getFilterClassCondition()
     {
-
         $filterClass = new $this->_filterClass;
         $filterClass->setRouteDispatcher($this->_routeDispatcher);
 
         return array($filterClass->getCondition(),array());
     }
 
-
-    public function getFilterField() {
+    public function getFilterField()
+    {
         return $this->_filteredField;
     }
 
-
     public function getFilteredCondition($_value)
     {
-        return array(
+        $ret = array(
             $this->_filteredField . " = :filtered ",
             array(':filtered' => $_value)
         );
+
+        return $ret;
     }
 
     public function hasForcedValues()
@@ -444,12 +548,14 @@ class KlearMatrix_Model_ResponseItem
     public function getForcedValuesConditions()
     {
         $forcedValueConds = array();
+
         foreach ($this->_forcedValues as $field => $value) {
+
             $valConstant = 'v' . rand(1000,9999);
             $forcedValueConds[] = array(
-                    $field . " = :" .$valConstant,
-                    array(':'.$valConstant => $value)
-                    );
+                $field . " = :" .$valConstant,
+                array(':'.$valConstant => $value)
+            );
         }
 
         return $forcedValueConds;
@@ -458,14 +564,14 @@ class KlearMatrix_Model_ResponseItem
     public function getForcedValues()
     {
         $ret = array();
+
         foreach ($this->_forcedValues as $field=> $value) {
+
             $ret[$field] = $value;
         }
+
         return $ret;
     }
-
-
-
 
     /**
      * Devuelve el primary Key especifico,
@@ -473,13 +579,22 @@ class KlearMatrix_Model_ResponseItem
      * o consulta con mainRouter
      * @return false|integer
      */
-    public function getCurrentPk() {
+    public function getCurrentPk()
+    {
         // Devuelve el PK para la pantalla de edit.
-        if ($pk = $this->getForcedPk()) return $pk;
-        if ($pk = $this->getCalculatedPk()) return $pk;
+        $pk = $this->getForcedPk();
+
+        if (!$pk) {
+
+            $pk = $this->getCalculatedPk();
+        }
+
+        if ($pk) {
+
+            return $pk;
+        }
 
         return $this->_routeDispatcher->getParam("pk");
-
     }
 
     public function getForcedPk()
@@ -487,37 +602,37 @@ class KlearMatrix_Model_ResponseItem
         return $this->_forcedPk;
     }
 
-    public function getCalculatedPk() {
-
+    public function getCalculatedPk()
+    {
         if (is_null($this->_calculatedPkConfig)) {
+
             return false;
         }
 
         if (!$class = $this->_calculatedPkConfig->class) {
+
             return false;
         }
 
         if (!$method = $this->_calculatedPkConfig->method) {
+
             return false;
         }
 
         $pkCalculator = new $class;
 
-        if (!$this->_calculatedPk =
-                   $pkCalculator->{$method}($this->_routeDispatcher)) {
+        if (!$this->_calculatedPk = $pkCalculator->{$method}($this->_routeDispatcher)) {
+
             return false;
         }
 
         return $this->_calculatedPk;
-
-
     }
 
     public function getParentField()
     {
         return $this->_parentField;
     }
-
 
     public function hasFieldOptions()
     {
@@ -529,33 +644,34 @@ class KlearMatrix_Model_ResponseItem
      */
     public function getScreenFieldsOptionsConfig()
     {
-
         $parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
+
         return $this->_getItemFieldsOptionsConfig('screen',$parent);
     }
 
     public function getDialogsFieldsOptionsConfig()
     {
-
         $parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
+
         return $this->_getItemFieldsOptionsConfig('dialog',$parent);
     }
-
 
     public function getScreenOptionsWrapper()
     {
         $generalOptionsWrapper = new KlearMatrix_Model_OptionsWrapper;
 
         if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
+
             return $generalOptionsWrapper;
         }
 
         $parent = new Klear_Model_KConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
-        
+
         $options = $this->_getItemFieldsOptionsConfig('screen',$parent);
 
         foreach($options as $_screen) {
+
             $screenOption = new KlearMatrix_Model_ScreenOption;
             $screenOption->setScreenName($_screen);
             $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
@@ -563,31 +679,29 @@ class KlearMatrix_Model_ResponseItem
         }
 
         $options = $this->_getItemFieldsOptionsConfig('dialog',$parent);
-        
+
         foreach($options as $_dialog) {
+
             $dialogOption = new KlearMatrix_Model_DialogOption;
             $dialogOption->setDialogName($_dialog);
             $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
             $generalOptionsWrapper->addOption($dialogOption);
         }
-        
-        
+
         return $generalOptionsWrapper;
-
     }
-
 
     public function getActionMessages()
     {
         $msgs = new KlearMatrix_Model_ActionMessageWrapper;
 
         if (!$this->_actionMessages) {
-            
+
             return $msgs;
-            
         }
-        
+
         foreach($this->_actionMessages as $_type => $msgConfig) {
+
             $msg = new KlearMatrix_Model_ActionMessage();
             $msg->setType($_type);
             $msg->setConfig($msgConfig);
@@ -600,17 +714,20 @@ class KlearMatrix_Model_ResponseItem
     public function getDialogsGeneralOptionsConfig()
     {
         if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
+
             return array();
         }
 
         $parent = new Klear_Model_KConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
+
         return $this->_getItemFieldsOptionsConfig('dialog',$parent);
     }
 
     public function getPaginationConfig()
     {
         if (!$this->_config->exists("pagination")) {
+
               return false;
         }
 
@@ -624,27 +741,28 @@ class KlearMatrix_Model_ResponseItem
      * Listo para ser enchufado a Matrixresponse.
      * @return boolean
      */
-    public function getInfo() {
+    public function getInfo()
+    {
         if ($this->_hasInfo) {
+
             return $this->_fieldInfo->getJSONArray();
         }
-        
+
         return false;
-        
     }
-    
-    
+
     public function getOrderConfig()
     {
         if (!$this->_config->exists("order")) {
+
             return false;
         }
 
         $orderConfig = new Klear_Model_KConfigParser();
         $orderConfig->setConfig($this->_config->getRaw()->order);
+
         return $orderConfig;
     }
-
 
     public function _getItemFieldsOptionsConfig($type,$parent)
     {
@@ -654,25 +772,31 @@ class KlearMatrix_Model_ResponseItem
             case 'dialog':
                 $property = 'dialogs';
             break;
+
             case 'screen':
                 $property = 'screens';
             break;
+
             default:
                 Throw new Zend_Exception("Undefined Option Type");
             break;
         }
 
-
         $_items = $parent->getProperty($property,false);
 
         if (!$_items) {
+
             return array();
         }
 
         foreach ($_items  as $_item=> $_enabled) {
-            if (!(bool)$_enabled) continue;
-            $retArray[] = $_item;
 
+            if (!(bool)$_enabled) {
+
+                continue;
+            }
+
+            $retArray[] = $_item;
         }
 
         return $retArray;

@@ -1,4 +1,9 @@
 <?php
+/**
+* Clase respuesta MatrixResponse para peticiones desde klear.request.js
+* @author jabi
+*/
+
 class KlearMatrix_Model_MatrixResponse
 {
 
@@ -8,7 +13,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_generalOptionsWrapper = false;
 
     protected $_messages;
-    
+
     protected $_paginator = false;
 
     protected $_parentIden = false;
@@ -21,11 +26,8 @@ class KlearMatrix_Model_MatrixResponse
     protected $_searchAddModifier = false;
 
     protected $_info = false;
-    
-    /**
-     * Enter description here ...
-     * @var KlearMatrix_Model_ResponseItem;
-     */
+
+    //@var KlearMatrix_Model_ResponseItem;
     protected $_item;
 
     protected $_pk;
@@ -105,7 +107,7 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_parentItem = $parentItem;
     }
-    
+
     /**
      * Ayuda contextual seteada
      * @param boolean|array $info
@@ -114,7 +116,7 @@ class KlearMatrix_Model_MatrixResponse
         if (false === $info) {
             return;
         }
-        
+
         $this->_info = $info;
     }
 
@@ -128,18 +130,18 @@ class KlearMatrix_Model_MatrixResponse
         $this->_searchAddModifier = $toggle;
     }
 
-     
+
     /**
      * Setea para su procesamiento el array de mensajes de confirmación y error predefinidos
      * @param KlearMatrix_Model_ActionMessageWrapper $msgs
      */
     public function setActionMessages(KlearMatrix_Model_ActionMessageWrapper $msgs)
     {
-        $this->_messages = $msgs;    
-        
+        $this->_messages = $msgs;
+
     }
-    
-    
+
+
     /**
      * Si los resultados (de data) son objetos, los pasa a array (para JSON)
      * Se eliminan los campos no presentes en el column-wrapper
@@ -232,7 +234,7 @@ class KlearMatrix_Model_MatrixResponse
         if (false !== $this->_info) {
             $ret['info'] = $this->_info;
         }
-        
+
         $simpleFields = array('parentIden','parentId','parentScreen','parentItem');
         foreach ($simpleFields as $_fld)  {
             if (false !== $this->{'_' . $_fld})  {
@@ -241,11 +243,11 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         if (sizeof($this->_messages) > 0) {
-            
+
             $ret['actionMessages'] = $this->_messages->toArray();
-            
+
         }
-        
+
         $ret[$this->_item->getType()] = $this->_item->getItemName();
 
         return $ret;

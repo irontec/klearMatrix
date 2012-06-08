@@ -17,7 +17,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
             '_mapper' => array('mapper', true),
             '_modelFile' => array('modelFile', true),
 	    '_csv' => array('csv', false),
-	    '_hooks' => array('hooks', array())
+	    '_hooks' => array('hooks', false)
 	);
 
 	//Seteamos el nombre del screen

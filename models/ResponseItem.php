@@ -51,8 +51,8 @@ class KlearMatrix_Model_ResponseItem
 
     //Configuraciones comunes para todos los tipos de ResponseItem
     protected $_configOptions = array(
-        '_mapper' => array('mapper', true),
-        '_modelFile' => array('modelFile', true),
+        '_mapper' => array('mapper', false),
+        '_modelFile' => array('modelFile', false),
         '_filteredField' => array('filterField', false),
         '_filterClass' => array('filterClass', false),
         '_forcedValues' => array('forcedValues', false),

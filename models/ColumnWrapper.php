@@ -161,7 +161,10 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate
 
     public function getDefaultLang()
     {
-        return array_shift($this->getLangs());
+        
+        $allLangs = $this->getLangs();
+        
+        return array_shift($allLangs);
     }
 
 

@@ -84,34 +84,34 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
     	$mapperName = $this->_item->getMapperName();
     	$mapper = new $mapperName;
 
-
-
     	$pk = $this->_mainRouter->getParam("pk");
 
 
     	// TO-DO traducir mensaje?
     	// TO-DO lanzar excepción ?
     	// Recuperamos el objeto y realizamos la acción de borrar
-    	if ( ($obj = $mapper->find($pk)) &&
-    			($mapper->delete($obj)) ) {
-    		$data = array(
-    					'error'=>false,
-    					'pk'=>$pk,
-    					'message'=>'Registro Eliminado correctamente'
-    				);
-    	} else {
-    		$data = array(
-    				'error'=>true,
-    				'message'=>'Algún error eliminado el registro'
-    		);
 
+        $obj = $mapper->find($pk);
+
+    	if ($obj && $obj->delete()) {
+
+    		$data = array(
+				'error' => false,
+				'pk' => $pk,
+				'message' => 'Registro eliminado correctamente'
+			);
+
+    	} else {
+
+    		$data = array(
+				'error' => true,
+				'message' => 'Algún error eliminado el registro'
+    		);
     	}
 
     	$jsonResponse = new Klear_Model_SimpleResponse();
     	$jsonResponse->setData($data);
     	$jsonResponse->attachView($this->view);
-
-
     }
 
 }

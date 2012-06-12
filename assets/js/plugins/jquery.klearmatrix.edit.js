@@ -117,7 +117,7 @@
                                     template : '<div class="ui-widget">{{html text}}</div>',
                                     buttons : []
                                 });
-                    	var $dialog = $(self.element).klearModule("getModuleDialog")
+                    	var $dialog = $(self.element).klearModule("getModuleDialog");
                     	var buttons = [];
                     	for(var i in _msg.action) {
                     		var _ac = _msg.action[i];
@@ -126,7 +126,7 @@
                     				text: _ac.label,
                     				click: function() {
 
-                    					if (_ac.return === true) {
+                    					if (_ac['return'] === true) {
                             				// Volvemos a showMessage por si hubiera más mensajes de "before"
                             				// o lanzar _launchAction()
                             				showMessage();
@@ -420,7 +420,7 @@
                                 _hiddenField
                                     .val(result.code)
                                     .data("fileDescription",fName + ' ('+fSize+')')
-                                    .trigger("manualchange")
+                                    .trigger("manualchange");
                                 $list.html('');
                             },
 

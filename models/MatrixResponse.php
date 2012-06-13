@@ -15,6 +15,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_messages;
 
     protected $_paginator = false;
+    protected $_csv = false;
 
     protected $_parentIden = false;
     protected $_parentId = false;
@@ -81,6 +82,11 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_item = $item;
         return $this;
+    }
+
+    public function setCsv($value) {
+
+        $this->_csv = (bool)$value;
     }
 
     public function setPaginator(Zend_Paginator $paginator)
@@ -220,6 +226,10 @@ class KlearMatrix_Model_MatrixResponse
 
         if (false !== $this->_generalOptionsWrapper) {
             $ret['generalOptions'] = $this->_generalOptionsWrapper->toArray();
+        }
+
+        if ($this->_csv !== false) {
+            $ret['csv'] = true;
         }
 
         if (false !== $this->_paginator) {

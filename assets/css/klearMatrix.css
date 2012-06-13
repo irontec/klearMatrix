@@ -33,7 +33,7 @@ table.kMatrix td {
 }
 table.kMatrix .multilangValue {
 	display:none;
-	
+
 }
 
 table.kMatrix .multilangValue.selected {
@@ -53,14 +53,14 @@ table.kMatrix .mlTag {
 
 .generalOptionsToolbar {
 	padding:1em;
-	margin:1em 0 1em 0;  
+	margin:1em 0 1em 0;
 }
 
 /* Form */
 
 .klearMatrix_form {
 	margin:1em;
-		
+
 }
 
 .klearMatrix_form select.multiselect {
@@ -122,13 +122,13 @@ table.kMatrix .mlTag {
     padding:0.5em;
     width:10em;
 }
- 
+
 .paginator {
     clear: both;
     margin: 0.2em;
     overflow: hidden;
     padding: 0.5em;
-    
+
 }
 
 .paginator a {
@@ -151,10 +151,12 @@ a.ui-state-nojump {
     padding:.5em;
 }
 
-.klearMatrixFiltering {
+
+.klearMatrixFiltering,
+.klearMatrixCsv {
     padding:.8em;
     overflow: hidden;
- }
+}
 
 .klearMatrixFiltering form.not-loaded .filterItem, .klearMatrixFiltering form.not-loaded .filteredFields{
     display:none;
@@ -162,20 +164,20 @@ a.ui-state-nojump {
 
 .klearMatrixFiltering form.not-loaded .title {
     margin:0;
-}    
+}
 
-.klearMatrixFiltering p.title {
+.klearMatrixFiltering p.title,
+.klearMatrixCsv p.title {
     margin:0em;
     font-size:1em;
     cursor:pointer;
- }
- 
- .klearMatrixFiltering span.ui-silk {
+}
+
+.klearMatrixFiltering span.ui-silk,
+.klearMatrixCsv span.ui-silk {
     margin: 0 .5em;
- }
- 
- 
- 
+}
+
 .klearMatrixFiltering input.term {
     width:205px;
 }
@@ -186,11 +188,11 @@ a.ui-state-nojump {
 	float:left;
     clear: both;
  }
- 
+
  .klearMatrixFiltering .addTerm {
     cursor:pointer;
  }
- 
+
  .klearMatrixFiltering .addToggle {
  	padding-top:.8em;
  	display:inline-block;
@@ -198,14 +200,14 @@ a.ui-state-nojump {
  .klearMatrixFiltering .disabled {
     cursor:default;
  }
- 
+
  .klearMatrixFiltering .filteredFields {
     float: left;
     margin-left: 3em;
 }
 
 
- 
+
  .klearMatrixFiltering .filteredFields .field {
     padding:.6em .6em;
     display:block;
@@ -237,11 +239,11 @@ a.ui-state-nojump {
 .fieldInfo-position-left {
         float: left;
         margin: -0.2em 0.2em 0 0;
-    
+
 }
 .fieldInfo-position-right {
         float: right;
-    
+
 }
 
 .assistant {

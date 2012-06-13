@@ -32,7 +32,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
-
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
@@ -82,32 +81,39 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $where = array_merge($where,$this->_item->getForcedValuesConditions());
         }
 
-        if ($searchFields = $this->getRequest()->getPost("searchFields")) {
+        //Generamos el where de los filtros
+        $searchFields = $this->getRequest()->getPost("searchFields");
+
+        if ($searchFields) {
+
             $_searchWhere = array();
 
             foreach ($searchFields as $field => $values) {
+
                 if ($col = $cols->getColFromDbName($field)) {
-                    $_searchWhere[] = $col->getSearchCondition($values,$model,$cols->getLangs());
-                    $data->addSearchField($field,$values);
+
+                    $_searchWhere[] = $col->getSearchCondition($values, $model, $cols->getLangs());
+                    $data->addSearchField($field, $values);
                 }
             }
 
             $expresions = $values = array();
+
             foreach ($_searchWhere as $condition) {
 
                 if (is_array($condition)) {
 
                     $expresions[] = $condition[0];
-                    $values = array_merge($values,$condition[1]);
+                    $values = array_merge($values, $condition[1]);
 
                 } else {
 
                     $expresions[] = $condition;
-
                 }
             }
 
             if ($this->getRequest()->getPost("searchAddModifier") == '1') {
+
                 $data->addSearchAddModifier(true);
                 $where[] = array('(' . implode ( " or ", $expresions) . ')', $values);
 
@@ -117,18 +123,23 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
         }
 
-        if ( ($orderField = $this->getRequest()->getPost("order")) && ($orderColumn = $cols->getColFromDbName($orderField)) ) {
+        //Calculamos el orden del listado
+        $orderField = $this->getRequest()->getPost("order");
+        $orderColumn = $cols->getColFromDbName($orderField);
+
+        if ( $orderField && $orderColumn) {
 
             $order = $orderColumn->getOrderField($model);
 
             $orderColumn->setAsOrdered();
 
-            if (in_array($this->getRequest()->getPost("orderType"),array("asc","desc")) ){
+            if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
 
                 $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));
                 $order .= ' ' . $this->getRequest()->getPost("orderType");
 
             } else {
+
                 $order .= ' asc';
             }
 
@@ -136,9 +147,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             $orderConfig = $this->_item->getOrderConfig();
 
-            if (
-                $orderConfig && $orderConfig->getProperty('field')
-            ) {
+            if ($orderConfig && $orderConfig->getProperty('field')) {
+
                     $order = $orderConfig->getProperty('field');
 
                     if ($order instanceof Zend_Config) {
@@ -160,36 +170,40 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                     }
 
             } else {
-                $order = $this->_item->getPK(); // Por defecto ordenamos por PK
+
+                // Por defecto ordenamos por PK
+                $order = $this->_item->getPK();
             }
         }
 
+        //Calculamos la página en la que estamos y el offset
+        $paginationConfig = $this->_item->getPaginationConfig();
 
-        if ($paginationConfig = $this->_item->getPaginationConfig()) {
+        if ($paginationConfig) {
 
-            $configCount = $paginationConfig->getproperty('items');
+            $count = $paginationConfig->getproperty('items');
+            $currentCount = (int)$this->getRequest()->getPost("count");
 
-            if ($currentCount = (int)$this->getRequest()->getPost("count")) {
+            if ($currentCount) {
+
                 $count = $currentCount;
-            } else {
-                $count = $configCount;
             }
 
-            if ($currentPage = (int)$this->getRequest()->getPost("page")) {
-                $page = ($currentPage<1)? 1:$currentPage;
-            } else {
-                $page = 1;
+            $page = 1;
+            $currentPage = (int)$this->getRequest()->getPost("page");
+
+            if ($currentPage) {
+
+                $page = ($currentPage < 1)? 1 : $currentPage;
             }
 
             $offset = ($page-1)*$count;
 
-
         } else {
+
             $count = NULL;
             $offset = NULL;
         }
-
-
 
         $data
             ->setResponseItem($this->_item)
@@ -197,28 +211,39 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setColumnWraper($cols)
             ->setPK($this->_item->getPK());
 
-        if (sizeof($where) == 0) {
+        if ($this->_item->getCsv()) {
+
+            $data->setCsv(true);
+        }
+
+        if (count($where) == 0) {
 
             $where = null;
 
         } else {
 
             $values = $expresions = array();
+
             foreach ($where as $condition) {
+
                 $expresions[] = $condition[0];
                 $values = array_merge($values,$condition[1]);
             }
 
             $where = array(implode ( " and ", $expresions),$values);
-
-
         }
 
-        if (!$results= $mapper->fetchList($where, $order, $count, $offset)) {
-            // No hay resultados
-            $data->setResults(array());
+        $data->setResults(array());
 
-        } else {
+        //Si existe exportcsv, vamos a otro método para sacar el listado en csv
+        if ($this->getRequest()->getPost('exportcsv', false)) {
+
+            return $this->_exportCsv($data, $mapper, $where, $order);
+        }
+
+        $results = $mapper->fetchList($where, $order, $count, $offset);
+
+        if (is_array($results)) {
 
             if (!is_null($count) && !is_null($offset) ) {
 
@@ -235,14 +260,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             if ($this->_item->hasFieldOptions()) {
 
                 $defaultOption = $cols->getOptionColumn()->getDefaultOption();
-
                 $fieldOptionsWrapper = new KlearMatrix_Model_OptionsWrapper;
 
                 foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
 
                     $screenOption = new KlearMatrix_Model_ScreenOption;
                     $screenOption->setScreenName($_screen);
+
                     if ($_screen === $defaultOption) {
+
                         $screenOption->setAsDefault();
                         $defaultOption = false;
                     }
@@ -255,22 +281,21 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 }
 
                 foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
+
                     $dialogOption = new KlearMatrix_Model_DialogOption;
                     $dialogOption->setDialogName($_dialog);
 
                     if ($_dialog === $defaultOption) {
+
                         $dialogOption->setAsDefault();
                         $defaultOption = false;
                     }
 
                     $dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($_dialog));
                     $fieldOptionsWrapper->addOption($dialogOption);
-
                 }
 
-
                 $data->setFieldOptions($fieldOptionsWrapper);
-
             }
 
             $data->fixResults($this->_item);
@@ -278,9 +303,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
 
         $data->setInfo($this->_item->getInfo());
-
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
-
 
         Zend_Json::$useBuiltinEncoderDecoder = true;
 
@@ -324,5 +347,21 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
+    }
+
+    //Exportamos los resultados a CSV
+    protected function _exportCsv($data, $mapper, $where, $order)
+    {
+        $this->_helper->getHelper('viewRenderer')->setNoRender();
+
+        $results = $mapper->fetchList($where, $order);
+
+        $this->_helper->sendFileToClient(
+            var_export($results, true),
+            array('filename' => 'export.csv'),
+            true
+        );
+
+        exit;
     }
 }

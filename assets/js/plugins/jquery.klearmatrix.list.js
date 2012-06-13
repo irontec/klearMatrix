@@ -281,10 +281,34 @@
                     $(".filterItem",$searchForm).slideUp(function() {
                         $searchForm.addClass("not-loaded");
                     });
+                }
+            });
 
+            //Exportar a CSV el listado
+            $(".klearMatrixCsv .title", panel).on('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+
+                if (!_dispatchOptions.post) {
+
+                    _dispatchOptions.post = {};
                 }
 
+                $.extend(_dispatchOptions.post,{
+                    exportcsv : true
+                });
+
+                $.klear.request({
+                    file: $(self).klearModule("option","file"),
+                    type: 'screen',
+                    screen: _self.options.data.screen,
+                    post: _dispatchOptions.post,
+                    external: true
+                });
             });
+
             return this;
         }
     });

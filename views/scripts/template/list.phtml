@@ -2,11 +2,11 @@
 
 <div class="ui-widget-content ui-corner-all assistant">
 <span class="
-ui-silk 
-ui-silk-${info.icon} 
+ui-silk
+ui-silk-${info.icon}
 fieldInfo-${info.type}
 fieldInfo-position-${info.position}
-" 
+"
 title="${info.text}"
 ></span>{{if (info.label)}} ${info.label} {{/if}}
 </div>
@@ -52,6 +52,11 @@ title="${info.text}"
 </form>
 </div>
 
+{{if ($item.data.csv)}}
+    <div class="ui-widget-content ui-corner-all klearMatrixCsv">
+        <p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Export to CSV'); ?></p>
+    </div>
+{{/if}}
 
 {{if ($item.data.paginator)}}
     {{if (paginator.pageCount>1)}}

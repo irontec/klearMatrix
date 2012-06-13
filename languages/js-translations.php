@@ -32,4 +32,5 @@ return array (
   28 => '{file} is too small, minimum file size is {minSizeLimit}.',
   29 => '{file} has invalid extension. Only {extensions} are allowed.',
   30 => 'The files are being uploaded, if you leave now the upload will be cancelled.',
+  31 => 'Campo obligatorio',
 );

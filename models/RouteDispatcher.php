@@ -87,6 +87,7 @@ class KlearMatrix_Model_RouteDispatcher {
                 case 'screen':
                 case 'dialog':
                 case 'command':
+                
                 case 'type':
                     $attrName = "_" . $param . "Name";
                     $this->{$attrName} = $value;

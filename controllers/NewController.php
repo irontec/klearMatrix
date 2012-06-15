@@ -106,7 +106,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         // Si la pantalla esta filtrada, debemos setearla en la "nueva"
         if ($this->_item->isFilteredScreen()) {
-
+            
             $filteredField = $this->_item->getFilterField();
 
             $filteredValue = $this->_mainRouter->getParam($filteredField);
@@ -188,6 +188,14 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $parentData = null;
         }
 
+        
+        // Es un "new", invocado con PK. Posiblemente desde una opción de campo de una edición.
+        // Hay que devolverlo para que se use en la invocación de save y que pueda ser usado como force value con ${param.parentPk}
+        $newPk = $this->_mainRouter->getParam('pk');
+        if (false !== $newPk) {
+            $data->setParentPk($newPk);
+        }    
+        
         $data->setInfo($this->_item->getInfo());
 
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());

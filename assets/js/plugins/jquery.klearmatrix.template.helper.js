@@ -311,8 +311,12 @@
                         .replace(/\%item\%/,this.cleanValue(defaultValue));
 
 
+            },
+            mustShowOptionColum : function(option, value) {
+            	console.log(arguments);
+            	return true;
+            	
             }
-
     };
 
 })(jQuery);

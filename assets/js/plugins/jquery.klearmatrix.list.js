@@ -285,7 +285,7 @@
             });
 
             //Exportar a CSV el listado
-            $(".klearMatrixCsv .title", panel).on('click', function(event) {
+            $("a.option.csv", panel).on('click', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
 
@@ -296,15 +296,15 @@
                     _dispatchOptions.post = {};
                 }
 
-                $.extend(_dispatchOptions.post,{
-                    exportcsv : true
-                });
+                var _tmpOptions = {};
+                $.extend(_tmpOptions, _dispatchOptions.post);
+                _tmpOptions['format'] = 'csv';
 
                 $.klear.request({
                     file: $(self).klearModule("option","file"),
                     type: 'screen',
                     screen: _self.options.data.screen,
-                    post: _dispatchOptions.post,
+                    post: _tmpOptions,
                     external: true
                 });
             });

@@ -19,6 +19,7 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_parentIden = false;
     protected $_parentId = false;
+    protected $_parentPk = false;
     protected $_parentScreen = false;
     protected $_parentItem = false;
     protected $_title;
@@ -102,8 +103,15 @@ class KlearMatrix_Model_MatrixResponse
     public function setParentId($parentId)
     {
         $this->_parentId = $parentId;
+        return $this;
     }
-
+    
+    public function setParentPk($parentPk)
+    {
+        $this->_parentPk = $parentPk;
+        return $this;
+    }
+    
     public function setParentScreen($parentScreen)
     {
         $this->_parentScreen = $parentScreen;
@@ -245,7 +253,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['info'] = $this->_info;
         }
 
-        $simpleFields = array('parentIden','parentId','parentScreen','parentItem');
+        $simpleFields = array('parentIden','parentId','parentScreen','parentItem','parentPk');
         foreach ($simpleFields as $_fld)  {
             if (false !== $this->{'_' . $_fld})  {
                 $ret[$_fld] = $this->{'_'. $_fld};

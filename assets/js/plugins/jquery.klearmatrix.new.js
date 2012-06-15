@@ -44,6 +44,11 @@
             if (typeof this.options.data.parentId != 'undefined') {
                 postData.push({ name:this.options.data.parentItem, value:this.options.data.parentId});
             }
+            
+            // Es una pantalla nueva "heredada" de una edición (pk será el elemento 'llamante'
+            if (self.options.data.parentPk) {
+            	postData.push({name:'parentPk',value: self.options.data.parentPk});           	
+            }
 
             $.klear.request(
                     {

@@ -11,7 +11,9 @@ class KlearMatrix_Model_ScreenOption {
     protected $_screen;
     protected $_class;
     protected $_title;
-
+    protected $_showOnlyOnNotNull = false;
+    protected $_showOnlyOnNull = false;
+    
     // La opción es abrible en multi-instancia?
     protected $_multiInstance = false;
 
@@ -41,7 +43,9 @@ class KlearMatrix_Model_ScreenOption {
         $this->_class = $this->_config->getProperty("class",false);
         $this->_label = (bool)$this->_config->getProperty("label",false);
         $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance",false);
-
+        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull",false);
+        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull",false);
+        
 
     }
 
@@ -76,7 +80,10 @@ class KlearMatrix_Model_ScreenOption {
             'title'=>$this->getTitle(),
             'label'=>$this->_label,
             'defaultOption'=>$this->isDefault(),
-            'multiInstance'=>$this->_multiInstance
+            'multiInstance'=>$this->_multiInstance,
+            'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
+            'showOnlyOnNull' => $this->_showOnlyOnNull
+                
         );
     }
 

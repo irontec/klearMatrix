@@ -18,12 +18,45 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function init()
     {
+        
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
-
-        $this->_helper->ContextSwitch()
-            ->addActionContext('index', 'json')
-            ->initContext('json');
+       
+        $csvSpec = array(
+                'suffix'=>'csv',
+                'headers'=>array(
+                        'Expires'=>0,
+                        'Cache-control'=>'private',
+                        'Cache-Control'=>'must-revalidate, post-check=0, pre-check=0',
+                        'Content-Description'=>'File Transfer',
+                        'Content-Type'=>'text/csv; charset=utf-8',
+                        'Content-disposition'=>'attachment; filename=export.csv',
+                ),
+                'callbacks'=>array(
+                    'init' => 'initJsonContext',
+                    'post' => array($this,'exportCsv') 
+                )
+               );
+        
+        
+        $context = $this->_helper->ContextSwitch();
+        
+        
+        $context
+            ->addContext('csv', $csvSpec)
+            ->setAutoDisableLayout(true)
+            ->setDefaultContext('json')
+            ->addActionContext('index', array('json','csv'));
+            
+        $contextParam = $this->getRequest()->getParam($context->getContextParam());
+        
+        if (empty($contextParam)) {
+            $context
+                ->initContext($context->getDefaultContext());
+        } else {
+            $context
+                ->initContext($contextParam);
+        }
 
         $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
@@ -32,6 +65,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
@@ -179,7 +213,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         //Calculamos la página en la que estamos y el offset
         $paginationConfig = $this->_item->getPaginationConfig();
 
-        if ($paginationConfig) {
+        if ( ($paginationConfig) && 
+            ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv') ) {
 
             $count = $paginationConfig->getproperty('items');
             $currentCount = (int)$this->getRequest()->getPost("count");
@@ -234,12 +269,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $data->setResults(array());
-
-        //Si existe exportcsv, vamos a otro método para sacar el listado en csv
-        if ($this->getRequest()->getPost('exportcsv', false)) {
-
-            return $this->_exportCsv($data, $mapper, $where, $order);
-        }
 
         $results = $mapper->fetchList($where, $order, $count, $offset);
 
@@ -347,21 +376,70 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
+        
     }
 
     //Exportamos los resultados a CSV
-    protected function _exportCsv($data, $mapper, $where, $order)
+    public function exportCsv()
     {
-        $this->_helper->getHelper('viewRenderer')->setNoRender();
-
-        $results = $mapper->fetchList($where, $order);
-
-        $this->_helper->sendFileToClient(
-            var_export($results, true),
-            array('filename' => 'export.csv'),
-            true
-        );
-
-        exit;
+        $fields = $this->view->data['columns'];
+        $values = $this->view->data['values'];
+        
+        $toBeChanged = array();
+        
+        foreach($fields as $field) {
+            if ($field['type'] == 'select') {
+                $toBeChanged[$field['id']] = array();
+                
+                foreach ($field['config']['values'] as $item) {
+                    $toBeChanged[$field['id']][$item['key']] = $item['item'];
+                }
+            }
+        }
+        
+        ob_start();
+        $fp = fopen("php://output", "w");
+        
+        if (is_resource($fp)) {
+            foreach ($values as $valLine)
+            {
+                foreach($valLine as $key=>$val) {
+                    if (isset($toBeChanged[$key])) {
+                        if (isset($toBeChanged[$key][$val])) {
+                            $valLine[$key] = $toBeChanged[$key][$val];
+                        } else {
+                            $valLine[$key] = '';
+                        }
+                    }
+                }
+                
+                fputcsv($fp, $valLine, ';', '"');
+            }
+        
+            $strContent = ob_get_clean();
+        
+            // Excel SYLK-Bug
+            // http://support.microsoft.com/kb/323626/de
+            $strContent = preg_replace('/^ID/', 'id', $strContent);
+        
+            //$strContent = utf8_decode($strContent);
+            $intLength = mb_strlen($strContent, 'utf-8');
+        
+            // length
+            $this->getResponse()->setHeader('Content-Length', $intLength);
+            // Set a header
+            
+            // kein fclose($fp);
+        
+            $this->getResponse()->setBody($strContent);
+            
+            
+        } else {
+            ob_end_clean();
+            Throw new Exception('unable to create output resource for csv.');
+        } 
+        
+        
+        
     }
 }

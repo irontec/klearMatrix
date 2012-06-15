@@ -52,12 +52,6 @@ title="${info.text}"
 </form>
 </div>
 
-{{if ($item.data.csv)}}
-    <div class="ui-widget-content ui-corner-all klearMatrixCsv">
-        <p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Export to CSV'); ?></p>
-    </div>
-{{/if}}
-
 {{if ($item.data.paginator)}}
     {{if (paginator.pageCount>1)}}
         {{tmpl(paginator) $item.getPaginatorTemplate()}}
@@ -114,7 +108,7 @@ title="${info.text}"
 {{/if}}
 
 
-{{if (generalOptions.length>0) }}
+{{if ( (generalOptions.length>0) || $item.data.csv )  }}
 <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
 {{each generalOptions}}
     <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
@@ -124,5 +118,13 @@ title="${info.text}"
     {{/if}}
     </a>
 {{/each}}
+
+{{if ($item.data.csv)}}
+    <a class="_generalOption option csv" href="">
+        <span class="ui-silk inline ui-silk-page-white-database"></span><?php echo $this->translate('Export to CSV'); ?>
+    </a>    
+{{/if}}
+
+
 </div>
 {{/if}}

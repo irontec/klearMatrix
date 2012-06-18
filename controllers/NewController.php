@@ -191,7 +191,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         
         // Es un "new", invocado con PK. Posiblemente desde una opción de campo de una edición.
         // Hay que devolverlo para que se use en la invocación de save y que pueda ser usado como force value con ${param.parentPk}
-        $newPk = $this->_mainRouter->getParam('pk');
+        $newPk = $this->_mainRouter->getParam('pk', false);
         if (false !== $newPk) {
             $data->setParentPk($newPk);
         }    

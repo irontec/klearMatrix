@@ -146,7 +146,15 @@
 
                 self.klearModule("close");
             });
-
+            
+            $('select:not(.multiselect)',this.element.klearModule("getPanel"))
+            	.combobox({
+            		'selected' : function(event,ui) {
+            			console.log(arguments);
+            			$(this).trigger("manualchange")
+            		}
+            	});
+            
             $('a.option.screen',this.element.klearModule("getPanel"))
             	.on('mouseup.screenOption')
             	.on('mouseup.screenOption',function(e) {
@@ -197,7 +205,7 @@
                     // Seteamos el valor para dispatchOptions
                     var _dispatchOptions = {
                         screen : _menuLink.data("screen"),
-                        pk        : _parentHolder.data("id"),
+                        pk : _parentHolder.data("id"),
                         post : {
                             callerScreen : _self.options.data.screen,
                         }

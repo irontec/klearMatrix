@@ -62,7 +62,8 @@ class KlearMatrix_Model_ResponseItem
         '_title' => array('title', false),
         '_customTemplate' => array('template', false),
         '_customScripts' => array('scripts', false),
-        '_actionMessages' => array('actionMessages', false)
+        '_actionMessages' => array('actionMessages', false),
+        '_disableSave' => array('disableSave', false),
     );
 
     protected $_configOptionsCustom = array();
@@ -195,7 +196,12 @@ class KlearMatrix_Model_ResponseItem
     {
         return $this->_config->getProperty($attribute,false);
     }
-
+    
+    public function getDisableSave()
+    {
+        return $this->_disableSave;
+    }
+    
     protected function _createCol($name, $config)
     {
         $col = new KlearMatrix_Model_Column;

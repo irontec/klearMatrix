@@ -1,3 +1,6 @@
+{{if (_readonly)}}
+    {{html _fieldValue}}
+{{else}}
 <textarea 
 
 {{if (_dataConfig.plugin)}}  data-plugin="${_dataConfig.plugin}" {{/if}}
@@ -11,3 +14,4 @@ name="${_elemName}"
 {{/each}}
 
 id="${_elemIden}" {{if (_readonly)}}disabled="disabled"{{/if}}>${_fieldValue}</textarea>
+{{/if}}

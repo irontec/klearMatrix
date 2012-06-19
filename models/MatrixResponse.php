@@ -22,6 +22,9 @@ class KlearMatrix_Model_MatrixResponse
     protected $_parentPk = false;
     protected $_parentScreen = false;
     protected $_parentItem = false;
+    
+    protected $_disableSave = false;
+    
     protected $_title;
 
     protected $_searchFields = array();
@@ -122,6 +125,11 @@ class KlearMatrix_Model_MatrixResponse
         $this->_parentItem = $parentItem;
     }
 
+    public function setDisableSave($disableSave)
+    {
+        $this->_disableSave = $disableSave;
+    }
+    
     /**
      * Ayuda contextual seteada
      * @param boolean|array $info
@@ -253,7 +261,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['info'] = $this->_info;
         }
 
-        $simpleFields = array('parentIden','parentId','parentScreen','parentItem','parentPk');
+        $simpleFields = array('parentIden','parentId','parentScreen','parentItem','parentPk','disableSave');
         foreach ($simpleFields as $_fld)  {
             if (false !== $this->{'_' . $_fld})  {
                 $ret[$_fld] = $this->{'_'. $_fld};

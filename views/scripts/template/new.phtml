@@ -18,6 +18,17 @@ title="${info.text}"
 
         {{each(colIdx,column) columns}}
 	    <p class="ui-widget-content ui-corner-all">
+	     {{if column.fieldInfo}}
+                <span 
+                    class="
+                        ui-silk 
+                        ui-silk-${column.fieldInfo.icon} 
+                        fieldInfo-${column.fieldInfo.type}
+                        fieldInfo-position-${column.fieldInfo.position}
+                        " 
+                    title="${column.fieldInfo.text}"
+                ></span>
+            {{/if}}
             <label for="${id}${randIden}">${name}:</label>
            {{html $item.getEditDataForField(false,column,true)}}
            {{if (column.options)}}
@@ -25,8 +36,8 @@ title="${info.text}"
                 <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
                 href=""
                 data-${type}="${$item.getIndex($value,type)}"
-                title="${$item.getTitle(title,false,true)}">
-                <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,false,true)}{{/if}}</a>
+                title="${$item.getTitle(title,false)}">
+                <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,false)}{{/if}}</a>
                 {{/each}}
             {{/if}}
         </p>

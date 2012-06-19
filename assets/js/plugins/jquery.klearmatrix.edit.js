@@ -358,6 +358,11 @@
             if ($(".qq-uploader",this.options.theForm).length>0) {
                 $(".qq-uploader",this.options.theForm).each(function() {
 
+                	var _hiddenField = $("#" + $(this).attr("rel"));
+                    if (_hiddenField.length == 0) {
+                    	return;
+                    }
+                    
                     var item = $("<div />");
                     item
                         .attr("rel",$(this).attr("rel"))
@@ -365,8 +370,7 @@
 
                     $(this).replaceWith(item);
 
-                    var _hiddenField = $("#" + item.attr("rel"));
-
+                    
                     _hiddenField.on("postmanualchange",function() {
                         var $shownFDesc = $('#new_'+ $(this).attr("id"));
                         if ($(this).hasClass("changed")) {
@@ -517,12 +521,19 @@
                 self.options.theForm.trigger("submit");
             });
 
-            $("select.visualFilter").on('manualchange.visualFilter',function(e,manual) {
-                var curOption = $("option[value="+$(this).val()+"]",$(this));
+            $(".visualFilter",this.element.klearModule("getPanel")).on('manualchange.visualFilter',function(e,manual) {
+            	
+            	
+            	if ($(this).is("input:hidden")) {
+            		var curOption = $(this);
+            	} else {
+            		var curOption = $("option[value="+$(this).val()+"]",$(this));
+            	}
+
                 $.each(curOption.data("hide").split(","),function(i,val) {
                     var fName = $.trim(val);
                     if (fName == '') return;
-                    var field = $("[name='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
+                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
                     if (manual) field.hide();
                     else field.slideUp();
                 });
@@ -530,9 +541,15 @@
                 $.each(curOption.data("show").split(","),function(i,val) {
                     var fName = $.trim(val);
                     if (fName == '') return;
-                    var field = $("[name='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
+                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
                     if (manual) field.show();
-                    else field.slideDown();
+                    else {
+                    	field.slideDown();
+                    	field.addClass("ui-state-highlight");
+                    	setTimeout(function() {
+                    		field.removeClass('ui-state-highlight');
+                    	},1300);
+                    }
                 });
 
             }).trigger("manualchange.visualFilter",true);

@@ -2,7 +2,25 @@
     {{each(idx,dataValue) _dataConfig.values}}
         {{if (_fieldValue && dataValue.key == _fieldValue)}}
             {{html dataValue.item }}
-            <input type="hidden" name="${_elemName}" value="${_fieldValue}" />
+            <input type="hidden" name="${_elemName}" value="${_fieldValue}"
+             {{if (_dataConfig.visualFilter)}}class="visualFilter"{{/if}}
+             {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[dataValue.key]) }}
+                data-show="
+                {{each(idxField,showField) _dataConfig.visualFilter.show[dataValue.key]}}
+                    {{if (idxField != '__className')}}
+                        ${showField},
+                    {{/if}}
+                {{/each}}"
+            {{/if}}
+            {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.hide[dataValue.key]) }}
+                data-hide="
+                {{each(idxField,hideField) _dataConfig.visualFilter.hide[dataValue.key]}}
+                    {{if (idxField != '__className')}}
+                        ${hideField},
+                    {{/if}}
+                {{/each}}"
+            {{/if}}
+            />
         {{/if}}
     {{/each}}
 

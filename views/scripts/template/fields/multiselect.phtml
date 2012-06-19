@@ -1,6 +1,14 @@
+{{if (_readonly)}}
+    {{each(idx,dataValue) _dataConfig.values}}
+        {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
+                 ${dataValue.item} / 
+        {{/if}}
+    {{/each}}
+
+{{else}}
+
 <select class="multiselect" multiple name="${_elemName}[]" id="${_elemIden}">
 {{each(idx,dataValue) _dataConfig.values}}
-${$item.debug(_fieldValue,dataValue)}
         <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
                  selected="selected"
             {{/if}}
@@ -9,3 +17,4 @@ ${$item.debug(_fieldValue,dataValue)}
 
 {{/each}}
 </select>
+{{/if}}

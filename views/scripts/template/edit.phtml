@@ -31,7 +31,7 @@ title="${info.text}"
                     title="${column.fieldInfo.text}"
                 ></span>
             {{/if}}
-            <label for="${id}${randIden}">
+            <label rel="${id}" for="${id}${randIden}">
             
             ${name}:
             
@@ -54,7 +54,7 @@ title="${info.text}"
                         title="${$item.getTitle(title,idx,true)}">
                         <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
                      {{/if}}
-                {{/each}}
+                {{/each}} 
             {{/if}}
 		</p>
 		{{/each}}
@@ -62,13 +62,14 @@ title="${info.text}"
 
     <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
         <a class="closeTab" href="" title="<?php echo $this->translate('Close'); ?>"><span class="ui-silk inline ui-silk-cross"></span><?php echo $this->translate('Close'); ?></a>
-        <a class="action" href="" title="<?php echo $this->translate('Save'); ?>"><span class="ui-silk inline ui-silk-bullet-disk"></span><?php echo $this->translate('Save'); ?></a>
-        <span class="action autoClose "><span><input type="checkbox" name="autoclose" /><?php echo $this->translate('Close automatically after save'); ?></span></span>
-
+        {{if (!disableSave)}}
+            <a class="action" href="" title="<?php echo $this->translate('Save'); ?>"><span class="ui-silk inline ui-silk-bullet-disk"></span><?php echo $this->translate('Save'); ?></a>
+            <span class="action autoClose "><span><input type="checkbox" name="autoclose" /><?php echo $this->translate('Close automatically after save'); ?></span></span>
+        {{/if}}
 {{if (generalOptions.length>0) }}
     <br /><br />
 {{each generalOptions}}
-
+    
     <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
     <span class="ui-silk inline ${icon}"></span>
     ${$item.getTitle(title,idx,true)}

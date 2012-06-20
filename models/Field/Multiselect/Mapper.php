@@ -49,8 +49,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         //TODO: Control de errores?
         $_where = null;
 
-        if ($filterclassName = $parsedValues->getProperty("filterClass")) 
-{
+        if ($filterClassName = $parsedValues->getProperty("filterClass")) {
 
             $filter = new $filterClassName;
 

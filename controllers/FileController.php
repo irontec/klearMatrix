@@ -32,19 +32,20 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
-    	$this->_helper->layout->disableLayout();
+        $this->_helper->layout->disableLayout();
 
-    	$this->_helper->ContextSwitch()
-    		->addActionContext('download', 'json')
-    		->addActionContext('upload', 'json')
-    		->initContext('json');
+        $this->_helper->ContextSwitch()
+            ->addActionContext('download', 'json')
+            ->addActionContext('upload', 'json')
+            ->initContext('json');
 
-    	$this->_mainRouter = $this->getRequest()->getParam("mainRouter");
-    	$this->_item = $this->_mainRouter->getCurrentItem();
+        $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+        $this->_item = $this->_mainRouter->getCurrentItem();
 
     }
 
-    protected function _getFileColumn() {
+    protected function _getFileColumn()
+    {
 
         $fileField = $this->_item->getConfigAttribute("mainColumn");
 
@@ -59,7 +60,8 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     }
 
 
-    public function uploadAction() {
+    public function uploadAction()
+    {
 
         try {
             $column = $this->_getFileColumn();
@@ -69,10 +71,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $allowedExtensions = explode(',', $colConfig['allowed_extensions']);
             $sizeLimit = $colConfig['size_limit'];
 
-            $uploader = new Iron_QQUploader_FileUploader($allowedExtensions,
-                                                                    $sizeLimit);
+            $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
 
-            $result = $uploader->handleUpload(sys_get_temp_dir(), false, sha1(time().rand(1000,10000)), '');
+            $result = $uploader->handleUpload(sys_get_temp_dir(), false, sha1(time() . rand(1000, 10000)), '');
 
         } catch(Exception $e) {
 
@@ -90,11 +91,12 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->view->success = true;
         $this->view->code = $result['filename'];
-
     }
-    
-    public function forcedwAction() {
-        $this->getRequest()->setParam("download",true);
+
+
+    public function forcedwAction()
+    {
+        $this->getRequest()->setParam("download", true);
         return $this->downloadAction();
     }
 
@@ -121,61 +123,62 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
 
 
-	        if ((bool)$this->_request->getParam("download")) {
-
-	            
-	            $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
-	            $nameGetter = 'get' . $fileFields['baseNameName'];
-
-	            
-	            
-	            $this->_helper->sendFileToClient(
-	                                $this->_model->{$fetchGetter}()->getBinary(),
-	                                array('filename'=>$this->_model->{$nameGetter}()),
-	                                true);
-	            exit;
-	        }
+            if ((bool)$this->_request->getParam("download")) {
 
 
-	        $nameGetter = 'get' . $fileFields['baseNameName'];
-	        $sizeGetter = 'get' . $fileFields['sizeName'];
-	        $mimeGetter = 'get' . $fileFields['mimeName'];
-
-	        $data = array(
-	                'pk'=>$this->_pk,
-	                'message'=> $this->_model->{$nameGetter}().'<br />('.$this->_model->{$sizeGetter}().')' ,
-	                'buttons'=>array(
-	                        $this->view->translate('Cancel') => array(
-	                                'recall'=>false,
-	                        ),
-	                        $this->view->translate('Download') => array(
-	                                'recall'=>true,
-	                                'external'=>true,
-	                                'params'=>array(
-	                                        "download"=>true
-	                                )
-	                        )
-	                )
-
-	        );
+                $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
+                $nameGetter = 'get' . $fileFields['baseNameName'];
 
 
-	    } catch(Exception $e) {
-	        if (!$this->_request->isXmlHttpRequest()) { 
-	            throw new Zend_Controller_Action_Exception('File not found.', 404);
-	            return;
-	        }
-	        
-	        $data = array(
-	                'message'=>sprintf($this->view->translate('Error preparing download.<br />(%s)'), $e->getMessage()),
-	                'buttons'=>array(
-	                        'Aceptar' => array(
-	                                'recall'=>false,
-	                        )
-	                )
-	        );
 
-	    }
+                $this->_helper->sendFileToClient(
+                    $this->_model->{$fetchGetter}()->getBinary(),
+                    array('filename' => $this->_model->{$nameGetter}()),
+                    true
+                );
+                exit;
+            }
+
+
+            $nameGetter = 'get' . $fileFields['baseNameName'];
+            $sizeGetter = 'get' . $fileFields['sizeName'];
+            $mimeGetter = 'get' . $fileFields['mimeName'];
+
+            $data = array(
+                    'pk'=>$this->_pk,
+                    'message'=> $this->_model->{$nameGetter}().'<br />('.$this->_model->{$sizeGetter}().')' ,
+                    'buttons'=>array(
+                            $this->view->translate('Cancel') => array(
+                                    'recall'=>false,
+                            ),
+                            $this->view->translate('Download') => array(
+                                    'recall'=>true,
+                                    'external'=>true,
+                                    'params'=>array(
+                                            "download"=>true
+                                    )
+                            )
+                    )
+
+            );
+
+
+        } catch(Exception $e) {
+            if (!$this->_request->isXmlHttpRequest()) {
+                throw new Zend_Controller_Action_Exception('File not found.', 404);
+                return;
+            }
+
+            $data = array(
+                    'message'=>sprintf($this->view->translate('Error preparing download.<br />(%s)'), $e->getMessage()),
+                    'buttons'=>array(
+                            'Aceptar' => array(
+                                    'recall'=>false,
+                            )
+                    )
+            );
+
+        }
 
 
         $jsonResponse = new Klear_Model_DispatchResponse();
@@ -184,8 +187,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.genericdialog.js");
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
-
-
-	}
+    }
 
 }

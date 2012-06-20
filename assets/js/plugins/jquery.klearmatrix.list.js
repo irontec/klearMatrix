@@ -297,10 +297,9 @@
                 }
 
                 var _tmpOptions = {};
-                console.log(_dispatchOptions.post);
                 $.extend(_tmpOptions, _dispatchOptions.post);
                 _tmpOptions['format'] = 'csv';
-console.log(_tmpOptions);
+
                 $.klear.request({
                     file: $(self).klearModule("option","file"),
                     type: 'screen',

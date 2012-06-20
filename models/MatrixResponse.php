@@ -88,7 +88,8 @@ class KlearMatrix_Model_MatrixResponse
         return $this;
     }
 
-    public function setCsv($value) {
+    public function setCsv($value) 
+    {
 
         $this->_csv = (bool)$value;
     }
@@ -134,7 +135,8 @@ class KlearMatrix_Model_MatrixResponse
      * Ayuda contextual seteada
      * @param boolean|array $info
      */
-    public function setInfo($info) {
+    public function setInfo($info) 
+    {
         if (false === $info) {
             return;
         }
@@ -186,7 +188,8 @@ class KlearMatrix_Model_MatrixResponse
 
             $_newResult = array();
 
-            if ( (is_object($result)) && (get_class($result) == $screen->getModelName()) ) {
+            if ( (is_object($result)) && (get_class($result) == $screen->getModelName()) ) 
+{
 
 
                 foreach($this->_columnWrapper as $column) {

@@ -10,7 +10,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $_where = null;
 
-        if ($filterClassName = $this->_config->getProperty('config')->filterClass) {
+        if ($filterclassName = $this->_config->getProperty('config')->filterClass) 
+{
 
             $filter = new $filterClassName;
 

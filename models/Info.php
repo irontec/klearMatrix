@@ -5,12 +5,14 @@
 * @author Lander de los bosques
 *
 */
-class KlearMatrix_Model_Info {
+class KlearMatrix_Model_Info 
+{
     
     protected $_config;
     protected $_fieldInfo = array();
     
-    public function setCOnfig(Zend_Config $info) {
+    public function setCOnfig(Zend_Config $info) 
+    {
         $this->_config = new Klear_Model_KConfigParser();
         $this->_config->setConfig($info);
 
@@ -28,7 +30,8 @@ class KlearMatrix_Model_Info {
      * Por favor, poner el nombre que deseeis;  
      * @return multitype:
      */
-    public function getJSONArray() {
+    public function getJSONArray() 
+    {
         return $this->_fieldInfo;
     }
     

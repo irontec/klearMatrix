@@ -4,7 +4,8 @@
 * @author jabi
 *
 */
-class KlearMatrix_Model_RouteDispatcher {
+class KlearMatrix_Model_RouteDispatcher 
+{
 
 
     const module = 'klearMatrix';
@@ -63,7 +64,8 @@ class KlearMatrix_Model_RouteDispatcher {
     protected $_config;
 
 
-    public function getModuleName() {
+    public function getModuleName() 
+    {
         if (isset($this->_selectedConfig->module)) {
             return $this->_selectedConfig->module;
         }
@@ -71,15 +73,18 @@ class KlearMatrix_Model_RouteDispatcher {
         return self::module;
     }
 
-    public function setConfig(KlearMatrix_Model_MainConfig $config) {
+    public function setConfig(KlearMatrix_Model_MainConfig $config) 
+    {
         $this->_config = $config;
     }
 
-    public function getConfig() {
+    public function getConfig() 
+    {
         return $this->_config;
     }
 
-    public function setParams(array $params) {
+    public function setParams(array $params) 
+    {
 
         foreach ($params as $param=>$value) {
 
@@ -103,7 +108,8 @@ class KlearMatrix_Model_RouteDispatcher {
     }
 
 
-    public function getParam($param, $required = true) {
+    public function getParam($param, $required = true) 
+    {
         if (isset($this->_params[$param])) {
             return $this->_params[$param];
         }
@@ -120,18 +126,21 @@ class KlearMatrix_Model_RouteDispatcher {
     }
 
 
-    public function getActionName(){
+    public function getActionName()
+    {
         return $this->_action;
     }
 
 
-    public function getControllerName() {
+    public function getControllerName() 
+    {
         return $this->_controller;
     }
 
 
 
-    public function getCurrentScreen() {
+    public function getCurrentScreen() 
+    {
 
         if (null === $this->_screen) {
 
@@ -144,7 +153,8 @@ class KlearMatrix_Model_RouteDispatcher {
     }
 
 
-    public function getCurrentDialog() {
+    public function getCurrentDialog() 
+    {
 
         if (null === $this->_dialog) {
 
@@ -157,7 +167,8 @@ class KlearMatrix_Model_RouteDispatcher {
     }
 
 
-    public function getCurrentCommand() {
+    public function getCurrentCommand() 
+    {
 
         if (null === $this->_command) {
 
@@ -174,7 +185,8 @@ class KlearMatrix_Model_RouteDispatcher {
     /**
      * @return Klear_Matrix_Screen
      */
-    public function getCurrentItem() {
+    public function getCurrentItem() 
+    {
 
         switch($this->_typeName) {
             case "dialog":
@@ -186,11 +198,13 @@ class KlearMatrix_Model_RouteDispatcher {
         }
     }
 
-    public function getCurrentType() {
+    public function getCurrentType() 
+    {
         return  $this->_typeName;
     }
 
-    protected function _resolveCurrentItem() {
+    protected function _resolveCurrentItem() 
+    {
 
         switch($this->_typeName) {
             case "command":
@@ -203,21 +217,24 @@ class KlearMatrix_Model_RouteDispatcher {
 
     }
 
-    protected function _resolveCurrentItemCommand() {
+    protected function _resolveCurrentItemCommand() 
+    {
         if ($this->_commandName == null) {
             $this->_commandName = $this->_config->getDefaultCommand();
         }
         return $this;
     }
 
-    protected function _resolveCurrentItemScreen() {
+    protected function _resolveCurrentItemScreen() 
+    {
         if ($this->_screenName == null) {
             $this->_screenName = $this->_config->getDefaultScreen();
         }
         return $this;
     }
 
-    protected function _resolveCurrentItemDialog() {
+    protected function _resolveCurrentItemDialog() 
+    {
 
         if ($this->_dialogName == null) {
             $this->_dialogName = $this->_config->getDefaultDialog();
@@ -227,7 +244,8 @@ class KlearMatrix_Model_RouteDispatcher {
 
 
 
-    public function _resolveCurrentConfig() {
+    public function _resolveCurrentConfig() 
+    {
 
         // Aquí resolvemos a que métodos de MainConfig llamar:
         // getScreenConfig | getDialogConfig
@@ -243,7 +261,8 @@ class KlearMatrix_Model_RouteDispatcher {
         return $this;
     }
 
-    public function _resolveCurrentProperty($name, $required) {
+    public function _resolveCurrentProperty($name, $required) 
+    {
 
         if (!isset($this->_selectedConfig->{$name})) {
             if ($required) {
@@ -260,7 +279,8 @@ class KlearMatrix_Model_RouteDispatcher {
         return $this;
     }
 
-    protected function _resolveAction() {
+    protected function _resolveAction() 
+    {
         if (isset($this->_params['execute'])) {
             $this->_action = $this->_params['execute'];
 
@@ -274,7 +294,8 @@ class KlearMatrix_Model_RouteDispatcher {
         return $this;
     }
 
-    public function getCurrentItemName() {
+    public function getCurrentItemName() 
+    {
         switch($this->_typeName) {
             case "dialog":
                 return $this->_dialogName;
@@ -285,7 +306,8 @@ class KlearMatrix_Model_RouteDispatcher {
         }
     }
 
-    public function resolveDispatch() {
+    public function resolveDispatch() 
+    {
 
         $this
             ->_resolveCurrentItem()

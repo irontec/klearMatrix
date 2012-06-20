@@ -133,7 +133,8 @@ class KlearMatrix_Model_ResponseItem
     {
         foreach ($properties as $property) {
 
-            if (!class_exists($this->{$property})) {
+            if (!class_exists($this->{$property})) 
+{
 
                 Throw new Zend_Exception( $this->{$property} . " no es una entidad instanciable.");
             }
@@ -615,7 +616,8 @@ class KlearMatrix_Model_ResponseItem
             return false;
         }
 
-        if (!$class = $this->_calculatedPkConfig->class) {
+        if (!$class = $this->_calculatedPkConfig->class) 
+{
 
             return false;
         }

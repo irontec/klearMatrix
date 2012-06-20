@@ -72,7 +72,8 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         return $value;
     }
 
-    public function getExtraJavascript() {
+    public function getExtraJavascript() 
+    {
         if ($this->_control) {
             return $this->_control->getExtraJavascript();
         } else {
@@ -81,7 +82,8 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
     }
 
 
-    public function getExtraCss() {
+    public function getExtraCss() 
+    {
         if ($this->_control) {
             return $this->_control->getExtraCss();
         } else {

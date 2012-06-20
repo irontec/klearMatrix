@@ -15,8 +15,8 @@ class KlearMatrix_Model_ActionMessage
     protected $_actions;
    /*
     *      title:
-    *      	i18n:
-    *      		es: AVISO!
+    *          i18n:
+    *              es: AVISO!
     *      message:
             i18n:
               es: Esta acción reiniciará su terminal.<br />¿Desea continuar?
@@ -47,11 +47,13 @@ class KlearMatrix_Model_ActionMessage
 
     }
     
-    public function getType() {
+    public function getType() 
+    {
         return $this->_type;
     }
 
-    public function setConfig($config) {
+    public function setConfig($config) 
+    {
         
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
@@ -83,7 +85,8 @@ class KlearMatrix_Model_ActionMessage
 
     }
 
-    public function toArray() {
+    public function toArray() 
+    {
 
         return array(
                 'message'=>$this->_message,

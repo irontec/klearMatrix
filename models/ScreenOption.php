@@ -5,7 +5,8 @@
 * @author jabi
 *
 */
-class KlearMatrix_Model_ScreenOption {
+class KlearMatrix_Model_ScreenOption 
+{
 
     protected $_config;
     protected $_screen;
@@ -29,11 +30,13 @@ class KlearMatrix_Model_ScreenOption {
 
     protected $_noLabel = true;
 
-    public function setScreenName($screen) {
+    public function setScreenName($screen) 
+    {
         $this->_screen = $screen;
     }
 
-    public function setConfig(Zend_Config $config) {
+    public function setConfig(Zend_Config $config) 
+    {
 
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
@@ -50,19 +53,23 @@ class KlearMatrix_Model_ScreenOption {
     }
 
     // Solo aplicable para fieldOPtionsWrapper
-    public function setAsDefault() {
+    public function setAsDefault() 
+    {
         $this->_default = true;
     }
 
-    public function isDefault() {
+    public function isDefault() 
+    {
         return true === $this->_default;
     }
 
-    public function getFilterField() {
+    public function getFilterField() 
+    {
         return $this->_filterField;
     }
 
-    public function getTitle() {
+    public function getTitle() 
+    {
         if (null !== $this->_title) {
             return $this->_title;
         }
@@ -72,7 +79,8 @@ class KlearMatrix_Model_ScreenOption {
 
     }
 
-    public function toArray() {
+    public function toArray() 
+    {
         return array(
             'icon'=>$this->_class,
             'type'=>'screen',

@@ -8,45 +8,45 @@
 class KlearMatrix_Model_ModelSpecification
 {
 
-	protected $_config;
-	protected $_class;
+    protected $_config;
+    protected $_class;
 
-	public function setConfig(Zend_Config $config)
-	{
-		$this->_config = new Klear_Model_KConfigParser;
-		$this->_config->setConfig($config);
+    public function setConfig(Zend_Config $config)
+    {
+        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config->setConfig($config);
 
-		$this->_class = $this->_config->getProperty("class",true);
-		$this->_instance = new $this->_class;
-	}
+        $this->_class = $this->_config->getProperty("class",true);
+        $this->_instance = new $this->_class;
+    }
 
-	public function getInstance()
-	{
-		return $this->_instance;
-	}
+    public function getInstance()
+    {
+        return $this->_instance;
+    }
 
-	public function getClassName()
-	{
-		return $this->_class;
-	}
+    public function getClassName()
+    {
+        return $this->_class;
+    }
 
-	public function getField($fName)
-	{
-		if ($this->_config->exists("fields->" . $fName)) {
-			return $this->_config->getRaw()->fields->{$fName};
-		}
-		return false;
-	}
+    public function getField($fName)
+    {
+        if ($this->_config->exists("fields->" . $fName)) {
+            return $this->_config->getRaw()->fields->{$fName};
+        }
+        return false;
+    }
 
-	public function getFields()
-	{
-	    $fields = array();
-	    $aFields = $this->_config->getRaw()->fields;
-	    if (is_array($aFields) || $aFields instanceof Zend_Config) {
+    public function getFields()
+    {
+        $fields = array();
+        $aFields = $this->_config->getRaw()->fields;
+        if (is_array($aFields) || $aFields instanceof Zend_Config) {
             foreach ($aFields as $key => $field) {
                 $fields[$key] = $field;
             }
-	    }
+        }
         return $fields;
-	}
+    }
 }

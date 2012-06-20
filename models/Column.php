@@ -5,7 +5,8 @@
  * @author jabi
 *
 */
-class KlearMatrix_Model_Column {
+class KlearMatrix_Model_Column 
+{
 
     protected $_dbName;
     protected $_publicName;
@@ -96,7 +97,8 @@ class KlearMatrix_Model_Column {
         return $this->_isDependant;
     }
 
-    public function isMultilang() {
+    public function isMultilang() 
+    {
         return $this->_isMultilang;
     }
 
@@ -105,7 +107,8 @@ class KlearMatrix_Model_Column {
         return $this->_isFile;
     }
 
-    public function setConfig(Zend_Config $config) {
+    public function setConfig(Zend_Config $config) 
+    {
 
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
@@ -120,7 +123,8 @@ class KlearMatrix_Model_Column {
         }
     }
 
-    protected function _parseOption() {
+    protected function _parseOption() 
+    {
 
         $this->_type = '_option';
 
@@ -129,7 +133,8 @@ class KlearMatrix_Model_Column {
         }
     }
 
-    protected function _parseField() {
+    protected function _parseField() 
+    {
 
         $this->_isDefault = (bool)$this->_config->getProperty("default",false);
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
@@ -163,7 +168,8 @@ class KlearMatrix_Model_Column {
 
     }
 
-    protected function _loadConfigClass() {
+    protected function _loadConfigClass() 
+    {
         if ($this->isOption()) return $this;
         if (is_object($this->_fieldConfig)) return $this;
 
@@ -176,7 +182,8 @@ class KlearMatrix_Model_Column {
 
     }
 
-    public function getFieldConfig() {
+    public function getFieldConfig() 
+    {
         return $this->_fieldConfig;
     }
 
@@ -188,21 +195,25 @@ class KlearMatrix_Model_Column {
         return $this->_routeDispatcher;
     }
 
-    public function getJsPaths() {
+    public function getJsPaths() 
+    {
         $this->_loadConfigClass();
         return $this->_fieldConfig->getExtraJavascript();
     }
 
-    public function getCssPaths() {
+    public function getCssPaths() 
+    {
 
         return $this->_fieldConfig->getExtraCss();
     }
 
-    public function isDefault() {
+    public function isDefault() 
+    {
         return $this->_isDefault;
     }
 
-    public function isReadonly() {
+    public function isReadonly() 
+    {
 
         if ($this->isOption()) return false;
 
@@ -210,7 +221,8 @@ class KlearMatrix_Model_Column {
 
     }
 
-    public function hasInfo() {
+    public function hasInfo() 
+    {
 
         if ($this->isOption()) return false;
         
@@ -239,12 +251,14 @@ class KlearMatrix_Model_Column {
     /**
      * @return Klear_Model_KConfigParser
      */
-    public function getKlearConfig() {
+    public function getKlearConfig() 
+    {
         return $this->_config;
 
     }
 
-    public function getPublicName() {
+    public function getPublicName() 
+    {
         if (null !== $this->_publicName) {
             return $this->_publicName;
         }
@@ -252,11 +266,13 @@ class KlearMatrix_Model_Column {
         return $this->_dbName;
     }
 
-    public function getDbName() {
+    public function getDbName() 
+    {
         return $this->_dbName;
     }
 
-    public function getType() {
+    public function getType() 
+    {
         return $this->_type;
     }
 
@@ -284,7 +300,8 @@ class KlearMatrix_Model_Column {
         return $this->_fieldConfig->filterValue($value, $original);
     }
 
-    public function _parseColumnOptions() {
+    public function _parseColumnOptions() 
+    {
 
         if ($this->_config->getProperty("options",false)) {
             $this->_options  = new KlearMatrix_Model_OptionsWrapper;
@@ -320,7 +337,8 @@ class KlearMatrix_Model_Column {
      *
      * A ver si aparecen más casos y podemos articular algo mejor todo esto O:)
      */
-    public function _parseDisabledOptions() {
+    public function _parseDisabledOptions() 
+    {
 
         $disabledConfig = new Klear_Model_KConfigParser;
         $disabledConfig->setConfig($this->_disabledOptions);
@@ -338,7 +356,8 @@ class KlearMatrix_Model_Column {
         $this->_disabledOptions = $disabledOptions;
     }
 
-    public function getSearchCondition(array $values,$model, $langs) {
+    public function getSearchCondition(array $values,$model, $langs) 
+    {
 
 
         if ( (method_exists($this->_fieldConfig, 'getCustomSearchCondition')) &&

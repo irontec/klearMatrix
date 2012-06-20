@@ -12,7 +12,8 @@ class KlearMatrix_Model_ActionMessageWrapper implements IteratorAggregate
     }
     
     
-    public function addMessage(KlearMatrix_Model_ActionMessage $msg) {
+    public function addMessage(KlearMatrix_Model_ActionMessage $msg) 
+    {
         
         $this->_msgs[] = $msg;
         

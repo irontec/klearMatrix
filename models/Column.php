@@ -113,7 +113,7 @@ class KlearMatrix_Model_Column
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        $this->_publicName = $this->_config->getProperty("title", false);
+        $this->_publicName = $this->_config->getProperty("title");
 
         if ($this->_dbName == '_fieldOptions') {
             $this->markAsOption();
@@ -128,7 +128,7 @@ class KlearMatrix_Model_Column
 
         $this->_type = '_option';
 
-        if ($default = $this->_config->getProperty("default", false)) {
+        if ($default = $this->_config->getProperty("default")) {
             $this->_defaultOption = $default;
         }
     }
@@ -136,30 +136,30 @@ class KlearMatrix_Model_Column
     protected function _parseField()
     {
 
-        $this->_isDefault = (bool)$this->_config->getProperty("default", false);
-        $this->_isReadonly = (bool)$this->_config->getProperty("readonly", false);
+        $this->_isDefault = (bool)$this->_config->getProperty("default");
+        $this->_isReadonly = (bool)$this->_config->getProperty("readonly");
 
-        $this->_hasInfo = (bool)$this->_config->getProperty("info", false);
+        $this->_hasInfo = (bool)$this->_config->getProperty("info");
         if ($this->_hasInfo) {
             $this->_fieldInfo = new KlearMatrix_Model_Info;
-            $this->_fieldInfo->setConfig($this->_config->getProperty("info", false));
+            $this->_fieldInfo->setConfig($this->_config->getProperty("info"));
         }
 
-        $this->_disabledOptions = $this->_config->getProperty("disabled", false);
+        $this->_disabledOptions = $this->_config->getProperty("disabled");
 
         if ($this->_disabledOptions) {
 
             $this->_parseDisabledOptions();
         }
 
-        $this->_type = $this->_config->getProperty("type", false);
+        $this->_type = $this->_config->getProperty("type");
         if (empty($this->_type)) {
             $this->_type = 'text';
         }
 
-        $this->_dirty = $this->_config->getProperty("dirty", false);
+        $this->_dirty = $this->_config->getProperty("dirty");
 
-        if ($this->_config->getProperty("options", false)) {
+        if ($this->_config->getProperty("options")) {
             $this->_hasFieldOptions = true;
             $this->_parseColumnOptions();
         }
@@ -303,7 +303,7 @@ class KlearMatrix_Model_Column
     public function _parseColumnOptions()
     {
 
-        if ($this->_config->getProperty("options", false)) {
+        if ($this->_config->getProperty("options")) {
             $this->_options  = new KlearMatrix_Model_OptionsWrapper;
 
             foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
@@ -345,11 +345,11 @@ class KlearMatrix_Model_Column
 
         $disabledOptions = array();
         // Valor del campo para que éste sea disabled
-        if ($disabledConfig->getProperty('valueCondition', false)) {
-            $disabledOptions['valuesCondition'] = $disabledConfig->getProperty('valueCondition', false);
+        if ($disabledConfig->getProperty('valueCondition')) {
+            $disabledOptions['valuesCondition'] = $disabledConfig->getProperty('valueCondition');
         }
 
-        if ($disabledConfig->getProperty('label', false)) {
+        if ($disabledConfig->getProperty('label')) {
             $disabledOptions['label'] = $disabledConfig->getProperty('label');
         }
 
@@ -392,8 +392,8 @@ class KlearMatrix_Model_Column
 
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_type == 'select'
-                    and is_object($this->_config->getProperty("source", false))
-                    and $this->_config->getProperty("source", false)->data == 'mapper') {
+                    and is_object($this->_config->getProperty("source"))
+                    and $this->_config->getProperty("source")->data == 'mapper') {
 
                         $vals[] = $searchField .' = ' . $template;
                         $_fieldValues[$template] = intval($_val);

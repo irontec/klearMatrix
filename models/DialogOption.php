@@ -27,10 +27,10 @@ class KlearMatrix_Model_DialogOption
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        $this->_title = $this->_config->getProperty("title", false);
+        $this->_title = $this->_config->getProperty("title");
 
-        $this->_class = $this->_config->getProperty("class", false);
-        $this->_label = (bool)$this->_config->getProperty("label", false);
+        $this->_class = $this->_config->getProperty("class");
+        $this->_label = (bool)$this->_config->getProperty("label");
     }
 
 

@@ -58,8 +58,8 @@ class KlearMatrix_Model_ActionMessage
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        $this->_title = $this->_config->getProperty("title", false);
-        $this->_message = $this->_config->getProperty("message", false);
+        $this->_title = $this->_config->getProperty("title");
+        $this->_message = $this->_config->getProperty("message");
 
         $_actions = $this->_config->getRaw()->actions;
 
@@ -69,8 +69,8 @@ class KlearMatrix_Model_ActionMessage
            $parsedAction = new Klear_Model_KConfigParser;
            $parsedAction->setConfig($_action);
            $aAction = array(
-                       'label' => $parsedAction->getProperty('label', false),
-                       'return' => (bool)$parsedAction->getProperty('return', false)
+                       'label' => $parsedAction->getProperty('label'),
+                       'return' => (bool)$parsedAction->getProperty('return')
                    );
 
            if (!$aAction['label']) {

@@ -103,7 +103,7 @@ class KlearMatrix_Model_ResponseItem
     public function setInfo()
     {
         //Cogemos la info del ResponseItem
-        $info = $this->_config->getProperty("info", false);
+        $info = $this->_config->getProperty("info");
         if ($this->_hasInfo !== false) {
 
             $this->_fieldInfo = new KlearMatrix_Model_Info;
@@ -193,7 +193,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function getConfigAttribute($attribute)
     {
-        return $this->_config->getProperty($attribute, false);
+        return $this->_config->getProperty($attribute);
     }
 
     public function getDisableSave()
@@ -793,7 +793,7 @@ class KlearMatrix_Model_ResponseItem
                 break;
         }
 
-        $_items = $parent->getProperty($property, false);
+        $_items = $parent->getProperty($property);
 
         if (!$_items) {
 

@@ -41,13 +41,13 @@ class KlearMatrix_Model_ScreenOption
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        $this->_title = $this->_config->getProperty("title", false);
-        $this->_filterField = $this->_config->getProperty("filterField", false);
-        $this->_class = $this->_config->getProperty("class", false);
-        $this->_label = (bool)$this->_config->getProperty("label", false);
-        $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance", false);
-        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull", false);
-        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull", false);
+        $this->_title = $this->_config->getProperty("title");
+        $this->_filterField = $this->_config->getProperty("filterField");
+        $this->_class = $this->_config->getProperty("class");
+        $this->_label = (bool)$this->_config->getProperty("label");
+        $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
+        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
+        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
 
 
     }

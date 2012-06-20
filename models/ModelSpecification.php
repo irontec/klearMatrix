@@ -16,7 +16,7 @@ class KlearMatrix_Model_ModelSpecification
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        $this->_class = $this->_config->getProperty("class", true);
+        $this->_class = $this->_config->getRequiredProperty("class");
         $this->_instance = new $this->_class;
     }
 

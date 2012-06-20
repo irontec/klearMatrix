@@ -37,6 +37,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
        foreach($cols as $column) {
             if ($column->isOption()) continue;
+            if (!$setter = $column->getSetterName($model)) continue;
+            if (!$getter = $column->getGetterName($model)) continue;
 
             if ($column->isMultilang()) {
                 $value = array();
@@ -44,94 +46,71 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                     $value[$lang] = $this->getRequest()->getPost($column->getDbName().$lang);
                 }
             } else {
-
                 $value = $this->getRequest()->getPost($column->getDbName());
-
             }
-
-
-            if (!$setter = $column->getSetterName($model)) continue;
-            if (!$getter = $column->getGetterName($model)) continue;
 
             switch(true) {
                 case ($column->isMultilang()):
                     foreach($value as $lang => $_value) {
-                        $_value =  $column->filterValue($_value,$model->{$getter}($lang));
-                        $model->$setter($_value,$lang);
+                        $_value =  $column->filterValue($_value, $model->{$getter}($lang));
+                        $model->$setter($_value, $lang);
                     }
                     break;
 
                 case ($column->isDependant()):
-                    $value = $column->filterValue($value,$model->{$getter}());
-                    $model->$setter($value,true);
+                    $value = $column->filterValue($value, $model->{$getter}());
+                    $model->$setter($value, true);
                     $hasDependant = true;
                     break;
 
                 case ($column->isFile()):
-
-                    $value = $column->filterValue($value,$model->{$getter}());
+                    $value = $column->filterValue($value, $model->{$getter}());
                     if ($value !== false) {
-                        $model->$setter($value['path'],$value['basename']);
+                        $model->$setter($value['path'], $value['basename']);
                     }
-
                     break;
 
-
                 default:
-
-                    if (method_exists($column, 'filterValue')) {
-
-                        $value = $column->filterValue($value,$model->{$getter}());
-                    }
-
+                    $value = $column->filterValue($value, $model->{$getter}());
                     $model->$setter($value);
             }
         }
 
         if ($this->_item->hasForcedValues()) {
-
             foreach($this->_item->getForcedValues() as $field => $value) {
-
                 try {
                     $varName = $model->columnNameToVar($field);
                     $model->{'set' . $varName}($value);
-
                 } catch (Exception $e) {
                     // Nothing to do... condition not found in model... :S
                     // Debemos morir??
                 }
             }
-
         }
 
         // Si la pantalla esta filtrada, debemos setearla en la "nueva"
         if ($this->_item->isFilteredScreen()) {
-            
             $filteredField = $this->_item->getFilterField();
-
             $filteredValue = $this->_mainRouter->getParam($filteredField);
+
             // TODO: Para el screename del parent, recuperar mapper, fetchById, y comprobar que existe el parámetro recibido.
 
             $filterFieldSetter = 'set' . $model->columnNameToVar($filteredField);
             $model->{$filterFieldSetter}($filteredValue);
         }
 
-
         try {
-             $model->save(false,$hasDependant);
+             $model->save(false, $hasDependant);
              $data = array(
-                'error'=>false,
-                'pk'=>$model->getPrimaryKey(),
-                'message'=>'Registro añadido correctamente.'
+                'error' => false,
+                'pk' => $model->getPrimaryKey(),
+                'message' => 'Registro añadido correctamente.'
             );
-
         } catch (Zend_Exception $exception) {
             $data = array(
-                    'error'=>true,
-                    'message'=>'Error añadiendo el registro.'
+                    'error' => true,
+                    'message' => 'Error añadiendo el registro.'
             );
-
-
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
@@ -188,14 +167,14 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $parentData = null;
         }
 
-        
+
         // Es un "new", invocado con PK. Posiblemente desde una opción de campo de una edición.
         // Hay que devolverlo para que se use en la invocación de save y que pueda ser usado como force value con ${param.parentPk}
         $newPk = $this->_mainRouter->getParam('pk', false);
         if (false !== $newPk) {
             $data->setParentPk($newPk);
-        }    
-        
+        }
+
         $data->setInfo($this->_item->getInfo());
 
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());

@@ -2,7 +2,6 @@
 
 class KlearMatrix_EditController extends Zend_Controller_Action
 {
-
     /**
      * Route Dispatcher desde klear/index/dispatch
      * @var KlearMatrix_Model_RouteDispatcher
@@ -14,7 +13,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
      * @var KlearMatrix_Model_ResponseItem
      */
     protected $_item;
-
 
     public function init()
     {
@@ -40,17 +38,14 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         // TO-DO traducir mensaje?
         // TO-DO lanzar excepción ?
         // Recuperamos el objeto y realizamos la acción de borrar
-
         if (!$object = $mapper->find($pk)) {
             Throw new Zend_Exception('El registro no se encuentra almacenado.');
         }
 
         $cols = $this->_item->getVisibleColumnWrapper();
-
         $hasDependant = false;
 
         foreach($cols as $column) {
-
             if ($column->isOption()) continue;
             if ($column->isReadonly()) continue;
             if (!$setter = $column->getSetterName($object)) continue;
@@ -61,66 +56,50 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 foreach($cols->getLangs() as $lang) {
                     $value[$lang] = $this->getRequest()->getPost($column->getDbName() . $lang);
                 }
-
             } else {
-
                 $value = $this->getRequest()->getPost($column->getDbName());
-
             }
 
             switch(true) {
-
                 case ($column->isMultilang()):
-
                     foreach($value as $lang => $_value) {
-                        $_value =  $column->filterValue($_value,$object->{$getter}($lang));
-                        $object->$setter($_value,$lang);
+                        $_value =  $column->filterValue($_value, $object->{$getter}($lang));
+                        $object->$setter($_value, $lang);
                     }
                     break;
 
                 case ($column->isDependant()):
-
-                    $value = $column->filterValue($value,$object->{$getter}());
-                    $object->$setter($value,true);
+                    $value = $column->filterValue($value, $object->{$getter}());
+                    $object->$setter($value, true);
                     $hasDependant = true;
                     break;
 
                 case ($column->isFile()):
-
-                    $value = $column->filterValue($value,$object->{$getter}());
+                    $value = $column->filterValue($value, $object->{$getter}());
                     if ($value !== false) {
-                        $object->$setter($value['path'],$value['basename']);
+                        $object->$setter($value['path'], $value['basename']);
                     }
-
                     break;
 
                 default:
-
-                    if (method_exists($column, 'filterValue')) {
-                        $value = $column->filterValue($value,$object->{$getter}());
-                    }
-
+                    $value = $column->filterValue($value, $object->{$getter}());
                     $object->$setter($value);
              }
         }
 
         try {
-
-             if (!$pk = $object->save(false,$hasDependant)) {
-
+             if (!$pk = $object->save(false, $hasDependant)) {
                  Throw New Zend_Exception("Error salvando el registro.");
              }
 
              $data = array(
-                'error'=>false,
-                'pk'=>$object->getPrimaryKey(),
-                'message'=>'Registro modificado correctamente.'
+                'error' => false,
+                'pk' => $object->getPrimaryKey(),
+                'message' => 'Registro modificado correctamente.'
             );
-
         } catch (Zend_Exception $exception) {
-
             $data = array(
-                    'error'=>true,
+                    'error' => true,
                     'message'=> $exception->getMessage()
             );
         }
@@ -198,7 +177,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
         $data->setActionMessages($this->_item->getActionMessages());
         $data->setDisableSave($this->_item->getDisableSave());
-        
+
         Zend_Json::$useBuiltinEncoderDecoder = true;
 
         $jsonResponse = new Klear_Model_DispatchResponse();

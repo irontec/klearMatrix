@@ -46,46 +46,42 @@ class KlearMatrix_Model_ActionMessage
         Throw new Exception('Invalid Type for message');
 
     }
-    
-    public function getType() 
+
+    public function getType()
     {
         return $this->_type;
     }
 
-    public function setConfig($config) 
+    public function setConfig($config)
     {
-        
+
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
-        
-        $this->_title = $this->_config->getProperty("title",false);
-        $this->_message = $this->_config->getProperty("message",false);
+
+        $this->_title = $this->_config->getProperty("title", false);
+        $this->_message = $this->_config->getProperty("message", false);
 
         $_actions = $this->_config->getRaw()->actions;
-        
-        
-        foreach($_actions as $idx => $_action) {
-            
+
+
+        foreach ($_actions as $idx => $_action) {
+
            $parsedAction = new Klear_Model_KConfigParser;
            $parsedAction->setConfig($_action);
            $aAction = array(
-                       'label' => $parsedAction->getProperty('label',false),
-                       'return' => (bool)$parsedAction->getProperty('return',false)
+                       'label' => $parsedAction->getProperty('label', false),
+                       'return' => (bool)$parsedAction->getProperty('return', false)
                    );
 
            if (!$aAction['label']) {
                $aAction['label'] = $idx;
            }
-           
-           $this->_action[]= $aAction; 
-           
-            
+
+           $this->_action[]= $aAction;
         }
-
-
     }
 
-    public function toArray() 
+    public function toArray()
     {
 
         return array(
@@ -95,5 +91,5 @@ class KlearMatrix_Model_ActionMessage
                 'action'=>$this->_action
                 );
     }
-    
+
 }

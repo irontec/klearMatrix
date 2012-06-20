@@ -91,7 +91,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate
     public function getTypesTemplateArray($path ,$prefix)
     {
         $tmpls = array();
-        foreach($this->_types as $type => $foo) {
+        foreach ($this->_types as $type => $foo) {
             if ($type == '') continue; // FIX ME! por que hay types vacíos?
             $tmpls[ $prefix . $type] = $path . $type;
         }
@@ -108,7 +108,7 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate
             case 'list':
             case 'field':
                 return array($path . $type);
-            break;
+                break;
         }
     }
 
@@ -154,16 +154,16 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate
         //TODO: Sacar esto a una clase externa que se encarge de filtrar los idiomas del modelo, por lo que queramos (o lo del site como hace el siguiente fragmento).
         $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
         $this->_klearBootstrap = $bootstrap->getResource('modules')->offsetGet('klear');
-        
+
         $_currentLangs = $this->_klearBootstrap->getOption('siteConfig')->getLangs();
-        
-        
-        foreach($langs as $_langIden) {
-            foreach($_currentLangs as $kLanguage) {
+
+
+        foreach ($langs as $_langIden) {
+            foreach ($_currentLangs as $kLanguage) {
                 if ($kLanguage->getLanguage() == $_langIden) {
                     $this->_langs[] = $_langIden;
                     break;
-                }        
+                }
             }
         }
 
@@ -176,9 +176,9 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate
 
     public function getDefaultLang()
     {
-        
+
         $allLangs = $this->getLangs();
-        
+
         return array_shift($allLangs);
     }
 

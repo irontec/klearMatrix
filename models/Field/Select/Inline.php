@@ -11,7 +11,7 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
         $parsedValues = new Klear_Model_KConfigParser;
         $parsedValues->setConfig($this->_config->getProperty('values'));
 
-        foreach($this->_config->getProperty('values') as $key=>$value) {
+        foreach ($this->_config->getProperty('values') as $key=>$value) {
 
             $value = $parsedValues->getProperty((string)$key);
 

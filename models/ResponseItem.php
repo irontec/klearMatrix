@@ -133,9 +133,7 @@ class KlearMatrix_Model_ResponseItem
     {
         foreach ($properties as $property) {
 
-            if (!class_exists($this->{$property})) 
-{
-
+            if (!class_exists($this->{$property})) {
                 Throw new Zend_Exception( $this->{$property} . " no es una entidad instanciable.");
             }
         }
@@ -195,14 +193,14 @@ class KlearMatrix_Model_ResponseItem
 
     public function getConfigAttribute($attribute)
     {
-        return $this->_config->getProperty($attribute,false);
+        return $this->_config->getProperty($attribute, false);
     }
-    
+
     public function getDisableSave()
     {
         return $this->_disableSave;
     }
-    
+
     protected function _createCol($name, $config)
     {
         $col = new KlearMatrix_Model_Column;
@@ -235,7 +233,7 @@ class KlearMatrix_Model_ResponseItem
 
             $fileObjects = $model->getFileObjects();
 
-            foreach($fileObjects as $_fileCol) {
+            foreach ($fileObjects as $_fileCol) {
 
                 if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
 
@@ -299,9 +297,12 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
-     * El método filtrará las columnas del modelo con el fichero de configuración de modelo y la whitelist/blacklist de la configuración
+     * El método filtrará las columnas del modelo con el fichero de configuración de modelo
+     * y la whitelist/blacklist de la configuración
+     *
+     * @return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
+     *
      * FIXME: lazyload no vale ni para tomar por culo
-     * return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
      */
     public function getVisibleColumnWrapper($ignoreBlackList = false, $lazyload = false)
     {
@@ -317,7 +318,7 @@ class KlearMatrix_Model_ResponseItem
         $pk = $model->getPrimaryKeyName();
 
         // La primary Key estará por defecto en la blackList, a excepción de encontrarse en la whitelist
-        if  (!$this->_config->exists("fields->whitelist->" . $pk)) {
+        if (!$this->_config->exists("fields->whitelist->" . $pk)) {
 
             $this->_blacklist[$pk] = true;
         }
@@ -329,7 +330,7 @@ class KlearMatrix_Model_ResponseItem
 
             if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
 
-                foreach($_blacklistConfig as $field => $value) {
+                foreach ($_blacklistConfig as $field => $value) {
 
                     if ((bool)$value) {
 
@@ -358,9 +359,9 @@ class KlearMatrix_Model_ResponseItem
         */
         if ($this->hasForcedValues()) {
 
-            foreach($this->getForcedValues() as $field => $value) {
+            foreach ($this->getForcedValues() as $field => $value) {
 
-                if  (!$this->_config->exists("fields->whitelist->" . $field)) {
+                if (!$this->_config->exists("fields->whitelist->" . $field)) {
 
                     $this->_blacklist[$field] = true;
                 }
@@ -368,7 +369,8 @@ class KlearMatrix_Model_ResponseItem
         }
 
         /*
-         * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper que idiomas tienen los modelos disponibles
+         * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
+         * que idiomas tienen los modelos disponibles
          */
         $multiLangFields = $model->getMultiLangColumnsList();
 
@@ -378,11 +380,12 @@ class KlearMatrix_Model_ResponseItem
         }
 
         /*
-         * Metemos en la lista negra los campos multi-idioma. Preguntaremos a sus getter genéricos con argumento de idioma.
+         * Metemos en la lista negra los campos multi-idioma.
+         * Preguntaremos a sus getter genéricos con argumento de idioma.
          */
-        foreach($multiLangFields as $dbName=>$columnName) {
+        foreach ($multiLangFields as $dbName=>$columnName) {
 
-            foreach($availableLangsPerModel as $langIden) {
+            foreach ($availableLangsPerModel as $langIden) {
 
                 $this->_blacklist[$dbName . '_'. $langIden] = true;
             }
@@ -403,7 +406,7 @@ class KlearMatrix_Model_ResponseItem
         /*
          * Iteramos sobre todos los campos
          */
-        foreach($model->getColumnsList() as $dbName => $attribute) {
+        foreach ($model->getColumnsList() as $dbName => $attribute) {
 
             if ( (!$ignoreBlackList) && (isset($this->_blacklist[$dbName])) ) {
 
@@ -558,7 +561,7 @@ class KlearMatrix_Model_ResponseItem
 
         foreach ($this->_forcedValues as $field => $value) {
 
-            $valConstant = 'v' . rand(1000,9999);
+            $valConstant = 'v' . rand(1000, 9999);
             $forcedValueConds[] = array(
                 $field . " = :" .$valConstant,
                 array(':'.$valConstant => $value)
@@ -616,8 +619,7 @@ class KlearMatrix_Model_ResponseItem
             return false;
         }
 
-        if (!$class = $this->_calculatedPkConfig->class) 
-{
+        if (!$class = $this->_calculatedPkConfig->class) {
 
             return false;
         }
@@ -648,20 +650,21 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
-     * Devuelve un array de objetos FieldOption (opciones por campo), a partir de las columnas de tipo Option del ColWrapper
+     * Devuelve un array de objetos FieldOption (opciones por campo),
+     * a partir de las columnas de tipo Option del ColWrapper
      */
     public function getScreenFieldsOptionsConfig()
     {
         $parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
 
-        return $this->_getItemFieldsOptionsConfig('screen',$parent);
+        return $this->_getItemFieldsOptionsConfig('screen', $parent);
     }
 
     public function getDialogsFieldsOptionsConfig()
     {
         $parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
 
-        return $this->_getItemFieldsOptionsConfig('dialog',$parent);
+        return $this->_getItemFieldsOptionsConfig('dialog', $parent);
     }
 
     public function getScreenOptionsWrapper()
@@ -676,9 +679,9 @@ class KlearMatrix_Model_ResponseItem
         $parent = new Klear_Model_KConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
 
-        $options = $this->_getItemFieldsOptionsConfig('screen',$parent);
+        $options = $this->_getItemFieldsOptionsConfig('screen', $parent);
 
-        foreach($options as $_screen) {
+        foreach ($options as $_screen) {
 
             $screenOption = new KlearMatrix_Model_ScreenOption;
             $screenOption->setScreenName($_screen);
@@ -686,9 +689,9 @@ class KlearMatrix_Model_ResponseItem
             $generalOptionsWrapper->addOption($screenOption);
         }
 
-        $options = $this->_getItemFieldsOptionsConfig('dialog',$parent);
+        $options = $this->_getItemFieldsOptionsConfig('dialog', $parent);
 
-        foreach($options as $_dialog) {
+        foreach ($options as $_dialog) {
 
             $dialogOption = new KlearMatrix_Model_DialogOption;
             $dialogOption->setDialogName($_dialog);
@@ -708,7 +711,7 @@ class KlearMatrix_Model_ResponseItem
             return $msgs;
         }
 
-        foreach($this->_actionMessages as $_type => $msgConfig) {
+        foreach ($this->_actionMessages as $_type => $msgConfig) {
 
             $msg = new KlearMatrix_Model_ActionMessage();
             $msg->setType($_type);
@@ -729,7 +732,7 @@ class KlearMatrix_Model_ResponseItem
         $parent = new Klear_Model_KConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
 
-        return $this->_getItemFieldsOptionsConfig('dialog',$parent);
+        return $this->_getItemFieldsOptionsConfig('dialog', $parent);
     }
 
     public function getPaginationConfig()
@@ -772,25 +775,25 @@ class KlearMatrix_Model_ResponseItem
         return $orderConfig;
     }
 
-    public function _getItemFieldsOptionsConfig($type,$parent)
+    public function _getItemFieldsOptionsConfig($type, $parent)
     {
         $retArray = array();
 
         switch($type) {
             case 'dialog':
                 $property = 'dialogs';
-            break;
+                break;
 
             case 'screen':
                 $property = 'screens';
-            break;
+                break;
 
             default:
                 Throw new Zend_Exception("Undefined Option Type");
-            break;
+                break;
         }
 
-        $_items = $parent->getProperty($property,false);
+        $_items = $parent->getProperty($property, false);
 
         if (!$_items) {
 

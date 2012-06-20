@@ -5,7 +5,7 @@
  * @author jabi
 *
 */
-class KlearMatrix_Model_Column 
+class KlearMatrix_Model_Column
 {
 
     protected $_dbName;
@@ -97,7 +97,7 @@ class KlearMatrix_Model_Column
         return $this->_isDependant;
     }
 
-    public function isMultilang() 
+    public function isMultilang()
     {
         return $this->_isMultilang;
     }
@@ -107,13 +107,13 @@ class KlearMatrix_Model_Column
         return $this->_isFile;
     }
 
-    public function setConfig(Zend_Config $config) 
+    public function setConfig(Zend_Config $config)
     {
 
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        $this->_publicName = $this->_config->getProperty("title",false);
+        $this->_publicName = $this->_config->getProperty("title", false);
 
         if ($this->_dbName == '_fieldOptions') {
             $this->markAsOption();
@@ -123,28 +123,28 @@ class KlearMatrix_Model_Column
         }
     }
 
-    protected function _parseOption() 
+    protected function _parseOption()
     {
 
         $this->_type = '_option';
 
-        if ($default = $this->_config->getProperty("default",false)) {
+        if ($default = $this->_config->getProperty("default", false)) {
             $this->_defaultOption = $default;
         }
     }
 
-    protected function _parseField() 
+    protected function _parseField()
     {
 
-        $this->_isDefault = (bool)$this->_config->getProperty("default",false);
-        $this->_isReadonly = (bool)$this->_config->getProperty("readonly",false);
+        $this->_isDefault = (bool)$this->_config->getProperty("default", false);
+        $this->_isReadonly = (bool)$this->_config->getProperty("readonly", false);
 
         $this->_hasInfo = (bool)$this->_config->getProperty("info", false);
         if ($this->_hasInfo) {
             $this->_fieldInfo = new KlearMatrix_Model_Info;
-            $this->_fieldInfo->setConfig($this->_config->getProperty("info",false));
+            $this->_fieldInfo->setConfig($this->_config->getProperty("info", false));
         }
-        
+
         $this->_disabledOptions = $this->_config->getProperty("disabled", false);
 
         if ($this->_disabledOptions) {
@@ -152,14 +152,14 @@ class KlearMatrix_Model_Column
             $this->_parseDisabledOptions();
         }
 
-        $this->_type = $this->_config->getProperty("type",false);
+        $this->_type = $this->_config->getProperty("type", false);
         if (empty($this->_type)) {
             $this->_type = 'text';
         }
 
-        $this->_dirty = $this->_config->getProperty("dirty",false);
+        $this->_dirty = $this->_config->getProperty("dirty", false);
 
-        if ($this->_config->getProperty("options",false)) {
+        if ($this->_config->getProperty("options", false)) {
             $this->_hasFieldOptions = true;
             $this->_parseColumnOptions();
         }
@@ -168,7 +168,7 @@ class KlearMatrix_Model_Column
 
     }
 
-    protected function _loadConfigClass() 
+    protected function _loadConfigClass()
     {
         if ($this->isOption()) return $this;
         if (is_object($this->_fieldConfig)) return $this;
@@ -182,7 +182,7 @@ class KlearMatrix_Model_Column
 
     }
 
-    public function getFieldConfig() 
+    public function getFieldConfig()
     {
         return $this->_fieldConfig;
     }
@@ -195,24 +195,24 @@ class KlearMatrix_Model_Column
         return $this->_routeDispatcher;
     }
 
-    public function getJsPaths() 
+    public function getJsPaths()
     {
         $this->_loadConfigClass();
         return $this->_fieldConfig->getExtraJavascript();
     }
 
-    public function getCssPaths() 
+    public function getCssPaths()
     {
 
         return $this->_fieldConfig->getExtraCss();
     }
 
-    public function isDefault() 
+    public function isDefault()
     {
         return $this->_isDefault;
     }
 
-    public function isReadonly() 
+    public function isReadonly()
     {
 
         if ($this->isOption()) return false;
@@ -221,11 +221,11 @@ class KlearMatrix_Model_Column
 
     }
 
-    public function hasInfo() 
+    public function hasInfo()
     {
 
         if ($this->isOption()) return false;
-        
+
         return $this->_hasInfo;
     }
 
@@ -251,13 +251,13 @@ class KlearMatrix_Model_Column
     /**
      * @return Klear_Model_KConfigParser
      */
-    public function getKlearConfig() 
+    public function getKlearConfig()
     {
         return $this->_config;
 
     }
 
-    public function getPublicName() 
+    public function getPublicName()
     {
         if (null !== $this->_publicName) {
             return $this->_publicName;
@@ -266,12 +266,12 @@ class KlearMatrix_Model_Column
         return $this->_dbName;
     }
 
-    public function getDbName() 
+    public function getDbName()
     {
         return $this->_dbName;
     }
 
-    public function getType() 
+    public function getType()
     {
         return $this->_type;
     }
@@ -300,10 +300,10 @@ class KlearMatrix_Model_Column
         return $this->_fieldConfig->filterValue($value, $original);
     }
 
-    public function _parseColumnOptions() 
+    public function _parseColumnOptions()
     {
 
-        if ($this->_config->getProperty("options",false)) {
+        if ($this->_config->getProperty("options", false)) {
             $this->_options  = new KlearMatrix_Model_OptionsWrapper;
 
             foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
@@ -337,7 +337,7 @@ class KlearMatrix_Model_Column
      *
      * A ver si aparecen más casos y podemos articular algo mejor todo esto O:)
      */
-    public function _parseDisabledOptions() 
+    public function _parseDisabledOptions()
     {
 
         $disabledConfig = new Klear_Model_KConfigParser;
@@ -356,7 +356,7 @@ class KlearMatrix_Model_Column
         $this->_disabledOptions = $disabledOptions;
     }
 
-    public function getSearchCondition(array $values,$model, $langs) 
+    public function getSearchCondition(array $values,$model, $langs)
     {
 
 
@@ -374,7 +374,7 @@ class KlearMatrix_Model_Column
 
         if ($this->isMultilang()) {
             $searchFields = array();
-            foreach($langs as $_lang) {
+            foreach ($langs as $_lang) {
                 $searchFields[] = $searchField .'_' . $_lang;
             }
 
@@ -408,7 +408,7 @@ class KlearMatrix_Model_Column
         }
 
         return array(
-                '(' . implode(' or ',$vals). ')',
+                '(' . implode(' or ', $vals). ')',
                 $_fieldValues
         );
     }
@@ -460,11 +460,11 @@ class KlearMatrix_Model_Column
         $ret["id"] = $this->_dbName;
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
-        
+
         if ($this->_dirty) {
             $ret["dirty"] = true; //Para mostrar el valor con html si está a true
         }
-        
+
         if ($this->isDefault()) {
             $ret['default'] = true;
         }

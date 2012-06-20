@@ -44,7 +44,7 @@ class KlearMatrix_Model_MainConfig
 
     protected function _getDefaultItem($itemName)
     {
-        if (!in_array($itemName,array("screen","dialog","command"))) {
+        if (!in_array($itemName, array("screen", "dialog", "command"))) {
             Throw new Zend_Exception("Error accediendo a la configuración. No se ha especificado un tipo de enrutado válido.");
         }
 
@@ -52,7 +52,7 @@ class KlearMatrix_Model_MainConfig
         $configItemName = "default" . ucfirst($itemName);
         $itemConfigWrapper = $itemName . "s";
 
-        if ($this->_config->exists("main->default" . ucfirst($itemName)) )  {
+        if ($this->_config->exists("main->default" . ucfirst($itemName))) {
 
             $this->{$attrName} = $this->_config->getRaw()->main->$configItemName;
 
@@ -128,7 +128,7 @@ class KlearMatrix_Model_MainConfig
 
         $propertiesToMap = array("action","mapper");
 
-        foreach($propertiesToMap as $prop) {
+        foreach ($propertiesToMap as $prop) {
             if (isset($this->_selectedConfig->{$prop})) {
                 $propName = '_' . $prop;
                 $this->{$propName} = $this->_selectedConfig->{$prop};

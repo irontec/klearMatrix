@@ -113,7 +113,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $retStruct = array();
         $relationIndex = array();
         // Itero en value, que supuestamente es un array de modelos de relación
-        foreach($value as $model) {
+        foreach ($value as $model) {
 
             if ( (!is_object($model))
                 || (!$model->getMapper() instanceof $this->_relationMapper) ) {

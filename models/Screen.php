@@ -51,8 +51,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
      */
     public function getHook($hookName = null)
     {
-        if (is_null( $hookName ) or ! isset( $this->_hooks->$hookName )) {
-
+        if (is_null($hookName) || !isset( $this->_hooks->$hookName)) {
             return false;
         }
 

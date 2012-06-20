@@ -41,7 +41,7 @@ class KlearMatrix_Model_Field_File_Fso
             return array();
         }
 
-        foreach($this->_config->extensions as $ext) {
+        foreach ($this->_config->extensions as $ext) {
 
             $exts[] = $ext;
         }

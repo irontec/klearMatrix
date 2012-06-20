@@ -22,9 +22,9 @@ class KlearMatrix_Model_MatrixResponse
     protected $_parentPk = false;
     protected $_parentScreen = false;
     protected $_parentItem = false;
-    
+
     protected $_disableSave = false;
-    
+
     protected $_title;
 
     protected $_searchFields = array();
@@ -88,7 +88,7 @@ class KlearMatrix_Model_MatrixResponse
         return $this;
     }
 
-    public function setCsv($value) 
+    public function setCsv($value)
     {
 
         $this->_csv = (bool)$value;
@@ -109,13 +109,13 @@ class KlearMatrix_Model_MatrixResponse
         $this->_parentId = $parentId;
         return $this;
     }
-    
+
     public function setParentPk($parentPk)
     {
         $this->_parentPk = $parentPk;
         return $this;
     }
-    
+
     public function setParentScreen($parentScreen)
     {
         $this->_parentScreen = $parentScreen;
@@ -130,12 +130,12 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_disableSave = $disableSave;
     }
-    
+
     /**
      * Ayuda contextual seteada
      * @param boolean|array $info
      */
-    public function setInfo($info) 
+    public function setInfo($info)
     {
         if (false === $info) {
             return;
@@ -184,15 +184,12 @@ class KlearMatrix_Model_MatrixResponse
         $_newResults = array();
 
 
-        foreach($this->_results as $result) {
+        foreach ($this->_results as $result) {
 
             $_newResult = array();
 
-            if ( (is_object($result)) && (get_class($result) == $screen->getModelName()) ) 
-{
-
-
-                foreach($this->_columnWrapper as $column) {
+            if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
+                foreach ($this->_columnWrapper as $column) {
 
                     if (!$getter = $column->getGetterName($result)) {
                         continue;
@@ -201,7 +198,7 @@ class KlearMatrix_Model_MatrixResponse
                     if ($column->isMultilang()) {
 
                         $rValue = array();
-                        foreach($this->_columnWrapper->getLangs() as $_lang) {
+                        foreach ($this->_columnWrapper->getLangs() as $_lang) {
                             $rValue[$_lang] = $result->{$getter}($_lang);
                         }
 
@@ -265,16 +262,14 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         $simpleFields = array('parentIden','parentId','parentScreen','parentItem','parentPk','disableSave');
-        foreach ($simpleFields as $_fld)  {
-            if (false !== $this->{'_' . $_fld})  {
+        foreach ($simpleFields as $_fld) {
+            if (false !== $this->{'_' . $_fld}) {
                 $ret[$_fld] = $this->{'_'. $_fld};
             }
         }
 
         if (sizeof($this->_messages) > 0) {
-
             $ret['actionMessages'] = $this->_messages->toArray();
-
         }
 
         $ret[$this->_item->getType()] = $this->_item->getItemName();

@@ -384,7 +384,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     {
         $fields = $this->view->data['columns'];
         $values = $this->view->data['values'];
-        
+
         $toBeChanged = array();
         
         foreach($fields as $field) {

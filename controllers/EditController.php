@@ -38,7 +38,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         // TO-DO traducir mensaje?
         // TO-DO lanzar excepción ?
         // Recuperamos el objeto y realizamos la acción de borrar
-        if (!$object = $mapper->find($pk)) {
+        if (!$model = $mapper->find($pk)) {
             Throw new Zend_Exception('El registro no se encuentra almacenado.');
         }
 
@@ -48,8 +48,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         foreach ($cols as $column) {
             if ($column->isOption()) continue;
             if ($column->isReadonly()) continue;
-            if (!$setter = $column->getSetterName($object)) continue;
-            if (!$getter = $column->getGetterName($object)) continue;
+            if (!$setter = $column->getSetterName($model)) continue;
+            if (!$getter = $column->getGetterName($model)) continue;
 
             if ($column->isMultilang()) {
                 $value = array();
@@ -63,50 +63,64 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             switch(true) {
                 case ($column->isMultilang()):
                     foreach ($value as $lang => $_value) {
-                        $_value =  $column->filterValue($_value, $object->{$getter}($lang));
-                        $object->$setter($_value, $lang);
+                        $_value =  $column->filterValue($_value, $model->{$getter}($lang));
+                        $model->$setter($_value, $lang);
                     }
                     break;
 
                 case ($column->isDependant()):
-                    $value = $column->filterValue($value, $object->{$getter}());
-                    $object->$setter($value, true);
+                    $value = $column->filterValue($value, $model->{$getter}());
+                    $model->$setter($value, true);
                     $hasDependant = true;
                     break;
 
                 case ($column->isFile()):
-                    $value = $column->filterValue($value, $object->{$getter}());
+                    $value = $column->filterValue($value, $model->{$getter}());
                     if ($value !== false) {
-                        $object->$setter($value['path'], $value['basename']);
+                        $model->$setter($value['path'], $value['basename']);
                     }
                     break;
 
                 default:
-                    $value = $column->filterValue($value, $object->{$getter}());
-                    $object->$setter($value);
+                    $value = $column->filterValue($value, $model->{$getter}());
+                    $model->$setter($value);
             }
         }
 
         try {
-             if (!$pk = $object->save(false, $hasDependant)) {
-                 Throw New Zend_Exception("Error salvando el registro.");
-             }
-
-             $data = array(
+            $this->_save($model, $hasDependant);
+            $data = array(
                 'error' => false,
-                'pk' => $object->getPrimaryKey(),
-                'message' => 'Registro modificado correctamente.'
+                'pk' => $model->getPrimaryKey(),
+                'message' => 'Registro salvado correctamente.'
             );
         } catch (Zend_Exception $exception) {
             $data = array(
-                    'error' => true,
-                    'message'=> $exception->getMessage()
+                'error' => true,
+                'message'=> $exception->getMessage()
             );
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _save($model, $hasDependant)
+    {
+        if (method_exists($model, 'saveRecursive')) {
+            if ($hasDependant) {
+                $pk = $model->saveRecursive();
+            } else {
+                $pk = $model->save();
+            }
+        } else {
+            $pk = $model->save(false, $hasDependant);
+        }
+
+        if (!$pk) {
+            throw new \Zend_Exception('Error salvando el registro');
+        }
     }
 
     public function indexAction()

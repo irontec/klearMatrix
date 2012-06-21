@@ -43,7 +43,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             if ($column->isMultilang()) {
                 $value = array();
                 foreach ($cols->getLangs() as $lang) {
-                    $value[$lang] = $this->getRequest()->getPost($column->getDbName().$lang);
+                    $value[$lang] = $this->getRequest()->getPost($column->getDbName() . $lang);
                 }
             } else {
                 $value = $this->getRequest()->getPost($column->getDbName());
@@ -100,22 +100,39 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         try {
-             $model->save(false, $hasDependant);
-             $data = array(
+            $this->_save($model, $hasDependant);
+            $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
-                'message' => 'Registro añadido correctamente.'
+                'message' => 'Registro salvado correctamente.'
             );
-        } catch (Zend_Exception $exception) {
+        } catch (\Zend_Exception $exception) {
             $data = array(
-                    'error' => true,
-                    'message' => 'Error añadiendo el registro.'
+                'error' => true,
+                'message'=> $exception->getMessage()
             );
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _save($model, $hasDependant)
+    {
+        try {
+            if (method_exists($model, 'saveRecursive')) {
+                if ($hasDependant) {
+                    $model->saveRecursive();
+                } else {
+                    $model->save();
+                }
+            } else {
+                $model->save(false, $hasDependant);
+            }
+        } catch (\Zend_Exception $exception) {
+            throw new \Zend_Exception('Error salvando el registro');
+        }
     }
 
     public function indexAction()

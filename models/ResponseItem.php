@@ -82,8 +82,11 @@ class KlearMatrix_Model_ResponseItem
 
         //Guardamos la configuración de cada propiedad
         foreach ($this->_configOptions as $option => $default) {
-
-            $this->$option = $this->_config->getProperty($default[0], $default[1]);
+            if ($default[1]) {
+                $this->$option = $this->_config->getRequiredProperty($default[0]);
+            } else {
+                $this->$option = $this->_config->getProperty($default[0]);
+            }
         }
 
         //Si hay modelFile, lo parseamos

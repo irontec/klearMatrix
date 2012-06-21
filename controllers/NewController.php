@@ -30,19 +30,19 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     public function saveAction()
     {
-       $model = $this->_item->getObjectInstance();
-       // Cargamos las columnas visibles, ignorando blacklist
-       $cols = $this->_item->getVisibleColumnWrapper();
-       $hasDependant = false;
+        $model = $this->_item->getObjectInstance();
+        // Cargamos las columnas visibles, ignorando blacklist
+        $cols = $this->_item->getVisibleColumnWrapper();
+        $hasDependant = false;
 
-       foreach($cols as $column) {
+        foreach ($cols as $column) {
             if ($column->isOption()) continue;
             if (!$setter = $column->getSetterName($model)) continue;
             if (!$getter = $column->getGetterName($model)) continue;
 
             if ($column->isMultilang()) {
                 $value = array();
-                foreach($cols->getLangs() as $lang) {
+                foreach ($cols->getLangs() as $lang) {
                     $value[$lang] = $this->getRequest()->getPost($column->getDbName().$lang);
                 }
             } else {
@@ -51,7 +51,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
             switch(true) {
                 case ($column->isMultilang()):
-                    foreach($value as $lang => $_value) {
+                    foreach ($value as $lang => $_value) {
                         $_value =  $column->filterValue($_value, $model->{$getter}($lang));
                         $model->$setter($_value, $lang);
                     }
@@ -77,7 +77,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         if ($this->_item->hasForcedValues()) {
-            foreach($this->_item->getForcedValues() as $field => $value) {
+            foreach ($this->_item->getForcedValues() as $field => $value) {
                 try {
                     $varName = $model->columnNameToVar($field);
                     $model->{'set' . $varName}($value);
@@ -154,7 +154,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 
-                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName());
 
                 // Se añaden los datos a la respuesta
                 // Se recogerán en el new, y se mostrará información por pantalla
@@ -163,13 +163,14 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $data->setParentScreen($parentScreenName);
             }
         } else {
-
             $parentData = null;
         }
 
-
-        // Es un "new", invocado con PK. Posiblemente desde una opción de campo de una edición.
-        // Hay que devolverlo para que se use en la invocación de save y que pueda ser usado como force value con ${param.parentPk}
+        /*
+         * Es un "new", invocado con PK. Posiblemente desde una opción de campo de una edición.
+         * Hay que devolverlo para que se use en la invocación de save
+         * y que pueda ser usado como force value con ${param.parentPk}
+         */
         $newPk = $this->_mainRouter->getParam('pk', false);
         if (false !== $newPk) {
             $data->setParentPk($newPk);
@@ -188,17 +189,25 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         $customTemplate = $this->_item->getCustomTemplate();
 
-        if (isset($customTemplate->module) and isset($customTemplate->name))
-        {
-            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, $customTemplate->name, $customTemplate->module);
-
+        if (isset($customTemplate->module) && isset($customTemplate->name)) {
+            $jsonResponse->addTemplate(
+                "/bin/template/" . $customTemplate->name,
+                $customTemplate->name, $customTemplate->module
+            );
         } else {
-
-            $jsonResponse->addTemplate("/template/new/type/" . $this->_item->getType(),"klearmatrixNew");
+            $jsonResponse->addTemplate(
+                "/template/new/type/" . $this->_item->getType(),
+                "klearmatrixNew"
+            );
         }
 
-        $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
-        $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
+        $jsonResponse->addTemplateArray(
+            $cols->getTypesTemplateArray("/template/field/type/", "klearMatrixFields")
+        );
+        $jsonResponse->addTemplate(
+            $cols->getMultiLangTemplateArray("/template/", 'field'),
+            "klearmatrixMultiLangField"
+        );
 
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
         $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
@@ -221,12 +230,12 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         $jsonResponse->addJsArray($js);
 
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js"); // klearmatrix.new hereda de klearmatrix.edit
+        // klearmatrix.new hereda de klearmatrix.edit
+        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.new.js");
 
         $customScripts = $this->_item->getCustomScripts();
-        if (isset($customScripts->module) and isset($customScripts->name))
-        {
+        if (isset($customScripts->module) && isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 

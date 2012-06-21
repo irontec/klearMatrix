@@ -45,7 +45,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $cols = $this->_item->getVisibleColumnWrapper();
         $hasDependant = false;
 
-        foreach($cols as $column) {
+        foreach ($cols as $column) {
             if ($column->isOption()) continue;
             if ($column->isReadonly()) continue;
             if (!$setter = $column->getSetterName($object)) continue;
@@ -53,7 +53,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
             if ($column->isMultilang()) {
                 $value = array();
-                foreach($cols->getLangs() as $lang) {
+                foreach ($cols->getLangs() as $lang) {
                     $value[$lang] = $this->getRequest()->getPost($column->getDbName() . $lang);
                 }
             } else {
@@ -62,7 +62,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
             switch(true) {
                 case ($column->isMultilang()):
-                    foreach($value as $lang => $_value) {
+                    foreach ($value as $lang => $_value) {
                         $_value =  $column->filterValue($_value, $object->{$getter}($lang));
                         $object->$setter($_value, $lang);
                     }
@@ -84,7 +84,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 default:
                     $value = $column->filterValue($value, $object->{$getter}());
                     $object->$setter($value);
-             }
+            }
         }
 
         try {
@@ -159,7 +159,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 
-                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName());
 
                 // Se añaden los datos a la respuesta
                 // Se recogerán en el new, y se mostrará información por pantalla
@@ -185,17 +185,25 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->setPlugin($this->_item->getPlugin('edit'));
 
         $customTemplate = $this->_item->getCustomTemplate();
-        if (isset($customTemplate->module) and isset($customTemplate->name))
-        {
-            $jsonResponse->addTemplate("/bin/template/" . $customTemplate->name, $customTemplate->name, $customTemplate->module);
-
+        if (isset($customTemplate->module) && isset($customTemplate->name)) {
+            $jsonResponse->addTemplate(
+                "/bin/template/" . $customTemplate->name, $customTemplate->name,
+                $customTemplate->module
+            );
         } else {
-
-            $jsonResponse->addTemplate("/template/edit/type/" . $this->_item->getType(),"klearmatrixEdit");
+            $jsonResponse->addTemplate(
+                "/template/edit/type/" . $this->_item->getType(),
+                "klearmatrixEdit"
+            );
         }
 
-        $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/","klearMatrixFields"));
-        $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'field'),"klearmatrixMultiLangField");
+        $jsonResponse->addTemplateArray(
+            $cols->getTypesTemplateArray("/template/field/type/", "klearMatrixFields")
+        );
+        $jsonResponse->addTemplate(
+            $cols->getMultiLangTemplateArray("/template/", 'field'),
+            "klearmatrixMultiLangField"
+        );
 
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 
@@ -222,8 +230,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 
         $customScripts = $this->_item->getCustomScripts();
-        if (isset($customScripts->module) and isset($customScripts->name))
-        {
+        if (isset($customScripts->module) and isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 

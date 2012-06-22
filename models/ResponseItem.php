@@ -205,6 +205,11 @@ class KlearMatrix_Model_ResponseItem
         return $this->_disableSave;
     }
 
+    /**
+     * @param unknown_type $name
+     * @param unknown_type $config
+     * @return KlearMatrix_Model_Column
+     */
     protected function _createCol($name, $config)
     {
         $col = new KlearMatrix_Model_Column;
@@ -227,82 +232,12 @@ class KlearMatrix_Model_ResponseItem
         return $col;
     }
 
-    /**
-     * Añade las columnas tipo "file" a $_visibleColumnWrapper
-     * @param object $model
-     */
-    protected function _loadFileColumns($model)
-    {
-        // TODO: Revisar esto, deberíamos estar seguros de que getFileObjects existe, con que devuelva un array vacío basta.
-        if (method_exists($model, 'getFileObjects')) {
-
-            $fileObjects = $model->getFileObjects();
-
-            foreach ($fileObjects as $_fileCol) {
-
-                $colConfig = $this->_modelSpec->getField($_fileCol);
-
-                if ($colConfig) {
-
-                    $fieldSpecsGetter = "get" . $_fileCol . "Specs";
-                    $involvedFields = $model->{$fieldSpecsGetter}();
-
-                    if (isset($involvedFields['sizeName'])) {
-
-                        $this->_blacklist[$model->varNameToColumn($involvedFields['sizeName'])] = true;
-                    }
-
-                    if (isset($involvedFields['mimeName'])) {
-
-                        $this->_blacklist[$model->varNameToColumn($involvedFields['mimeName'])] = true;
-                    }
-
-                    if (isset($involvedFields['baseNameName'])) {
-
-                        $this->_blacklist[$model->varNameToColumn($involvedFields['baseNameName'])] = true;
-                    }
-
-                    // FIXME: Aquí nos estamos saltando un posible ignoreBlackList...
-                    if (isset($this->_blacklist[$_fileCol])) {
-
-                        continue;
-                    }
-
-                    $col = $this->_createFileColumn($colConfig, $_fileCol);
-                    $this->_visibleColumnWrapper->addCol($col);
-                }
-            }
-        }
-    }
-
     protected function _createDependantColumn($colConfig, $dependantConfig)
     {
         $col = $this->_createCol($dependantConfig['property'], $colConfig);
         $col->markAsDependant();
 
         return $col;
-    }
-
-    /**
-     * Instancia en self::_visibleColumnWrapper las columnas tipo dependant
-     * @param unknown_type $model
-     */
-    protected function _loadDependantColumns($model)
-    {
-        foreach ($model->getDependentList() as $dependatConfig) {
-
-            if (isset($this->_blacklist[$dependatConfig['property']])) {
-
-                continue;
-            }
-
-            $colConfig = $this->_modelSpec->getField($dependatConfig['property']);
-            if ($colConfig) {
-
-                $col = $this->_createDependantColumn($colConfig, $dependatConfig);
-                $this->_visibleColumnWrapper->addCol($col);
-            }
-        }
     }
 
     /**
@@ -327,9 +262,6 @@ class KlearMatrix_Model_ResponseItem
             $this->_createBlackList($model);
         }
 
-        //TODO: Revisar este método, porque también se encarga de generar parte de la lista negra
-        $this->_loadFileColumns($model);
-
         /*
          * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
          * que idiomas tienen los modelos disponibles
@@ -340,53 +272,22 @@ class KlearMatrix_Model_ResponseItem
             $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
         }
 
-        /*
-         * Buscamos los campos ghost y los añadimos si no están en blacklist
-         */
-        foreach ($this->_modelSpec->getFields() as $key => $field) {
+        // Campos de tipo "file"
+        //TODO: Revisar este método, porque también se encarga de generar parte de la lista negra
+        $fileColumns = $this->_getVisibleFileColumns($model);
+        $this->_visibleColumnWrapper->addCols($fileColumns);
 
-            if ($field->type == 'ghost' && !isset($this->_blacklist[$key])) {
+        // Campos Ghost
+        $ghostColumns = $this->_getVisibleGhostColumns();
+        $this->_visibleColumnWrapper->addCols($ghostColumns);
 
-                $col = $this->_createCol($key, $field);
-                $this->_visibleColumnWrapper->addCol($col);
-            }
-        }
+        // Campos de la BBDD
+        $columns = $this->_getVisibleColumns($model, $ignoreBlackList);
+        $this->_visibleColumnWrapper->addCols($columns);
 
-        /*
-         * Iteramos sobre todos los campos
-         */
-        foreach ($model->getColumnsList() as $dbFieldName => $attribute) {
-            /*
-             * TODO: Revisar esto, en principio ya no debería hacer falta comprobar el $ignoreBlackList,
-             *       la lista no se genera si no es necesaria, pero hay que repasar el método _loadFileColumns.
-             */
-            if ((!$ignoreBlackList) && (isset($this->_blacklist[$dbFieldName]))) {
-
-                continue;
-            }
-
-            $config = $this->_modelSpec->getField($dbFieldName);
-
-            //Si es un campo ghost, pasamos de él. Ya estaba metido antes
-            if (isset($config->type) && $config->type == 'ghost') {
-
-                continue;
-            }
-
-            $col = $this->_createCol($dbFieldName, $config);
-
-            if (isset($multiLangFields[$dbFieldName])) {
-
-                $col->markAsMultilang();
-            }
-
-            $this->_visibleColumnWrapper->addCol($col);
-        }
-
-       /**
-        *  Buscamos las tablas dependientes, por si estuvieran *Explicitamente* declaradas en el fichero de modelo
-        */
-        $this->_loadDependantColumns($model);
+        // Tablas dependientes
+        $dependantColumns = $this->_getVisibleDependantColumns($model, $ignoreBlackList);
+        $this->_visibleColumnWrapper->addCols($dependantColumns);
 
         if ($this->hasFieldOptions()) {
 
@@ -408,7 +309,7 @@ class KlearMatrix_Model_ResponseItem
     {
         $pk = $model->getPrimaryKeyName();
 
-        // Si la clave primaria no está en la lista blanca, estará por defecto en la lista negra
+        // Si la clave primaria no está en la lista blanca no la mostramos
         if (!$this->_config->exists("fields->whitelist->" . $pk)) {
 
             $this->_blacklist[$pk] = true;
@@ -434,7 +335,7 @@ class KlearMatrix_Model_ResponseItem
         }
 
         /*
-         * Si es una pantalla con filtro de ventana padre, no mostraremos por defecto el campo de filtrado
+         * Si es una pantalla con filtro de ventana padre no mostramos el campo de filtrado
          */
         if ($this->isFilteredScreen()) {
 
@@ -442,7 +343,7 @@ class KlearMatrix_Model_ResponseItem
         }
 
         /*
-         * Si es una pantalla con valores forzados, y éstos no están en la lista blanca
+         * Si es una pantalla con valores forzados y estos no están en la lista blanca
          * no serán mostrados por defecto.
          */
         if ($this->hasForcedValues()) {
@@ -471,6 +372,131 @@ class KlearMatrix_Model_ResponseItem
         }
 
     }
+
+    /**
+     * Devuelve las columnas visibles de tipo "file"
+     * @param object $model
+     * @return array
+     */
+    protected function _getVisibleFileColumns($model)
+    {
+        $columns = array();
+        $blacklistSubfields = array('sizeName', 'mimeName', 'baseNameName');
+
+        // TODO: Revisar esto, deberíamos estar seguros de que getFileObjects existe, con que devuelva un array vacío basta.
+        if (method_exists($model, 'getFileObjects')) {
+
+            $fileObjects = $model->getFileObjects();
+
+            foreach ($fileObjects as $_fileCol) {
+
+                $colConfig = $this->_modelSpec->getField($_fileCol);
+
+                if ($colConfig) {
+
+                    $fieldSpecsGetter = "get" . $_fileCol . "Specs";
+                    $involvedFields = $model->{$fieldSpecsGetter}();
+
+                    foreach ($blacklistSubfields as $blSubfield) {
+                        if (isset($involvedFields[$blSubfield])) {
+
+                            $colName = $model->varNameToColumn($involvedFields[$blSubfield]);
+                            $this->_blacklist[$colName] = true;
+                        }
+                    }
+
+                    // FIXME: Aquí nos estamos saltando un posible ignoreBlackList...
+                    if (isset($this->_blacklist[$_fileCol])) {
+
+                        continue;
+                    }
+
+                    $col = $this->_createFileColumn($colConfig, $_fileCol);
+                    $columns[] = $col;
+                }
+            }
+        }
+        return $columns;
+    }
+
+    /*
+     * Devuelve array con la lista de columnas de tipo ghost que no se encuentran en la blacklist
+     */
+    protected function _getVisibleGhostColumns()
+    {
+        $columns = array();
+        foreach ($this->_modelSpec->getFields() as $key => $field) {
+
+            if ($field->type == 'ghost' && !isset($this->_blacklist[$key])) {
+
+                $columns[] = $this->_createCol($key, $field);
+            }
+        }
+        return $columns;
+    }
+
+    protected function _getVisibleColumns($model, $ignoreBlackList = false)
+    {
+        $columns = array();
+        /*
+         * Iteramos sobre todos los campos
+        */
+        $dbFieldNames = array_keys($model->getColumnsList());
+        foreach ($dbFieldNames as $dbFieldName) {
+            /*
+             * TODO: Revisar esto, en principio ya no debería hacer falta comprobar el $ignoreBlackList,
+            *       la lista no se genera si no es necesaria, pero hay que repasar el método _getVisibleFileColumns.
+            */
+            if (!$ignoreBlackList && isset($this->_blacklist[$dbFieldName])) {
+
+                continue;
+            }
+
+            $config = $this->_modelSpec->getField($dbFieldName);
+
+            //Si es un campo ghost, pasamos de él. Ya estaba metido antes
+            if (isset($config->type) && $config->type == 'ghost') {
+
+                continue;
+            }
+
+            $col = $this->_createCol($dbFieldName, $config);
+
+            if (isset($multiLangFields[$dbFieldName])) {
+
+                $col->markAsMultilang();
+            }
+
+            $columns[] = $col;
+        }
+
+        return $columns;
+    }
+
+    /**
+     * Devuelve las columans de tipo dependant
+     * @param unknown_type $model
+     */
+    protected function _getVisibleDependantColumns($model, $ignoreBlacklist = false)
+    {
+        $columns = array();
+        foreach ($model->getDependentList() as $dependatConfig) {
+
+            if (!$ignoreBlacklist && isset($this->_blacklist[$dependatConfig['property']])) {
+
+                continue;
+            }
+
+            $colConfig = $this->_modelSpec->getField($dependatConfig['property']);
+            if ($colConfig) {
+
+                $col = $this->_createDependantColumn($colConfig, $dependatConfig);
+                $columns[] = $col;
+            }
+        }
+        return $columns;
+    }
+
 
     /**
      * Recuperar y crear una objeto tipo Column

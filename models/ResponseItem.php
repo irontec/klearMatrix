@@ -66,19 +66,13 @@ class KlearMatrix_Model_ResponseItem
         '_disableSave' => array('disableSave', false),
     );
 
-    protected $_configOptionsCustom = array();
-
     //Guardamos en $this->_config un objeto Klear_Model_KConfigParser
     public function setConfig(Zend_Config $config)
     {
         $this->_config = new Klear_Model_KConfigParser;
         $this->_config->setConfig($config);
 
-        //Añadimos las configuraciones personalizadas
-        foreach ($this->_configOptionsCustom as $config => $option) {
-
-            $this->_configOptions[$config] = $option;
-        }
+        $this->_initCustomConfig();
 
         //Guardamos la configuración de cada propiedad
         foreach ($this->_configOptions as $option => $default) {
@@ -100,6 +94,13 @@ class KlearMatrix_Model_ResponseItem
 
             $this->_checkClasses(array("_mapper"));
         }
+    }
+
+    /**
+     * Este método permite añadir otras configuraciones al objeto
+     */
+    protected function _initCustomConfig()
+    {
     }
 
     //Setea la info de ayuda si existe

@@ -27,10 +27,13 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
     }
 
     //Seteamos la configuración del screen
-    public function setConfig(Zend_Config $config)
+    protected function _initCustomConfig()
     {
-        //Mandamos $config al setConfig del padre, que guarda en $this->_config un objeto Klear_Model_KConfigParser
-        parent::setConfig($config);
+        //Añadimos las configuraciones personalizadas
+        foreach ($this->_configOptionsCustom as $config => $option) {
+
+            $this->_configOptions[$config] = $option;
+        }
 
         //Seteamos la info de ayuda si la hubiese
         $this->setInfo();

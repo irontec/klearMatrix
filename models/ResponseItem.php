@@ -75,11 +75,11 @@ class KlearMatrix_Model_ResponseItem
         $this->_initCustomConfig();
 
         //Guardamos la configuración de cada propiedad
-        foreach ($this->_configOptions as $option => $default) {
-            if ($default[1]) {
-                $this->$option = $this->_config->getRequiredProperty($default[0]);
+        foreach ($this->_configOptions as $option => $optConfig) {
+            if ($optConfig[1]) {
+                $this->$option = $this->_config->getRequiredProperty($optConfig[0]);
             } else {
-                $this->$option = $this->_config->getProperty($default[0]);
+                $this->$option = $this->_config->getProperty($optConfig[0]);
             }
         }
 
@@ -91,8 +91,7 @@ class KlearMatrix_Model_ResponseItem
 
         //Si hay mapper, lo checkeamos a ver si es válido
         if ($this->_mapper) {
-
-            $this->_checkClasses(array("_mapper"));
+            $this->_checkClassesExist(array("_mapper"));
         }
     }
 
@@ -124,7 +123,7 @@ class KlearMatrix_Model_ResponseItem
             $filePath,
             APPLICATION_ENV,
             array(
-                    "yamldecoder"=>"yaml_parse"
+                "yamldecoder"=>"yaml_parse"
             )
         );
 
@@ -133,11 +132,12 @@ class KlearMatrix_Model_ResponseItem
     }
 
 
-    protected function _checkClasses(array $properties)
+    protected function _checkClassesExist(array $properties)
     {
         foreach ($properties as $property) {
 
             if (!class_exists($this->{$property})) {
+
                 Throw new Zend_Exception( $this->{$property} . " no es una entidad instanciable.");
             }
         }
@@ -228,18 +228,21 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
-     * Instancia en self::_visibleColumnWrapper las columnas tipo file del modelo
-     * @param unknown_type $model
+     * Añade las columnas tipo "file" a $_visibleColumnWrapper
+     * @param object $model
      */
     protected function _loadFileColumns($model)
     {
+        // TODO: Revisar esto, deberíamos estar seguros de que getFileObjects existe, con que devuelva un array vacío basta.
         if (method_exists($model, 'getFileObjects')) {
 
             $fileObjects = $model->getFileObjects();
 
             foreach ($fileObjects as $_fileCol) {
 
-                if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
+                $colConfig = $this->_modelSpec->getField($_fileCol);
+
+                if ($colConfig) {
 
                     $fieldSpecsGetter = "get" . $_fileCol . "Specs";
                     $involvedFields = $model->{$fieldSpecsGetter}();
@@ -259,6 +262,7 @@ class KlearMatrix_Model_ResponseItem
                         $this->_blacklist[$model->varNameToColumn($involvedFields['baseNameName'])] = true;
                     }
 
+                    // FIXME: Aquí nos estamos saltando un posible ignoreBlackList...
                     if (isset($this->_blacklist[$_fileCol])) {
 
                         continue;
@@ -292,7 +296,8 @@ class KlearMatrix_Model_ResponseItem
                 continue;
             }
 
-            if ($colConfig = $this->_modelSpec->getField($dependatConfig['property'])) {
+            $colConfig = $this->_modelSpec->getField($dependatConfig['property']);
+            if ($colConfig) {
 
                 $col = $this->_createDependantColumn($colConfig, $dependatConfig);
                 $this->_visibleColumnWrapper->addCol($col);
@@ -304,95 +309,35 @@ class KlearMatrix_Model_ResponseItem
      * El método filtrará las columnas del modelo con el fichero de configuración de modelo
      * y la whitelist/blacklist de la configuración
      *
-     * @return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
+     * TODO: Implementar lista blanca que solo muestre las columnas especificadas en la misma (showColumns o algo así)
      *
-     * FIXME: lazyload no vale ni para tomar por culo
+     * @return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
      */
-    public function getVisibleColumnWrapper($ignoreBlackList = false, $lazyload = false)
+    public function getVisibleColumnWrapper($ignoreBlackList = false)
     {
         if (isset($this->_visibleColumnWrapper)) {
 
             return $this->_visibleColumnWrapper;
         }
 
-        $model = $this->_modelSpec->getInstance();
-
         $this->_visibleColumnWrapper =  new KlearMatrix_Model_ColumnWrapper;
+        $model = $this->getObjectInstance();
 
-        $pk = $model->getPrimaryKeyName();
-
-        // La primary Key estará por defecto en la blackList, a excepción de encontrarse en la whitelist
-        if (!$this->_config->exists("fields->whitelist->" . $pk)) {
-
-            $this->_blacklist[$pk] = true;
+        if (!$ignoreBlackList) {
+            $this->_createBlackList($model);
         }
 
-       /*
-        * LLenamos el array blacklist en base al fichero de configuración
-        */
-        if ($this->_config->exists("fields->blacklist")) {
-
-            if (($_blacklistConfig = $this->_config->getRaw()->fields->blacklist) !== '') {
-
-                foreach ($_blacklistConfig as $field => $value) {
-
-                    if ((bool)$value) {
-
-                        $this->_blacklist[$field] = true;
-                    }
-                }
-            }
-        }
-
-        /*
-         * Si el modelo tiene el método getFileObjects, y éstos están definidos en la configuración
-        */
+        //TODO: Revisar este método, porque también se encarga de generar parte de la lista negra
         $this->_loadFileColumns($model);
-
-        /*
-         * Si es una pantalla con filtro de ventana padre, no mostraremos por defecto el campo de filtrado
-         */
-        if ($this->isFilteredScreen()) {
-
-            $this->_blacklist[$this->_filteredField] = true;
-        }
-
-        /*
-         * Si es una pantalla con valores forzados, y éstos no están en la lista blanca
-         * no serán mostrados por defecto.
-        */
-        if ($this->hasForcedValues()) {
-
-            foreach ($this->getForcedValues() as $field => $value) {
-
-                if (!$this->_config->exists("fields->whitelist->" . $field)) {
-
-                    $this->_blacklist[$field] = true;
-                }
-            }
-        }
 
         /*
          * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
          * que idiomas tienen los modelos disponibles
          */
         $multiLangFields = $model->getMultiLangColumnsList();
-
-        if ( (is_array($availableLangsPerModel = $model->getAvailableLangs())) && (count($availableLangsPerModel)>0) ) {
-
+        $availableLangsPerModel = $model->getAvailableLangs();
+        if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
-        }
-
-        /*
-         * Metemos en la lista negra los campos multi-idioma.
-         * Preguntaremos a sus getter genéricos con argumento de idioma.
-         */
-        foreach ($multiLangFields as $dbName=>$columnName) {
-
-            foreach ($availableLangsPerModel as $langIden) {
-
-                $this->_blacklist[$dbName . '_'. $langIden] = true;
-            }
         }
 
         /*
@@ -410,14 +355,17 @@ class KlearMatrix_Model_ResponseItem
         /*
          * Iteramos sobre todos los campos
          */
-        foreach ($model->getColumnsList() as $dbName => $attribute) {
-
-            if ( (!$ignoreBlackList) && (isset($this->_blacklist[$dbName])) ) {
+        foreach ($model->getColumnsList() as $dbFieldName => $attribute) {
+            /*
+             * TODO: Revisar esto, en principio ya no debería hacer falta comprobar el $ignoreBlackList,
+             *       la lista no se genera si no es necesaria, pero hay que repasar el método _loadFileColumns.
+             */
+            if ((!$ignoreBlackList) && (isset($this->_blacklist[$dbFieldName]))) {
 
                 continue;
             }
 
-            $config = $this->_modelSpec->getField($dbName);
+            $config = $this->_modelSpec->getField($dbFieldName);
 
             //Si es un campo ghost, pasamos de él. Ya estaba metido antes
             if (isset($config->type) && $config->type == 'ghost') {
@@ -425,9 +373,9 @@ class KlearMatrix_Model_ResponseItem
                 continue;
             }
 
-            $col = $this->_createCol($dbName, $config);
+            $col = $this->_createCol($dbFieldName, $config);
 
-            if (isset($multiLangFields[$dbName])) {
+            if (isset($multiLangFields[$dbFieldName])) {
 
                 $col->markAsMultilang();
             }
@@ -438,7 +386,6 @@ class KlearMatrix_Model_ResponseItem
        /**
         *  Buscamos las tablas dependientes, por si estuvieran *Explicitamente* declaradas en el fichero de modelo
         */
-
         $this->_loadDependantColumns($model);
 
         if ($this->hasFieldOptions()) {
@@ -457,29 +404,96 @@ class KlearMatrix_Model_ResponseItem
         return $this->_visibleColumnWrapper;
     }
 
+    protected function _createBlackList($model)
+    {
+        $pk = $model->getPrimaryKeyName();
+
+        // Si la clave primaria no está en la lista blanca, estará por defecto en la lista negra
+        if (!$this->_config->exists("fields->whitelist->" . $pk)) {
+
+            $this->_blacklist[$pk] = true;
+        }
+
+       /*
+        * LLenamos el array blacklist en base al fichero de configuración
+        */
+        if ($this->_config->exists("fields->blacklist")) {
+
+            $blackListConfig = $this->_config->getRaw()->fields->blacklist;
+
+            if ($blackListConfig !== '') {
+
+                foreach ($blackListConfig as $field => $value) {
+
+                    if ((bool)$value) {
+
+                        $this->_blacklist[$field] = true;
+                    }
+                }
+            }
+        }
+
+        /*
+         * Si es una pantalla con filtro de ventana padre, no mostraremos por defecto el campo de filtrado
+         */
+        if ($this->isFilteredScreen()) {
+
+            $this->_blacklist[$this->_filteredField] = true;
+        }
+
+        /*
+         * Si es una pantalla con valores forzados, y éstos no están en la lista blanca
+         * no serán mostrados por defecto.
+         */
+        if ($this->hasForcedValues()) {
+
+            foreach ($this->getForcedValues() as $field => $value) {
+
+                if (!$this->_config->exists("fields->whitelist->" . $field)) {
+
+                    $this->_blacklist[$field] = true;
+                }
+            }
+        }
+
+        /*
+         * Metemos en la lista negra los campos multi-idioma.
+         * Preguntaremos a sus getter genéricos con argumento de idioma.
+         */
+        $availableLangsPerModel = $model->getAvailableLangs();
+        $multiLangFields = $model->getMultiLangColumnsList();
+        foreach ($multiLangFields as $dbFieldName => $columnName) {
+
+            foreach ($availableLangsPerModel as $langIden) {
+
+                $this->_blacklist[$dbFieldName . '_'. $langIden] = true;
+            }
+        }
+
+    }
+
     /**
      * Recuperar y crear una objeto tipo Column
      * @param unknown_type $colName
      */
     public function getColumn($colName)
     {
-        $model = $this->_modelSpec->getInstance();
+        $model = $this->getObjectInstance();
 
-        foreach ($model->getColumnsList() as $dbName => $attribute) {
+        $columnList = $model->getColumnsList();
+        if (isset($columnList[$colName])) {
 
-            if ($colName == $dbName) {
+            $col = $this->_createCol($colName, $this->_modelSpec->getField($colName));
 
-                $col = $this->_createCol($dbName, $this->_modelSpec->getField($dbName));
-
-                return $col;
-            }
+            return $col;
         }
 
         foreach ($model->getDependentList() as $dependatConfig) {
 
             if ($colName == $dependatConfig['table_name']) {
 
-                if ($colConfig = $this->_modelSpec->getField($dependatConfig['table_name'])) {
+                $colConfig = $this->_modelSpec->getField($dependatConfig['table_name']);
+                if ($colConfig) {
 
                     $col = $this->_createDependantColumn($colConfig, $dependantConfig);
 
@@ -492,24 +506,19 @@ class KlearMatrix_Model_ResponseItem
             }
         }
 
-
+        // TODO: Cambiar esto, deberíamos estar seguros de que getFileObjects existe.
         if (!method_exists($model, 'getFileObjects')) {
 
             return false;
         }
 
-        foreach ($model->getFileObjects() as $_fileCol) {
+        $fileObjects = $model->getFileObjects();
+        if (in_array($colName, $fileObjects)) {
 
-            if ($colName == $_fileCol) {
+            $colConfig = $this->_modelSpec->getField($colName);
+            if ($colConfig) {
 
-                if ($colConfig = $this->_modelSpec->getField($_fileCol)) {
-
-                    return $this->_createFileColumn($colConfig, $_fileCol);
-
-                } else {
-
-                    return false;
-                }
+                return $this->_createFileColumn($colConfig, $colName);
             }
         }
 
@@ -556,7 +565,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function hasForcedValues()
     {
-        return sizeof($this->_forcedValues)>0;
+        return sizeof($this->_forcedValues) > 0;
     }
 
     public function getForcedValuesConditions()
@@ -623,19 +632,17 @@ class KlearMatrix_Model_ResponseItem
             return false;
         }
 
-        if (!$class = $this->_calculatedPkConfig->class) {
-
-            return false;
-        }
-
-        if (!$method = $this->_calculatedPkConfig->method) {
+        $class = $this->_calculatedPkConfig->class;
+        $method = $this->_calculatedPkConfig->method;
+        if (!$class || !$method) {
 
             return false;
         }
 
         $pkCalculator = new $class;
+        $this->_calculatedPk = $pkCalculator->{$method}($this->_routeDispatcher);
 
-        if (!$this->_calculatedPk = $pkCalculator->{$method}($this->_routeDispatcher)) {
+        if (!$this->_calculatedPkConfig) {
 
             return false;
         }

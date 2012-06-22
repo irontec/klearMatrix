@@ -138,7 +138,7 @@ class KlearMatrix_Model_ResponseItem
 
             if (!class_exists($this->{$property})) {
 
-                Throw new Zend_Exception( $this->{$property} . " no es una entidad instanciable.");
+                throw new \Zend_Exception($this->{$property} . " no es una entidad instanciable.");
             }
         }
     }

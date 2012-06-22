@@ -206,7 +206,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             } else {
 
                 // Por defecto ordenamos por PK
-                $order = $this->_item->getPK();
+                $order = $this->_item->getPkName();
             }
         }
 
@@ -244,7 +244,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setResponseItem($this->_item)
             ->setTitle($this->_item->getTitle())
             ->setColumnWraper($cols)
-            ->setPK($this->_item->getPK());
+            ->setPK($this->_item->getPkName());
 
         if ($this->_item->getCsv()) {
 

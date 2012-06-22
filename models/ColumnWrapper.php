@@ -45,6 +45,16 @@ class KlearMatrix_Model_ColumnWrapper implements IteratorAggregate
         }
     }
 
+    /**
+     * @param KlearMatrix_Model_Column[] $columns
+     */
+    public function addCols(array $columns)
+    {
+        foreach ($columns as $col) {
+            $this->addCol($col);
+        }
+    }
+
     //Ordena los campos a mostrar según lo indicado en el screen en fields->order
     public function sortCols($orderFields = array())
     {

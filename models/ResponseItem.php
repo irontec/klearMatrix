@@ -633,15 +633,12 @@ class KlearMatrix_Model_ResponseItem
         // Devuelve el PK para la pantalla de edit.
         $pk = $this->getForcedPk();
 
-        if (!$pk) {
-
-            $pk = $this->getCalculatedPk();
-        }
-
         if ($pk) {
 
             return $pk;
         }
+
+        $pk = $this->getCalculatedPk();
 
         return $this->_routeDispatcher->getParam("pk");
     }
@@ -851,10 +848,9 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
-     * TODO: Renombrar este método... joder... getPkName por lo menos :S
      * gateway hacia modelo específico, para devolver el nombre de la PK
      */
-    public function getPK()
+    public function getPkName()
     {
         return $this->_modelSpec->getInstance()->getPrimaryKeyName();
     }

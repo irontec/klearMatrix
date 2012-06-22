@@ -48,7 +48,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $data = new KlearMatrix_Model_MatrixResponse;
 
         $data->setColumnWraper($cols)
-            ->setPK($this->_item->getPK())
+            ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 
         if (!$obj = $mapper->find($pk)) {

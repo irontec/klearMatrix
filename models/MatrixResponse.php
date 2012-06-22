@@ -176,7 +176,7 @@ class KlearMatrix_Model_MatrixResponse
     {
 
 
-        $primaryKeyName = $screen->getPK();
+        $primaryKeyName = $screen->getPkName();
 
 
         if (!is_array($this->_results)) $this->_results = array($this->_results);

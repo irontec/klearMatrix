@@ -117,7 +117,6 @@ class KlearMatrix_Model_RouteDispatcher
         if (false === $required) {
             return false;
         }
-        var_dump(debug_backtrace(null, 12));exit();
         throw new Zend_Exception('Parámetro ['. $param .'] no encontrado.', 9999);
     }
 

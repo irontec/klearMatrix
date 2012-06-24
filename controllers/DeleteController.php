@@ -25,7 +25,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             ->addActionContext('delete', 'json')
             ->initContext('json');
 
-        $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+        $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
     }
 

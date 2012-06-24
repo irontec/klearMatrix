@@ -24,7 +24,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             ->addActionContext('save', 'json')
             ->initContext('json');
 
-        $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+        $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
     }
 

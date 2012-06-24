@@ -58,7 +58,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 ->initContext($contextParam);
         }
 
-        $this->_mainRouter = $this->getRequest()->getParam("mainRouter");
+        $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
     }
 

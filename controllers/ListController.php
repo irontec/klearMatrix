@@ -18,10 +18,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function init()
     {
-        
+
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
-       
+
         $csvSpec = array(
                 'suffix'=>'csv',
                 'headers'=>array(
@@ -34,22 +34,22 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 ),
                 'callbacks'=>array(
                     'init' => 'initJsonContext',
-                    'post' => array($this,'exportCsv') 
+                    'post' => array($this,'exportCsv')
                 )
                );
-        
-        
+
+
         $context = $this->_helper->ContextSwitch();
-        
-        
+
+
         $context
             ->addContext('csv', $csvSpec)
             ->setAutoDisableLayout(true)
             ->setDefaultContext('json')
             ->addActionContext('index', array('json','csv'));
-            
+
         $contextParam = $this->getRequest()->getParam($context->getContextParam());
-        
+
         if (empty($contextParam)) {
             $context
                 ->initContext($context->getDefaultContext());
@@ -65,9 +65,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        
         $mapperName = $this->_item->getMapperName();
-        $mapper = new $mapperName;
+        $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
         $data = new KlearMatrix_Model_MatrixResponse;
         $cols = $this->_item->getVisibleColumnWrapper();
@@ -96,7 +95,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
                $defaultParentCol = $parentColWrapper->getDefaultCol();
 
-               $parentMapper = new $parentMapperName;
+               $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
                $parentId = $this->_mainRouter->getParam('pk');
                $parentData = $parentMapper->find($parentId);
 
@@ -213,7 +212,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         //Calculamos la página en la que estamos y el offset
         $paginationConfig = $this->_item->getPaginationConfig();
 
-        if ( ($paginationConfig) && 
+        if ( ($paginationConfig) &&
             ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv') ) {
 
             $count = $paginationConfig->getproperty('items');
@@ -376,7 +375,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
-        
+
     }
 
     //Exportamos los resultados a CSV
@@ -386,20 +385,20 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $values = $this->view->data['values'];
 
         $toBeChanged = array();
-        
+
         foreach($fields as $field) {
             if ($field['type'] == 'select') {
                 $toBeChanged[$field['id']] = array();
-                
+
                 foreach ($field['config']['values'] as $item) {
                     $toBeChanged[$field['id']][$item['key']] = $item['item'];
                 }
             }
         }
-        
+
         ob_start();
         $fp = fopen("php://output", "w");
-        
+
         if (is_resource($fp)) {
             foreach ($values as $valLine)
             {
@@ -412,34 +411,34 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                         }
                     }
                 }
-                
+
                 fputcsv($fp, $valLine, ';', '"');
             }
-        
+
             $strContent = ob_get_clean();
-        
+
             // Excel SYLK-Bug
             // http://support.microsoft.com/kb/323626/de
             $strContent = preg_replace('/^ID/', 'id', $strContent);
-        
+
             //$strContent = utf8_decode($strContent);
             $intLength = mb_strlen($strContent, 'utf-8');
-        
+
             // length
             $this->getResponse()->setHeader('Content-Length', $intLength);
             // Set a header
-            
+
             // kein fclose($fp);
-        
+
             $this->getResponse()->setBody($strContent);
-            
-            
+
+
         } else {
             ob_end_clean();
             Throw new Exception('unable to create output resource for csv.');
-        } 
-        
-        
-        
+        }
+
+
+
     }
 }

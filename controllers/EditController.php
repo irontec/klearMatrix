@@ -31,7 +31,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
     public function saveAction()
     {
         $mapperName = $this->_item->getMapperName();
-        $mapper = new $mapperName;
+        $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
         $pk = $this->_item->getCurrentPk();
 
@@ -126,7 +126,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
     public function indexAction()
     {
         $mapperName = $this->_item->getMapperName();
-        $mapper = new $mapperName;
+        $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
         $pk = $this->_item->getCurrentPk();
 
@@ -169,7 +169,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $defaultParentCol = $parentColWrapper->getDefaultCol();
 
                 // Recuperamos mapper, para recuperar datos principales (default value)
-                $parentMapper = new $parentMapperName;
+                $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 

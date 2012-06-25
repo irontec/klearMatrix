@@ -130,9 +130,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $pk = $this->_item->getCurrentPk();
 
-        $cols = $this->_item->getVisibleColumnWrapper();
-
         $data = new KlearMatrix_Model_MatrixResponse;
+        $cols = $this->_item->getVisibleColumnWrapper();
 
         $data
             ->setTitle($this->_item->getTitle())

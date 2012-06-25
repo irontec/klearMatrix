@@ -40,8 +40,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
 
         $context = $this->_helper->ContextSwitch();
-
-
         $context
             ->addContext('csv', $csvSpec)
             ->setAutoDisableLayout(true)

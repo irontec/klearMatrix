@@ -1,8 +1,8 @@
 <?php
 
-class KlearMatrix_Model_OptionsWrapper implements Iterator
+class KlearMatrix_Model_OptionsWrapper implements \IteratorAggregate
 {
-    public $_opts = array();
+    protected $_opts = array();
     protected $_title;
     protected $_position;
 
@@ -23,35 +23,8 @@ class KlearMatrix_Model_OptionsWrapper implements Iterator
         return $retArray;
     }
 
-    public function __construct()
+    public function getIterator()
     {
-        $this->_position = 0;
+        return new \ArrayIterator($this->_opts);
     }
-
-    public function rewind()
-    {
-        $this->_position = 0;
-    }
-
-    public function current()
-    {
-        return $this->_opts[$this->_position];
-    }
-
-    public function key()
-    {
-        return $this->_position;
-    }
-
-    public function next()
-    {
-        ++$this->_position;
-    }
-
-    public function valid()
-    {
-        return isset($this->_opts[$this->_position]);
-
-    }
-
 }

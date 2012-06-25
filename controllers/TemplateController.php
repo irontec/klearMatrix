@@ -7,76 +7,60 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
-
     }
-
 
     public function listAction()
     {
-
     }
-
-
 
     public function editAction()
     {
-
     }
 
     public function newAction()
     {
-
     }
 
     public function paginatorAction()
     {
-
     }
 
 
     public function deleteAction()
     {
-
     }
 
-    public function multilangAction() {
+    public function multilangAction()
+    {
+        $templateTypes = array('list', 'field');
+        $templateItem = $this->getRequest()->getParam("item");
 
-        if ($templateItem = $this->getRequest()->getParam("item")) {
-
-            switch($templateItem) {
-                case "list":
-                case "field":
-                    $this->_helper->viewRenderer('multilang/' . $templateItem);
-                    break;
-
-            }
+        if (in_array($templateItem, $templateTypes)) {
+            $this->_helper->viewRenderer('multilang/' . $templateItem);
         }
-
-
     }
-
 
     public function fieldAction()
     {
-        if ($fieldType = $this->getRequest()->getParam("type")) {
+        $fieldType = $this->getRequest()->getParam("type");
 
-            switch($fieldType) {
-                case "text":
-                case "textarea":
-                case "select":
-                case "multiselect":
-                case "password":
-                case "number":
-                case "ghost":
-                case "file":
-                case "picker":
-                    $this->_helper->viewRenderer('fields/' . $fieldType);
-                    break;
-
-            }
+        if (in_array($fieldType, $this->_getAvailableFieldTypes())) {
+            $this->_helper->viewRenderer('fields/' . $fieldType);
         }
-
-
     }
 
+    protected function _getAvailableFieldTypes()
+    {
+        return array(
+            "text",
+            "textarea",
+            "select",
+            "multiselect",
+            "password",
+            "number",
+            "ghost",
+            "file",
+            "picker",
+        );
+    }
 }

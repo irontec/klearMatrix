@@ -266,7 +266,6 @@ class KlearMatrix_Model_ResponseItem
          * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
          * que idiomas tienen los modelos disponibles
          */
-        $multiLangFields = $model->getMultiLangColumnsList();
         $availableLangsPerModel = $model->getAvailableLangs();
         if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
@@ -462,6 +461,7 @@ class KlearMatrix_Model_ResponseItem
 
             $col = $this->_createCol($dbFieldName, $config);
 
+            $multiLangFields = $model->getMultiLangColumnsList();
             if (isset($multiLangFields[$dbFieldName])) {
 
                 $col->markAsMultilang();

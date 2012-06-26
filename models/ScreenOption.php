@@ -23,7 +23,6 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 
     protected function _init()
     {
-        parent::_init();
         $this->_filterField = $this->_config->getProperty("filterField");
         $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
     }
@@ -36,16 +35,6 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
     public function getFilterField()
     {
         return $this->_filterField;
-    }
-
-    public function getTitle()
-    {
-        if (null !== $this->_title) {
-            return $this->_title;
-        }
-
-        // o_O pues eso.... MAL!
-        return 'error';
     }
 
     public function toArray()

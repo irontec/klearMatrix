@@ -13,15 +13,6 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
         $this->_dialog = $dialog;
     }
 
-    public function getTitle()
-    {
-        if (null != $this->_title) {
-            return $this->_title;
-        }
-
-        return 'unnamed option';
-    }
-
     public function toArray()
     {
         $ret = array(
@@ -33,7 +24,7 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
             'label' => $this->_label,
             'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
             'showOnlyOnNull' => $this->_showOnlyOnNull
-                
+
         );
 
         if ($this->isDefault()) {

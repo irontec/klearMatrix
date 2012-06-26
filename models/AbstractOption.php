@@ -15,13 +15,14 @@ abstract class KlearMatrix_Model_AbstractOption
         $this->_title = $this->_config->getProperty("title");
         $this->_class = $this->_config->getProperty("class");
         $this->_label = (bool)$this->_config->getProperty("label");
+        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
+        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
+
         $this->_init();
     }
 
     protected function _init()
     {
-        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
-        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
     }
 
     // Solo aplicable para fieldOptionsWrapper
@@ -33,6 +34,15 @@ abstract class KlearMatrix_Model_AbstractOption
     public function isDefault()
     {
         return true === $this->_default;
+    }
+
+    public function getTitle()
+    {
+        if (null != $this->_title) {
+            return $this->_title;
+        }
+
+        return '';
     }
 
     abstract public function toArray();

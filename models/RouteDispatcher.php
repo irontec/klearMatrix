@@ -150,7 +150,7 @@ class KlearMatrix_Model_RouteDispatcher
         return $this->_screen;
     }
 
-
+command
     public function getCurrentDialog()
     {
         if (null === $this->_dialog) {
@@ -168,7 +168,7 @@ class KlearMatrix_Model_RouteDispatcher
         if (null === $this->_command) {
 
             $command = new KlearMatrix_Model_Command();
-            $this->_command = $this->_initResponseItem($screen, $this->_commandName);
+            $this->_command = $this->_initResponseItem($command, $this->_commandName);
         }
         return $this->_command;
     }

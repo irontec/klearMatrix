@@ -122,11 +122,11 @@ class KlearMatrix_Model_ResponseItem
         $filePath = 'klear.yaml:///model/' . $this->_modelFile;
 
         $modelConfig = new Zend_Config_Yaml(
-                $filePath,
-                APPLICATION_ENV,
-                array(
-                        "yamldecoder"=>"yaml_parse"
-                )
+            $filePath,
+            APPLICATION_ENV,
+            array(
+                "yamldecoder"=>"yaml_parse"
+            )
         );
 
         $this->_modelSpec = new KlearMatrix_Model_ModelSpecification;
@@ -827,7 +827,7 @@ class KlearMatrix_Model_ResponseItem
 
             default:
                 Throw new Zend_Exception("Undefined Option Type");
-            break;
+                break;
         }
 
         $_items = $parent->getProperty($property);

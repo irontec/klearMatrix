@@ -18,33 +18,31 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function init()
     {
-
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
 
         $csvSpec = array(
-                'suffix'=>'csv',
-                'headers'=>array(
-                        'Expires'=>0,
-                        'Cache-control'=>'private',
-                        'Cache-Control'=>'must-revalidate, post-check=0, pre-check=0',
-                        'Content-Description'=>'File Transfer',
-                        'Content-Type'=>'text/csv; charset=utf-8',
-                        'Content-disposition'=>'attachment; filename=export.csv',
-                ),
-                'callbacks'=>array(
-                    'init' => 'initJsonContext',
-                    'post' => array($this,'exportCsv')
-                )
-               );
-
+            'suffix'=>'csv',
+            'headers'=>array(
+                'Expires'=>0,
+                'Cache-control'=>'private',
+                'Cache-Control'=>'must-revalidate, post-check=0, pre-check=0',
+                'Content-Description'=>'File Transfer',
+                'Content-Type'=>'text/csv; charset=utf-8',
+                'Content-disposition'=>'attachment; filename=export.csv',
+            ),
+            'callbacks'=>array(
+                'init' => 'initJsonContext',
+                'post' => array($this, 'exportCsv')
+            )
+        );
 
         $context = $this->_helper->ContextSwitch();
         $context
             ->addContext('csv', $csvSpec)
             ->setAutoDisableLayout(true)
             ->setDefaultContext('json')
-            ->addActionContext('index', array('json','csv'));
+            ->addActionContext('index', array('json', 'csv'));
 
         $contextParam = $this->getRequest()->getParam($context->getContextParam());
 
@@ -97,7 +95,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                $parentId = $this->_mainRouter->getParam('pk');
                $parentData = $parentMapper->find($parentId);
 
-               $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName() );
+               $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
                $data->setParentIden($parentData->$getter());
                $data->setParentScreen($callerScreen);
                $data->setParentId($parentId);
@@ -109,7 +107,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         if ($this->_item->hasForcedValues()) {
-            $where = array_merge($where,$this->_item->getForcedValuesConditions());
+            $where = array_merge($where, $this->_item->getForcedValuesConditions());
         }
 
         //Generamos el where de los filtros
@@ -146,11 +144,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             if ($this->getRequest()->getPost("searchAddModifier") == '1') {
 
                 $data->addSearchAddModifier(true);
-                $where[] = array('(' . implode ( " or ", $expresions) . ')', $values);
+                $where[] = array('(' . implode(" or ", $expresions) . ')', $values);
 
             } else {
 
-                $where[] = array('(' . implode ( " and ", $expresions) . ')', $values);
+                $where[] = array('(' . implode(" and ", $expresions) . ')', $values);
             }
         }
 
@@ -158,7 +156,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $orderField = $this->getRequest()->getPost("order");
         $orderColumn = $cols->getColFromDbName($orderField);
 
-        if ( $orderField && $orderColumn) {
+        if ($orderField && $orderColumn) {
 
             $order = $orderColumn->getOrderField($model);
 
@@ -210,8 +208,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         //Calculamos la página en la que estamos y el offset
         $paginationConfig = $this->_item->getPaginationConfig();
 
-        if ( ($paginationConfig) &&
-            ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv') ) {
+        if (($paginationConfig) &&
+            ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv')) {
 
             $count = $paginationConfig->getproperty('items');
             $currentCount = (int)$this->getRequest()->getPost("count");
@@ -259,10 +257,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             foreach ($where as $condition) {
 
                 $expresions[] = $condition[0];
-                $values = array_merge($values,$condition[1]);
+                $values = array_merge($values, $condition[1]);
             }
 
-            $where = array(implode ( " and ", $expresions),$values);
+            $where = array(implode(" and ", $expresions), $values);
         }
 
         $data->setResults(array());
@@ -271,7 +269,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         if (is_array($results)) {
 
-            if (!is_null($count) && !is_null($offset) ) {
+            if (!is_null($count) && !is_null($offset)) {
 
                 $totalItems = $mapper->countByQuery($where);
                 $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
@@ -337,9 +335,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->setPlugin($this->_item->getPlugin('list'));
 
-        $jsonResponse->addTemplate("/template/paginator","klearmatrixPaginator");
-        $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(),"klearmatrixList");
-        $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/",'list'),"klearmatrixMultiLangList");
+        $jsonResponse->addTemplate("/template/paginator", "klearmatrixPaginator");
+        $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(), "klearmatrixList");
+        $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/", 'list'), "klearmatrixMultiLangList");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
         $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
@@ -384,8 +382,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $toBeChanged = array();
 
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
+
             if ($field['type'] == 'select') {
+
                 $toBeChanged[$field['id']] = array();
 
                 foreach ($field['config']['values'] as $item) {
@@ -398,13 +398,18 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $fp = fopen("php://output", "w");
 
         if (is_resource($fp)) {
-            foreach ($values as $valLine)
-            {
-                foreach($valLine as $key=>$val) {
+
+            foreach ($values as $valLine) {
+
+                foreach ($valLine as $key => $val) {
+
                     if (isset($toBeChanged[$key])) {
+
                         if (isset($toBeChanged[$key][$val])) {
+
                             $valLine[$key] = $toBeChanged[$key][$val];
                         } else {
+
                             $valLine[$key] = '';
                         }
                     }
@@ -430,13 +435,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             $this->getResponse()->setBody($strContent);
 
-
         } else {
             ob_end_clean();
             Throw new Exception('unable to create output resource for csv.');
         }
-
-
-
     }
 }

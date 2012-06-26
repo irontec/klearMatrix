@@ -37,7 +37,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $hasDependant = false;
 
         foreach ($cols as $column) {
-            if ($this->_columnIsNotEditable($colum)) {
+            if ($this->_columnIsNotEditable($column)) {
                 continue;
             }
 
@@ -122,7 +122,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
-    protected function _columnIsNotEditable()
+    protected function _columnIsNotEditable(KlearMatrix_Model_Column $column)
     {
         return $column->isOption();
     }

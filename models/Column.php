@@ -300,31 +300,64 @@ class KlearMatrix_Model_Column
         return $this->_fieldConfig->filterValue($value, $original);
     }
 
+    
+    protected function _parseScreenOptions()
+    {
+        if (!$this->_config->getProperty("options")->screens) {
+            return;
+        }
+        
+        foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
+            if (!(bool)$enabled) {
+                continue;
+            }
+        
+            $screenOption = new KlearMatrix_Model_ScreenOption;
+            $screenOption->setScreenName($_screen);
+            $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
+        
+            if ( ($this->_routeDispatcher->getCurrentItem()->isFilteredScreen()) &&
+                    ( $screenOption->getFilterField()) &&
+                    ( $screenOption->getFilterField() !=
+                            $this->_routeDispatcher->getCurrentItem()->getFilterField())
+            ) {
+        
+                continue;
+            }
+        
+            $this->_options->addOption($screenOption);
+        }
+    }
+
+    protected function _parseDialogOptions()
+    {
+        if (!$this->_config->getProperty("options")->dialogs) {
+            return;
+        }
+        
+        foreach ($this->_config->getProperty("options")->dialogs  as $_dialog => $enabled) {
+            
+            if (!(bool)$enabled) {
+                continue;
+            }
+    
+            $dialogOption = new KlearMatrix_Model_DialogOption;
+            $dialogOption->setDialogName($_dialog);
+            $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
+    
+            $this->_options->addOption($dialogOption);
+        }
+    }
+    
+    
     public function _parseColumnOptions()
     {
 
         if ($this->_config->getProperty("options")) {
             $this->_options  = new KlearMatrix_Model_OptionCollection();
 
-            foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
-                if (!(bool)$enabled) continue;
-
-                $screenOption = new KlearMatrix_Model_ScreenOption;
-                $screenOption->setScreenName($_screen);
-                $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
-
-                if ( ($this->_routeDispatcher->getCurrentItem()->isFilteredScreen()) &&
-                     ( $screenOption->getFilterField()) &&
-                     ( $screenOption->getFilterField() !=
-                     $this->_routeDispatcher->getCurrentItem()->getFilterField())
-                ) {
-
-                    continue;
-                }
-
-                $this->_options->addOption($screenOption);
-            }
-
+            $this->_parseScreenOptions();
+            $this->_parseDialogOptions();
             //TO-DO : Opciones de dialogo para campos??? El no va a más!!! LOCURA!!
         }
     }

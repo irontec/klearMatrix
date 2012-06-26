@@ -20,6 +20,8 @@ abstract class KlearMatrix_Model_AbstractOption
 
     protected function _init()
     {
+        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
+        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
     }
 
     // Solo aplicable para fieldOptionsWrapper

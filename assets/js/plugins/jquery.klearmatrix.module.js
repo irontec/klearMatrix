@@ -284,13 +284,12 @@
 	            if (data && typeof data.params != undefined) {
 		            $.extend(_postData,data.params);
 	            }
-                
+	            
 	            if ($(this).data("params")) {
 	            	$.extend(_postData,$(this).data("params"));
 	            }
 	            
-	            
-                $.klear.request(
+	            $.klear.request(
                         {
                             file: self.klearModule("option","file"),
                             type: 'dialog',

@@ -30,7 +30,10 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
             'dialog' => $this->_dialog,
             'title' => $this->getTitle(),
             'defaultOption' => $this->isDefault(),
-            'label' => $this->_label
+            'label' => $this->_label,
+            'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
+            'showOnlyOnNull' => $this->_showOnlyOnNull
+                
         );
 
         if ($this->isDefault()) {

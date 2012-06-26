@@ -32,8 +32,8 @@
                             if (self.options.data.buttons[label].recall) {
 
                                 var extraData = {
-                                        params: self.options.data.buttons[label].params,
-                                        external: self.options.data.buttons[label].external
+                                        params: self.options.data.buttons[label].params || {},
+                                        external: self.options.data.buttons[label].external || false
                                 };
                                 
                                 var configuredParams = {};
@@ -52,9 +52,10 @@
                                 	configuredParams[$(this).attr("name")] = $(this).val();
                                 });
                                 
-                                $.extend(extraData.params,configuredParams);
                                 
+                                $.extend(extraData.params,configuredParams);
                                 self.options.caller.trigger("click",extraData);
+                                
                             }
                             $(this).moduleDialog("close");
                         }

@@ -23,10 +23,9 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 
     protected function _init()
     {
+        parent::_init();
         $this->_filterField = $this->_config->getProperty("filterField");
         $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
-        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
-        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
     }
 
     public function setScreenName($screen)

@@ -2,7 +2,6 @@
 
 abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator
 {
-
     protected $_config;
     protected $_items;
     protected $_keys;
@@ -10,7 +9,7 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator
 
     protected $_column;
 
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
         return $value;
     }

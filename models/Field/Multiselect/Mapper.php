@@ -62,7 +62,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $dataMapperName = $this->_relatedMapper;
         $dataMapper = new $dataMapperName;
 
-        if ($results = $dataMapper->fetchList($_where,$_order)) {
+        if ($results = $dataMapper->fetchList($_where, $_order)) {
 
             $posCounter = 0;
             foreach ($results as $dataModel) {
@@ -75,7 +75,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 }
 
                 $this->_keys[] = $dataModel->getPrimaryKey();
-                $this->_items[] = str_replace(array_keys($replace),$replace,$fieldTemplate);
+                $this->_items[] = str_replace(array_keys($replace), $replace, $fieldTemplate);
             }
         }
     }

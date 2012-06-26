@@ -150,7 +150,6 @@ class KlearMatrix_Model_RouteDispatcher
         return $this->_screen;
     }
 
-command
     public function getCurrentDialog()
     {
         if (null === $this->_dialog) {

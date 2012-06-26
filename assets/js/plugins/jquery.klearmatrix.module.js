@@ -146,11 +146,10 @@
 
                 self.klearModule("close");
             });
-            
-            $('select:not(.multiselect)',this.element.klearModule("getPanel"))
+
+            $('select:not(.multiselect,.notcombo)',this.element.klearModule("getPanel"))
             	.combobox({
             		'selected' : function(event,ui) {
-            			console.log(arguments);
             			$(this).trigger("manualchange")
             		}
             	});

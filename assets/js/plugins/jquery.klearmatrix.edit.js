@@ -523,7 +523,6 @@
 
             $(".visualFilter",this.element.klearModule("getPanel")).on('manualchange.visualFilter',function(e,manual) {
             	
-            	
             	if ($(this).is("input:hidden")) {
             		var curOption = $(this);
             	} else {
@@ -531,8 +530,10 @@
             	}
 
                 $.each(curOption.data("hide").split(","),function(i,val) {
+                	
                     var fName = $.trim(val);
                     if (fName == '') return;
+                    
                     var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
                     if (manual) field.hide();
                     else field.slideUp();

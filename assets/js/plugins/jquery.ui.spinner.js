@@ -42,8 +42,7 @@ $.widget('ui.spinner', {
     options: {
         min: null,
         max: null,
-        allowNull: false,
-
+        allowNull: true,
         group: '',
         point: '.',
         prefix: '',

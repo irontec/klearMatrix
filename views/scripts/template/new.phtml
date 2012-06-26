@@ -29,7 +29,7 @@ title="${info.text}"
                     title="${column.fieldInfo.text}"
                 ></span>
             {{/if}}
-            <label for="${id}${randIden}">${name}:</label>
+            <label rel="${id}" for="${id}${randIden}">${name}:</label>
            {{html $item.getEditDataForField(false,column,true)}}
            {{if (column.options)}}
                 {{each column.options}}

@@ -17,31 +17,31 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
     public function addCol(KlearMatrix_Model_Column $col)
     {
-        $this->_cols[$col->getDbName()] = $col;
+        $this->_cols[$col->getDbFieldName()] = $col;
 
         // Estamos dando por hecho, que hay sólo una columna de opciones por listado.
         if ($col->isOption()) {
 
-            $this->_optionColumnsIdx = $col->getDbName();
+            $this->_optionColumnsIdx = $col->getDbFieldName();
         } else {
 
-            $this->_types[$col->getType()] = $col->getDbName();
+            $this->_types[$col->getType()] = $col->getDbFieldName();
         }
 
         if ($col->isDefault()) {
-            $this->_defaultColumnIdx = $col->getDbName();
+            $this->_defaultColumnIdx = $col->getDbFieldName();
         }
 
         if ($col->isDependant()) {
-            $this->_dependantColumnIdx[] = $col->getDbName();
+            $this->_dependantColumnIdx[] = $col->getDbFieldName();
         }
 
         if ($col->isMultilang()) {
-            $this->_multilangColumnIdx[] = $col->getDbName();
+            $this->_multilangColumnIdx[] = $col->getDbFieldName();
         }
 
         if ($col->isFile()) {
-            $this->_fileColumnIdx[] = $col->getDbName();
+            $this->_fileColumnIdx[] = $col->getDbFieldName();
         }
     }
 
@@ -81,7 +81,7 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $retArray = array();
         foreach ($this->_cols as $col) {
 
-            $retArray[$col->getDbName()] = $col->toArray();
+            $retArray[$col->getDbFieldName()] = $col->toArray();
         }
 
         return $retArray;

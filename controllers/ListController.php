@@ -97,7 +97,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                $parentId = $this->_mainRouter->getParam('pk');
                $parentData = $parentMapper->find($parentId);
 
-               $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName() );
+               $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName() );
                $data->setParentIden($parentData->$getter());
                $data->setParentScreen($callerScreen);
                $data->setParentId($parentId);

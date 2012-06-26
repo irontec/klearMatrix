@@ -8,7 +8,7 @@
 class KlearMatrix_Model_Column
 {
 
-    protected $_dbName;
+    protected $_dbFieldName;
     protected $_publicName;
     protected $_isDefault = false;
     protected $_isReadonly = false;
@@ -46,9 +46,9 @@ class KlearMatrix_Model_Column
 
     protected $_routeDispatcher;
 
-    public function setDbName($name)
+    public function setDbFieldName($name)
     {
-        $this->_dbName = $name;
+        $this->_dbFieldName = $name;
     }
 
     public function setPublicName($name)
@@ -115,7 +115,7 @@ class KlearMatrix_Model_Column
 
         $this->_publicName = $this->_config->getProperty("title");
 
-        if ($this->_dbName == '_fieldOptions') {
+        if ($this->_dbFieldName == '_fieldOptions') {
             $this->markAsOption();
             $this->_parseOption();
         } else {
@@ -245,7 +245,7 @@ class KlearMatrix_Model_Column
             return $this->_fieldConfig->getCustomOrderField($model);
         }
 
-        return $this->_dbName;
+        return $this->_dbFieldName;
     }
 
     /**
@@ -263,12 +263,12 @@ class KlearMatrix_Model_Column
             return $this->_publicName;
         }
 
-        return $this->_dbName;
+        return $this->_dbFieldName;
     }
 
-    public function getDbName()
+    public function getDbFieldName()
     {
-        return $this->_dbName;
+        return $this->_dbFieldName;
     }
 
     public function getType()
@@ -369,7 +369,7 @@ class KlearMatrix_Model_Column
         if (method_exists($this->_fieldConfig, 'getCustomSearchField')) {
             $searchField = $this->_fieldConfig->getCustomSearchField($model);
         } else {
-            $searchField = $this->_dbName;
+            $searchField = $this->_dbFieldName;
         }
 
         if ($this->isMultilang()) {
@@ -424,9 +424,9 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->isDependant()) {
-            return 'get' . $this->getDbName();
+            return 'get' . $this->getDbFieldName();
         } else {
-            return 'get' . $model->columnNameToVar($this->getDbName());
+            return 'get' . $model->columnNameToVar($this->getDbFieldName());
         }
 
     }
@@ -442,9 +442,9 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->isDependant()) {
-            return 'set' . $this->getDbName();
+            return 'set' . $this->getDbFieldName();
         } else {
-            return 'set' . $model->columnNameToVar($this->getDbName());
+            return 'set' . $model->columnNameToVar($this->getDbFieldName());
         }
 
     }
@@ -457,7 +457,7 @@ class KlearMatrix_Model_Column
 
         $ret= array();
 
-        $ret["id"] = $this->_dbName;
+        $ret["id"] = $this->_dbFieldName;
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
 

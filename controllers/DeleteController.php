@@ -87,7 +87,6 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         // Recuperamos el objeto y realizamos la acción de borrar
 
         $obj = $mapper->find($pk);
-
         if ($obj && $obj->delete()) {
 
             $data = array(

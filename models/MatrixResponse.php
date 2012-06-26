@@ -206,7 +206,7 @@ class KlearMatrix_Model_MatrixResponse
                         $rValue = $result->{$getter}();
                     }
 
-                    $_newResult[$column->getDbName()] = $column->prepareValue($rValue, $result);
+                    $_newResult[$column->getDbFieldName()] = $column->prepareValue($rValue, $result);
 
                 }
 

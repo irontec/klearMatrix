@@ -32,21 +32,25 @@ class KlearMatrix_NewController extends Zend_Controller_Action
     {
         $model = $this->_item->getObjectInstance();
         // Cargamos las columnas visibles, ignorando blacklist
+
         $cols = $this->_item->getVisibleColumns();
         $hasDependant = false;
 
         foreach ($cols as $column) {
-            if ($column->isOption()) continue;
-            if (!$setter = $column->getSetterName($model)) continue;
-            if (!$getter = $column->getGetterName($model)) continue;
+            if ($this->_columnIsNotEditable($colum)) {
+                continue;
+            }
+
+            $setter = $column->getSetterName($model);
+            $getter = $column->getGetterName($model);
 
             if ($column->isMultilang()) {
                 $value = array();
                 foreach ($cols->getLangs() as $lang) {
-                    $value[$lang] = $this->getRequest()->getPost($column->getDbName() . $lang);
+                    $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
                 }
             } else {
-                $value = $this->getRequest()->getPost($column->getDbName());
+                $value = $this->getRequest()->getPost($column->getDbFieldName());
             }
 
             switch(true) {
@@ -118,6 +122,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
+    protected function _columnIsNotEditable()
+    {
+        return $column->isOption();
+    }
+
     protected function _save($model, $hasDependant)
     {
         try {
@@ -171,7 +180,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 
-                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName());
+                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
 
                 // Se añaden los datos a la respuesta
                 // Se recogerán en el new, y se mostrará información por pantalla

@@ -213,7 +213,7 @@ class KlearMatrix_Model_ResponseItem
     protected function _createCol($name, $config)
     {
         $col = new KlearMatrix_Model_Column;
-        $col->setDbName($name);
+        $col->setDbFieldName($name);
         $col->setRouteDispatcher($this->_routeDispatcher);
 
         if ($config) {

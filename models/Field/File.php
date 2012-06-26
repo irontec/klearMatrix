@@ -64,17 +64,17 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 
     public function getCustomGetterName($model)
     {
-        return 'get' . $this->_column->getDbName() . 'Specs';
+        return 'get' . $this->_column->getDbFieldName() . 'Specs';
     }
 
     public function getCustomSetterName($model)
     {
-        return 'put' . $this->_column->getDbName();
+        return 'put' . $this->_column->getDbFieldName();
     }
 
-    public function getFetchMethod($dbName)
+    public function getFetchMethod($dbFieldName)
     {
-        return $this->_adapter->getFetchMethod($dbName);
+        return $this->_adapter->getFetchMethod($dbFieldName);
     }
 
     public function filterValue($value,$original)

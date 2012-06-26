@@ -35,9 +35,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $pk = $this->_item->getCurrentPk();
 
-        // TO-DO traducir mensaje?
-        // TO-DO lanzar excepción ?
-        // Recuperamos el objeto y realizamos la acción de borrar
+        // TODO: traducir mensaje?
         if (!$model = $mapper->find($pk)) {
             Throw new Zend_Exception('El registro no se encuentra almacenado.');
         }
@@ -46,18 +44,20 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $hasDependant = false;
 
         foreach ($cols as $column) {
-            if ($column->isOption()) continue;
-            if ($column->isReadonly()) continue;
-            if (!$setter = $column->getSetterName($model)) continue;
-            if (!$getter = $column->getGetterName($model)) continue;
+            if ($this->_columnIsNotEditable()) {
+                continue;
+            }
+
+            $setter = $column->getSetterName($model);
+            $getter = $column->getGetterName($model);
 
             if ($column->isMultilang()) {
                 $value = array();
                 foreach ($cols->getLangs() as $lang) {
-                    $value[$lang] = $this->getRequest()->getPost($column->getDbName() . $lang);
+                    $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
                 }
             } else {
-                $value = $this->getRequest()->getPost($column->getDbName());
+                $value = $this->getRequest()->getPost($column->getDbFieldName());
             }
 
             switch(true) {
@@ -104,6 +104,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _columnIsNotEditable()
+    {
+        return $column->isOption() || $column->isReadOnly();
     }
 
     protected function _save($model, $hasDependant)
@@ -172,7 +177,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 
-                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbName());
+                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
 
                 // Se añaden los datos a la respuesta
                 // Se recogerán en el new, y se mostrará información por pantalla

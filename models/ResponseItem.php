@@ -1,8 +1,8 @@
 <?php
 /**
-* De esta clase extienden Screen, Dialog y Command
-* @author jabi
-*/
+ * De esta clase extienden Screen, Dialog y Command
+ * @author jabi
+ */
 
 class KlearMatrix_Model_ResponseItem
 {
@@ -93,6 +93,7 @@ class KlearMatrix_Model_ResponseItem
         if ($this->_mapper) {
             $this->_checkClassesExist(array("_mapper"));
         }
+        return $this;
     }
 
     /**
@@ -113,6 +114,7 @@ class KlearMatrix_Model_ResponseItem
             $this->_fieldInfo->setConfig($info);
             $this->_hasInfo = true;
         }
+        return $this;
     }
 
     protected function _parseModelFile()
@@ -120,11 +122,11 @@ class KlearMatrix_Model_ResponseItem
         $filePath = 'klear.yaml:///model/' . $this->_modelFile;
 
         $modelConfig = new Zend_Config_Yaml(
-            $filePath,
-            APPLICATION_ENV,
-            array(
-                "yamldecoder"=>"yaml_parse"
-            )
+                $filePath,
+                APPLICATION_ENV,
+                array(
+                        "yamldecoder"=>"yaml_parse"
+                )
         );
 
         $this->_modelSpec = new KlearMatrix_Model_ModelSpecification;
@@ -158,6 +160,7 @@ class KlearMatrix_Model_ResponseItem
     public function setRouteDispatcher(KlearMatrix_Model_RouteDispatcher $routeDispatcher)
     {
         $this->_routeDispatcher = $routeDispatcher;
+        return $this;
     }
 
     public function getMapperName()
@@ -174,7 +177,7 @@ class KlearMatrix_Model_ResponseItem
     {
         if (empty($this->_plugin)) {
 
-           return $defaultValue;
+            return $defaultValue;
         }
 
         return $this->_plugin;
@@ -264,8 +267,8 @@ class KlearMatrix_Model_ResponseItem
 
         /*
          * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
-         * que idiomas tienen los modelos disponibles
-         */
+        * que idiomas tienen los modelos disponibles
+        */
         $availableLangsPerModel = $model->getAvailableLangs();
         if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumns->setLangs($availableLangsPerModel);
@@ -314,8 +317,8 @@ class KlearMatrix_Model_ResponseItem
             $this->_blacklist[$pk] = true;
         }
 
-       /*
-        * LLenamos el array blacklist en base al fichero de configuración
+        /*
+         * LLenamos el array blacklist en base al fichero de configuración
         */
         if ($this->_config->exists("fields->blacklist")) {
 
@@ -335,7 +338,7 @@ class KlearMatrix_Model_ResponseItem
 
         /*
          * Si es una pantalla con filtro de ventana padre no mostramos el campo de filtrado
-         */
+        */
         if ($this->isFilteredScreen()) {
 
             $this->_blacklist[$this->_filteredField] = true;
@@ -343,8 +346,8 @@ class KlearMatrix_Model_ResponseItem
 
         /*
          * Si es una pantalla con valores forzados y estos no están en la lista blanca
-         * no serán mostrados por defecto.
-         */
+        * no serán mostrados por defecto.
+        */
         if ($this->hasForcedValues()) {
 
             foreach ($this->getForcedValues() as $field => $value) {
@@ -358,8 +361,8 @@ class KlearMatrix_Model_ResponseItem
 
         /*
          * Metemos en la lista negra los campos multi-idioma.
-         * Preguntaremos a sus getter genéricos con argumento de idioma.
-         */
+        * Preguntaremos a sus getter genéricos con argumento de idioma.
+        */
         $availableLangsPerModel = $model->getAvailableLangs();
         $multiLangFields = $model->getMultiLangColumnsList();
         foreach ($multiLangFields as $dbFieldName => $columnName) {
@@ -420,7 +423,7 @@ class KlearMatrix_Model_ResponseItem
 
     /*
      * Devuelve array con la lista de columnas de tipo ghost que no se encuentran en la blacklist
-     */
+    */
     protected function _getVisibleGhostColumns()
     {
         $columns = array();
@@ -582,8 +585,8 @@ class KlearMatrix_Model_ResponseItem
     public function getFilteredCondition($_value)
     {
         $ret = array(
-            $this->_filteredField . " = :filtered ",
-            array(':filtered' => $_value)
+                $this->_filteredField . " = :filtered ",
+                array(':filtered' => $_value)
         );
 
         return $ret;
@@ -602,8 +605,8 @@ class KlearMatrix_Model_ResponseItem
 
             $valConstant = 'v' . rand(1000, 9999);
             $forcedValueConds[] = array(
-                $field . " = :" .$valConstant,
-                array(':'.$valConstant => $value)
+                    $field . " = :" .$valConstant,
+                    array(':'.$valConstant => $value)
             );
         }
 
@@ -773,7 +776,7 @@ class KlearMatrix_Model_ResponseItem
     {
         if (!$this->_config->exists("pagination")) {
 
-              return false;
+            return false;
         }
 
         $pagination = new Klear_Model_KConfigParser();
@@ -824,7 +827,7 @@ class KlearMatrix_Model_ResponseItem
 
             default:
                 Throw new Zend_Exception("Undefined Option Type");
-                break;
+            break;
         }
 
         $_items = $parent->getProperty($property);

@@ -144,10 +144,8 @@ class KlearMatrix_Model_RouteDispatcher
 
         if (null === $this->_screen) {
 
-            $this->_screen = new KlearMatrix_Model_Screen();
-            $this->_screen->setRouteDispatcher($this);
-            $this->_screen->setName($this->_screenName);
-            $this->_screen->setConfig($this->_selectedConfig);
+            $screen = new KlearMatrix_Model_Screen();
+            $this->_screen = $this->_initResponseItem($screen, $this->_screenName);
         }
         return $this->_screen;
     }
@@ -155,13 +153,10 @@ class KlearMatrix_Model_RouteDispatcher
 
     public function getCurrentDialog()
     {
-
         if (null === $this->_dialog) {
 
-            $this->_dialog = new KlearMatrix_Model_Dialog();
-            $this->_dialog->setRouteDispatcher($this);
-            $this->_dialog->setName($this->_dialogName);
-            $this->_dialog->setConfig($this->_selectedConfig);
+            $dialog = new KlearMatrix_Model_Dialog();
+            $this->_dialog = $this->_initResponseItem($dialog, $this->_dialogName);
         }
         return $this->_dialog;
     }
@@ -172,12 +167,18 @@ class KlearMatrix_Model_RouteDispatcher
 
         if (null === $this->_command) {
 
-            $this->_command = new KlearMatrix_Model_Command();
-            $this->_command->setRouteDispatcher($this);
-            $this->_command->setName($this->_commandName);
-            $this->_command->setConfig($this->_selectedConfig);
+            $command = new KlearMatrix_Model_Command();
+            $this->_command = $this->_initResponseItem($screen, $this->_commandName);
         }
         return $this->_command;
+    }
+
+    protected function _initResponseItem(KlearMatrix_Model_ResponseItem $responseItem, $name)
+    {
+        $responseItem->setRouteDispatcher($this)
+                     ->setName($name)
+                     ->setConfig($this->_selectedConfig);
+        return $responseItem;
     }
 
 

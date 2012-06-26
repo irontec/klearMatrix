@@ -42,7 +42,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             Throw new Zend_Exception('El registro no se encuentra almacenado.');
         }
 
-        $cols = $this->_item->getVisibleColumnWrapper();
+        $cols = $this->_item->getVisibleColumns();
         $hasDependant = false;
 
         foreach ($cols as $column) {
@@ -131,7 +131,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $pk = $this->_item->getCurrentPk();
 
         $data = new KlearMatrix_Model_MatrixResponse;
-        $cols = $this->_item->getVisibleColumnWrapper();
+        $cols = $this->_item->getVisibleColumns();
 
         $data
             ->setTitle($this->_item->getTitle())
@@ -164,8 +164,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($parentScreenName));
                 $parentMapperName = $parentScreen->getMapperName();
 
-                $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
-                $defaultParentCol = $parentColWrapper->getDefaultCol();
+                $parentColumns = $parentScreen->getVisibleColumns();
+                $defaultParentCol = $parentColumns->getDefaultCol();
 
                 // Recuperamos mapper, para recuperar datos principales (default value)
                 $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
@@ -187,7 +187,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
         $data->setInfo($this->_item->getInfo());
-        $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
+        $data->setGeneralOptions($this->_item->getScreenOptions());
         $data->setActionMessages($this->_item->getActionMessages());
         $data->setDisableSave($this->_item->getDisableSave());
 

@@ -37,12 +37,11 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $pk = $this->_mainRouter->getParam("pk");
 
-        $cols = $this->_item->getVisibleColumnWrapper();
+        $cols = $this->_item->getVisibleColumns();
 
         $defaultCol = $cols->getDefaultCol();
 
-        $cols
-            ->resetWrapper()
+        $cols->clear()
             ->addCol($defaultCol);
 
         $data = new KlearMatrix_Model_MatrixResponse;

@@ -7,10 +7,10 @@
 class KlearMatrix_Model_MatrixResponse
 {
 
-    protected $_columnWrapper;
+    protected $_columns;
     protected $_results;
-    protected $_fieldOptionsWrapper = false;
-    protected $_generalOptionsWrapper = false;
+    protected $_fieldOptions = false;
+    protected $_generalOptions = false;
 
     protected $_messages;
 
@@ -37,9 +37,9 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_pk;
 
-    public function setColumnWraper(KlearMatrix_Model_ColumnWrapper $columnWrapper)
+    public function setColumnWraper(KlearMatrix_Model_ColumnCollection $columnWrapper)
     {
-        $this->_columnWrapper = $columnWrapper;
+        $this->_columns = $columnWrapper;
         return $this;
     }
 
@@ -63,21 +63,21 @@ class KlearMatrix_Model_MatrixResponse
 
     /**
      * Opciones "generales" de pantalla
-     * @param KlearMatrix_Model_OptionsWrapper $screenOptsWrapper
+     * @param KlearMatrix_Model_OptionCollection $screenOptsWrapper
      */
-    public function setGeneralOptions(KlearMatrix_Model_OptionsWrapper $generalOptsWrapper)
+    public function setGeneralOptions(KlearMatrix_Model_OptionCollection $generalOptsWrapper)
     {
-        $this->_generalOptionsWrapper = $generalOptsWrapper;
+        $this->_generalOptions = $generalOptsWrapper;
         return $this;
     }
 
     /**
      * Opciones por fila
-     * @param KlearMatrix_Model_OptionsWrapper $fieldOptsWrapper
+     * @param KlearMatrix_Model_OptionCollection $fieldOptsWrapper
      */
-    public function setFieldOptions(KlearMatrix_Model_OptionsWrapper $fieldOptsWrapper)
+    public function setFieldOptions(KlearMatrix_Model_OptionCollection $fieldOptsWrapper)
     {
-        $this->_fieldOptionsWrapper = $fieldOptsWrapper;
+        $this->_fieldOptions = $fieldOptsWrapper;
         return $this;
     }
 
@@ -157,9 +157,9 @@ class KlearMatrix_Model_MatrixResponse
 
     /**
      * Setea para su procesamiento el array de mensajes de confirmación y error predefinidos
-     * @param KlearMatrix_Model_ActionMessageWrapper $msgs
+     * @param KlearMatrix_Model_ActionMessageCollection $msgs
      */
-    public function setActionMessages(KlearMatrix_Model_ActionMessageWrapper $msgs)
+    public function setActionMessages(KlearMatrix_Model_ActionMessageCollection $msgs)
     {
         $this->_messages = $msgs;
 
@@ -189,7 +189,7 @@ class KlearMatrix_Model_MatrixResponse
             $_newResult = array();
 
             if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
-                foreach ($this->_columnWrapper as $column) {
+                foreach ($this->_columns as $column) {
 
                     if (!$getter = $column->getGetterName($result)) {
                         continue;
@@ -198,7 +198,7 @@ class KlearMatrix_Model_MatrixResponse
                     if ($column->isMultilang()) {
 
                         $rValue = array();
-                        foreach ($this->_columnWrapper->getLangs() as $_lang) {
+                        foreach ($this->_columns->getLangs() as $_lang) {
                             $rValue[$_lang] = $result->{$getter}($_lang);
                         }
 
@@ -227,21 +227,21 @@ class KlearMatrix_Model_MatrixResponse
 
         $ret = array();
         $ret['title'] = $this->_title;
-        $ret['columns'] = $this->_columnWrapper->toArray();
+        $ret['columns'] = $this->_columns->toArray();
 
         // Probablemente no es la mejor forma de devolver los idiomas disponibles en los campos...
-        $ret['langs'] = $this->_columnWrapper->getLangs();
-        $ret['defaultLang'] = $this->_columnWrapper->getDefaultLang();
+        $ret['langs'] = $this->_columns->getLangs();
+        $ret['defaultLang'] = $this->_columns->getDefaultLang();
 
         $ret['values'] = $this->_results;
         $ret['pk'] = $this->_pk;
 
-        if (false !== $this->_fieldOptionsWrapper) {
-            $ret['fieldOptions'] = $this->_fieldOptionsWrapper->toArray();
+        if (false !== $this->_fieldOptions) {
+            $ret['fieldOptions'] = $this->_fieldOptions->toArray();
         }
 
-        if (false !== $this->_generalOptionsWrapper) {
-            $ret['generalOptions'] = $this->_generalOptionsWrapper->toArray();
+        if (false !== $this->_generalOptions) {
+            $ret['generalOptions'] = $this->_generalOptions->toArray();
         }
 
         if ($this->_csv !== false) {

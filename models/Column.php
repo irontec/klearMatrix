@@ -304,7 +304,7 @@ class KlearMatrix_Model_Column
     {
 
         if ($this->_config->getProperty("options")) {
-            $this->_options  = new KlearMatrix_Model_OptionsWrapper;
+            $this->_options  = new KlearMatrix_Model_OptionCollection();
 
             foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
                 if (!(bool)$enabled) continue;

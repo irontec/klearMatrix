@@ -5,13 +5,9 @@
 * @author jabi
 *
 */
-class KlearMatrix_Model_ScreenOption
+class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 {
-
-    protected $_config;
     protected $_screen;
-    protected $_class;
-    protected $_title;
     protected $_showOnlyOnNotNull = false;
     protected $_showOnlyOnNull = false;
 
@@ -25,42 +21,17 @@ class KlearMatrix_Model_ScreenOption
     // Para comprobar en opciones desde columna... no permitir siempre que sea diferente al de la pantalla contenedora... (sino, lío de IDs)
     protected $_filterField = false;
 
-    protected $_default = false;
-
-
-    protected $_noLabel = true;
+    protected function _init()
+    {
+        $this->_filterField = $this->_config->getProperty("filterField");
+        $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
+        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
+        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
+    }
 
     public function setScreenName($screen)
     {
         $this->_screen = $screen;
-    }
-
-    public function setConfig(Zend_Config $config)
-    {
-
-        $this->_config = new Klear_Model_KConfigParser;
-        $this->_config->setConfig($config);
-
-        $this->_title = $this->_config->getProperty("title");
-        $this->_filterField = $this->_config->getProperty("filterField");
-        $this->_class = $this->_config->getProperty("class");
-        $this->_label = (bool)$this->_config->getProperty("label");
-        $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
-        $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
-        $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
-
-
-    }
-
-    // Solo aplicable para fieldOPtionsWrapper
-    public function setAsDefault()
-    {
-        $this->_default = true;
-    }
-
-    public function isDefault()
-    {
-        return true === $this->_default;
     }
 
     public function getFilterField()
@@ -76,25 +47,21 @@ class KlearMatrix_Model_ScreenOption
 
         // o_O pues eso.... MAL!
         return 'error';
-
     }
 
     public function toArray()
     {
         return array(
-            'icon'=>$this->_class,
-            'type'=>'screen',
-            'screen'=>$this->_screen,
-            'title'=>$this->getTitle(),
-            'label'=>$this->_label,
-            'defaultOption'=>$this->isDefault(),
-            'multiInstance'=>$this->_multiInstance,
+            'icon' => $this->_class,
+            'type' => 'screen',
+            'screen' => $this->_screen,
+            'title' => $this->getTitle(),
+            'label' => $this->_label,
+            'defaultOption' => $this->isDefault(),
+            'multiInstance' => $this->_multiInstance,
             'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
             'showOnlyOnNull' => $this->_showOnlyOnNull
 
         );
     }
-
-
-
 }

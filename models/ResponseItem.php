@@ -40,7 +40,7 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_modelSpec;
 
-    protected $_visibleColumnWrapper;
+    protected $_visibleColumns;
 
     protected $_options;
 
@@ -246,16 +246,16 @@ class KlearMatrix_Model_ResponseItem
      *
      * TODO: Implementar lista blanca que solo muestre las columnas especificadas en la misma (showColumns o algo así)
      *
-     * @return KlearMatrix_Model_ColumnWrapper $_visibleColumnWrapper listado de columnas que devuelve el modelo
+     * @return KlearMatrix_Model_ColumnCollection listado de columnas que devuelve el modelo
      */
-    public function getVisibleColumnWrapper($ignoreBlackList = false)
+    public function getVisibleColumns($ignoreBlackList = false)
     {
-        if (isset($this->_visibleColumnWrapper)) {
+        if (isset($this->_visibleColumns)) {
 
-            return $this->_visibleColumnWrapper;
+            return $this->_visibleColumns;
         }
 
-        $this->_visibleColumnWrapper =  new KlearMatrix_Model_ColumnWrapper;
+        $this->_visibleColumns =  new KlearMatrix_Model_ColumnCollection();
         $model = $this->getObjectInstance();
 
         if (!$ignoreBlackList) {
@@ -268,40 +268,40 @@ class KlearMatrix_Model_ResponseItem
          */
         $availableLangsPerModel = $model->getAvailableLangs();
         if (count($availableLangsPerModel) > 0) {
-            $this->_visibleColumnWrapper->setLangs($availableLangsPerModel);
+            $this->_visibleColumns->setLangs($availableLangsPerModel);
         }
 
         // Campos de tipo "file"
         //TODO: Revisar este método, porque también se encarga de generar parte de la lista negra
         $fileColumns = $this->_getVisibleFileColumns($model);
-        $this->_visibleColumnWrapper->addCols($fileColumns);
+        $this->_visibleColumns->addCols($fileColumns);
 
         // Campos Ghost
         $ghostColumns = $this->_getVisibleGhostColumns();
-        $this->_visibleColumnWrapper->addCols($ghostColumns);
+        $this->_visibleColumns->addCols($ghostColumns);
 
         // Campos de la BBDD
         $columns = $this->_getVisibleColumns($model, $ignoreBlackList);
-        $this->_visibleColumnWrapper->addCols($columns);
+        $this->_visibleColumns->addCols($columns);
 
         // Tablas dependientes
         $dependantColumns = $this->_getVisibleDependantColumns($model, $ignoreBlackList);
-        $this->_visibleColumnWrapper->addCols($dependantColumns);
+        $this->_visibleColumns->addCols($dependantColumns);
 
         if ($this->hasFieldOptions()) {
 
             $col = $this->_createCol("_fieldOptions", $this->_config->getRaw()->fields->options);
             $col->markAsOption();
-            $this->_visibleColumnWrapper->addCol($col);
+            $this->_visibleColumns->addCol($col);
         }
 
         //Ordenamos los campos si existe la configuración
         if ($this->_config->exists("fields->order")) {
 
-            $this->_visibleColumnWrapper->sortCols($this->_config->getRaw()->fields->order);
+            $this->_visibleColumns->sortCols($this->_config->getRaw()->fields->order);
         }
 
-        return $this->_visibleColumnWrapper;
+        return $this->_visibleColumns;
     }
 
     protected function _createBlackList($model)
@@ -689,25 +689,25 @@ class KlearMatrix_Model_ResponseItem
      */
     public function getScreenFieldsOptionsConfig()
     {
-        $parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
+        $parent = $this->_visibleColumns->getOptionColumn()->getKlearConfig();
 
         return $this->_getItemFieldsOptionsConfig('screen', $parent);
     }
 
     public function getDialogsFieldsOptionsConfig()
     {
-        $parent = $this->_visibleColumnWrapper->getOptionColumn()->getKlearConfig();
+        $parent = $this->_visibleColumns->getOptionColumn()->getKlearConfig();
 
         return $this->_getItemFieldsOptionsConfig('dialog', $parent);
     }
 
-    public function getScreenOptionsWrapper()
+    public function getScreenOptions()
     {
-        $generalOptionsWrapper = new KlearMatrix_Model_OptionsWrapper;
+        $generalOptions = new KlearMatrix_Model_OptionCollection();
 
         if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
 
-            return $generalOptionsWrapper;
+            return $generalOptions;
         }
 
         $parent = new Klear_Model_KConfigParser();
@@ -720,7 +720,7 @@ class KlearMatrix_Model_ResponseItem
             $screenOption = new KlearMatrix_Model_ScreenOption;
             $screenOption->setScreenName($_screen);
             $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
-            $generalOptionsWrapper->addOption($screenOption);
+            $generalOptions->addOption($screenOption);
         }
 
         $options = $this->_getItemFieldsOptionsConfig('dialog', $parent);
@@ -730,15 +730,15 @@ class KlearMatrix_Model_ResponseItem
             $dialogOption = new KlearMatrix_Model_DialogOption;
             $dialogOption->setDialogName($_dialog);
             $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
-            $generalOptionsWrapper->addOption($dialogOption);
+            $generalOptions->addOption($dialogOption);
         }
 
-        return $generalOptionsWrapper;
+        return $generalOptions;
     }
 
     public function getActionMessages()
     {
-        $msgs = new KlearMatrix_Model_ActionMessageWrapper;
+        $msgs = new KlearMatrix_Model_ActionMessageCollection();
 
         if (!$this->_actionMessages) {
 

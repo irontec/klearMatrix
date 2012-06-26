@@ -6,7 +6,6 @@
  */
 class KlearMatrix_FileController extends Zend_Controller_Action
 {
-
     /**
      * Route Dispatcher desde klear/index/dispatch
      * @var KlearMatrix_Model_RouteDispatcher
@@ -19,15 +18,13 @@ class KlearMatrix_FileController extends Zend_Controller_Action
      */
     protected $_item;
 
-
     /**
-     * @var KlearMatrix_Model_ColumnWrapper
+     * @var KlearMatrix_Model_ColumnCollection
      */
     protected $_cols;
 
     protected $_pk;
     protected $_model;
-
 
     public function init()
     {
@@ -46,7 +43,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
     protected function _getFileColumn()
     {
-
         $fileField = $this->_item->getConfigAttribute("mainColumn");
 
         $fileColumn = $this->_item->getColumn($fileField);
@@ -56,13 +52,11 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         }
 
         return $fileColumn;
-
     }
 
 
     public function uploadAction()
     {
-
         try {
             $column = $this->_getFileColumn();
 
@@ -102,8 +96,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
     public function downloadAction()
     {
-
-
         try {
 
             $dwColumn = $this->_getFileColumn();
@@ -161,8 +153,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                     )
 
             );
-
-
         } catch(Exception $e) {
             if (!$this->_request->isXmlHttpRequest()) {
                 throw new Zend_Controller_Action_Exception('File not found.', 404);
@@ -179,7 +169,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             );
 
         }
-
 
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');

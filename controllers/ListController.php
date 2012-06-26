@@ -67,7 +67,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
         $data = new KlearMatrix_Model_MatrixResponse;
-        $cols = $this->_item->getVisibleColumnWrapper();
+        $cols = $this->_item->getVisibleColumns();
 
         $model = $this->_item->getObjectInstance();
 
@@ -90,8 +90,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
                $parentMapperName = $parentScreen->getMapperName();
 
-               $parentColWrapper = $parentScreen->getVisibleColumnWrapper();
-               $defaultParentCol = $parentColWrapper->getDefaultCol();
+               $parentColumns = $parentScreen->getVisibleColumns();
+               $defaultParentCol = $parentColumns->getDefaultCol();
 
                $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
                $parentId = $this->_mainRouter->getParam('pk');
@@ -286,7 +286,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             if ($this->_item->hasFieldOptions()) {
 
                 $defaultOption = $cols->getOptionColumn()->getDefaultOption();
-                $fieldOptionsWrapper = new KlearMatrix_Model_OptionsWrapper;
+                $fieldOptions = new KlearMatrix_Model_OptionCollection();
 
                 foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
 
@@ -303,7 +303,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                     // El "nombre" mainRouter apesta... pero... O:)
 
                     $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
-                    $fieldOptionsWrapper->addOption($screenOption);
+                    $fieldOptions->addOption($screenOption);
                 }
 
                 foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
@@ -318,10 +318,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                     }
 
                     $dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($_dialog));
-                    $fieldOptionsWrapper->addOption($dialogOption);
+                    $fieldOptions->addOption($dialogOption);
                 }
 
-                $data->setFieldOptions($fieldOptionsWrapper);
+                $data->setFieldOptions($fieldOptions);
             }
 
             $data->fixResults($this->_item);
@@ -329,7 +329,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
 
         $data->setInfo($this->_item->getInfo());
-        $data->setGeneralOptions($this->_item->getScreenOptionsWrapper());
+        $data->setGeneralOptions($this->_item->getScreenOptions());
 
         Zend_Json::$useBuiltinEncoderDecoder = true;
 

@@ -143,7 +143,7 @@ class KlearMatrix_Model_ResponseItem
         }
     }
 
-    public function setItemName($name)
+    public function setName($name)
     {
         $this->_itemName = $name;
 
@@ -718,7 +718,7 @@ class KlearMatrix_Model_ResponseItem
         foreach ($options as $_screen) {
 
             $screenOption = new KlearMatrix_Model_ScreenOption;
-            $screenOption->setScreenName($_screen);
+            $screenOption->setName($_screen);
             $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
             $generalOptions->addOption($screenOption);
         }
@@ -728,7 +728,7 @@ class KlearMatrix_Model_ResponseItem
         foreach ($options as $_dialog) {
 
             $dialogOption = new KlearMatrix_Model_DialogOption;
-            $dialogOption->setDialogName($_dialog);
+            $dialogOption->setName($_dialog);
             $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
             $generalOptions->addOption($dialogOption);
         }

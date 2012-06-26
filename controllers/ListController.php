@@ -291,7 +291,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
 
                     $screenOption = new KlearMatrix_Model_ScreenOption;
-                    $screenOption->setScreenName($_screen);
+                    $screenOption->setName($_screen);
 
                     if ($_screen === $defaultOption) {
 
@@ -309,7 +309,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
 
                     $dialogOption = new KlearMatrix_Model_DialogOption;
-                    $dialogOption->setDialogName($_dialog);
+                    $dialogOption->setName($_dialog);
 
                     if ($_dialog === $defaultOption) {
 

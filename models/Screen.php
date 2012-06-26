@@ -20,12 +20,6 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         '_hooks' => array('hooks', false)
     );
 
-    //Seteamos el nombre del screen
-    public function setScreenName($name)
-    {
-        $this->setItemName($name);
-    }
-
     //Seteamos la configuración del screen
     protected function _initCustomConfig()
     {

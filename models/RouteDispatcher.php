@@ -146,7 +146,7 @@ class KlearMatrix_Model_RouteDispatcher
 
             $this->_screen = new KlearMatrix_Model_Screen();
             $this->_screen->setRouteDispatcher($this);
-            $this->_screen->setScreenName($this->_screenName);
+            $this->_screen->setName($this->_screenName);
             $this->_screen->setConfig($this->_selectedConfig);
         }
         return $this->_screen;
@@ -160,7 +160,7 @@ class KlearMatrix_Model_RouteDispatcher
 
             $this->_dialog = new KlearMatrix_Model_Dialog();
             $this->_dialog->setRouteDispatcher($this);
-            $this->_dialog->setDialogName($this->_dialogName);
+            $this->_dialog->setName($this->_dialogName);
             $this->_dialog->setConfig($this->_selectedConfig);
         }
         return $this->_dialog;
@@ -174,7 +174,7 @@ class KlearMatrix_Model_RouteDispatcher
 
             $this->_command = new KlearMatrix_Model_Command();
             $this->_command->setRouteDispatcher($this);
-            $this->_command->setCommandName($this->_commandName);
+            $this->_command->setName($this->_commandName);
             $this->_command->setConfig($this->_selectedConfig);
         }
         return $this->_command;

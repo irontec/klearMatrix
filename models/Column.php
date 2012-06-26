@@ -300,33 +300,34 @@ class KlearMatrix_Model_Column
         return $this->_fieldConfig->filterValue($value, $original);
     }
 
-    
+
     protected function _parseScreenOptions()
     {
         if (!$this->_config->getProperty("options")->screens) {
             return;
         }
-        
+
         foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
             if (!(bool)$enabled) {
                 continue;
             }
-        
+
             $screenOption = new KlearMatrix_Model_ScreenOption;
-            $screenOption->setScreenName($_screen);
+            $screenOption->setName($_screen);
             $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
-        
-            if ( ($this->_routeDispatcher->getCurrentItem()->isFilteredScreen()) &&
-                    ( $screenOption->getFilterField()) &&
-                    ( $screenOption->getFilterField() !=
-                            $this->_routeDispatcher->getCurrentItem()->getFilterField())
-            ) {
-        
-                continue;
+
+            if ($this->_optionMustBeAdded($screenOption)) {
+                $this->_options->addOption($screenOption);
             }
-        
-            $this->_options->addOption($screenOption);
         }
+    }
+
+    // TODO: Sacar esta comprobación de aquí, parece que el propio $screenOption podría saber si debe añadirse o no
+    protected function _optionMustBeAdded(KlearMatrix_Model_ScreenOption $screenOption)
+    {
+        return !$this->_routeDispatcher->getCurrentItem()->isFilteredScreen()
+                || !$screenOption->getFilterField()
+                || ($screenOption->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField());
     }
 
     protected function _parseDialogOptions()
@@ -334,22 +335,22 @@ class KlearMatrix_Model_Column
         if (!$this->_config->getProperty("options")->dialogs) {
             return;
         }
-        
+
         foreach ($this->_config->getProperty("options")->dialogs  as $_dialog => $enabled) {
-            
+
             if (!(bool)$enabled) {
                 continue;
             }
-    
+
             $dialogOption = new KlearMatrix_Model_DialogOption;
-            $dialogOption->setDialogName($_dialog);
+            $dialogOption->setName($_dialog);
             $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
-    
+
             $this->_options->addOption($dialogOption);
         }
     }
-    
-    
+
+
     public function _parseColumnOptions()
     {
 

@@ -7,6 +7,11 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_default = false;
     protected $_noLabel = true;
 
+    protected $_name;
+
+    protected $_showOnlyOnNotNull = false;
+    protected $_showOnlyOnNull = false;
+
     public function setConfig(Zend_Config $config)
     {
         $this->_config = new Klear_Model_KConfigParser;
@@ -25,15 +30,13 @@ abstract class KlearMatrix_Model_AbstractOption
     {
     }
 
-    // Solo aplicable para fieldOptionsWrapper
-    public function setAsDefault()
+    /**
+     * Set option's name
+     * @param unknown_type $name
+     */
+    public function setName($name)
     {
-        $this->_default = true;
-    }
-
-    public function isDefault()
-    {
-        return true === $this->_default;
+        $this->_name = $name;
     }
 
     public function getTitle()
@@ -43,6 +46,17 @@ abstract class KlearMatrix_Model_AbstractOption
         }
 
         return '';
+    }
+
+    // Solo aplicable para fieldOptionsWrapper
+    public function setAsDefault()
+    {
+        $this->_default = true;
+    }
+
+    public function isDefault()
+    {
+        return true === $this->_default;
     }
 
     abstract public function toArray();

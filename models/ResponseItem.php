@@ -635,13 +635,14 @@ class KlearMatrix_Model_ResponseItem
     {
         // Devuelve el PK para la pantalla de edit.
         $pk = $this->getForcedPk();
-
-        if ($pk) {
-
+        if (!empty($pk)) {
             return $pk;
         }
 
         $pk = $this->getCalculatedPk();
+        if (!empty($pk)) {
+            return $pk;
+        }
 
         return $this->_routeDispatcher->getParam("pk");
     }

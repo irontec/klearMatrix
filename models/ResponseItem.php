@@ -170,7 +170,11 @@ class KlearMatrix_Model_ResponseItem
 
     public function getModelName()
     {
-        return $this->_modelSpec->getClassName();
+        $className = $this->_modelSpec->getClassName();
+        if ($className{0} == '\\') {
+            $className = substr($className, 1);
+        }
+        return $className;
     }
 
     public function getPlugin($defaultValue = '')

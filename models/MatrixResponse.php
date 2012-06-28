@@ -178,8 +178,9 @@ class KlearMatrix_Model_MatrixResponse
 
         $primaryKeyName = $screen->getPkName();
 
-
-        if (!is_array($this->_results)) $this->_results = array($this->_results);
+        if (!is_array($this->_results)) {
+            $this->_results = array($this->_results);
+        }
 
         $_newResults = array();
 
@@ -187,7 +188,6 @@ class KlearMatrix_Model_MatrixResponse
         foreach ($this->_results as $result) {
 
             $_newResult = array();
-
             if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
                 foreach ($this->_columns as $column) {
 

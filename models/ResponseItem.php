@@ -364,7 +364,7 @@ class KlearMatrix_Model_ResponseItem
          * Metemos en la lista negra los campos multi-idioma.
         * Preguntaremos a sus getter genéricos con argumento de idioma.
         */
-        $multilangFields = $this->_getMultilangFields($model);
+        $multiLangFields = $this->_getMultilangFields($model);
         foreach ($multiLangFields as $field) {
             $this->_blacklist[$field] = true;
         }
@@ -382,7 +382,7 @@ class KlearMatrix_Model_ResponseItem
                 $multiLangFields[] = $dbFieldName . '_'. $langIden;
             }
         }
-        return $multilangFields;
+        return $multiLangFields;
     }
 
     /**

@@ -128,7 +128,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             $parents = $model->getParentList();
             foreach ($parents as $_fk => $parentData) {
 
-                if ($parentData['table_name'] == $tableRelatedName) {
+                if (strtolower($parentData['table_name']) == strtolower($tableRelatedName)) {
 
                     if ($this->_relatedProperty == $parentData['property']) {
 
@@ -139,7 +139,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
 
             if (false === $fkName) {
-
                 Throw New Zend_Exception('No se encuentra el valor de la FK.');
             }
 

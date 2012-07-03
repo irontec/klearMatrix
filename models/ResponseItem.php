@@ -313,13 +313,16 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _createBlackList($model)
     {
+        $this->_poblateBlackList($model);
+        $this->_cleanBlackList();
+    }
+
+    protected function _poblateBlackList($model)
+    {
         $pk = $model->getPrimaryKeyName();
 
         // Si la clave primaria no está en la lista blanca no la mostramos
-        if (!$this->_config->exists("fields->whitelist->" . $pk)) {
-
-            $this->_blacklist[$pk] = true;
-        }
+        $this->_blacklist[$pk] = true;
 
         /*
          * LLenamos el array blacklist en base al fichero de configuración
@@ -332,10 +335,7 @@ class KlearMatrix_Model_ResponseItem
 
                 foreach ($blackListConfig as $field => $value) {
 
-                    if ((bool)$value) {
-
-                        $this->_blacklist[$field] = true;
-                    }
+                    $this->_blacklist[$field] = (bool)$value;
                 }
             }
         }
@@ -354,12 +354,9 @@ class KlearMatrix_Model_ResponseItem
         */
         if ($this->hasForcedValues()) {
 
-            foreach ($this->getForcedValues() as $field => $value) {
+            foreach (array_keys($this->getForcedValues()) as $field) {
 
-                if (!$this->_config->exists("fields->whitelist->" . $field)) {
-
-                    $this->_blacklist[$field] = true;
-                }
+                $this->_blacklist[$field] = true;
             }
         }
 
@@ -367,16 +364,37 @@ class KlearMatrix_Model_ResponseItem
          * Metemos en la lista negra los campos multi-idioma.
         * Preguntaremos a sus getter genéricos con argumento de idioma.
         */
+        $multilangFields = $this->_getMultilangFields($model);
+        foreach ($multiLangFields as $field) {
+            $this->_blacklist[$field] = true;
+        }
+    }
+
+    protected function _getMultilangFields($model)
+    {
+        $multiLangFields = array();
         $availableLangsPerModel = $model->getAvailableLangs();
         $multiLangFields = $model->getMultiLangColumnsList();
         foreach ($multiLangFields as $dbFieldName => $columnName) {
 
             foreach ($availableLangsPerModel as $langIden) {
 
-                $this->_blacklist[$dbFieldName . '_'. $langIden] = true;
+                $multiLangFields[] = $dbFieldName . '_'. $langIden;
             }
         }
+        return $multilangFields;
+    }
 
+    /**
+     * Removes whitelisted and false valued blacklist elements
+     */
+    protected function _cleanBlackList()
+    {
+        foreach ($this->_blacklist as $key => $value) {
+            if ($this->_config->exists("fields->whitelist->" . $key) || $value === false) {
+                unset($this->_blacklist[$key]);
+            }
+        }
     }
 
     /**

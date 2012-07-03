@@ -139,6 +139,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
 
             if (false === $fkName) {
+
                 Throw New Zend_Exception('No se encuentra el valor de la FK.');
             }
 
@@ -197,7 +198,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                     $fkColumn = $model->getColumnForParentTable($tableRelatedName, $this->_relatedProperty);
                 }
 
-                $getter = 'get' . ufcirst($fkColumn);
+                $getter = 'get' . ucfirst($fkColumn);
                 foreach ($value as $idx=>$idRelatedItem) {
 
                     if ($idRelatedItem ==  $model->{$getter}()) {

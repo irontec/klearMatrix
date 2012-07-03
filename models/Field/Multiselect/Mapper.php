@@ -2,10 +2,11 @@
 
 class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field_Multiselect_Abstract
 {
-
     protected $_relationMapper;
 
     protected $_relatedMapper;
+    protected $_relatedProperty;
+
     protected $_fieldConfig;
 
     protected $_editableFields;
@@ -17,6 +18,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         // Mapper de las relaciones. Aquí se guardarán las coincidencias.
         $this->_relationMapper = $parsedValues->getProperty("relationMapper");
+        $this->_relatedProperty = $parsedValues->getProperty("relatedProperty", null);
 
         $this->_relatedMapper = $parsedValues->getProperty("relatedMapperName");
         $this->_fieldName = $parsedValues->getProperty("relatedFieldName");
@@ -70,7 +72,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 $replace = array();
                 foreach ($fields as $_fieldName) {
 
-                    $_getter = 'get' . $dataModel->columnNameToVar($_fieldName);
+                    $_getter = 'get' . ucfirst($dataModel->columnNameToVar($_fieldName));
                     $replace['%' . $_fieldName . '%'] = $dataModel->$_getter();
                 }
 
@@ -111,6 +113,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         $retStruct = array();
         $relationIndex = array();
+
         // Itero en value, que supuestamente es un array de modelos de relación
         foreach ($value as $model) {
 
@@ -121,13 +124,17 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
 
             $fkName = false;
+
             $parents = $model->getParentList();
             foreach ($parents as $_fk => $parentData) {
 
                 if ($parentData['table_name'] == $tableRelatedName) {
 
-                    $fkName = $_fk;
-                    break;
+                    if ($this->_relatedProperty == $parentData['property']) {
+
+                        $fkName = $_fk;
+                        break;
+                    }
                 }
             }
 
@@ -143,7 +150,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
             $retStruct = array(
                 'pk'=> $model->getPrimaryKey(),
-                'relatedId'=>$model->{'get' . $relationAttributte}()
+                'relatedId'=>$model->{'get' . ucfirst($relationAttributte)}()
             );
 
             $relationIndex[$retStruct['relatedId']] = $retStruct['pk'];
@@ -188,10 +195,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 if (false === $fkColumn) {
 
-                    $fkColumn = $model->getColumnForParentTable($tableRelatedName);
+                    $fkColumn = $model->getColumnForParentTable($tableRelatedName, $this->_relatedProperty);
                 }
 
-                $getter = 'get' . $fkColumn;
+                $getter = 'get' . ufcirst($fkColumn);
                 foreach ($value as $idx=>$idRelatedItem) {
 
                     if ($idRelatedItem ==  $model->{$getter}()) {
@@ -213,10 +220,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 if (false === $fkColumn) {
 
-                    $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName);
+                    $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relatedProperty);
                 }
 
-                $setter = 'set'.$fkColumn;
+                $setter = 'set' . ucfirst($fkColumn);
 
                 $relationModel->{$setter}($idRelated);
                 $retRelations[] = $relationModel;

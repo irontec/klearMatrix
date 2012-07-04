@@ -29,24 +29,20 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         return $this->_control->getConfig();
     }
 
-    private function getFormat($phpFormat = true)
-    {
-        if ($phpFormat) {
-
-            return $this->_control->getPhpFormat();
-        }
-
-        return $this->_control->getFormat();
-    }
-
     /*
      * Filtra (y adecua) el valor del campo antes del setter
      *
      */
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
-        $value = new Zend_Date($value, $this->getFormat(true));
-        return $value;
+        
+        if (method_exists($this->_control, 'filterValue')) {
+            return $this->_control->filterValue($value, $original);
+        }
+        
+        $date = new Zend_Date($value, false, $this->_control->getLocale());
+        return $date->toString($this->_control->getMapperFormat());
+
     }
 
     /*
@@ -59,14 +55,19 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      */
     public function prepareValue($value, $model)
     {
+        
+        if (method_exists($this->_control, 'prepareValue')) {
+            return $this->_control->prepareValue($value, $model);
+        }
+        
         $getter = $this->_column->getGetterName($model);
         $zendDateValue = $model->$getter(true);
 
-        $format = $this->getFormat(true);
-
         if ($zendDateValue instanceof Zend_Date) {
-
-            return $zendDateValue->toString($format);
+            
+            return $zendDateValue->toString($this->_control->getFormat());
+        } else {
+            
         }
 
         return $value;

@@ -274,14 +274,17 @@
                 $("input.auto, textarea.auto",this.options.theForm).each(function() {
                     if ($(this).data("plugin")) {
 
-                        var plgSettings = {};
+                        var plgSettings = null;
 
                         $.each($(this).data(),function(idx, value) {
                             if (idx.match(/setting-*/)) {
-
+                            	
                                 idx = idx.replace('setting', '');
                                 idx = idx.charAt(0).toLowerCase() + idx.substr(1); //lcfirst
-
+                                if (!plgSettings) {
+                                	plgSettings = {};
+                                }
+                                
                                 plgSettings[idx] = value;
                             }
                         });
@@ -297,8 +300,10 @@
                         			lazyPluginLoad(target,pluginName,settings);
                         		},50);
                         	}
-                        	
-                        	target[pluginName](settings);
+
+                        	if (target[pluginName]) {
+                        		target[pluginName](settings);
+                        	}
                         })($(this), $(this).data("plugin"),plgSettings);
 
 

@@ -230,44 +230,60 @@
 
             });
 
+            var currentPlugin = false;
+            
             $(".klearMatrixFiltering select[name=searchFiled]",panel).on('manualchange',function(e) {
 
                 var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns,$(this).val());
                 var availableValues = {};
                 var searchField = $(".klearMatrixFiltering input.term",panel);
 
-                if ( (column)
+				if (searchField.data('autocomplete')) {
+            		searchField.autocomplete("destroy").data("idItem",null);
+            	}
+				if (false !== currentPlugin) {
+					console.log("UNLOADING" , currentPlugin);
+					searchField[currentPlugin]("destroy");
+					currentPlugin = false;
+				}
+				
+                switch(true) {
+                	// un select!
+                	case ( (column)
                         && (availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column))
-                        ){
+                        ):
 
-                    var sourcedata = [];
-                    $.each(availableValues,function(i,val) {
-                        sourcedata.push({label:val,id:i});
-                    })
+	                    var sourcedata = [];
+	                    $.each(availableValues,function(i,val) {
+	                        sourcedata.push({label:val,id:i});
+	                    })
+	
+	                    searchField.autocomplete({
+	                        minLength: 0,
+	                        source: sourcedata,
+	                        select: function(event, ui) {
+	                            searchField.val( ui.item.label );
+	                            searchField.data('idItem',ui.item.id);
+	                            return false;
+	                        }
+	                    }).data( "autocomplete" )._renderItem = function( ul, item ) {
+	
+	                        return $( "<li></li>" )
+	                            .data( "item.autocomplete", item )
+	                            .append( "<a>" + item.label + "</a>" )
+	                            .appendTo( ul );
+	                    };
+	                    break;
+                	case (column.config && typeof column.config['plugin'] == 'string'):
+                		
+                		
+                		break;
+                    default:
+                    	
+                    	break;
+            	}
 
-                    searchField.autocomplete({
-                        minLength: 0,
-                        source: sourcedata,
-                        select: function(event, ui) {
-                            searchField.val( ui.item.label );
-                            searchField.data('idItem',ui.item.id);
-                            return false;
-                        }
-                    }).data( "autocomplete" )._renderItem = function( ul, item ) {
-
-                        return $( "<li></li>" )
-                            .data( "item.autocomplete", item )
-                            .append( "<a>" + item.label + "</a>" )
-                            .appendTo( ul );
-                    };
-
-                } else {
-                    if (searchField.data('autocomplete')) {
-                        searchField.autocomplete("destroy").data("idItem",null);
-                    }
-                }
-
-            }).trigger('change');
+            }).trigger('manualchange');
 
             $(".klearMatrixFilteringForm",panel).form();
 

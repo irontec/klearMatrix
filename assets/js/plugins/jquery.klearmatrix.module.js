@@ -45,7 +45,7 @@
         _parseDefaultItems : function() {
         	
         	if (!this.options.data.title) return;
-        	
+
             var defaultValue, defaultColumn, count = false;
             if (this.options.data.values && this.options.data.values.length && this.options.data.values>0) {
             	 for(var i in this.options.data.columns) {
@@ -68,11 +68,12 @@
              } else {
             	 defaultValue = '';
              }
+            
              this.options.data.title =  this.options.data.title
-             								.replace(/\%parent\%/,this.options.parentIden)
+             								.replace(/\%parent\%/,this.options.data.parentIden)
              								.replace(/\%item\%/,defaultValue);
 
-
+             	
         },
         _loadTemplate : function(tmplName) {
 

@@ -26,7 +26,7 @@
 			setTimeout(apply,10);
 			return;
 		}
-		$.timepicker.setDefaults($.timepicker.regional['es']);		
+		$.timepicker.setDefaults($.timepicker.regional['es']);
 	})();
 	
 })(jQuery);

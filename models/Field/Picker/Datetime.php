@@ -4,13 +4,15 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 {
     protected $_config;
 
-    protected $_css = array(
-        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
-    );
+    protected $_mapperFormat = 'YYYY-MM-dd HH:mm:ss';
 
-    protected $_js = array(
-        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"        
-    );
+    
+    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_settings['dateFormat'] = $this->getFormat($this->getLocale());
+    }
 
     public function setConfig($config)
     {
@@ -19,12 +21,9 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 
         return $this;
     }
-
+    
     public function init()
     {
-        //TODO: lang global getter (lander donde andaba eso¿)
-        $lang = 'es';
-        $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$lang.".js";
         return $this;
     }
 
@@ -37,29 +36,25 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
             "settings" => $baseSettings,
         );
 
-         return $config;
+        return $config;
     }
 
-    public function getPhpDateFormat()
+    public function getFormat($locale = null)
     {
-        $ret = str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->getFormat());
+        
+        if (isset($this->_settings['format'])) {
+            return $this->_setting['format'];
+        }
+        
+        if (empty($locale)) {
+            $locale = $this->_jqLocale;
+        }
 
-        return $ret;
-    }
+        if (isset($this->_dateFormats[$locale])) {
+            return $this->_getDateFormatFixed($locale) . ' ' . $this->_timeFormats;
+        }
 
-    public function getDateFormat($locale = null)
-    {
-        return parent::getFormat();
-    }
-
-    public function getExtraJavascript()
-    {
-        return $this->_js;
-    }
-
-    public function getExtraCss()
-    {
-        return $this->_css;
+        return null;
     }
 
 }

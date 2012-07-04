@@ -3,15 +3,9 @@
 class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker_Abstract
 {
     protected $_config;
-
-    protected $_css = array(
-        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
-    );
-
-    protected $_js = array(
-        "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
-    );
-
+    
+    protected $_mapperFormat = 'HH:mm:ss';
+    
     public function __construct()
     {
         parent::__construct();
@@ -28,8 +22,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
     public function init()
     {
         //TODO: lang global getter (lander donde andaba eso¿)
-        $lang = 'es';
-        $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$lang.".js";
+
         return $this;
     }
 
@@ -45,14 +38,9 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         return $config;
     }
 
-    public function getPhpFormat()
-    {
-        return 'H:i:s';
-    }
-
     public function getFormat($locale = null)
     {
-        return 'hh:mm:ss';
+        return $this->_timeFormats;
     }
 
     public function getExtraJavascript()
@@ -64,6 +52,30 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
     {
         return $this->_css;
     }
+
+
+    public function filterValue($value, $original)
+    {
+    
+        $time = new Iron_Time($value);
+        return $time->getFormattedString($this->_mapperFormat);
+    
+    }
+    
+    
+    /**
+     * @param mixed $value Valor devuelto por el getter del model
+     * @param object $model Modelo cargado
+     * @return unknown
+     */
+    public function prepareValue($value, $model)
+    {
+        $time = new Iron_Time($value);
+        return $time->getFormattedString($this->_timeFormats);
+        
+    }
+    
+    
 }
 
 //EOF

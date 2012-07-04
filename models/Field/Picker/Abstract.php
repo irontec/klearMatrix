@@ -1,11 +1,19 @@
 <?php
 class KlearMatrix_Model_Field_Picker_Abstract
 {
-    private $_locale;
+    protected $_locale;
+    protected $_jqLocale;
 
-    protected $_css = array();
-    protected $_js = array();
+    protected $_mapperFormat = 'YYYY-MM-dd';
 
+    protected $_css = array(
+            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
+    );
+    
+    protected $_js = array(
+            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
+    );
+    
     protected $_settings = array(
 
         'disabled' => null,
@@ -132,42 +140,36 @@ class KlearMatrix_Model_Field_Picker_Abstract
 
     public function __construct()
     {
-        $bootstrap = \Zend_Controller_Front::getInstance()->getParam('bootstrap');
-
-        if (is_null($bootstrap)) {
-
-            $conf = new \Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini',APPLICATION_ENV);
-            $conf = (Object) $conf->toArray();
-
-        } else {
-
-            $conf = (Object) $bootstrap->getOptions();
+        
+        $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
+        $this->_locale = $currentKlearLanguage->getLocale();
+        
+        $this->_jqLocale = $currentKlearLanguage->getjQLocale();
+        
+        if (false === $this->_jqLocale) {
+            Throw new \Exception('Klear locale not available in current picker');
         }
-
-        if (isset($options->defaultLanguageZendRegistryKey)) {
-
-            $langKey = $options->defaultLanguageZendRegistryKey;
-
-        } else {
-
-            $langKey = 'defaultLang';
-        }
-
-        $this->_locale = Zend_Registry::get($langKey);
+        
+        $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$this->_jqLocale.".js";
+        return $this;
+        
     }
 
-    protected function getLocale()
+    public function getLocale()
     {
         return $this->_locale;
     }
 
     public function setConfig($config)
     {
-        foreach ($config->settings as $key => $value) {
+        if ($config->settings) {
+            
+            foreach ($config->settings as $key => $value) {
 
-            if (array_key_exists($key, $this->_settings)) {
+                if (array_key_exists($key, $this->_settings)) {
 
-                $this->_settings[$key] = $value;
+                    $this->_settings[$key] = $value;
+                }
             }
         }
 
@@ -189,25 +191,43 @@ class KlearMatrix_Model_Field_Picker_Abstract
         return $filteredSettings;
     }
 
-    public function getPhpFormat()
+  
+    
+    /**
+     * Devuelve el formato de fecha "Localizado" segun jQ; y fixeado para formato Zend_Date 
+     */
+    protected function _getDateFormatFixed($locale)
     {
-        return $this->getFormat();
-    }
+        
+        $_dateFormat = $this->_dateFormats[$locale];
+        return str_replace(array('mm', 'yy'), array('MM','yyyy'), $_dateFormat);
 
+    }
+    
+    
     public function getFormat($locale = null)
     {
+        
+        if (isset($this->_settings['format'])) {
+            return $this->_setting['format'];
+        }
+        
         if (empty($locale)) {
-
-            $locale = $this->_locale;
+            $locale = $this->_jqLocale;
         }
 
         if (isset($this->_dateFormats[$locale])) {
-
-            return $this->_dateFormats[$locale];
+            return $this->_getDateFormatFixed($locale);
         }
 
         return null;
     }
+   
+    public function getMapperFormat()
+    {
+        return $this->_mapperFormat;    
+    }
+   
 
     public function getExtraJavascript()
     {

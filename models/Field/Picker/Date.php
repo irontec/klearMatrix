@@ -4,6 +4,9 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
 {
     protected $_config;
 
+    protected $_mapperFormat = 'YYYY-MM-dd';
+
+    
     public function __construct()
     {
         parent::__construct();
@@ -35,17 +38,6 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
         return $config;
     }
 
-    public function getPhpFormat()
-    {
-        $ret = str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->getFormat());
-
-        return $ret;
-    }
-
-    public function getFormat($locale = null)
-    {
-        return parent::getFormat();
-    }
 
 }
 

@@ -57,8 +57,15 @@
                                 self.options.caller.trigger("click",extraData);
                                 
                             }
+                            
+                            if (self.options.data.buttons[label].reloadParent) {
+                            	$(self.options.parent).klearModule("reDispatch");
+                            }
+                            	
                             $(this).moduleDialog("close");
                         }
+                    
+                    
                     }
                     return button;
                 })(label,this));

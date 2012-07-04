@@ -59,7 +59,7 @@ class KlearMatrix_Model_Field_Datepicker extends KlearMatrix_Model_Field_Abstrac
         $getter = $this->_column->getGetterName($model);
         $zendDateValue = $model->$getter(true);
 
-        $format = $this->getDateFormat(); //str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->_control->getDateFormat());
+        $format = $this->getDateFormat();
 
         return $zendDateValue->toString($format);
     }

@@ -30,9 +30,9 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
         $this->_adapter = new $adapterClassName;
         $this->_adapter
-                    ->setConfig($sourceConfig)
-                    ->setColumn($this->_column)
-                    ->init();
+             ->setConfig($sourceConfig)
+             ->setColumn($this->_column)
+             ->init();
     }
 
     public function getExtraJavascript()
@@ -48,8 +48,8 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
     public function getConfig()
     {
         $ret = array(
-            'values'=>$this->_adapter->toArray(),
-            'editableFields'=>$this->_adapter->getEditableFieldsConfig()
+            'values' => $this->_adapter->toArray(),
+            'editableFields' => $this->_adapter->getEditableFieldsConfig()
         );
 
         return $ret;
@@ -68,9 +68,8 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
     public function filterValue($value,$original)
     {
-        return $this->_adapter->filterValue($value,$original);
+        return $this->_adapter->filterValue($value, $original);
     }
-
 }
 
 //EOF

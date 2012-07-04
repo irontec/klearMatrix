@@ -40,8 +40,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         $dataMapper = new $_mapper;
-
-        if ($results = $dataMapper->fetchList($_where,$_order)) {
+        $results = $dataMapper->fetchList($_where, $_order);
+        if ($results) {
 
             foreach ($results as $dataModel) {
 
@@ -52,12 +52,11 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
                     $replace['%' . $_fieldName . '%'] = $dataModel->$_getter();
                 }
 
-                $this->_items[] = str_replace(array_keys($replace),$replace,$fieldTemplate);
+                $this->_items[] = str_replace(array_keys($replace), $replace, $fieldTemplate);
                 $this->_keys[] = $dataModel->getPrimaryKey();
             }
         }
     }
-
 }
 
 //EOF

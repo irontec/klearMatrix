@@ -94,8 +94,18 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         // Si la pantalla esta filtrada, debemos setearla en la "nueva"
         if ($this->_item->isFilteredScreen()) {
+            
+            
             $filteredField = $this->_item->getFilterField();
-            $filteredValue = $this->_mainRouter->getParam($filteredField);
+            
+            //TODO: Desgaretizar parentPk / parentId :S en todos los controllers --- muy complicado.
+            $parentPk = $this->_mainRouter->getParam("parentPk", false);
+            if ($parentPk) {
+                //pantalla new desde un edit
+                $filteredValue = $parentPk;
+            } else {
+                $filteredValue = $this->_mainRouter->getParam($filteredField);
+            }
 
             // TODO: Para el screename del parent, recuperar mapper, fetchById, y comprobar que existe el parámetro recibido.
 

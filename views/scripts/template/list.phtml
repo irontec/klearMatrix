@@ -75,7 +75,15 @@ title="${info.text}"
 
 
 <table class="kMatrix">
-<caption class="ui-state-active ui-priority-primary">${$item.getTitle(title,false)}</caption>
+<caption class="ui-state-active ui-priority-primary">
+${$item.getTitle(title,false)}
+<span class="extraCaptionInfo">
+Total: <strong>${total} </strong> Registros.
+{{if (paginator.itemCountPerPage)}}
+Registros por página: <input value="${paginator.itemCountPerPage}" type="number" min="0" max="1000" />
+{{/if}}
+</span>
+</caption>
 
 <tr>
    {{each(idx,column) columns}}

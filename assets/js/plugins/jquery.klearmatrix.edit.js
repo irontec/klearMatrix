@@ -301,7 +301,6 @@
                         		},50);
                         	}
 
-                        	console.log("plugin!" , pluginName , target, settings);
                         	if (target[pluginName]) {
                         		target[pluginName](settings);
                         	}

@@ -27,6 +27,7 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_title;
 
+    protected $_total = false;
     protected $_searchFields = array();
     
     
@@ -50,7 +51,14 @@ class KlearMatrix_Model_MatrixResponse
         $this->_results = $results;
         return $this;
     }
-
+    
+    public function setTotal($total)
+    {
+        $this->_total = $total;
+        return $this;
+    }
+    
+    
     public function setPK($pk)
     {
         $this->_pk = $pk;
@@ -265,7 +273,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['info'] = $this->_info;
         }
 
-        $simpleFields = array('parentIden','parentId','parentScreen','parentItem','parentPk','disableSave');
+        $simpleFields = array('total', 'parentIden','parentId','parentScreen','parentItem','parentPk','disableSave');
         foreach ($simpleFields as $_fld) {
             if (false !== $this->{'_' . $_fld}) {
                 $ret[$_fld] = $this->{'_'. $_fld};

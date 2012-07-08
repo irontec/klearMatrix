@@ -30,6 +30,10 @@
 
         },
         _applyDecorators : function() {
+        	
+        	var self = this.element;
+            var _self = this;
+            
             $container = $(this.element.klearModule("getPanel"));
 
             $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
@@ -42,7 +46,31 @@
                     $(this).prepend($mlSelector.clone().tooltip());
                 });
             }
+            
+            $("caption span.extraCaptionInfo input",$container)
+            	.spinner()
+            	.on('keydown',function(e) {
+            		
+            		if (e.keyCode == 13) {
+            			$(this).trigger('fireit'); 
+            		}
+            	})
+            	.on('fireit',function() {
+            		var _count = parseInt($(this).val());
+        			var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                    if (!_dispatchOptions.post) _dispatchOptions.post = {};
 
+                    $.extend(_dispatchOptions.post,{
+                    	count : _count
+                    });
+
+                    $(self)
+                    	.klearModule("option","dispatchOptions",_dispatchOptions)
+                    	.klearModule("reDispatch");
+
+            	});
+            
+            
             return this;
         },
         _registerEvents : function() {

@@ -244,7 +244,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setPK($this->_item->getPkName());
 
         if ($this->_item->getCsv()) {
-
             $data->setCsv(true);
         }
 
@@ -279,8 +278,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 $paginator->setItemCountPerPage($count);
 
                 $data->setPaginator($paginator);
+            } else {
+                
+                $totalItems = sizeof($results);
             }
 
+            $data->setTotal($totalItems);
             $data->setResults($results);
 
             if ($this->_item->hasFieldOptions()) {
@@ -341,6 +344,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(), "klearmatrixList");
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/", 'list'), "klearmatrixMultiLangList");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
+        $jsonResponse->addJsFile("/js/plugins/jquery.ui.spinner.js");
+        
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
         $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
@@ -355,7 +360,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->addCssFile("/css/klearMatrix.css");
-
+        $jsonResponse->addCssFile("/css/jquery.ui.spinner.css");
         //setData hook
         if ($this->_item->getHook('setData')) {
 

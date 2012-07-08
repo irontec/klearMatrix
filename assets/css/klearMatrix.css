@@ -11,6 +11,14 @@ table.kMatrix caption {
 	font-size:1.1em;
 }
 
+table.kMatrix caption span.extraCaptionInfo {
+	font-size: .8em;
+	float: right;
+}
+table.kMatrix caption span.extraCaptionInfo input {
+	width: 4em;
+}
+
 table.kMatrix th {
     padding: 3px;
 }

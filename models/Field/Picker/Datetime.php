@@ -11,7 +11,6 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
     public function __construct()
     {
         parent::__construct();
-        $this->_settings['dateFormat'] = $this->getFormat($this->getLocale());
     }
 
     public function setConfig($config)

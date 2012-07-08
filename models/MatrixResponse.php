@@ -28,6 +28,8 @@ class KlearMatrix_Model_MatrixResponse
     protected $_title;
 
     protected $_searchFields = array();
+    
+    
     protected $_searchAddModifier = false;
 
     protected $_info = false;
@@ -144,9 +146,10 @@ class KlearMatrix_Model_MatrixResponse
         $this->_info = $info;
     }
 
-    public function addSearchField($field,$values)
+    public function addSearchField($field,$values, $ops)
     {
         $this->_searchFields[$field] = $values;
+        $this->_searchOps[$field] = $ops;
     }
 
     public function addSearchAddModifier($toggle)
@@ -254,6 +257,7 @@ class KlearMatrix_Model_MatrixResponse
 
         if (sizeof($this->_searchFields)>0) {
             $ret['searchFields'] = $this->_searchFields;
+            $ret['searchOps'] = $this->_searchOps;
             $ret['searchAddModifier'] = $this->_searchAddModifier;
         }
 

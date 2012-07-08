@@ -24,6 +24,42 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
             ->init();
     }
 
+    public function getCustomSearchCondition($values, $searchOps, $model) {
+
+        $searchField = $this->_column->getDbFieldName();
+        $_fieldValues = $vals = array();
+        $cont = 0;
+        foreach ($values as $idx => $_val) {
+            $template = ':' . $searchField . $cont;
+
+            $op = "=";
+            if (isset($searchOps[$idx])) {
+                switch($searchOps[$idx]) {
+                    case 'lt': 
+                        $op = '<';
+                        break;
+                    case 'gt':
+                        $op = '>';
+                        break;
+                }
+            }
+            
+            $vals[] = $searchField .' '.$op.' '. $template;
+            $_fieldValues[$template] = $this->filterValue($_val, $model);
+                
+            $cont++;
+
+        }
+        
+        return array(
+                '(' . implode(' or ', $vals). ')',
+                $_fieldValues
+        );
+            
+            
+            
+    }
+    
     public function getConfig()
     {
         return $this->_control->getConfig();
@@ -64,10 +100,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $zendDateValue = $model->$getter(true);
 
         if ($zendDateValue instanceof Zend_Date) {
-            
             return $zendDateValue->toString($this->_control->getFormat());
-        } else {
-            
         }
 
         return $value;

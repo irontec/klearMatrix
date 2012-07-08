@@ -8,7 +8,7 @@
 {{if (_dataConfig.plugin)}}  data-plugin="${_dataConfig.plugin}" {{/if}}
 
 {{each(attribute, value) _dataConfig.settings}}
-    ${$item.dataParser(attribute, value)}
+    data-setting-${$item.dataParser(attribute, value)}="${value}"
 {{/each}}
 
 {{each(idx,attrValue) _dataConfig.attributes}}

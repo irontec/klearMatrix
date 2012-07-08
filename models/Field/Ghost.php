@@ -38,7 +38,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         return $ret;
     }
 
-    public function getCustomSearchCondition($values, $model)
+    public function getCustomSearchCondition($values, $searchOps, $model)
     {
         if (!$this->_config->getRaw()->source->searchMethod) {
             return false;

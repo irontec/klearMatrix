@@ -112,17 +112,19 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         //Generamos el where de los filtros
         $searchFields = $this->getRequest()->getPost("searchFields");
-
+        $searchOps = $this->getRequest()->getPost("searchOps");
+        
         if ($searchFields) {
 
             $_searchWhere = array();
 
             foreach ($searchFields as $field => $values) {
-
+                
+                $valuesOp = $searchOps[$field];
                 if ($col = $cols->getColFromDbName($field)) {
 
-                    $_searchWhere[] = $col->getSearchCondition($values, $model, $cols->getLangs());
-                    $data->addSearchField($field, $values);
+                    $_searchWhere[] = $col->getSearchCondition($values, $valuesOp, $model, $cols->getLangs());
+                    $data->addSearchField($field, $values, $valuesOp);
                 }
             }
 
@@ -344,6 +346,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
 
+        // Añadimos JS de los campos - tema filtrados - 
+        $jsonResponse->addJsArray($cols->getColsJsArray());
+        
         $customScripts = $this->_item->getCustomScripts();
         if (isset($customScripts->module) and isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);

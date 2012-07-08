@@ -16,7 +16,6 @@ class KlearMatrix_Model_Field_Picker_Abstract
     
     protected $_settings = array(
 
-        'disabled' => null,
         'altField' => null,
         'altFormat' => null,
         'appendText' => null,
@@ -179,7 +178,7 @@ class KlearMatrix_Model_Field_Picker_Abstract
     public function getConfig()
     {
         $filteredSettings = array();
-
+        
         foreach ($this->_settings as $key => $val) {
 
             if (! is_null($val)) {
@@ -187,7 +186,6 @@ class KlearMatrix_Model_Field_Picker_Abstract
                  $filteredSettings[$key] = $val;
             }
         }
-
         return $filteredSettings;
     }
 

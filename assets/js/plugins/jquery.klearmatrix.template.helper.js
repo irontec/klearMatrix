@@ -85,11 +85,14 @@
                 var _templateHelpers = {
                     dataParser: function (attribute, value) {
 
+                    	console.log(">>>>>>>>>>" , value);
                         attribute = attribute.charAt(0).toLowerCase() + attribute.substr(1).replace(/[A-Z]/g,function(s) {
                             return "-"+s.toLowerCase();
                         });
 
-                        return "data-setting-" + attribute + ' = '+ value;
+                        
+                        
+                        return  attribute;
                     }
                 };
 

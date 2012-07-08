@@ -222,6 +222,14 @@ a.ui-state-nojump {
     cursor:pointer;
 }
 
+.klearMatrixFiltering .searchOption {	
+	display:none;
+	margin-right:1em;
+}
+
+.klearMatrixFiltering .searchOption select {
+	width:35px;
+}
 
 .fieldInfo-tooltip {
     cursor:help;

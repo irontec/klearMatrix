@@ -197,6 +197,10 @@ class KlearMatrix_Model_Column
 
     public function getJsPaths()
     {
+        if ($this->isOption()) {
+            return array();        
+        }
+        
         $this->_loadConfigClass();
         return $this->_fieldConfig->getExtraJavascript();
     }
@@ -390,12 +394,12 @@ class KlearMatrix_Model_Column
         $this->_disabledOptions = $disabledOptions;
     }
 
-    public function getSearchCondition(array $values,$model, $langs)
+    public function getSearchCondition(array $values, array $searchOps, $model, $langs)
     {
 
 
         if ( (method_exists($this->_fieldConfig, 'getCustomSearchCondition')) &&
-                ($searchCondition = $this->_fieldConfig->getCustomSearchCondition($values, $model)) ) {
+                ($searchCondition = $this->_fieldConfig->getCustomSearchCondition($values, $searchOps, $model)) ) {
 
             return $searchCondition;
         }

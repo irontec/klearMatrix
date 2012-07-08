@@ -150,6 +150,8 @@
                 e.preventDefault();
                 e.stopPropagation();
             });
+            
+            
 
             $(".klearMatrixFiltering span.addTerm",panel).on('click',function(e,noNewValue) {
                 e.preventDefault();
@@ -157,20 +159,22 @@
 
                 var $holder = $(this).parents(".klearMatrixFiltering");
                 var $_term = $("input.term",$holder);
-                var $_field = $("select[name=searchFiled]",$holder);
+                var $_field = $("select[name=searchField]",$holder);
 
                 var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
                 var fieldName = $_field.val();
 
                 _dispatchOptions.post = _dispatchOptions.post || {};
                 _dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
+                _dispatchOptions.post.searchOps = _dispatchOptions.post.searchOps || {};
+                
                 _dispatchOptions.post.searchFields[fieldName] = _dispatchOptions.post.searchFields[fieldName] || [];
-
+                _dispatchOptions.post.searchOps[fieldName] = _dispatchOptions.post.searchOps[fieldName] || [];
+                
 
                 if (noNewValue !== true) {
                     if ( (($_term.data('autocomplete')) && (!$_term.data('idItem')) ) ||
                             ($_term.val() == '') ) {
-
                             $(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
                             return;
                     }
@@ -179,6 +183,14 @@
                     $_field.attr("disabled","disabled");
                     var _newVal = ($_term.data('autocomplete'))? $_term.data('idItem') : $_term.val();
                     _dispatchOptions.post.searchFields[fieldName].push(_newVal);
+                    
+                    var _searchOp = 'eq';
+                    if ($("select[name=searchOption]",$holder).parent("span").is(":visible")) {
+                    	_searchOp = $("select[name=searchOption]",$holder).val();
+                    }
+                    
+                    _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
+
                 }
 
                 _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
@@ -191,7 +203,7 @@
 
             });
 
-            $(".klearMatrixFiltering input.term",panel).on('keydown',function(e) {
+            $(".klearMatrixFiltering",panel).on('keydown','input.term',function(e) {
                 if (e.keyCode == 13) {
                     // Wait for select event to happed (autocomplete)
                     var $target = $(this);
@@ -230,34 +242,46 @@
 
             });
 
-            var currentPlugin = false;
+            $(".klearMatrixFilteringForm",panel).form();
             
-            $(".klearMatrixFiltering select[name=searchFiled]",panel).on('manualchange',function(e) {
+            var currentPlugin = false;
+            var originalSearchField = $(".klearMatrixFiltering input.term",panel).clone();
+            
+            $(".klearMatrixFiltering select[name=searchField]",panel).on('manualchange',function(e) {
 
-                var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns,$(this).val());
+                var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns, $(this).val());
                 var availableValues = {};
+                
                 var searchField = $(".klearMatrixFiltering input.term",panel);
-
-				if (searchField.data('autocomplete')) {
-            		searchField.autocomplete("destroy").data("idItem",null);
-            	}
+                var searchOption = $("span.searchOption",panel);
+                
 				if (false !== currentPlugin) {
-					console.log("UNLOADING" , currentPlugin);
 					searchField[currentPlugin]("destroy");
 					currentPlugin = false;
 				}
 				
-                switch(true) {
+				var _newField = originalSearchField.clone();
+				searchField = searchField.replaceWith(_newField);
+				searchField = _newField;
+				
+				//TODO: Determinar cuando mostrar el searchOption (=/</>)
+				if (column.config && column.config['plugin'] && column.config['plugin'].match(/date|time/g)) {
+					searchOption.show();
+        		} else {
+        			searchOption.hide();
+        		}
+				
+				switch(true) {
                 	// un select!
-                	case ( (column)
-                        && (availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column))
-                        ):
+                	case  (column.type == 'select'):
+                         
+                		var _availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column);
 
 	                    var sourcedata = [];
-	                    $.each(availableValues,function(i,val) {
+	                    $.each(_availableValues,function(i,val) {
 	                        sourcedata.push({label:val,id:i});
 	                    })
-	
+	                    
 	                    searchField.autocomplete({
 	                        minLength: 0,
 	                        source: sourcedata,
@@ -267,15 +291,18 @@
 	                            return false;
 	                        }
 	                    }).data( "autocomplete" )._renderItem = function( ul, item ) {
-	
 	                        return $( "<li></li>" )
 	                            .data( "item.autocomplete", item )
 	                            .append( "<a>" + item.label + "</a>" )
 	                            .appendTo( ul );
 	                    };
+                		currentPlugin = 'autocomplete';
+
 	                    break;
                 	case (column.config && typeof column.config['plugin'] == 'string'):
-                		
+                		var _pluginName = column.config['plugin'];
+                		currentPlugin = _pluginName;
+               			searchField[_pluginName](column.config['settings']);
                 		
                 		break;
                     default:
@@ -283,9 +310,9 @@
                     	break;
             	}
 
-            }).trigger('manualchange');
+            }).trigger('manualchange').trigger('select');
 
-            $(".klearMatrixFilteringForm",panel).form();
+            
 
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");
@@ -300,6 +327,7 @@
                 }
             });
 
+            
             //Exportar a CSV el listado
             $("a.option.csv", panel).on('click', function(event) {
                 event.preventDefault();

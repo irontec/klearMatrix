@@ -9,7 +9,6 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
     public function __construct()
     {
         parent::__construct();
-        $this->_settings['timeFormat'] = $this->getFormat();
     }
 
     public function setConfig($config)

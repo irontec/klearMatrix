@@ -79,7 +79,7 @@ title="${info.text}"
 ${$item.getTitle(title,false)}
 <span class="extraCaptionInfo">
 Total: <strong>${total} </strong> Registros.
-{{if (paginator.itemCountPerPage)}}
+{{if (paginator)}}
 Registros por página: <input value="${paginator.itemCountPerPage}" type="number" min="0" max="1000" />
 {{/if}}
 </span>

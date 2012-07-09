@@ -218,13 +218,14 @@ a.ui-state-nojump {
 
 
  .klearMatrixFiltering .filteredFields .field {
-    padding:.6em .6em;
+    padding:.8em;
     display:block;
 }
 .klearMatrixFiltering .filteredFields .field .content {
     white-space:nowrap;
-    padding: .3em;
-    margin: .3em;
+    padding: .5em;
+    margin: -.5em .3em 0 .3em
+    float: right;
 }
 .klearMatrixFiltering .filteredFields .field .ui-silk {
     cursor:pointer;

@@ -262,6 +262,7 @@
                     return;
                 }
                 _dispatchOptions.post.searchFields[fieldName].splice(idxToRemove,1);
+                _dispatchOptions.post.searchOps[fieldName].splice(idxToRemove,1);
                 _dispatchOptions.post.page = 1;
 
                 $(self)

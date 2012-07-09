@@ -4,7 +4,7 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
 {
     protected $_config;
 
-    protected $_mapperFormat = 'YYYY-MM-dd';
+    protected $_mapperFormat = 'YYYY-MM-DD';
 
     
     public function __construct()
@@ -26,6 +26,20 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
         return $this;
     }
 
+
+    public function filterValue($value, $original)
+    {
+    
+        $date = new Zend_Date();
+        $date->setTimeZone('UTC');
+        $date->setDate($value, null, $this->getLocale());
+        $date->setHour(0)->setMinute(0)->setSecond(0);
+        
+        
+        return $date->toString(Zend_Date::ISO_8601);
+    
+    }
+    
     public function getConfig()
     {
         $baseSettings = parent::getConfig();

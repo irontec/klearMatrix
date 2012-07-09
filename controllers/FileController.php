@@ -26,6 +26,8 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     protected $_pk;
     protected $_model;
 
+    protected $_filePrefix = 'kmatrixFSO';
+    
     public function init()
     {
         /* Initialize action controller here */
@@ -67,7 +69,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
 
-            $result = $uploader->handleUpload(sys_get_temp_dir(), false, sha1(time() . rand(1000, 10000)), '');
+            $result = $uploader->handleUpload(sys_get_temp_dir(), false, $this->_filePrefix . sha1(time() . rand(1000, 10000)), '');
 
         } catch(Exception $e) {
 
@@ -75,18 +77,27 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $this->view->error_number = $e->getCode();
             $this->view->error_msg = $e->getMessage();
             return;
-
         }
 
         $tempFSystemNS = new Zend_Session_Namespace('File_Controller');
         $tempFSystemNS->{$result['filename']} = array(
                                                     'path'=>$result['path'],
                                                     'basename' => $result['basename']);
-
+        $this->_clearOldFiles();
         $this->view->success = true;
         $this->view->code = $result['filename'];
     }
 
+    protected function _clearOldFiles() {
+        $files = glob(sys_get_temp_dir() . $this->_filePrefix . '*');
+        
+       foreach ($files as $file) {
+           
+           
+       }
+        
+        
+    }
 
     public function forcedwAction()
     {

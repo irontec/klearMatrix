@@ -190,7 +190,7 @@ class KlearMatrix_Model_Field_Picker_Abstract
     }
 
   
-    
+
     /**
      * Devuelve el formato de fecha "Localizado" segun jQ; y fixeado para formato Zend_Date 
      */

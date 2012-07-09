@@ -37,6 +37,18 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 
         return $config;
     }
+    
+
+    public function filterValue($value, $original)
+    {
+    
+        $date = new Zend_Date($value, false, $this->getLocale());
+        $date->setTimezone('UTC');
+        
+        return $date->toString(Zend_Date::ISO_8601);
+        
+    
+    }
 
     public function getFormat($locale = null)
     {

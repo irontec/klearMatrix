@@ -51,8 +51,9 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
 
         }
         
+        // Campos datetime / date / time se "conjugan" con and >> Antes de las 12 y despues de las 10
         return array(
-                '(' . implode(' or ', $vals). ')',
+                '(' . implode(' and ', $vals). ')',
                 $_fieldValues
         );
             
@@ -71,14 +72,9 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      */
     public function filterValue($value, $original)
     {
-        
-        if (method_exists($this->_control, 'filterValue')) {
-            return $this->_control->filterValue($value, $original);
-        }
-        
-        $date = new Zend_Date($value, false, $this->_control->getLocale());
-        return $date->toString($this->_control->getMapperFormat());
 
+        return $this->_control->filterValue($value, $original);
+    
     }
 
     /*
@@ -100,6 +96,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $zendDateValue = $model->$getter(true);
 
         if ($zendDateValue instanceof Zend_Date) {
+            $zendDateValue->setTimezone('Europe/Madrid');
             return $zendDateValue->toString($this->_control->getFormat());
         }
 

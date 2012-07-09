@@ -44,10 +44,14 @@
 
         _parseDefaultItems : function() {
         	
-        	if (!this.options.data.title) return;
+        	if (!this.options.data.title) {
+        		return;
+        	}
 
             var defaultValue, defaultColumn, count = false;
-            if (this.options.data.values && this.options.data.values.length && this.options.data.values>0) {
+            console.log(typeof this.options.data.values);
+            
+            if ($.isArray(this.options.data.values)) {
             	 for(var i in this.options.data.columns) {
             		 if (count === false) {
             			 defaultColumn = this.options.data.columns[i];
@@ -59,17 +63,20 @@
             			 break;
             		 }
             	 }
-            	 
+            
             	 var defaultValue = this.options.data.values[0][defaultColumn.id];
-
+            	 
             	 if (defaultColumn.multilang) {
             		 defaultValue = defaultValue[this.options.data.defaultLang];
             	 }
+            	 
              } else {
+            	 
             	 defaultValue = '';
+            	 
              }
             
-             this.options.data.title =  this.options.data.title
+            this.options.data.title =  this.options.data.title
              								.replace(/\%parent\%/,this.options.data.parentIden)
              								.replace(/\%item\%/,defaultValue);
 

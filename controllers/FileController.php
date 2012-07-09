@@ -26,7 +26,13 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     protected $_pk;
     protected $_model;
 
+    // Prefix for files uploaded temporaly to get_sys_temp_dir
     protected $_filePrefix = 'kmatrixFSO';
+    // On every successfull uploaded file, the "brother" filed uploaded before self::_hoursOld will be deleted.
+    // no-cron needed by now. 
+    protected $_hoursOld = 24;
+    
+    
     
     public function init()
     {
@@ -71,11 +77,16 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             $result = $uploader->handleUpload(sys_get_temp_dir(), false, $this->_filePrefix . sha1(time() . rand(1000, 10000)), '');
 
+            $this->_helper->log('new file uploaded (' .$result['basename'].')' );
+            
         } catch(Exception $e) {
 
+            
             $this->view->error = true;
             $this->view->error_number = $e->getCode();
             $this->view->error_msg = $e->getMessage();
+            
+            $this->_helper->log('Error uploading File ['.$e->getCode().'] (' .$e->getMessage().')', Zend_Log::ERR );
             return;
         }
 
@@ -89,14 +100,24 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     }
 
     protected function _clearOldFiles() {
-        $files = glob(sys_get_temp_dir() . $this->_filePrefix . '*');
         
-       foreach ($files as $file) {
-           
-           
+        $files = glob(sys_get_temp_dir() . '/' . $this->_filePrefix . '*');
+        $secsLimit = time() - ($this->_hoursOld * 3600); 
+        
+        foreach ($files as $file) {
+
+            if (!is_file($file)) {
+                // WTF?!?!?! symlink? dir? some maderfoker in the house?
+                $this->_helper->log('KlearMatrix::FSO NOT A FILE TO BE DELETED! something nasty!! ['.$file.']', Zend_Log::ALERT);
+                continue;
+            }
+            
+            if (filemtime($file) < $secsLimit) {
+                $this->_helper->log('KlearMatrix::FSO Deleting OLD file ['.basename($file).']');
+                unlink($file);
+            }
        }
-        
-        
+
     }
 
     public function forcedwAction()
@@ -116,7 +137,13 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $mapper = new $mapperName;
 
             $this->_pk = $this->_mainRouter->getParam("pk");
+            
+            $this->_helper->log('Download stated for file in '. $mapperName. ' >> PK('.$this->_pk.')');
+            
             if (!$this->_model = $mapper->find($this->_pk)) {
+                
+                $this->_helper->log('Model not found for '. $mapperName. ' >> PK('.$this->_pk.')', Zend_Log::ERR);
+                
                 Throw new Zend_Exception("No se encuentra la columna solicitada.");
             }
 
@@ -128,12 +155,12 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             if ((bool)$this->_request->getParam("download")) {
 
-
                 $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
                 $nameGetter = 'get' . $fileFields['baseNameName'];
 
 
-
+                $this->_helper->log('Sending file to Client: ('.$this->_model->{$nameGetter}().')');
+                
                 $this->_helper->sendFileToClient(
                     $this->_model->{$fetchGetter}()->getBinary(),
                     array('filename' => $this->_model->{$nameGetter}()),
@@ -165,11 +192,17 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             );
         } catch(Exception $e) {
+            
             if (!$this->_request->isXmlHttpRequest()) {
+                
+                $this->_helper->log('Error Downloading; request not from XHR.', Zend_Log::ERR);
+                
                 throw new Zend_Controller_Action_Exception('File not found.', 404);
                 return;
             }
 
+            $this->_helper->log('Error Downloading; ('.$e->getMessage().')', Zend_Log::ERR);
+            
             $data = array(
                     'message'=>sprintf($this->view->translate('Error preparing download.<br />(%s)'), $e->getMessage()),
                     'buttons'=>array(

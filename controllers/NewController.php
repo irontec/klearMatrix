@@ -30,9 +30,13 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     public function saveAction()
     {
+        $mapperName = $this->_item->getMapperName();
+        
         $model = $this->_item->getObjectInstance();
         // Cargamos las columnas visibles, ignorando blacklist
 
+        $this->_helper->log('new::save action for mapper:' . $mapperName);
+        
         $cols = $this->_item->getVisibleColumns();
         $hasDependant = false;
 
@@ -115,6 +119,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         try {
             $this->_save($model, $hasDependant);
+            $this->_helper->log('model created succesfully for ' . $mapperName );
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
@@ -125,6 +130,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 'error' => true,
                 'message'=> $exception->getMessage()
             );
+            $this->_helper->log('Error saving in new::save for ' . $mapperName . ' ['.$exception->getMessage().']', Zend_Log::CRIT);
+            
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
@@ -158,7 +165,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
     {
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
-
+        
+        $this->_helper->log('New for mapper:' . $mapperName );
+        
         $cols = $this->_item->getVisibleColumns();
 
         $data = new KlearMatrix_Model_MatrixResponse;

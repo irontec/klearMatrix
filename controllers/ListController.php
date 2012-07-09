@@ -64,6 +64,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
         $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
+        $this->_helper->log('List mapper: ' . $mapperName);
         $data = new KlearMatrix_Model_MatrixResponse;
         $cols = $this->_item->getVisibleColumns();
 
@@ -115,7 +116,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $searchOps = $this->getRequest()->getPost("searchOps");
         
         if ($searchFields) {
-
+            
+            $this->_helper->log('Search arguments found for:' . $mapperName);
+            
             $_searchWhere = array();
 
             foreach ($searchFields as $field => $values) {
@@ -159,9 +162,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $orderColumn = $cols->getColFromDbName($orderField);
 
         if ($orderField && $orderColumn) {
-
+            $this->_helper->log('Order column especified for:' . $mapperName);
             $order = $orderColumn->getOrderField($model);
-
+            
             $orderColumn->setAsOrdered();
 
             if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
@@ -246,7 +249,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         if ($this->_item->getCsv()) {
             $data->setCsv(true);
         }
-
+        
         if (count($where) == 0) {
 
             $where = null;
@@ -267,7 +270,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $data->setResults(array());
 
         $results = $mapper->fetchList($where, $order, $count, $offset);
-
+        
+        $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $mapperName);
+        
         if (is_array($results)) {
 
             if (!is_null($count) && !is_null($offset)) {
@@ -387,6 +392,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     //Exportamos los resultados a CSV
     public function exportCsv()
     {
+        
+        
         $fields = $this->view->data['columns'];
         $values = $this->view->data['values'];
 
@@ -447,7 +454,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         } else {
             ob_end_clean();
-            Throw new Exception('unable to create output resource for csv.');
+            Throw new Exception('Unable to create output resource for csv.');
         }
     }
 }

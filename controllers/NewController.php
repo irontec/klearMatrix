@@ -94,10 +94,10 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         // Si la pantalla esta filtrada, debemos setearla en la "nueva"
         if ($this->_item->isFilteredScreen()) {
-            
-            
+
+
             $filteredField = $this->_item->getFilterField();
-            
+
             //TODO: Desgaretizar parentPk / parentId :S en todos los controllers --- muy complicado.
             $parentPk = $this->_mainRouter->getParam("parentPk", false);
             if ($parentPk) {
@@ -134,7 +134,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     protected function _columnIsNotEditable(KlearMatrix_Model_Column $column)
     {
-        return $column->isOption();
+        return $column->isOption() || $column->isReadOnly();
     }
 
     protected function _save($model, $hasDependant)

@@ -50,7 +50,7 @@
 
             var defaultValue, defaultColumn, count = false;
 
-            if ($.isArray(this.options.data.values)) {
+            if ($.isArray(this.options.data.values) && this.options.data.values.length > 0) {
             	 for(var i in this.options.data.columns) {
             		 if (count === false) {
             			 defaultColumn = this.options.data.columns[i];

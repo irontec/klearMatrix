@@ -17,7 +17,7 @@ abstract class KlearMatrix_Model_Field_Textarea_Abstract implements Iterator
 
     public function setConfig(Zend_Config $config)
     {
-        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
         if ($this->_config->getProperty("null")) {

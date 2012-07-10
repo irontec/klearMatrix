@@ -8,7 +8,7 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
 
     public function init()
     {
-        $parsedValues = new Klear_Model_KConfigParser;
+        $parsedValues = new Klear_Model_ConfigParser;
         $parsedValues->setConfig($this->_config->getProperty('values'));
 
         foreach ($this->_config->getProperty('values') as $key=>$value) {
@@ -17,7 +17,7 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
 
             if (!is_string($value)) {
 
-                $fieldValue = new Klear_Model_KConfigParser;
+                $fieldValue = new Klear_Model_ConfigParser;
                 $fieldValue->setConfig($value);
                 $value = $fieldValue->getProperty("title");
 

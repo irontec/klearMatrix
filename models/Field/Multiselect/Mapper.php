@@ -13,7 +13,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     public function init()
     {
-        $parsedValues = new Klear_Model_KConfigParser;
+        $parsedValues = new Klear_Model_ConfigParser;
         $parsedValues->setConfig($this->_config->config);
 
         // Mapper de las relaciones. Aquí se guardarán las coincidencias.
@@ -27,7 +27,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         if (is_object($this->_fieldName)) {
 
-            $_fieldConfig = new Klear_Model_KConfigParser;
+            $_fieldConfig = new Klear_Model_ConfigParser;
             $_fieldConfig->setConfig($this->_fieldName);
 
             $fields = $_fieldConfig->getProperty("fields");
@@ -84,7 +84,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     protected function _parseEditableField($name, Zend_Config $editableField)
     {
-        $_editFieldConfig = new Klear_Model_KConfigParser;
+        $_editFieldConfig = new Klear_Model_ConfigParser;
         $_editFieldConfig->setConfig($editableField);
 
         $_field = array(

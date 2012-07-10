@@ -24,7 +24,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         if (is_object($_fieldConf)) {
 
-            $_fieldConfig = new Klear_Model_KConfigParser;
+            $_fieldConfig = new Klear_Model_ConfigParser;
             $_fieldConfig->setConfig($_fieldConf);
 
             $fields = $_fieldConfig->getProperty("fields");

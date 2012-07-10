@@ -14,7 +14,7 @@ abstract class KlearMatrix_Model_AbstractOption
 
     public function setConfig(Zend_Config $config)
     {
-        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
         $this->_title = $this->_config->getProperty("title");

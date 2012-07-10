@@ -110,7 +110,7 @@ class KlearMatrix_Model_Column
     public function setConfig(Zend_Config $config)
     {
 
-        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
         $this->_publicName = $this->_config->getProperty("title");
@@ -253,7 +253,7 @@ class KlearMatrix_Model_Column
     }
 
     /**
-     * @return Klear_Model_KConfigParser
+     * @return Klear_Model_ConfigParser
      */
     public function getKlearConfig()
     {
@@ -378,7 +378,7 @@ class KlearMatrix_Model_Column
     public function _parseDisabledOptions()
     {
 
-        $disabledConfig = new Klear_Model_KConfigParser;
+        $disabledConfig = new Klear_Model_ConfigParser;
         $disabledConfig->setConfig($this->_disabledOptions);
 
         $disabledOptions = array();

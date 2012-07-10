@@ -66,10 +66,10 @@ class KlearMatrix_Model_ResponseItem
         '_disableSave' => array('disableSave', false),
     );
 
-    //Guardamos en $this->_config un objeto Klear_Model_KConfigParser
+    //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
     public function setConfig(Zend_Config $config)
     {
-        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
         $this->_initCustomConfig();
@@ -740,7 +740,7 @@ class KlearMatrix_Model_ResponseItem
             return $generalOptions;
         }
 
-        $parent = new Klear_Model_KConfigParser();
+        $parent = new Klear_Model_ConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
 
         $options = $this->_getItemFieldsOptionsConfig('screen', $parent);
@@ -793,7 +793,7 @@ class KlearMatrix_Model_ResponseItem
             return array();
         }
 
-        $parent = new Klear_Model_KConfigParser();
+        $parent = new Klear_Model_ConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
 
         return $this->_getItemFieldsOptionsConfig('dialog', $parent);
@@ -806,7 +806,7 @@ class KlearMatrix_Model_ResponseItem
             return false;
         }
 
-        $pagination = new Klear_Model_KConfigParser();
+        $pagination = new Klear_Model_ConfigParser();
         $pagination->setConfig($this->_config->getRaw()->pagination);
         return $pagination;
     }
@@ -833,7 +833,7 @@ class KlearMatrix_Model_ResponseItem
             return false;
         }
 
-        $orderConfig = new Klear_Model_KConfigParser();
+        $orderConfig = new Klear_Model_ConfigParser();
         $orderConfig->setConfig($this->_config->getRaw()->order);
 
         return $orderConfig;

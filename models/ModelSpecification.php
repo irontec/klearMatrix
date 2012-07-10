@@ -13,7 +13,7 @@ class KlearMatrix_Model_ModelSpecification
 
     public function setConfig(Zend_Config $config)
     {
-        $this->_config = new Klear_Model_KConfigParser;
+        $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
         $this->_class = $this->_config->getRequiredProperty("class");

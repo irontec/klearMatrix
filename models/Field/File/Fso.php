@@ -70,7 +70,7 @@ class KlearMatrix_Model_Field_File_Fso
         if ($fileOptions = $this->_config->options) {
 
             $ret['options'] = array();
-            $parser = new Klear_Model_KConfigParser;
+            $parser = new Klear_Model_ConfigParser;
             $parser->setConfig($fileOptions);
 
             foreach ($fileOptions as $option => $opObject) {

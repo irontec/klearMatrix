@@ -1,7 +1,7 @@
 ;(function($) {
-    
+
     var __namespace__ = "klearmatrix.module";
-    
+
     $.widget("klearmatrix.module", {
         options: {
             moduleName: 'module'
@@ -43,14 +43,13 @@
         },
 
         _parseDefaultItems : function() {
-        	
+
         	if (!this.options.data.title) {
         		return;
         	}
 
             var defaultValue, defaultColumn, count = false;
-            console.log(typeof this.options.data.values);
-            
+
             if ($.isArray(this.options.data.values)) {
             	 for(var i in this.options.data.columns) {
             		 if (count === false) {
@@ -63,24 +62,24 @@
             			 break;
             		 }
             	 }
-            
+
             	 var defaultValue = this.options.data.values[0][defaultColumn.id];
-            	 
+
             	 if (defaultColumn.multilang) {
             		 defaultValue = defaultValue[this.options.data.defaultLang];
             	 }
-            	 
+
              } else {
-            	 
+
             	 defaultValue = '';
-            	 
+
              }
-            
+
             this.options.data.title =  this.options.data.title
              								.replace(/\%parent\%/,this.options.data.parentIden)
              								.replace(/\%item\%/,defaultValue);
 
-             	
+
         },
         _loadTemplate : function(tmplName) {
 
@@ -89,7 +88,7 @@
                             this.options.data,
                             $.klearmatrix.template.helper
                             );
-            
+
             this._parseDefaultItems();
             return $tmplObj;
 
@@ -110,16 +109,16 @@
             }
 
         },
-        
+
         _resolveParentHolder : function(element) {
-        	
+
         	// Si es un módulo con parent
         	if (this.options.moduleParent) {
-        		var modulecheck = this.options.moduleParent; 
+        		var modulecheck = this.options.moduleParent;
         	} else {
         		var modulecheck = this.options.moduleName;
         	}
-        	
+
             switch (modulecheck) {
                 case 'list':
                 	return $(element).parents("tr:eq(0)");
@@ -127,10 +126,10 @@
                 case 'new':
                 case 'edit':
                 	return $(element).parents("form:eq(0)");
-                	
+
                 break;
                 default:
-                	
+
                 	if ($(element).data("parentHolderSelector")) {
                 		return $(element).parents($(element).data("parentHolderSelector"));
                 	} else {
@@ -138,9 +137,9 @@
                 	}
                 break;
             }
-        	
+
         },
-        
+
         _registerBaseEvents : function() {
 
             var self = this.element;
@@ -161,7 +160,7 @@
             			$(this).trigger("manualchange")
             		}
             	});
-            
+
             $('a.option.screen',this.element.klearModule("getPanel"))
             	.on('mouseup.screenOption')
             	.on('mouseup.screenOption',function(e) {
@@ -187,9 +186,9 @@
 
                 var _newIndex = self.klearModule("option","tabIndex")+1;
                 var _menuLink = $(this);
-                
+
                 var _parentHolder = _self._resolveParentHolder(this);
-                
+
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
@@ -280,23 +279,23 @@
                 var _postData = {
                     callerScreen : _self.options.data.screen,
                 };
-                
+
                 // Si la pantalla llamante tiene condición (parentId -- en data --
 	            // enviarlos a la nueva pantalla
-                
+
 	            if (_self.options.data.parentId) {
 	            	_postData.parentId = _self.options.data.parentId;
 	            	_postData.parentScreen = _self.options.data.parentScreen;
 	            }
-	            
+
 	            if (data && typeof data.params != undefined) {
 		            $.extend(_postData,data.params);
 	            }
-	            
+
 	            if ($(this).data("params")) {
 	            	$.extend(_postData,$(this).data("params"));
 	            }
-	            
+
 	            $.klear.request(
                         {
                             file: self.klearModule("option","file"),
@@ -364,18 +363,18 @@
                 var _postData = {
                     callerScreen : _self.options.data.screen,
                 };
-                
+
                 // Si la pantalla llamante tiene condición (parentId -- en data --
 	            // enviarlos a la nueva pantalla
 	            if (_self.options.data.parentId) {
 	            	_postData.parentId = _self.options.data.parentId;
 	            	_postData.parentScreen = _self.options.data.parentScreen;
 	            }
-	            
+
 	            if (data && typeof data.params != undefined) {
 		            $.extend(_postData,data.params);
 	            }
-	            
+
                 $.klear.request(
                         {
                             file: self.klearModule("option","file"),
@@ -386,7 +385,7 @@
                             external: external
                         },
                         function(response) {
-                        		
+
                         },
                         function() {
                             console.log(arguments);
@@ -395,14 +394,14 @@
                 );
 
             });
-            
-            
+
+
             $("[title]:not(.fieldInfo-box)",this.element.klearModule("getPanel")).tooltip();
 
             $(".fieldInfo-box",this.element.klearModule("getPanel")).toggle(function(){
-            	
+
             	var $self = $(this);
-            	
+
             	var $box = $self.parent().find('.fieldInfo-boxinfo');
             	if ($box.length<=0) {
             		$box = $('<div />', {
@@ -410,7 +409,7 @@
                 		html: '<p>' + $self.attr('title') + '</p>'
                 	});
                 	$box.hide();
-                	$self.parent().prepend($box);	
+                	$self.parent().prepend($box);
             	}
             	$box.slideDown('slow');
             },
@@ -426,10 +425,10 @@
         },
         standardError : function(data) {
         	var self = this;
-        	
+
             var $_dialog = $(self.element).klearModule("getModuleDialog");
-            
-            
+
+
             $_dialog.moduleDialog("option","buttons",
                      [
                           {
@@ -440,22 +439,22 @@
                         }
                     ]
             );
-            
+
             if (typeof data.code != 'undefined') {
             	var errorDesc;
             	if (errorDesc = $.klear.fetchErrorByCode(data.code)) {
             		var _oldMessage = data.message;
             		data.message = errorDesc;
-            		
-            		data.message = data.message.replace(/%message%/,_oldMessage); 
+
+            		data.message = data.message.replace(/%message%/,_oldMessage);
             	}
-            	
+
             }
-            
-            
-            $_dialog.moduleDialog("option","title",$.translate("Error", [__namespace__])); 
+
+
+            $_dialog.moduleDialog("option","title",$.translate("Error", [__namespace__]));
             $_dialog.moduleDialog("updateContent",data.message);
-            
+
         }
 
     });

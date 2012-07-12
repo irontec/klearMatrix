@@ -217,7 +217,7 @@ a.ui-state-nojump {
 
 
 
- .klearMatrixFiltering .filteredFields .field {
+.klearMatrixFiltering .filteredFields .field {
     padding:.8em;
     display:block;
 }
@@ -275,6 +275,20 @@ a.ui-state-nojump {
 	width:auto;
 }
 
+span.klearFieldError {
+	padding:.6em;
+	margin:.3em;
+	display:block;
+	overflow: hidden;
+}
+
+span.klearFieldError span {
+	float:left;	
+}
+
+span.klearFieldError span.content {
+	margin-left:20px;
+}
 
 
 @media screen and (max-width: 680px){

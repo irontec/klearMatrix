@@ -15,6 +15,10 @@ abstract class KlearMatrix_Model_Field_Abstract
 
     protected $_properties = array();
 
+    /*valid error index */
+    protected $_errorIndex = array('patternMismatch','rangeOverflow','rangeUnderflow','stepMismatch','tooLong','typeMismatch','valueMissing');
+    protected $_errorMessages = array();
+
     public function setColumn($column)
     {
         $this->_column = $column;
@@ -24,6 +28,23 @@ abstract class KlearMatrix_Model_Field_Abstract
     public function getColumn($column)
     {
         return $this->_column;
+    }
+
+    protected function _parseErrorMessages()
+    {
+        $_errorMsgs = $this->_config->getProperty("errorMessages");
+
+        if (!$_errorMsgs) {
+            return;
+        }
+        $errorConfig = new Klear_Model_ConfigParser;
+        $errorConfig->setConfig($_errorMsgs);
+
+        foreach ($this->_errorIndex as $errorIndex) {
+            if (isset($_errorMsgs->$errorIndex)) {
+                $this->_errorMessages[$errorIndex] = $errorConfig->getProperty($errorIndex);
+            }
+        }
     }
 
     /**
@@ -39,6 +60,8 @@ abstract class KlearMatrix_Model_Field_Abstract
                 $this->_properties[$_prop] = $this->_config->getProperty($_prop);
             }
         }
+
+        $this->_parseErrorMessages();
 
         return $this;
     }
@@ -115,6 +138,16 @@ abstract class KlearMatrix_Model_Field_Abstract
 
         return true;
     }
+
+    public function getCustomErrors()
+    {
+        if (sizeof($this->_errorMessages) == 0) {
+            return false;
+        }
+
+        return $this->_errorMessages;
+    }
+
 }
 
 //EOF

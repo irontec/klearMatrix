@@ -36,6 +36,16 @@
                 ._registerMainActionEvent();
 
         },
+        _formValidationErrors : {
+    		'customError' : $.translate('undefined error',[__namespace__]), 
+        	'patternMismatch' : $.translate('invalid pattern',[__namespace__]), 
+        	'rangeOverflow' : $.translate('range overflow',[__namespace__]),
+        	'rangeUnderflow' : $.translate('range underflow',[__namespace__]),
+        	'stepMismatch' : $.translate('step mismatch',[__namespace__]),
+        	'tooLong' : $.translate('the value is too long',[__namespace__]),
+        	'typeMismatch' : $.translate('type mismatched',[__namespace__]),
+        	'valueMissing' : $.translate('this is a required field',[__namespace__])
+        },
         _registerReDispatchSavers : function() {
             var self = this;
 
@@ -72,7 +82,6 @@
 
                 var validForm = $(this).h5Validate("allValid");
                 if (!validForm) {
-
 
                     return;
                 }
@@ -238,10 +247,53 @@
                     .trigger("manualchange");
             });
 
+            var self = this;
+            var _errorTemplate = $('<span class="ui-widget ui-state-error ui-corner-all klearFieldError">'  
+									+ '<span class="ui-icon ui-icon-alert"></span><span class="content"></span></span>');
+		
             this.options.theForm
                             .h5Validate()
                             .on('validated',function(formElement,validation) {
+                            	
+                            	var _inputContainer = $(formElement.target).parents("p:eq(0)");
+                            	
+                            	if (true === validation.valid) {
+                            		$(".klearFieldError",_inputContainer).slideUp(function() {
+                            			$(this).remove();
+                            		});
 
+                            		return;                            		
+                            	}
+                            	
+                            	
+                            	var errorCollection = [];
+                        		
+                            	for (errorType in self._formValidationErrors) {
+                            		if (validation[errorType] === true) {
+                            			
+                            			var _dataIndex = errorType.toLowerCase();
+                            			if ($(formElement.target).data(_dataIndex)) {
+                            				errorCollection.push($(formElement.target).data(_dataIndex));
+                            			} else {
+	                            			errorCollection.push(self._formValidationErrors[errorType]);
+                            			}
+                            		}
+                            	}
+                            	
+                            	if (errorCollection.length > 0) {
+                            		if (!$(".klearFieldError",_inputContainer).is("span")) {
+                            			_errorTemplate.clone().prependTo(_inputContainer);
+                            		} 
+                            		$(".klearFieldError .content",_inputContainer).html(errorCollection.join('<br />'));
+                            		
+                            	} else {
+                            		
+                            		$(".klearFieldError",_inputContainer).slideUp(function() {
+                            			$(this).remove();
+                            		});
+                            		
+                            	}
+                            	
                             });
 
         },

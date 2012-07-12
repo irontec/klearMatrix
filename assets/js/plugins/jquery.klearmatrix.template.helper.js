@@ -35,7 +35,8 @@
 
                 var extraConfig = column.config || false;
                 var properties = column.properties || false;
-
+                var customErrors = column.errors || false;
+                
                 if (true === isNew) {
                     var _value = '';
                 } else {
@@ -77,7 +78,8 @@
                         _readonly: column.readonly? true:false,
                         _dataConfig : extraConfig,
                         _properties : properties,
-                        _fieldValue : _value
+                        _fieldValue : _value,
+                        _errors : customErrors
                 };
 
                 var node = $("<div />");
@@ -107,6 +109,7 @@
                             _dataConfig : extraConfig,
                             _properties : properties,
                             _fieldValue: _curValue,
+                            _errors : customErrors
                         };
 
                         var _node = $("<div />");
@@ -312,7 +315,7 @@
 
             },
             mustShowOptionColum : function(option, value) {
-            	console.log(arguments);
+
             	return true;
             	
             }

@@ -33,4 +33,12 @@ return array (
   29 => '{file} has invalid extension. Only {extensions} are allowed.',
   30 => 'The files are being uploaded, if you leave now the upload will be cancelled.',
   31 => 'Campo obligatorio',
+  32 => 'invalid pattern',
+  33 => 'the value is too long',
+  34 => 'range underflow',
+  35 => 'this is a required field',
+  36 => 'type mismatched',
+  37 => 'range overflow',
+  38 => 'undefined error',
+  39 => 'step mismatch',
 );

@@ -198,9 +198,9 @@ class KlearMatrix_Model_Column
     public function getJsPaths()
     {
         if ($this->isOption()) {
-            return array();        
+            return array();
         }
-        
+
         $this->_loadConfigClass();
         return $this->_fieldConfig->getExtraJavascript();
     }
@@ -542,6 +542,10 @@ class KlearMatrix_Model_Column
 
             if ($props = $this->_fieldConfig->getProperties()) {
                 $ret['properties'] = $props;
+            }
+
+            if ($errors = $this->_fieldConfig->getCustomErrors()) {
+                $ret['errors'] = $errors;
             }
         }
 

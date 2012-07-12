@@ -35,7 +35,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $pk = $this->_item->getCurrentPk();
         $this->_helper->log('edit::save action for mapper:' . $mapperName . ' > PK('.$pk.')');
-        
+
         // TODO: traducir mensaje?
         if (!$model = $mapper->find($pk)) {
             $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
@@ -102,7 +102,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 'error' => true,
                 'message'=> $exception->getMessage()
             );
-            
+
             $this->_helper->log('Error saving in edit::save for ' . $mapperName . ' > PK('.$pk.') ['.$exception->getMessage().']', Zend_Log::CRIT);
         }
 
@@ -138,11 +138,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
         $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
-        
+
         $pk = $this->_item->getCurrentPk();
-        
+
         $this->_helper->log('Edit for mapper:' . $mapperName . ' > PK('.$pk.')');
-        
+
         $data = new KlearMatrix_Model_MatrixResponse;
         $cols = $this->_item->getVisibleColumns();
 
@@ -153,9 +153,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             ->setResponseItem($this->_item);
 
         if (!$model = $mapper->find($pk)) {
-            
+
             $this->_helper->log('PK NOT FOUND ' . $mapperName . ' > PK('.$pk.')', Zend_Log::ERR);
-            
+
             exit;// Error
 
         } else {

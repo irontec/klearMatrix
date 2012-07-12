@@ -15,7 +15,7 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
 
             $value = $parsedValues->getProperty((string)$key);
 
-            if (!is_string($value)) {
+            if ($value instanceof Zend_Config) {
 
                 $fieldValue = new Klear_Model_ConfigParser;
                 $fieldValue->setConfig($value);

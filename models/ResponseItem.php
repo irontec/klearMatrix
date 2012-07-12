@@ -274,7 +274,7 @@ class KlearMatrix_Model_ResponseItem
         * que idiomas tienen los modelos disponibles
         */
         $availableLangsPerModel = $model->getAvailableLangs();
-        
+
         if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumns->setLangs($availableLangsPerModel);
         }
@@ -374,11 +374,10 @@ class KlearMatrix_Model_ResponseItem
     protected function _getMultilangFields($model)
     {
         $returnMultiLangFields = array();
-        
+
         $availableLangsPerModel = $model->getAvailableLangs();
         $multiLangFields = $model->getMultiLangColumnsList();
-        
-        
+
         foreach ($multiLangFields as $dbFieldName => $columnName) {
 
             foreach ($availableLangsPerModel as $langIden) {

@@ -114,15 +114,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         //Generamos el where de los filtros
         $searchFields = $this->getRequest()->getPost("searchFields");
         $searchOps = $this->getRequest()->getPost("searchOps");
-        
+
         if ($searchFields) {
-            
+
             $this->_helper->log('Search arguments found for:' . $mapperName);
-            
+
             $_searchWhere = array();
 
             foreach ($searchFields as $field => $values) {
-                
+
                 $valuesOp = $searchOps[$field];
                 if ($col = $cols->getColFromDbName($field)) {
 
@@ -164,7 +164,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         if ($orderField && $orderColumn) {
             $this->_helper->log('Order column especified for:' . $mapperName);
             $order = $orderColumn->getOrderField($model);
-            
+
             $orderColumn->setAsOrdered();
 
             if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
@@ -249,7 +249,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         if ($this->_item->getCsv()) {
             $data->setCsv(true);
         }
-        
+
         if (count($where) == 0) {
 
             $where = null;
@@ -270,9 +270,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $data->setResults(array());
 
         $results = $mapper->fetchList($where, $order, $count, $offset);
-        
+
         $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $mapperName);
-        
+
         if (is_array($results)) {
 
             if (!is_null($count) && !is_null($offset)) {
@@ -284,7 +284,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
                 $data->setPaginator($paginator);
             } else {
-                
+
                 $totalItems = sizeof($results);
             }
 
@@ -335,7 +335,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $data->fixResults($this->_item);
         }
 
-
         $data->setInfo($this->_item->getInfo());
         $data->setGeneralOptions($this->_item->getScreenOptions());
 
@@ -350,15 +349,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/", 'list'), "klearmatrixMultiLangList");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.spinner.js");
-        
+
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
         $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
 
-        // Añadimos JS de los campos - tema filtrados - 
+        // Añadimos JS de los campos - tema filtrados -
         $jsonResponse->addJsArray($cols->getColsJsArray());
-        
+
         $customScripts = $this->_item->getCustomScripts();
         if (isset($customScripts->module) and isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
@@ -392,8 +391,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     //Exportamos los resultados a CSV
     public function exportCsv()
     {
-        
-        
         $fields = $this->view->data['columns'];
         $values = $this->view->data['values'];
 

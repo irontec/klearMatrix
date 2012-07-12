@@ -108,7 +108,8 @@ class KlearMatrix_Model_ResponseItem
     {
         //Cogemos la info del ResponseItem
         $info = $this->_config->getProperty("info");
-        if ($this->_hasInfo !== false) {
+
+        if ($info !== false) {
 
             $this->_fieldInfo = new KlearMatrix_Model_Info;
             $this->_fieldInfo->setConfig($info);

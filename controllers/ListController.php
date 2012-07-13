@@ -184,7 +184,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $order = $this->_getListOrder($cols, $model);
         $count = $this->_getItemsPerPage();
-        $offset = $this->_getOffset($count);
+        $page = $this->_getCurrentPage();
+        $offset = $this->_getOffset($count, $page);
 
         $results = $mapper->fetchList($where, $order, $count, $offset);
 
@@ -328,10 +329,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         return null;
     }
 
-    protected function _getOffset($itemsPerPage)
+    protected function _getOffset($itemsPerPage, $page)
     {
         if ($itemsPerPage) {
-            $page = $this->_getCurrentPage();
             return $itemsPerPage * ($page - 1);
         }
         return null;

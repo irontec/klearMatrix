@@ -14,6 +14,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
      */
     protected $_item;
 
+    protected $_mapperName;
+    protected $_mapper;
+
 
     public function init()
     {
@@ -55,32 +58,23 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
+        $this->_mapperName = $this->_item->getMapperName();
+        $this->_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_mapperName);
+        $this->_helper->log('List mapper: ' . $this->_mapperName);
     }
 
 
     public function indexAction()
     {
-        $mapperName = $this->_item->getMapperName();
-        $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
-
-        $this->_helper->log('List mapper: ' . $mapperName);
-
         $data = new KlearMatrix_Model_MatrixResponse();
 
         $cols = $this->_item->getVisibleColumns();
         $model = $this->_item->getObjectInstance();
 
-        $where = array();
-
-        if ($this->_item->hasFilterClass()) {
-            $where[] = $this->_item->getFilterClassCondition();
-        }
-
         if ($this->_item->isFilteredScreen()) {
 
-            $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
-
-            if ($callerScreen = $this->getRequest()->getPost("callerScreen")) {
+            $callerScreen = $this->getRequest()->getPost("callerScreen");
+            if ($callerScreen) {
 
                $parentScreen = new KlearMatrix_Model_Screen;
                $parentScreen->setRouteDispatcher($this->_mainRouter);
@@ -95,64 +89,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                $parentData = $parentMapper->find($parentId);
 
                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+
                $data->setParentIden($parentData->$getter());
                $data->setParentScreen($callerScreen);
                $data->setParentId($parentId);
-
             }
         } else {
 
             $parentData = null;
-        }
-
-        if ($this->_item->hasForcedValues()) {
-            $where = array_merge($where, $this->_item->getForcedValuesConditions());
-        }
-
-        //Generamos el where de los filtros
-        $searchFields = $this->getRequest()->getPost("searchFields");
-        $searchOps = $this->getRequest()->getPost("searchOps");
-
-        if ($searchFields) {
-
-            $this->_helper->log('Search arguments found for:' . $mapperName);
-
-            $_searchWhere = array();
-
-            foreach ($searchFields as $field => $values) {
-
-                $valuesOp = $searchOps[$field];
-                if ($col = $cols->getColFromDbName($field)) {
-
-                    $_searchWhere[] = $col->getSearchCondition($values, $valuesOp, $model, $cols->getLangs());
-                    $data->addSearchField($field, $values, $valuesOp);
-                }
-            }
-
-            $expresions = $values = array();
-
-            foreach ($_searchWhere as $condition) {
-
-                if (is_array($condition)) {
-
-                    $expresions[] = $condition[0];
-                    $values = array_merge($values, $condition[1]);
-
-                } else {
-
-                    $expresions[] = $condition;
-                }
-            }
-
-            if ($this->getRequest()->getPost("searchAddModifier") == '1') {
-
-                $data->addSearchAddModifier(true);
-                $where[] = array('(' . implode(" or ", $expresions) . ')', $values);
-
-            } else {
-
-                $where[] = array('(' . implode(" and ", $expresions) . ')', $values);
-            }
         }
 
         $data
@@ -163,50 +107,28 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setResults(array())
             ->setCsv((bool)$this->_item->getCsv());
 
-
-        if (count($where) == 0) {
-
-            $where = null;
-
-        } else {
-
-            $values = $expresions = array();
-
-            foreach ($where as $condition) {
-
-                $expresions[] = $condition[0];
-                $values = array_merge($values, $condition[1]);
-            }
-
-            $where = array(implode(" and ", $expresions), $values);
-        }
-
-
+        $where = $this->_getWhere($cols, $model, $data);
         $order = $this->_getListOrder($cols, $model);
         $count = $this->_getItemsPerPage();
         $page = $this->_getCurrentPage();
         $offset = $this->_getOffset($count, $page);
 
-        $results = $mapper->fetchList($where, $order, $count, $offset);
-
-        $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $mapperName);
+        $results = $this->_mapper->fetchList($where, $order, $count, $offset);
+        $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
 
         if (is_array($results)) {
 
+            $totalItems = $this->_mapper->countByQuery($where);
+            $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
+
             if (!is_null($count) && !is_null($offset)) {
 
-                $totalItems = $mapper->countByQuery($where);
-                $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
                 $paginator->setCurrentPageNumber($page);
                 $paginator->setItemCountPerPage($count);
-
-                $data->setPaginator($paginator);
-            } else {
-
-                $totalItems = sizeof($results);
             }
 
-            $data->setTotal($totalItems);
+            $data->setPaginator($paginator);
+            $data->setTotal($paginator->getTotalItemCount());
             $data->setResults($results);
 
             if ($this->_item->hasFieldOptions()) {
@@ -224,9 +146,13 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                         $screenOption->setAsDefault();
                         $defaultOption = false;
                     }
+
                     // Recuperamos la configuración del screen, de la configuración general del módulo
                     // Supongo que cuando lo vea Alayn, le gustará mucho :)
+                        // Lo he visto y solo digo: http://en.wikipedia.org/wiki/Law_of_Demeter :p
+
                     // El "nombre" mainRouter apesta... pero... O:)
+                        // Pero habría que cambiarlo, no?
 
                     $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
                     $fieldOptions->addOption($screenOption);
@@ -307,6 +233,89 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
+    protected function _getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data)
+    {
+        $where = array();
+
+        if ($this->_item->hasFilterClass()) {
+            $where[] = $this->_item->getFilterClassCondition();
+        }
+
+        if ($this->_item->isFilteredScreen()) {
+            $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
+        }
+
+        if ($this->_item->hasForcedValues()) {
+            $where = array_merge($where, $this->_item->getForcedValuesConditions());
+        }
+
+        //Generamos el where de los filtros
+        $searchFields = $this->getRequest()->getPost("searchFields");
+        $searchOps = $this->getRequest()->getPost("searchOps");
+
+        if ($searchFields) {
+
+            $this->_helper->log('Search arguments found for:' . $this->_mapperName);
+
+            $searchWhere = array();
+
+            foreach ($searchFields as $field => $values) {
+
+                $valuesOp = $searchOps[$field];
+                $col = $cols->getColFromDbName($field);
+                if ($col) {
+
+                    $searchWhere[] = $col->getSearchCondition($values, $valuesOp, $model, $cols->getLangs());
+                    $data->addSearchField($field, $values, $valuesOp);
+                }
+            }
+
+            $expressions = $values = array();
+
+            foreach ($searchWhere as $condition) {
+
+                if (is_array($condition)) {
+
+                    $expressions[] = $condition[0];
+                    $values = array_merge($values, $condition[1]);
+
+                } else {
+
+                    $expressions[] = $condition;
+                }
+            }
+
+            if ($this->getRequest()->getPost("searchAddModifier") == '1') {
+
+                $data->addSearchAddModifier(true);
+                $where[] = array('(' . implode(" or ", $expressions) . ')', $values);
+
+            } else {
+
+                $where[] = array('(' . implode(" and ", $expressions) . ')', $values);
+            }
+        }
+
+        if (count($where) == 0) {
+
+            $where = null;
+
+        } else {
+
+            $values = $expressions = array();
+
+            foreach ($where as $condition) {
+
+                $expressions[] = $condition[0];
+                $values = array_merge($values, $condition[1]);
+            }
+
+            $where = array(implode(" and ", $expressions), $values);
+        }
+
+        return $where;
+    }
+
     protected function _getItemsPerPage()
     {
         //Calculamos la página en la que estamos y el offset
@@ -361,7 +370,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $orderColumn = $cols->getColFromDbName($orderField);
 
         if ($orderField && $orderColumn) {
-//             $this->_helper->log('Order column especified for:' . $mapperName);
+            $this->_helper->log('Order column especified for:' . $this->_mapperName);
             $order = $orderColumn->getOrderField($model);
 
             $orderColumn->setAsOrdered();

@@ -255,7 +255,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['csv'] = true;
         }
 
-        if (false !== $this->_paginator) {
+        if (false !== $this->_paginator && count($this->_paginator) > 1) {
             $ret['paginator'] = (array)$this->_paginator->getPages();
         }
 

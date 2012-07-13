@@ -32,6 +32,7 @@ abstract class KlearMatrix_Model_Field_Abstract
 
     protected function _parseErrorMessages()
     {
+
         $_errorMsgs = $this->_config->getProperty("errorMessages");
 
         if (!$_errorMsgs) {
@@ -53,15 +54,16 @@ abstract class KlearMatrix_Model_Field_Abstract
     public function init()
     {
         $this->_config = $this->_column->getKlearConfig();
+
         if (is_object($this->_config)) {
 
             foreach (self::$_propertyMaster as $_prop) {
 
                 $this->_properties[$_prop] = $this->_config->getProperty($_prop);
             }
-        }
 
-        $this->_parseErrorMessages();
+            $this->_parseErrorMessages();
+        }
 
         return $this;
     }

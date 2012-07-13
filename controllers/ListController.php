@@ -2,7 +2,6 @@
 
 class KlearMatrix_ListController extends Zend_Controller_Action
 {
-
     /**
      * Route Dispatcher desde klear/index/dispatch
      * @var KlearMatrix_Model_RouteDispatcher
@@ -65,18 +64,17 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
         $this->_helper->log('List mapper: ' . $mapperName);
-        $data = new KlearMatrix_Model_MatrixResponse;
-        $cols = $this->_item->getVisibleColumns();
 
+        $data = new KlearMatrix_Model_MatrixResponse();
+
+        $cols = $this->_item->getVisibleColumns();
         $model = $this->_item->getObjectInstance();
 
         $where = array();
 
-
         if ($this->_item->hasFilterClass()) {
             $where[] = $this->_item->getFilterClassCondition();
         }
-
 
         if ($this->_item->isFilteredScreen()) {
 
@@ -157,58 +155,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
         }
 
-        //Calculamos el orden del listado
-        $orderField = $this->getRequest()->getPost("order");
-        $orderColumn = $cols->getColFromDbName($orderField);
-
-        if ($orderField && $orderColumn) {
-            $this->_helper->log('Order column especified for:' . $mapperName);
-            $order = $orderColumn->getOrderField($model);
-
-            $orderColumn->setAsOrdered();
-
-            if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
-
-                $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));
-                $order .= ' ' . $this->getRequest()->getPost("orderType");
-
-            } else {
-
-                $order .= ' asc';
-            }
-
-        } else {
-
-            $orderConfig = $this->_item->getOrderConfig();
-
-            if ($orderConfig && $orderConfig->getProperty('field')) {
-
-                    $order = $orderConfig->getProperty('field');
-
-                    if ($order instanceof Zend_Config) {
-
-                        $order = $order->toArray();
-                    }
-
-                    if (! is_array($order)) {
-
-                        $order = array($order);
-                    }
-
-                    if ($orderConfig->getProperty('type')) {
-
-                        foreach ($order as $key => $val) {
-
-                            $order[$key] .= ' '. $orderConfig->getProperty('type');
-                        }
-                    }
-
-            } else {
-
-                // Por defecto ordenamos por PK
-                $order = $this->_item->getPkName();
-            }
-        }
+        $order = $this->_getListOrder($cols, $model);
 
         //Calculamos la página en la que estamos y el offset
         $paginationConfig = $this->_item->getPaginationConfig();
@@ -366,26 +313,90 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->addCssFile("/css/klearMatrix.css");
         $jsonResponse->addCssFile("/css/jquery.ui.spinner.css");
         //setData hook
-        if ($this->_item->getHook('setData')) {
 
-            $hook = $this->_item->getHook('setData');
+        $hook = $this->_item->getHook('setData');
+        if ($hook) {
+
             $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
 
         } else {
 
             $data = $data->toArray();
         }
+
         $jsonResponse->setData($data);
 
         //attachView hook
-        if ($this->_item->getHook('attachView')) {
+        $hook = $this->_item->getHook('attachView');
+        if ($hook) {
 
-            $hook = $this->_item->getHook('attachView');
             $this->_helper->{$hook->helper}->{$hook->action}($this->view);
         }
 
         $jsonResponse->attachView($this->view);
+    }
 
+    /**
+     * Returns order query part
+     * @param KlearMatrix_Model_ColumnCollection $cols
+     * @param Object $model
+     * @return string
+     */
+    protected function _getListOrder(KlearMatrix_Model_ColumnCollection $cols, $model)
+    {
+        //Calculamos el orden del listado
+        $orderField = $this->getRequest()->getPost("order");
+        $orderColumn = $cols->getColFromDbName($orderField);
+
+        if ($orderField && $orderColumn) {
+//             $this->_helper->log('Order column especified for:' . $mapperName);
+            $order = $orderColumn->getOrderField($model);
+
+            $orderColumn->setAsOrdered();
+
+            if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
+
+                $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));
+                $order .= ' ' . $this->getRequest()->getPost("orderType");
+
+            } else {
+
+                $order .= ' asc';
+            }
+
+        } else {
+
+            $orderConfig = $this->_item->getOrderConfig();
+
+            if ($orderConfig && $orderConfig->getProperty('field')) {
+
+                $order = $orderConfig->getProperty('field');
+
+                if ($order instanceof Zend_Config) {
+
+                    $order = $order->toArray();
+                }
+
+                if (!is_array($order)) {
+
+                    $order = array($order);
+                }
+
+                if ($orderConfig->getProperty('type')) {
+
+                    foreach ($order as $key => $val) {
+
+                        $order[$key] .= ' '. $orderConfig->getProperty('type');
+                    }
+                }
+
+            } else {
+
+                // Por defecto ordenamos por PK
+                $order = $this->_item->getPkName();
+            }
+        }
+        return $order;
     }
 
     //Exportamos los resultados a CSV

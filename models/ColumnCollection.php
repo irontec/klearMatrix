@@ -87,6 +87,10 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         return $retArray;
     }
 
+    /**
+     * @param string $field
+     * @return KlearMatrix_Model_Column|NULL
+     */
     public function getColFromDbName($field)
     {
         if (isset($this->_cols[$field])) {
@@ -94,7 +98,7 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
             return $this->_cols[$field];
         }
 
-        return false;
+        return null;
     }
 
 

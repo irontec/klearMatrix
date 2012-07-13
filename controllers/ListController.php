@@ -155,47 +155,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
         }
 
-        $order = $this->_getListOrder($cols, $model);
-
-        //Calculamos la página en la que estamos y el offset
-        $paginationConfig = $this->_item->getPaginationConfig();
-
-        if (($paginationConfig) &&
-            ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv')) {
-
-            $count = $paginationConfig->getproperty('items');
-            $currentCount = (int)$this->getRequest()->getPost("count");
-
-            if ($currentCount) {
-
-                $count = $currentCount;
-            }
-
-            $page = 1;
-            $currentPage = (int)$this->getRequest()->getPost("page");
-
-            if ($currentPage) {
-
-                $page = ($currentPage < 1)? 1 : $currentPage;
-            }
-
-            $offset = ($page-1)*$count;
-
-        } else {
-
-            $count = NULL;
-            $offset = NULL;
-        }
-
         $data
             ->setResponseItem($this->_item)
             ->setTitle($this->_item->getTitle())
             ->setColumnWraper($cols)
-            ->setPK($this->_item->getPkName());
+            ->setPK($this->_item->getPkName())
+            ->setResults(array())
+            ->setCsv((bool)$this->_item->getCsv());
 
-        if ($this->_item->getCsv()) {
-            $data->setCsv(true);
-        }
 
         if (count($where) == 0) {
 
@@ -214,7 +181,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $where = array(implode(" and ", $expresions), $values);
         }
 
-        $data->setResults(array());
+
+        $order = $this->_getListOrder($cols, $model);
+        $count = $this->_getItemsPerPage();
+        $offset = $this->_getOffset($count);
 
         $results = $mapper->fetchList($where, $order, $count, $offset);
 
@@ -334,6 +304,48 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _getItemsPerPage()
+    {
+        //Calculamos la página en la que estamos y el offset
+        $paginationConfig = $this->_item->getPaginationConfig();
+        if (
+            ($paginationConfig instanceof Klear_Model_ConfigParser)
+            && ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv')
+        ) {
+
+            $count = $paginationConfig->getproperty('items');
+            $currentCount = (int)$this->getRequest()->getPost("count");
+
+            if ($currentCount) {
+
+                $count = $currentCount;
+            }
+
+            return $count;
+        }
+        return null;
+    }
+
+    protected function _getOffset($itemsPerPage)
+    {
+        if ($itemsPerPage) {
+            $page = $this->_getCurrentPage();
+            return $itemsPerPage * ($page - 1);
+        }
+        return null;
+    }
+
+    protected function _getCurrentPage()
+    {
+        $page = 1;
+        $currentPage = (int)$this->getRequest()->getPost("page");
+
+        if ($currentPage > 0) {
+            $page = $currentPage;
+        }
+        return $page;
     }
 
     /**

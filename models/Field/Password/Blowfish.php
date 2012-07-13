@@ -1,5 +1,5 @@
 <?php
-class KlearMatrix_Model_Field_Password_Sha_Salt extends KlearMatrix_Model_Field_Password_Abstract
+class KlearMatrix_Model_Field_Password_Blowfish extends KlearMatrix_Model_Field_Password_Abstract
 {
 
     protected function _salt()

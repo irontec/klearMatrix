@@ -141,7 +141,9 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
         // Theme
         $this->_mainConfig['theme'] = 'advanced';
 
-        $this->_mainConfig['theme_advanced_buttons1'] = implode(',', array(
+        $this->_mainConfig['theme_advanced_buttons1'] = implode(
+            ',',
+            array(
                 'bold',
                 'italic',
                 'underline',
@@ -159,7 +161,8 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
                 'unlink',
                 'pagebreak',
                 'fullscreen'
-        ));
+            )
+        );
 
         /*$this->_mainConfig['theme_advanced_buttons1'] = implode(',', array(
                 'save',

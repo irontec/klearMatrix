@@ -38,7 +38,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $pk = $this->_mainRouter->getParam("pk");
 
         $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
-        
+
         $cols = $this->_item->getVisibleColumns();
 
         $defaultCol = $cols->getDefaultCol();
@@ -93,7 +93,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         if ($obj && $obj->delete()) {
 
             $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.$pk.')');
-            
+
             $data = array(
                 'error' => false,
                 'pk' => $pk,
@@ -102,8 +102,11 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         } else {
 
-            $this->_helper->log('Error deleting model for ' . $mapperName . ' > PK('.$pk.')',Zend_Log::ERR);
-            
+            $this->_helper->log(
+                'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
+                Zend_Log::ERR
+            );
+
             $data = array(
                 'error' => true,
                 'message' => 'Algún error eliminado el registro'

@@ -75,9 +75,14 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
 
-            $result = $uploader->handleUpload(sys_get_temp_dir(), false, $this->_filePrefix . sha1(time() . rand(1000, 10000)), '');
+            $result = $uploader->handleUpload(
+                sys_get_temp_dir(),
+                false,
+                $this->_filePrefix . sha1(time() . rand(1000, 10000)),
+                ''
+            );
 
-            $this->_helper->log('new file uploaded (' .$result['basename'].')' );
+            $this->_helper->log('new file uploaded (' .$result['basename'].')');
 
         } catch(Exception $e) {
 
@@ -86,7 +91,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $this->view->error_number = $e->getCode();
             $this->view->error_msg = $e->getMessage();
 
-            $this->_helper->log('Error uploading File ['.$e->getCode().'] (' .$e->getMessage().')', Zend_Log::ERR );
+            $this->_helper->log(
+                'Error uploading File [' . $e->getCode() . '] (' . $e->getMessage() . ')',
+                Zend_Log::ERR
+            );
             return;
         }
 
@@ -99,7 +107,8 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $this->view->code = $result['filename'];
     }
 
-    protected function _clearOldFiles() {
+    protected function _clearOldFiles()
+    {
 
         $files = glob(sys_get_temp_dir() . '/' . $this->_filePrefix . '*');
         $secsLimit = time() - ($this->_hoursOld * 3600);
@@ -108,7 +117,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             if (!is_file($file)) {
                 // WTF?!?!?! symlink? dir? some maderfoker in the house?
-                $this->_helper->log('KlearMatrix::FSO NOT A FILE TO BE DELETED! something nasty!! ['.$file.']', Zend_Log::ALERT);
+                $this->_helper->log(
+                    'KlearMatrix::FSO NOT A FILE TO BE DELETED! something nasty!! ['.$file.']',
+                    Zend_Log::ALERT
+                );
                 continue;
             }
 
@@ -116,8 +128,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $this->_helper->log('KlearMatrix::FSO Deleting OLD file ['.basename($file).']');
                 unlink($file);
             }
-       }
-
+        }
     }
 
     public function forcedwAction()

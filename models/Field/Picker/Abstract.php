@@ -9,11 +9,11 @@ class KlearMatrix_Model_Field_Picker_Abstract
     protected $_css = array(
             "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
     );
-    
+
     protected $_js = array(
             "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
     );
-    
+
     protected $_settings = array(
 
         'altField' => null,
@@ -139,19 +139,19 @@ class KlearMatrix_Model_Field_Picker_Abstract
 
     public function __construct()
     {
-        
+
         $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
         $this->_locale = $currentKlearLanguage->getLocale();
-        
+
         $this->_jqLocale = $currentKlearLanguage->getjQLocale();
-        
+
         if (false === $this->_jqLocale) {
             Throw new \Exception('Klear locale not available in current picker');
         }
-        
+
         $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$this->_jqLocale.".js";
         return $this;
-        
+
     }
 
     public function getLocale()
@@ -162,7 +162,7 @@ class KlearMatrix_Model_Field_Picker_Abstract
     public function setConfig($config)
     {
         if ($config->settings) {
-            
+
             foreach ($config->settings as $key => $value) {
 
                 if (array_key_exists($key, $this->_settings)) {
@@ -178,7 +178,7 @@ class KlearMatrix_Model_Field_Picker_Abstract
     public function getConfig()
     {
         $filteredSettings = array();
-        
+
         foreach ($this->_settings as $key => $val) {
 
             if (! is_null($val)) {
@@ -189,27 +189,27 @@ class KlearMatrix_Model_Field_Picker_Abstract
         return $filteredSettings;
     }
 
-  
+
 
     /**
-     * Devuelve el formato de fecha "Localizado" segun jQ; y fixeado para formato Zend_Date 
+     * Devuelve el formato de fecha "Localizado" segun jQ; y fixeado para formato Zend_Date
      */
     protected function _getDateFormatFixed($locale)
     {
-        
+
         $_dateFormat = $this->_dateFormats[$locale];
         return str_replace(array('mm', 'yy'), array('MM','yyyy'), $_dateFormat);
 
     }
-    
-    
+
+
     public function getFormat($locale = null)
     {
-        
+
         if (isset($this->_settings['format'])) {
             return $this->_setting['format'];
         }
-        
+
         if (empty($locale)) {
             $locale = $this->_jqLocale;
         }
@@ -220,12 +220,12 @@ class KlearMatrix_Model_Field_Picker_Abstract
 
         return null;
     }
-   
+
     public function getMapperFormat()
     {
-        return $this->_mapperFormat;    
+        return $this->_mapperFormat;
     }
-   
+
 
     public function getExtraJavascript()
     {

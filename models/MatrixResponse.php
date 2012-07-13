@@ -29,8 +29,8 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_total = false;
     protected $_searchFields = array();
-    
-    
+
+
     protected $_searchAddModifier = false;
 
     protected $_info = false;
@@ -51,14 +51,14 @@ class KlearMatrix_Model_MatrixResponse
         $this->_results = $results;
         return $this;
     }
-    
+
     public function setTotal($total)
     {
         $this->_total = $total;
         return $this;
     }
-    
-    
+
+
     public function setPK($pk)
     {
         $this->_pk = $pk;
@@ -185,8 +185,6 @@ class KlearMatrix_Model_MatrixResponse
      */
     public function fixResults(KlearMatrix_Model_ResponseItem $screen)
     {
-
-
         $primaryKeyName = $screen->getPkName();
 
         if (!is_array($this->_results)) {
@@ -194,7 +192,6 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         $_newResults = array();
-
 
         foreach ($this->_results as $result) {
 
@@ -230,7 +227,6 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         $this->_results = $_newResults;
-
     }
 
     public function toArray()

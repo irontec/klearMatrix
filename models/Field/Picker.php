@@ -24,8 +24,8 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
             ->init();
     }
 
-    public function getCustomSearchCondition($values, $searchOps, $model) {
-
+    public function getCustomSearchCondition($values, $searchOps, $model)
+    {
         $searchField = $this->_column->getDbFieldName();
         $_fieldValues = $vals = array();
         $cont = 0;
@@ -35,7 +35,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
             $op = "=";
             if (isset($searchOps[$idx])) {
                 switch($searchOps[$idx]) {
-                    case 'lt': 
+                    case 'lt':
                         $op = '<';
                         break;
                     case 'gt':
@@ -43,24 +43,24 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
                         break;
                 }
             }
-            
+
             $vals[] = $searchField .' '.$op.' '. $template;
             $_fieldValues[$template] = $this->filterValue($_val, $model);
-                
+
             $cont++;
 
         }
-        
+
         // Campos datetime / date / time se "conjugan" con and >> Antes de las 12 y despues de las 10
         return array(
                 '(' . implode(' and ', $vals). ')',
                 $_fieldValues
         );
-            
-            
-            
+
+
+
     }
-    
+
     public function getConfig()
     {
         return $this->_control->getConfig();
@@ -74,7 +74,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
     {
 
         return $this->_control->filterValue($value, $original);
-    
+
     }
 
     /*
@@ -87,11 +87,11 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      */
     public function prepareValue($value, $model)
     {
-        
+
         if (method_exists($this->_control, 'prepareValue')) {
             return $this->_control->prepareValue($value, $model);
         }
-        
+
         $getter = $this->_column->getGetterName($model);
         $zendDateValue = $model->$getter(true);
 
@@ -103,7 +103,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         return $value;
     }
 
-    public function getExtraJavascript() 
+    public function getExtraJavascript()
     {
         if ($this->_control) {
             return $this->_control->getExtraJavascript();
@@ -113,7 +113,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
     }
 
 
-    public function getExtraCss() 
+    public function getExtraCss()
     {
         if ($this->_control) {
             return $this->_control->getExtraCss();

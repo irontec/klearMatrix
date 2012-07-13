@@ -802,7 +802,7 @@ class KlearMatrix_Model_ResponseItem
     {
         if (!$this->_config->exists("pagination")) {
 
-            return false;
+            return null;
         }
 
         $pagination = new Klear_Model_ConfigParser();

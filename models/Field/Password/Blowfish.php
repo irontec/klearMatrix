@@ -15,7 +15,7 @@ class KlearMatrix_Model_Field_Password_Blowfish extends KlearMatrix_Model_Field_
     {
         $strength = '08';
         $salt = $this->_salt();
-        $ret = crypt($this->_clearValue, '$2a$' . $strength . '$' . $salt . '$') . $salt;
+        $ret = crypt($this->_clearValue, '$2a$' . $strength . '$' . $salt . '$');
 
         return $ret;
     }

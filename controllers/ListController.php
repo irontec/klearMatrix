@@ -119,16 +119,20 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         if (is_array($results)) {
 
             $totalItems = $this->_mapper->countByQuery($where);
-            $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
 
             if (!is_null($count) && !is_null($offset)) {
 
+                $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
+
                 $paginator->setCurrentPageNumber($page);
                 $paginator->setItemCountPerPage($count);
+
+                $data->setPaginator($paginator);
+
+
             }
 
-            $data->setPaginator($paginator);
-            $data->setTotal($paginator->getTotalItemCount());
+            $data->setTotal($totalItems);
             $data->setResults($results);
 
             if ($this->_item->hasFieldOptions()) {
@@ -340,6 +344,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected function _getOffset($itemsPerPage, $page)
     {
+
         if ($itemsPerPage) {
             return $itemsPerPage * ($page - 1);
         }
@@ -354,6 +359,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         if ($currentPage > 0) {
             $page = $currentPage;
         }
+
         return $page;
     }
 

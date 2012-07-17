@@ -165,6 +165,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         return $this->_cols[$this->_defaultColumnIdx];
     }
 
+    /**
+     * @param array $langs Languages specified in the model
+     */
     public function setLangs($langs)
     {
         //TODO: Sacar esto a una clase externa que se encarge de filtrar los idiomas del modelo, por lo que queramos (o lo del site como hace el siguiente fragmento).
@@ -173,15 +176,14 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
         $_currentLangs = $this->_klearBootstrap->getOption('siteConfig')->getLangs();
 
-        foreach ($langs as $_langIden) {
-            foreach ($_currentLangs as $kLanguage) {
+        foreach ($_currentLangs as $kLanguage) {
+            foreach ($langs as $_langIden) {
                 if ($kLanguage->getLanguage() == $_langIden) {
                     $this->_langs[] = $_langIden;
                     break;
                 }
             }
         }
-
     }
 
     public function getLangs()

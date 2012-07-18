@@ -11,10 +11,13 @@
             data : null,
             moduleName: 'new'
         },
+        
         _super: $.klearmatrix.module.prototype,
+        
         _create : function() {
             this._super._create.apply(this);
         },
+        
         _init: function() {
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
@@ -33,6 +36,7 @@
                 ._registerMainActionEvent();
 
         },
+        
         _doAction : function() {
 
             var self = this;
@@ -51,66 +55,60 @@
             }
 
             $.klear.request(
-                    {
-                        file: $self.klearModule("option","file"),
-                        type: 'screen',
-                        execute: 'save',
-                        screen: self.options.data.screen,
-                        post : postData
-                    },
-                    function(data) {
+                {
+                    file: $self.klearModule("option","file"),
+                    type: 'screen',
+                    execute: 'save',
+                    screen: self.options.data.screen,
+                    post : postData
+                },
+                function(data) {
 
+                    if (data.error) {
+                        //TO-DO: FOK OFF
+                        // Mostrar errores desde arriba
+                    } else {
+                        var $parentModule = $self.klearModule("option","parentScreen");
+                        $parentModule.klearModule("reDispatch");
 
-
-                        if (data.error) {
-                            //TO-DO: FOK OFF
-                            // Mostrar errores desde arriba
-                        } else {
-                            var $parentModule = $self.klearModule("option","parentScreen");
-                            $parentModule.klearModule("reDispatch");
-
-                            $("input,select,textarea",self.options.theForm).val('');
-                            self._initSavedValueHashes();
-                            self.options.theForm.trigger('updateChangedState');
-                            if ($("input[name=autoclose]",$self.klearModule("getPanel")).is(":checked")) {
-                                $dialog.moduleDialog("close");
-                                $self.klearModule("close");
-                                return
-                            }
+                        $("input,select,textarea",self.options.theForm).val('');
+                        self._initSavedValueHashes();
+                        self.options.theForm.trigger('updateChangedState');
+                        if ($("input[name=autoclose]",$self.klearModule("getPanel")).is(":checked")) {
+                            $dialog.moduleDialog("close");
+                            $self.klearModule("close");
+                            return
                         }
-
-
-                        $dialog.moduleDialog("option","buttons",
-                                 [
-                                      {
-                                        text: $.translate("Close", [__namespace__]),
-                                        click: function() {
-                                            $(this).moduleDialog("close");
-                                            $self.klearModule("close");
-                                        }
-                                    },
-                                    {
-                                        text: $.translate("Add another record", [__namespace__]),
-                                        click: function() {
-                                            $(this).moduleDialog("close");
-                                        }
-                                    }
-                                ]
-                        );
-
-                        $dialog.moduleDialog("updateContent",data.message);
-
-                        var triggerData = {'data': data, 'postData': postData};
-                        $self.trigger('postMainActionHook', triggerData);
-
-                    },
-                    // Error from new/index/save
-                    function(data) {
-                    	self.standardError(data);
-
                     }
-            );
 
+                    $dialog.moduleDialog("option","buttons",
+                             [
+                                  {
+                                    text: $.translate("Close", [__namespace__]),
+                                    click: function() {
+                                        $(this).moduleDialog("close");
+                                        $self.klearModule("close");
+                                    }
+                                },
+                                {
+                                    text: $.translate("Add another record", [__namespace__]),
+                                    click: function() {
+                                        $(this).moduleDialog("close");
+                                    }
+                                }
+                            ]
+                    );
+
+                    $dialog.moduleDialog("updateContent",data.message);
+
+                    var triggerData = {'data': data, 'postData': postData};
+                    $self.trigger('postMainActionHook', triggerData);
+                },
+                // Error from new/index/save
+                function(data) {
+                	self.standardError(data);
+                }
+            );
         }
     });
 

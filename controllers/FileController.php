@@ -32,8 +32,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     // no-cron needed by now.
     protected $_hoursOld = 24;
 
-
-
     public function init()
     {
         /* Initialize action controller here */
@@ -46,6 +44,11 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
+        if (!$this->_item->hasModelFile())
+        {
+            $errorMessage = 'modelFile must be specified in ' . $this->_item->getType() . 'configuration';
+            throw new \KlearMatrix_Exception_File($errorMessage);
+        }
 
     }
 
@@ -85,17 +88,12 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $this->_helper->log('new file uploaded (' .$result['basename'].')');
 
         } catch(Exception $e) {
-
-
-            $this->view->error = true;
-            $this->view->error_number = $e->getCode();
-            $this->view->error_msg = $e->getMessage();
-
             $this->_helper->log(
                 'Error uploading File [' . $e->getCode() . '] (' . $e->getMessage() . ')',
                 Zend_Log::ERR
             );
-            return;
+
+            throw new \KlearMatrix_Exception_File($e->getMessage(), $e->getCode());
         }
 
         $tempFSystemNS = new Zend_Session_Namespace('File_Controller');

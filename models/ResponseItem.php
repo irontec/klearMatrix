@@ -133,6 +133,11 @@ class KlearMatrix_Model_ResponseItem
         $this->_modelSpec->setConfig($modelConfig);
     }
 
+    public function hasModelFile()
+    {
+        return (bool)$this->_modelFile;
+    }
+
 
     protected function _checkClassesExist(array $properties)
     {
@@ -274,7 +279,6 @@ class KlearMatrix_Model_ResponseItem
         * que idiomas tienen los modelos disponibles
         */
         $availableLangsPerModel = $model->getAvailableLangs();
-
         if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumns->setLangs($availableLangsPerModel);
         }

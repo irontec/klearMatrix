@@ -44,8 +44,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
-        if (!$this->_item->hasModelFile())
-        {
+        if (!$this->_item->hasModelFile()) {
             $errorMessage = 'modelFile must be specified in ' . $this->_item->getType() . 'configuration';
             throw new \KlearMatrix_Exception_File($errorMessage);
         }
@@ -55,16 +54,14 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     protected function _getFileColumn()
     {
         $fileField = $this->_item->getConfigAttribute("mainColumn");
-
         $fileColumn = $this->_item->getColumn($fileField);
 
         if (!$fileColumn->isFile()) {
-            Throw new Zend_Exception("La columna especificada no es de tipo fichero.");
+            throw new \KlearMatrix_Exception_File("Specified column's type must be a 'file'");
         }
 
         return $fileColumn;
     }
-
 
     public function uploadAction()
     {
@@ -76,6 +73,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $allowedExtensions = explode(',', $colConfig['allowed_extensions']);
             $sizeLimit = $colConfig['size_limit'];
 
+            //TODO: Igual habría que meter el uploader como parte de Klear? Abandonar las librerías Iron por Klear_*?
             $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
 
             $result = $uploader->handleUpload(
@@ -153,20 +151,17 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
                 $this->_helper->log('Model not found for '. $mapperName. ' >> PK('.$this->_pk.')', Zend_Log::ERR);
 
-                Throw new Zend_Exception("No se encuentra la columna solicitada.");
+                throw new Zend_Exception("No se encuentra la columna solicitada.");
             }
 
             $downloadField = $this->_item->getConfigAttribute("mainColumn");
             $fieldSpecsGetter = "get" . $downloadField . "Specs";
             $fileFields = $this->_model->{$fieldSpecsGetter}();
 
-
-
             if ((bool)$this->_request->getParam("download")) {
 
                 $fetchGetter = $dwColumn->getFieldConfig()->getFetchMethod($downloadField);
                 $nameGetter = 'get' . $fileFields['baseNameName'];
-
 
                 $this->_helper->log('Sending file to Client: ('.$this->_model->{$nameGetter}().')');
 
@@ -177,7 +172,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 );
                 exit;
             }
-
 
             $nameGetter = 'get' . $fileFields['baseNameName'];
             $sizeGetter = 'get' . $fileFields['sizeName'];
@@ -220,7 +214,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                             )
                     )
             );
-
         }
 
         $jsonResponse = new Klear_Model_DispatchResponse();

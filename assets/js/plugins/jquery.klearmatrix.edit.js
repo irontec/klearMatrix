@@ -12,10 +12,24 @@
             moduleName: 'edit',
             theForm : false
         },
+        
         _super: $.klearmatrix.module.prototype,
+
         _create : function() {
             this._super._create.apply(this);
         },
+        
+        _formValidationErrors : {
+            'customError' : $.translate('undefined error',[__namespace__]), 
+            'patternMismatch' : $.translate('invalid pattern',[__namespace__]), 
+            'rangeOverflow' : $.translate('range overflow',[__namespace__]),
+            'rangeUnderflow' : $.translate('range underflow',[__namespace__]),
+            'stepMismatch' : $.translate('step mismatch',[__namespace__]),
+            'tooLong' : $.translate('the value is too long',[__namespace__]),
+            'typeMismatch' : $.translate('type mismatched',[__namespace__]),
+            'valueMissing' : $.translate('this is a required field',[__namespace__])
+        },
+
         _init: function() {
 
             $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
@@ -29,52 +43,49 @@
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 
             this._applyDecorators()
-            	._registerReDispatchSavers()
+                ._registerReDispatchSavers()
                 ._initFormElements()
                 ._registerBaseEvents()
                 ._registerEvents()
                 ._registerMainActionEvent();
 
         },
-        _formValidationErrors : {
-    		'customError' : $.translate('undefined error',[__namespace__]), 
-        	'patternMismatch' : $.translate('invalid pattern',[__namespace__]), 
-        	'rangeOverflow' : $.translate('range overflow',[__namespace__]),
-        	'rangeUnderflow' : $.translate('range underflow',[__namespace__]),
-        	'stepMismatch' : $.translate('step mismatch',[__namespace__]),
-        	'tooLong' : $.translate('the value is too long',[__namespace__]),
-        	'typeMismatch' : $.translate('type mismatched',[__namespace__]),
-        	'valueMissing' : $.translate('this is a required field',[__namespace__])
+        
+        _applyDecorators : function() {
+            $(".generalOptionsToolbar a",this.element.klearModule("getPanel")).each(function() {
+                $(this).button();
+            });
+            return this;
         },
+        
         _registerReDispatchSavers : function() {
             var self = this;
 
             this.element.klearModule("option","PreDispatchMethod",function() {
-            	// Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
-            	this.savedValues = {};
-            	var _selfklear = this;
+                // Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
+                this.savedValues = {};
+                var _selfklear = this;
 
-            	$("select.changed,input.changed,textarea.changed",self.options.theForm).each(function() {
-            		_selfklear.savedValues[$(this).attr("name")] = $(this).val();
-            	});
+                $("select.changed,input.changed,textarea.changed",self.options.theForm).each(function() {
+                    _selfklear.savedValues[$(this).attr("name")] = $(this).val();
+                });
 
             });
 
             this.element.klearModule("option","PostDispatchMethod",function() {
-            	if (!this.savedValues) return;
-            	$.each(this.savedValues,function(name,value) {
-                	$("[name="+name+"]",self.options.theForm).val(value).trigger("manualchange");
-            	});
-            	this.savedValues = {};
+                if (!this.savedValues) return;
+                $.each(this.savedValues,function(name,value) {
+                    $("[name="+name+"]",self.options.theForm).val(value).trigger("manualchange");
+                });
+                this.savedValues = {};
             });
 
             return this;
-
-    	},
+        },
+        
         _registerMainActionEvent : function() {
 
-        	var self = this;
-
+            var self = this;
 
             this.options.theForm.on('submit',function(e) {
                 e.preventDefault();
@@ -86,9 +97,8 @@
                     return;
                 }
 
-
                 var _launchAction = function() {
-                	$(self.element).klearModule("showDialog",
+                    $(self.element).klearModule("showDialog",
                             '<br />',
                             {
                                 title: self.options.data.title,
@@ -101,73 +111,69 @@
                     self._doAction.call(self);
                 };
 
-
                 if (self.options.data.actionMessages &&
-                		self.options.data.actionMessages.before) {
+                    self.options.data.actionMessages.before
+                ) {
 
-                	var curMsg = 0;
+                    var curMsg = 0;
 
-                	(function showMessage() {
+                    (function showMessage() {
 
 
-                		// Si se invoca showMessage y no hay más mensajes pendientes, ejecutamos acción
-                		if (!self.options.data.actionMessages.before[curMsg]) {
-                			_launchAction();
-                			return;
-                		}
-                		var _msg = self.options.data.actionMessages.before[curMsg];
+                        // Si se invoca showMessage y no hay más mensajes pendientes, ejecutamos acción
+                        if (!self.options.data.actionMessages.before[curMsg]) {
+                            _launchAction();
+                            return;
+                        }
+                        var _msg = self.options.data.actionMessages.before[curMsg];
 
-                		curMsg++;
+                        curMsg++;
 
-                    	$(self.element).klearModule("showDialog",
+                        $(self.element).klearModule("showDialog",
                                 '<br />',
                                 {
                                     title: _msg.title,
                                     template : '<div class="ui-widget">{{html text}}</div>',
                                     buttons : []
                                 });
-                    	var $dialog = $(self.element).klearModule("getModuleDialog");
-                    	var buttons = [];
-                    	for(var i in _msg.action) {
-                    		var _ac = _msg.action[i];
-                    		buttons.push((function(_ac) {
-                    			return {
-                    				text: _ac.label,
-                    				click: function() {
+                        var $dialog = $(self.element).klearModule("getModuleDialog");
+                        var buttons = [];
+                        for(var i in _msg.action) {
+                            var _ac = _msg.action[i];
+                            buttons.push((function(_ac) {
+                                return {
+                                    text: _ac.label,
+                                    click: function() {
 
-                    					if (_ac['return'] === true) {
-                            				// Volvemos a showMessage por si hubiera más mensajes de "before"
-                            				// o lanzar _launchAction()
-                            				showMessage();
-                            				$dialog.moduleDialog("close");
-                            				return;
-                            			} else{
-                            				$dialog.moduleDialog("close");
-                            				return;
+                                        if (_ac['return'] === true) {
+                                            // Volvemos a showMessage por si hubiera más mensajes de "before"
+                                            // o lanzar _launchAction()
+                                            showMessage();
+                                            $dialog.moduleDialog("close");
+                                            return;
+                                        } else{
+                                            $dialog.moduleDialog("close");
+                                            return;
+                                        }
+                                    }
+                                };
+                            })(_ac));
+                        }
 
-                            			}
-                            		}
-                    			};
+                        $dialog.moduleDialog("option","buttons",buttons);
+                        $dialog.moduleDialog("updateContent",_msg.message);
 
-                    		})(_ac));
-
-
-                    	}
-
-                    	$dialog.moduleDialog("option","buttons",buttons);
-                    	$dialog.moduleDialog("updateContent",_msg.message);
-
-                	})();
+                    })();
 
                 } else {
-                	_launchAction();
+                    _launchAction();
                 }
-
 
             });
 
             return this;
         },
+        
         _doAction : function() {
 
             (function(self) {
@@ -187,7 +193,7 @@
                         function(data) {
 
                             if (data.error) {
-                            	self.standardError(data.error);
+                                self.standardError(data.error);
 
                             } else {
                                 var $parentModule = $self.klearModule("option","parentScreen");
@@ -231,7 +237,7 @@
                         },
                         // Error from new/index/save
                         function(data) {
-                        	self.standardError(data);
+                            self.standardError(data);
                         }
                 );
             })(this); // Invocamos Closure
@@ -249,54 +255,54 @@
 
             var self = this;
             var _errorTemplate = $('<span class="ui-widget ui-state-error ui-corner-all klearFieldError">'  
-									+ '<span class="ui-icon ui-icon-alert"></span><span class="content"></span></span>');
-		
+                                    + '<span class="ui-icon ui-icon-alert"></span><span class="content"></span></span>');
+        
             this.options.theForm
-                            .h5Validate()
-                            .on('validated',function(formElement,validation) {
-                            	
-                            	var _inputContainer = $(formElement.target).parents("p:eq(0)");
-                            	
-                            	if (true === validation.valid) {
-                            		$(".klearFieldError",_inputContainer).slideUp(function() {
-                            			$(this).remove();
-                            		});
+                .h5Validate()
+                .on('validated',function(formElement,validation) {
+                    
+                    var _inputContainer = $(formElement.target).parents("p:eq(0)");
+                    
+                    if (true === validation.valid) {
+                        $(".klearFieldError",_inputContainer).slideUp(function() {
+                            $(this).remove();
+                        });
 
-                            		return;                            		
-                            	}
-                            	
-                            	
-                            	var errorCollection = [];
-                        		
-                            	for (errorType in self._formValidationErrors) {
-                            		if (validation[errorType] === true) {
-                            			
-                            			var _dataIndex = errorType.toLowerCase();
-                            			if ($(formElement.target).data(_dataIndex)) {
-                            				errorCollection.push($(formElement.target).data(_dataIndex));
-                            			} else {
-	                            			errorCollection.push(self._formValidationErrors[errorType]);
-                            			}
-                            		}
-                            	}
-                            	
-                            	if (errorCollection.length > 0) {
-                            		if (!$(".klearFieldError",_inputContainer).is("span")) {
-                            			_errorTemplate.clone().prependTo(_inputContainer);
-                            		} 
-                            		$(".klearFieldError .content",_inputContainer).html(errorCollection.join('<br />'));
-                            		
-                            	} else {
-                            		
-                            		$(".klearFieldError",_inputContainer).slideUp(function() {
-                            			$(this).remove();
-                            		});
-                            		
-                            	}
-                            	
-                            });
-
+                        return;                                    
+                    }
+                    
+                    var errorCollection = [];
+                    
+                    for (errorType in self._formValidationErrors) {
+                        if (validation[errorType] === true) {
+                            
+                            var _dataIndex = errorType.toLowerCase();
+                            if ($(formElement.target).data(_dataIndex)) {
+                                errorCollection.push($(formElement.target).data(_dataIndex));
+                            } else {
+                                errorCollection.push(self._formValidationErrors[errorType]);
+                            }
+                        }
+                    }
+                    
+                    if (errorCollection.length > 0) {
+                        if (!$(".klearFieldError",_inputContainer).is("span")) {
+                            _errorTemplate.clone().prependTo(_inputContainer);
+                        } 
+                        $(".klearFieldError .content",_inputContainer).html(errorCollection.join('<br />'));
+                        
+                    } else {
+                        
+                        $(".klearFieldError",_inputContainer).slideUp(function() {
+                            $(this).remove();
+                        });
+                        
+                    }
+                    
+                });
         },
+        
+        //TODO: Este método está creciendo demasiado. Revisar para que no acabe demasiado inflado
         _initFormElements : function() {
             var self = this;
             var _self = this.element;
@@ -330,11 +336,11 @@
 
                         $.each($(this).data(),function(idx, value) {
                             if (idx.match(/setting-*/)) {
-                            	
+                                
                                 idx = idx.replace('setting', '');
                                 idx = idx.charAt(0).toLowerCase() + idx.substr(1); //lcfirst
                                 if (!plgSettings) {
-                                	plgSettings = {};
+                                    plgSettings = {};
                                 }
                                 
                                 plgSettings[idx] = value;
@@ -343,26 +349,25 @@
 
                         
                         (function lazyPluginLoad(target, pluginName, settings) {
-                        	if (!$.fn[pluginName]) {
-                        		this.count++;
-                        		if (this.count > 20) {
-                        			return;
-                        		}
-                        		setTimeout(function() {
-                        			lazyPluginLoad(target,pluginName,settings);
-                        		},50);
-                        	}
+                            if (!$.fn[pluginName]) {
+                                this.count++;
+                                if (this.count > 20) {
+                                    return;
+                                }
+                                setTimeout(function() {
+                                    lazyPluginLoad(target,pluginName,settings);
+                                },50);
+                            }
 
-                        	if (target[pluginName]) {
-                        		target[pluginName](settings);
-                        	}
-                        	
+                            if (target[pluginName]) {
+                                target[pluginName](settings);
+                            }
+                            
                         })($(this), $(this).data("plugin"),plgSettings);
-
-
                     }
                 });
             }
+            
             if ($(".jmedia",this.options.theForm).length>0) {
                 $(".jmedia",this.options.theForm).each(function() {
 
@@ -407,18 +412,15 @@
                                     oggSupport: false,
                                     wmode:"window"
                                 });
-
                 });
-
             }
-
 
             if ($(".qq-uploader",this.options.theForm).length>0) {
                 $(".qq-uploader",this.options.theForm).each(function() {
 
-                	var _hiddenField = $("#" + $(this).attr("rel"));
+                    var _hiddenField = $("#" + $(this).attr("rel"));
                     if (_hiddenField.length == 0) {
-                    	return;
+                        return;
                     }
                     
                     var item = $("<div />");
@@ -427,7 +429,6 @@
                         .data("command",$(this).data("command"));
 
                     $(this).replaceWith(item);
-
                     
                     _hiddenField.on("postmanualchange",function() {
                         var $shownFDesc = $('#new_'+ $(this).attr("id"));
@@ -468,12 +469,10 @@
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
-
-                            	if (result.error) {
-                            		$(_self).klearModule("showDialogError",result.error_msg, {title : $.translate("ERROR",[__namespace__])});
-                            		return;
-                            	}
-
+                                if (result.error) {
+                                    $(_self).klearModule("showDialogError", result.error_msg, {title : $.translate("ERROR",[__namespace__])});
+                                    return;
+                                }
 
                                 var $list = $(".qq-upload-list",$(this.element));
                                 var fName = $(".qq-upload-file",$list).html();
@@ -487,11 +486,10 @@
                             },
 
                             showMessage : function(message) {
-                            	$(_self).klearModule("showDialogError",message, {title : $.translate("ERROR",[__namespace__])});
-
-
+                                if (typeof(message) == 'string') {
+                                    $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR",[__namespace__])});
+                                }
                             }
-
                     };
 
                     if (_hiddenField.data("extensions")) {
@@ -499,25 +497,22 @@
                     }
 
                     (function lazyQQLoad() {
-                    	if (!qq || !qq.FileUploader) {
-                    		this.count++;
-                    		if (this.count > 10) {
-                    			return;
-                    		}
-                    		setTimeout(lazyQQLoad,50);
-                    		return;
-                    	}
-                    	var uploader = new qq.FileUploader(qqOptions);
+                        if (!qq || !qq.FileUploader) {
+                            this.count++;
+                            if (this.count > 10) {
+                                return;
+                            }
+                            setTimeout(lazyQQLoad,50);
+                            return;
+                        }
+                        var uploader = new qq.FileUploader(qqOptions);
                     })();
-
-
-
                 });
             }
             
             var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
 
-            $("input, select, textarea",this.options.theForm)
+            $("input, select, textarea", this.options.theForm)
                 .autoResize({
                     onStartCheck: function() {
                         // El plugin se "come" el evento :S
@@ -527,10 +522,11 @@
                 .filter("[required]").before(_required.clone())
                 .end()
                 .find(":not(:disabled):eq(0)").trigger("focusin").select();
-            	
+                
             return this;
-
         },
+        
+        //TODO: Este método está creciendo demasiado. Revisar para que no acabe demasiado inflado
         _registerEvents : function() {
 
             var self = this;
@@ -564,13 +560,11 @@
                         });
 
                         return true;
-
                     });
 
                 } else {
                     self.element.klearModule("setAsUnChanged");
                 }
-
             });
 
             $(".generalOptionsToolbar a.action",this.element.klearModule("getPanel")).on('click',function(e) {
@@ -580,15 +574,15 @@
             });
 
             $(".visualFilter",this.element.klearModule("getPanel")).on('manualchange.visualFilter',function(e,manual) {
-            	
-            	if ($(this).is("input:hidden")) {
-            		var curOption = $(this);
-            	} else {
-            		var curOption = $("option[value="+$(this).val()+"]",$(this));
-            	}
+                
+                if ($(this).is("input:hidden")) {
+                    var curOption = $(this);
+                } else {
+                    var curOption = $("option[value="+$(this).val()+"]",$(this));
+                }
 
                 $.each(curOption.data("hide").split(","),function(i,val) {
-                	
+                    
                     var fName = $.trim(val);
                     if (fName == '') return;
                     
@@ -603,42 +597,54 @@
                     var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
                     if (manual) field.show();
                     else {
-                    	field.slideDown();
-                    	field.addClass("ui-state-highlight");
-                    	setTimeout(function() {
-                    		field.removeClass('ui-state-highlight');
-                    	},1300);
+                        field.slideDown();
+                        field.addClass("ui-state-highlight");
+                        setTimeout(function() {
+                            field.removeClass('ui-state-highlight');
+                        },1300);
                     }
                 });
 
             }).trigger("manualchange.visualFilter",true);
 
-            $("select,input,textarea",this.options.theForm).on('manualchange',function() {
-                var _val = $(this).val()? $(this).val():'';
+            $("select, input, textarea", this.options.theForm).on('manualchange', function() {
+                var _val = $(this).val()? $(this).val() : '';
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
+                    
                     $(this).addClass("changed ui-state-highlight");
+                    
                 } else {
+                    
                     $(this).removeClass("changed ui-state-highlight");
                 }
+                
                 self.options.theForm.trigger("updateChangedState");
                 $(this).trigger("postmanualchange");
             });
 
-            $("select",this.options.theForm).on("change",function() {
+            $("select",this.options.theForm).on("change", function() {
                 $(this).trigger("manualchange");
             });
 
+//            $('input, textarea', this.options.theForm).on('focusout', function() {
+//                var _val = $(this).val()? $(this).val() : '';
+//                self._autocompleteMultilangFields(this, _val);
+//            });
 
-
-            return this;
-
-        },
-        _applyDecorators : function() {
-            $(".generalOptionsToolbar a",this.element.klearModule("getPanel")).each(function() {
-                $(this).button();
-            });
             return this;
         }
+
+//        _autocompleteMultilangFields: function(field, value) {
+//            var multilangFields = $(field).siblings('[data-multilang]');
+//            if (multilangFields.length > 0) {
+//                $.each(multilangFields, function (idx, field) {
+//                    if ($(field).val() == '') {
+//                        $(field).val(value);
+//                        $(field).trigger('manualchange');
+//                    }
+//                });
+//            }
+//        }
     });
 
     $.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);

@@ -358,7 +358,7 @@ qq.FileUploaderBasic.prototype = {
     _onProgress: function(id, fileName, loaded, total){        
     },
     _onComplete: function(id, fileName, result){
-        this._filesInProgress--;                 
+        this._filesInProgress--;
         if (result.error){
             this._options.showMessage(result.error);
         }             
@@ -1211,23 +1211,18 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         
         this._options.onProgress(id, name, size, size);
                 
-        if (xhr.status == 200){
-            this.log("xhr - server response received");
-            this.log("responseText = " + xhr.responseText);
-                        
-            var response;
+        this.log("xhr - server response received");
+        this.log("responseText = " + xhr.responseText);
                     
-            try {
-                response = eval("(" + xhr.responseText + ")");
-            } catch(err){
-                response = {};
-            }
-            
-            this._options.onComplete(id, name, response);
-                        
-        } else {                   
-            this._options.onComplete(id, name, {});
+        var response;
+                
+        try {
+            response = eval("(" + xhr.responseText + ")");
+        } catch(err){
+            response = {};
         }
+        
+        this._options.onComplete(id, name, response);
                 
         this._files[id] = null;
         this._xhrs[id] = null;    

@@ -67,10 +67,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     {
         try {
             $column = $this->_getFileColumn();
-
             $colConfig = $column->getFieldConfig()->getConfig();
 
-            $allowedExtensions = explode(',', $colConfig['allowed_extensions']);
+            $allowedExtensions = $colConfig['allowed_extensions'];
             $sizeLimit = $colConfig['size_limit'];
 
             //TODO: Igual habría que meter el uploader como parte de Klear? Abandonar las librerías Iron por Klear_*?

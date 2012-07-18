@@ -45,10 +45,7 @@ class KlearMatrix_Model_Field_File_Fso
 
             $exts[] = $ext;
         }
-
-        $ret = implode(',', $exts);
-
-        return $ret;
+        return $exts;
     }
 
     protected function _getSizeLimit()

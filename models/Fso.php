@@ -265,7 +265,7 @@ class KlearMatrix_Model_Fso
      */
     public function remove()
     {
-        $pk = $model->getPrimaryKey();
+        $pk = $this->_model->getPrimaryKey();
 
         if (!is_numeric($pk)) {
 

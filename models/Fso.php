@@ -186,15 +186,18 @@ class KlearMatrix_Model_Fso
             }
         }
 
-        rename($this->_srcFile, $targetFile);
+        $srcFileSize = filesize($this->_srcFile);
 
-        clearstatcache();
-        if ($this->getSize() != filesize($targetFile)) {
+        if ($this->getSize() != $srcFileSize) {
 
-            $targetFileSize = filesize($targetFile);
-            unlink($targetFile);
-            throw new Exception('Something went wrong' . $this->getSize() . ' - ' . $tagetFileSize);
+            unlink($srcFileSize);
+
+            throw new KlearMatrix_Exception_File(
+                'Something went wrong. New filesize: ' . $srcFileSize . '. Expected: ' . $this->getSize()
+            );
         }
+
+        rename($this->_srcFile, $targetFile);
 
         $this->_mustFlush = false;
         return $this;

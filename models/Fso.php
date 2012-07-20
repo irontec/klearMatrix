@@ -7,22 +7,30 @@ class KlearMatrix_Model_Fso
 {
     const CLASS_ATTR_SEPARATOR = '.';
 
-    private $_storagePath = '';
-
-    protected $_pk;
+    protected $_model;
+    protected $_modelSpecs;
+    protected $_basePath = '';
 
     protected $_srcFile;
-
     protected $_size = null;
-
-    protected $_basePath = '';
-    protected $_path;
-    protected $_baseName = '';
     protected $_mimeType;
+    protected $_baseName = '';
 
     protected $_mustFlush = false;
 
-    public function __construct()
+    public function __construct($model, $specs)
+    {
+        $storagePath = $this->_getLocalStorage($this->_getConfig());
+
+        $this->_model = $model;
+        $this->_modelSpecs = $specs;
+
+        $modelClassName = $this->_getModelClassName();
+        $modelAttrPath = strtolower($modelClassName . self::CLASS_ATTR_SEPARATOR . $specs['basePath']);
+        $this->_basePath = $storagePath . $modelAttrPath;
+    }
+
+    protected function _getConfig()
     {
         $bootstrap = \Zend_Controller_Front::getInstance()->getParam('bootstrap');
 
@@ -35,23 +43,26 @@ class KlearMatrix_Model_Fso
             $conf = (Object) $bootstrap->getOptions();
         }
 
-        $this->_setLocalStorage($conf);
-
+        return $conf;
     }
 
-    protected function _setLocalStorage($conf)
+    protected function _getLocalStorage($conf)
     {
         if (isset($conf->localStoragePath)) {
 
-            $this->_storagePath = $conf->localStoragePath;
-            if (substr($this->_storagePath, -1) != DIRECTORY_SEPARATOR) {
-                $this->_storagePath .= DIRECTORY_SEPARATOR;
+            $storagePath = $conf->localStoragePath;
+            if (substr($storagePath, -1) != DIRECTORY_SEPARATOR) {
+                $storagePath .= DIRECTORY_SEPARATOR;
             }
 
-        } else {
-
-            $this->_storagePath = APPLICATION_PATH . '/../storage/';
+            return $storagePath;
         }
+        return APPLICATION_PATH . '/../storage/';
+    }
+
+    protected function _getModelClassName()
+    {
+        return str_replace('\\', '_', get_class($this->_model));
     }
 
     /**
@@ -79,38 +90,42 @@ class KlearMatrix_Model_Fso
     }
 
     /**
-     * @var string $basePath
-     * @var string $file
-     * @var int $pk
+     * Prepara el módelo para poder guardar el fichero pasado como parámetro.
+     * No guarda el fichero, lo prepara para guardarlo al llamar a flush
+     * @var string $file Ruta al fichero
      * @return KlearMatrix_Model_Fso
      *
      * TODO: Comprobar que el $model implementa todo lo necesario para ser un módelo válido para ¿KlearMatrix?
      */
-    public function put($specs, $file, $model)
+    public function put($file)
     {
-        $modelClassName = $this->_getModelClassName($model);
-        $basePath = $modelClassName . self::CLASS_ATTR_SEPARATOR . $specs['basePath'];
-
         if (empty($file) or !file_exists($file)) {
 
             throw new \KlearMatrix_Exception_File('File not found');
         }
 
-        $this->_basePath = strtolower($basePath);
-
+        $this->setBaseName(basename($file));
         $this->_setSrcFile($file);
         $this->_setSize(filesize($file));
-        $this->setBaseName(basename($file));
         $this->_setMimeType($file);
-
-        $this->_updateModelSpecs($model, $specs);
+        $this->_updateModelSpecs();
         $this->_mustFlush = true;
+        return $this;
+    }
+
+    /**
+     * @var string
+     */
+    public function setBaseName($name)
+    {
+        $this->_baseName = $name;
         return $this;
     }
 
     protected function _setSrcFile($filepath)
     {
         $this->_srcFile = $filepath;
+        return $this;
     }
 
     /**
@@ -134,26 +149,15 @@ class KlearMatrix_Model_Fso
         }
     }
 
-    /**
-     * @var string
-     */
-    public function setBaseName($name)
+    protected function _updateModelSpecs()
     {
-        $this->_baseName = $name;
-        return $this;
-    }
+        $sizeSetter = 'set' . $this->_modelSpecs['sizeName'];
+        $mimeSetter = 'set' . $this->_modelSpecs['mimeName'];
+        $nameSetter = 'set' . $this->_modelSpecs['baseNameName'];
 
-    protected function _updateModelSpecs($model, $specs)
-    {
-
-        $sizeSetter = 'set' . $specs['sizeName'];
-        $mimeSetter = 'set' . $specs['mimeName'];
-        $nameSetter = 'set' . $specs['baseNameName'];
-
-        $model->{$sizeSetter}($this->getSize());
-        $model->{$mimeSetter}($this->getMimeType());
-        $model->{$nameSetter}($this->getBaseName());
-
+        $this->_model->{$sizeSetter}($this->getSize());
+        $this->_model->{$mimeSetter}($this->getMimeType());
+        $this->_model->{$nameSetter}($this->getBaseName());
     }
 
     /**
@@ -161,7 +165,6 @@ class KlearMatrix_Model_Fso
      */
     public function flush($pk)
     {
-        //TODO: Mejorar esta comprobación, no parece lo más obvio (tenemos un mustFlush por ahí...)
         if (!$this->mustFlush()) {
 
             throw new Exception('Nothing to flush');
@@ -172,11 +175,8 @@ class KlearMatrix_Model_Fso
             throw new Exception('Invalid Primary Key');
         }
 
-        $this->_pk = $pk;
-        $this->_path = $this->_pk2path($this->_pk);
-
-        $targetPath = $this->_storagePath . $this->_basePath . DIRECTORY_SEPARATOR . $this->_path;
-        $targetFile = $targetPath . $this->_pk;
+        $targetPath = $this->_basePath . DIRECTORY_SEPARATOR . $this->_pk2path($pk);
+        $targetFile = $targetPath . $pk;
 
         if (!file_exists($targetPath)) {
 
@@ -188,10 +188,12 @@ class KlearMatrix_Model_Fso
 
         rename($this->_srcFile, $targetFile);
 
+        clearstatcache();
         if ($this->getSize() != filesize($targetFile)) {
 
+            $targetFileSize = filesize($targetFile);
             unlink($targetFile);
-            throw new Exception('Something went wrong' . $this->getSize() . ' - ' . filesize($targetFile));
+            throw new Exception('Something went wrong' . $this->getSize() . ' - ' . $tagetFileSize);
         }
 
         $this->_mustFlush = false;
@@ -209,6 +211,11 @@ class KlearMatrix_Model_Fso
 
 
     /**
+     * Converts id to path:
+     *  1 => 0/1
+     *  10 => 1/10
+     *  15 => 1/15
+     *  214 => 2/1/214
      * @return string
      */
     protected function _pk2path($pk)
@@ -225,108 +232,47 @@ class KlearMatrix_Model_Fso
     }
 
     /**
-     * //FIXME: Implementar esto bien, ahora está copiado de EKT_MODEL_FSO, not working
-     * @var string $basePath
-     * @var int $pk
-     * @return EKT_Model_FSO
+     * Prepara el módelo para permitir la descarga del fichero llamando a getBinary()
+     * @return KlearMatrix_Model_Fso
      */
-    public function fetch($specs, $model)
+    public function fetch()
     {
-        $modelClassName = $this->_getModelClassName($model);
-        $basePath = $modelClassName . self::CLASS_ATTR_SEPARATOR . $specs['basePath'];
+        $pk = $this->_model->getPrimaryKey();
 
-        $pk = $model->getPrimaryKey();
-
-        if ( ! is_numeric($pk) ) {
+        if (!is_numeric($pk) ) {
 
             throw new Exception("Empty object. No PK found");
         }
 
-        if (! is_null($pk)) {
+        $file = $this->_basePath . DIRECTORY_SEPARATOR . $this->_pk2path($pk) . $pk;
 
-            $this->_pk = $pk;
+        if (!file_exists($file)) {
+
+            throw new Exception("File $file not found");
         }
 
-        if ( $this->_basePath != $basePath
-                or $this->_path != $this->_pk2path($this->_pk)
-        ) {
-
-            $this->_basePath = $basePath;
-            $this->_path = $this->_pk2path($this->_pk);
-
-            if (empty($this->_storagePath)) {
-
-                $soapClient = $this->_getSoapClient();
-
-                $response = $soapClient->FSO_fetch($specs, addcslashes(serialize($model), "\0\\"));
-
-                if (! is_null($response)) {
-
-                    $response = unserialize(stripcslashes($response));
-                }
-
-                $this->_size = $response->getSize();
-                $this->_mimeType = $response->getMimeType();
-                $this->_binary = $response->getBinary();
-                $this->_b64encoded = false;
-
-            } else {
-
-                $file = $this->_storagePath . strtolower($basePath) . DIRECTORY_SEPARATOR . $this->_path . $this->_pk;
-
-                if (! file_exists($file)) {
-
-                    throw new Exception("File $file not found");
-                }
-
-                $this->_setSize(filesize($file));
-                $this->_setBinary($file);
-                $this->_setMimeType($file);
-            }
-        }
+        $this->_setSize(filesize($file));
+        $this->_setSrcFile($file);
+        $this->_setMimeType($file);
 
         return $this;
-    }
-
-    protected function _getModelClassName($model)
-    {
-        return str_replace('\\', '_', get_class($model));
     }
 
     /**
      * @var string
      * @var int
      */
-    public function remove($specs, $model = null)
+    public function remove()
     {
-        $basePath = $specs['basePath'];
-
-        if (!$model instanceof EKT_Model_Raw_ModelAbstract) {
-
-            throw new Exception('Invalid EKT_Model');
-        }
-
-
         $pk = $model->getPrimaryKey();
 
-        if (! is_numeric($this->_pk) and ! is_numeric($pk)) {
+        if (!is_numeric($pk)) {
 
-            throw new Exception('Invalid PK given');
+            throw new Exception('Empty object. No PK found');
 
-        } else {
-
-            $this->_pk = $pk;
         }
 
-        if ( $this->_basePath != $basePath
-                or $this->_path != $this->_pk2path($this->_pk)
-        ) {
-
-            $this->_basePath = $basePath;
-            $this->_path = $this->_pk2path($this->_pk);
-        }
-
-        $file = $this->_storagePath . $basePath . DIRECTORY_SEPARATOR . $this->_path . $this->_pk;
+        $file = $this->_basePath . DIRECTORY_SEPARATOR . $this->_pk2path($pk) . $pk;
 
         if (file_exists($file)) {
 
@@ -341,9 +287,14 @@ class KlearMatrix_Model_Fso
         $this->_mimeType = null;
         $this->_binary = null;
 
-        $this->_updateModelSpecs($model, $specs);
+        $this->_updateModelSpecs();
 
         return $this;
+    }
+
+    public function getBinary()
+    {
+        return file_get_contents($this->_srcFile);
     }
 
 }

@@ -126,16 +126,21 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         }
     }
 
-    public function forcedwAction()
+    public function forceDownloadAction()
     {
         $this->getRequest()->setParam("download", true);
         return $this->downloadAction();
     }
 
+    /**
+     *
+     * //TODO: Documentar esta acción, el uso de forceDownload está claro, pero esta acción para que sirve??
+     * @throws Zend_Exception
+     * @throws Zend_Controller_Action_Exception
+     */
     public function downloadAction()
     {
         try {
-
             $dwColumn = $this->_getFileColumn();
 
             $mapperName = $this->_item->getMapperName();
@@ -163,13 +168,12 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $nameGetter = 'get' . $fileFields['baseNameName'];
 
                 $this->_helper->log('Sending file to Client: ('.$this->_model->{$nameGetter}().')');
-
                 $this->_helper->sendFileToClient(
                     $this->_model->{$fetchGetter}()->getBinary(),
                     array('filename' => $this->_model->{$nameGetter}()),
                     true
                 );
-                exit;
+                return;
             }
 
             $nameGetter = 'get' . $fileFields['baseNameName'];
@@ -222,5 +226,15 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }
+
+    /**
+     * @deprecated Sustituir por forceDownloadAction, que es bastante más explicito
+     * //TODO: Hacer desaparecer esto.
+     */
+    public function forcedwAction()
+    {
+        return $this->forceDownloadAction();
+    }
+
 
 }

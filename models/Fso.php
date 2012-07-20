@@ -220,8 +220,6 @@ class KlearMatrix_Model_Fso
      */
     protected function _pk2path($pk)
     {
-        $path = "";
-
         $aId = str_split((string)$pk);
         array_pop($aId);
         if (!sizeof($aId)) {

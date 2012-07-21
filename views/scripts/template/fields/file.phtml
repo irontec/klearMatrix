@@ -2,23 +2,28 @@
 <span class="klearMatrix_file" id="current_${_elemIden}">
 
 {{if (_fieldValue.name)}}
-    ${_fieldValue.name}
+    {{if (!_dataConfig.options['hiddenName'])}}
+        ${_fieldValue.name}
+    {{/if}}
+
 {{else}}
     <?php echo $this->translate('Not available'); ?>
-{{/if}}  
-    
+{{/if}}
+
     {{each(idx,option) _dataConfig.options}}
-    
+
         {{if (!(option.onNull == 'hide' && !_fieldValue.name))}}
-        
+
             <a rel="${_elemIden}" href="#"
             {{if (option.title)}} title="${option.title}" {{/if}}
             class="option
              {{if (option.class)}}
                  ${option.class}
             {{/if}}
-            {{if (option.type)}} 
-                ${option.type}" data-${option.type}="${option.target}"
+            {{if (option.type)}}
+                ${option.type} data-${option.type}="${option.target}"
+            {{else}}
+                "
             {{/if}}
             {{if (option.external)}}
                  data-external="true"
@@ -31,16 +36,16 @@
         {{/if}}
     {{/each}}
 
-  
+
 
 
 </span>
-    
+
 {{if (!_readonly)}}
     <input type="hidden" name="${_elemName}" value="${_fieldValue.name}"
     {{if (_properties.required)}}required="" {{/if}}
     {{if (_dataConfig.allowed_extensions)}} data-extensions="${_dataConfig.allowed_extensions}"{{/if}}
     {{if (_dataConfig.uploadCommnad)}} data-upload="command" data-command="${_dataConfig.uploadCommnad}"{{/if}}
     id="${_elemIden}" />
-    
+
 {{/if}}

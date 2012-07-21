@@ -258,7 +258,12 @@
                                     + '<span class="ui-icon ui-icon-alert"></span><span class="content"></span></span>');
         
             this.options.theForm
-                .h5Validate()
+                .h5Validate({
+                	focusout: false,
+                	focusin: false,
+                	change: false,
+                	keyup: false
+                })
                 .on('validated',function(formElement,validation) {
                     
                     var _inputContainer = $(formElement.target).parents("p:eq(0)");

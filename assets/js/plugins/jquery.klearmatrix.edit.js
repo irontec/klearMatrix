@@ -414,7 +414,41 @@
                                 });
                 });
             }
-
+            
+            if ($(".password",this.options.theForm).length>0) {
+            	var isNew = this.options.theForm.data("type") == "new";
+            	
+            	$(".password", this.options.theForm).each(function() {
+            	
+            		var $self = $(this);
+            		var _parent = $self.parent();
+            		var _checkbox = $("input:checkbox[rel="+$self.attr("name")+"]",_parent);
+            		
+            		if (isNew) {
+            			_checkbox.parents("span:eq(0)").remove();
+            			return;
+            		}
+            		
+            		$(this)
+            			.attr("disabled","disabled")
+            			.addClass("ui-state-disabled");
+            		
+            		_checkbox.on("change",function() {
+            			if ($(this).is(":checked")) {
+            				$self.removeAttr("disabled").removeClass("ui-state-disabled");
+            				$self.select().trigger("focus");
+            				
+            			} else {
+            				$self.attr("disabled","disabled").addClass("ui-state-disabled");
+            			}
+            		});
+            		
+            		
+            	});
+            }
+            
+            
+            
             if ($(".qq-uploader",this.options.theForm).length>0) {
                 $(".qq-uploader",this.options.theForm).each(function() {
 

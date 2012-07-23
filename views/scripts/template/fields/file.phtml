@@ -19,12 +19,12 @@
             class="option
              {{if (option.class)}}
                  ${option.class}
-            {{/if}}
-            {{if (option.type)}}
-                ${option.type} data-${option.type}="${option.target}"
-            {{else}}
+             {{/if}}
+             {{if (option.type)}}
+                ${option.type}" data-${option.type}="${option.target}"
+             {{else}}
                 "
-            {{/if}}
+             {{/if}}
             {{if (option.external)}}
                  data-external="true"
             {{/if}}

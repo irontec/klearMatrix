@@ -64,6 +64,11 @@ class KlearMatrix_Model_Field_File_Fso
         $ret['allowed_extensions'] = $this->_getAllowedExtensions();
         $ret['size_limit'] = $this->_getSizeLimit();
 
+        $defaultOptions = array(
+            'type' => 'command',
+            'class' => ''
+        );
+
         if ($fileOptions = $this->_config->options) {
 
             $ret['options'] = array();
@@ -83,6 +88,12 @@ class KlearMatrix_Model_Field_File_Fso
                 } else {
 
                     $ret['options'][$option] = $opObject;
+                }
+
+                foreach ($defaultOptions as $key => $value) {
+                    if (!isset($ret['options'][$option][$key])) {
+                        $ret['options'][$option][$key] = $value;
+                    }
                 }
             }
         }

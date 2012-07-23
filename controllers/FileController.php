@@ -173,6 +173,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                     array('filename' => $this->_model->{$nameGetter}()),
                     true
                 );
+
+                $response = Zend_Controller_Front::getInstance()->getResponse();
+                $response->clearHeaders();
+
                 return;
             }
 

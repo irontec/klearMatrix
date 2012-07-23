@@ -509,7 +509,7 @@
                              '</div>',
                             onComplete : function(id, fileName, result) {
                                 if (result.error) {
-                                    $(_self).klearModule("showDialogError", result.error_msg, {title : $.translate("ERROR",[__namespace__])});
+                                    $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR",[__namespace__])});
                                     return;
                                 }
 

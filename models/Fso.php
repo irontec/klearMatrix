@@ -298,4 +298,9 @@ class KlearMatrix_Model_Fso
         return file_get_contents($this->_srcFile);
     }
 
+    public function getFilePath()
+    {
+        return $this->_srcFile;
+    }
+
 }

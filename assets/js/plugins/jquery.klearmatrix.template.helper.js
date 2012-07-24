@@ -6,31 +6,29 @@
     var __namespace__ = "klearmatrix.templatehelper";
 
     $.klearmatrix.template.helper = {
-        
+
         debug : function() {
             console.log(arguments);
             return '';
         },
-        
+
         cleanValue : function(_value, ifNull, pattern) {
-            
-            if (typeof ifNull == undefined || _value == '') {
-                ifNull = $.translate('Not available', [__namespace__]);
+
+            if (typeof ifNull == 'undefined') {
+
+                ifNull = '';
             }
 
-            if (pattern) {
+            if (pattern && !ifNull.match(pattern)) {
 
-                if (!ifNull.match(pattern)) {
-
-                    ifNull = '';
-                }
+                ifNull = '';
             }
 
-            if(typeof _value == 'undefined' || _value == '') {
-                
+            if(typeof _value == 'undefined' || !_value || _value == '') {
+
                 return ifNull;
             }
-            
+
             return $('<div/>').text(_value).html();
         },
 
@@ -38,9 +36,9 @@
             var extraConfig = column.config || false;
             var properties = column.properties || false;
             var customErrors = column.errors || false;
-            
+
             if (true === isNew) {
-                
+
                 var _value = '';
             } else {
 
@@ -96,7 +94,7 @@
                     return  attribute;
                 }
             };
-            
+
             if (column.multilang) {
                 var mlData = [];
                 for (var i in this.data.langs) {
@@ -118,7 +116,7 @@
 
                     var _node = $("<div />");
                     $.tmpl(this.getTemplateNameForType(column.type), _curFieldData, _templateHelpers).appendTo(_node);
-                    
+
                     mlData.push({
                         _iden: _curFieldData._elemIden,
                         _lang : lang,
@@ -128,14 +126,14 @@
                 $.tmpl('klearmatrixMultiLangField', mlData).appendTo(node);
 
             } else {
-                
+
                 $.tmpl(this.getTemplateNameForType(column.type), fieldData, _templateHelpers).appendTo(node);
             }
 
             return node.html();
 
         },
-        
+
         getColumnName : function(columns, columnId) {
 
             for(var idx in columns) {
@@ -146,7 +144,7 @@
             return false;
 
         },
-        
+
         getColumn : function(columns, columnId) {
 
             for(var idx in columns) {
@@ -157,12 +155,12 @@
             return false;
 
         },
-        
+
         getIndex : function(values,idx) {
             if (!values[idx]) return 'error';
             return values[idx];
         },
-        
+
         getMultiLangValue : function(value,langs,defaultLang) {
             var retItem = $("<div />");
             for (var i in langs) {
@@ -178,7 +176,7 @@
 
             return retItem.html();
         },
-        
+
         getValuesFromSelectColumn : function(column, idx) {
             switch (column.type){
                 case 'select':
@@ -215,76 +213,86 @@
                 return false;
             }
         },
-        
+
         getIndexFromColumn : function(values,column) {
-           
+
             if (typeof values[column.id] == 'undefined') {
-                switch(column.type) {
-                    default:
-                        return $.translate("Not available", [__namespace__]);
-                }
+
+                return '';
 
             } else {
                 switch(column.type){
-                    case 'select':
-                        var _curVal = values[column.id];
-                        if (this.getValuesFromSelectColumn(column)[_curVal]) {
-                            return this.getValuesFromSelectColumn(column)[_curVal];
-                        } else {
-                            return '';
-                        }
-                    break;
-                    case 'multiselect':
-                        var fixedValues = this.getValuesFromSelectColumn(column);
 
+                    case 'select':
+
+                        var _curVal = values[column.id];
+
+                        if (this.getValuesFromSelectColumn(column)[_curVal]) {
+
+                            return this.getValuesFromSelectColumn(column)[_curVal];
+                        }
+
+                        return '';
+                        break;
+
+                    case 'multiselect':
+
+                        var fixedValues = this.getValuesFromSelectColumn(column);
                         var returnValue = [];
+
                         for(var i in values[column.id]['relStruct']) {
+
                             var relId = values[column.id]['relStruct'][i]['relatedId'];
+
                             if (fixedValues[relId]) {
+
                                 returnValue.push(fixedValues[relId]);
                             }
                         }
+
                         if (returnValue.length == 0) {
+
                             return '<em>' + $.translate('There are not associated elements', [__namespace__]) + '</em>';
-                        } else {
-                            return returnValue.join(', ');
                         }
 
-                    break;
+                        return returnValue.join(', ');
+                        break;
+
                     case 'file':
+
                         return this.cleanValue(values[column.id]['name'])
-                    break;
+                        break;
+
                     default:
+
                         if (column.multilang) {
+
                             return this.getMultiLangValue(values[column.id],this.data.langs,this.data.defaultLang);
-
-                        } else {
-
-                            if (column.dirty) {
-
-                                return values[column.id];
-                            } else {
-
-                                return this.cleanValue(values[column.id]);
-                            }
                         }
-                    break;
+
+                        if (column.dirty) {
+
+                            return values[column.id];
+                        }
+
+                        return this.cleanValue(values[column.id]);
+                        break;
                 }
             }
         },
-        
+
         getTemplateNameForType : function(type) {
             return 'klearMatrixFields' + type;
         },
-        
+
         getTemplateForType : function(type) {
             return $.template[this.getTemplateNameForType(type)];
         },
-        
+
         getPaginatorTemplate : function() {
             return $.template['klearmatrixPaginator'];
         },
-        
+
         getTitle : function(title,idx,replaceParentPerItem) {
             if (false !== idx) {
 
@@ -325,7 +333,7 @@
 
 
         },
-        
+
         mustShowOptionColum : function(option, value) {
 
             return true;

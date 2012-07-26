@@ -7,7 +7,6 @@
 */
 class KlearMatrix_Model_Column
 {
-
     protected $_dbFieldName;
     protected $_publicName;
     protected $_isDefault = false;
@@ -170,8 +169,13 @@ class KlearMatrix_Model_Column
 
     protected function _loadConfigClass()
     {
-        if ($this->isOption()) return $this;
-        if (is_object($this->_fieldConfig)) return $this;
+        if ($this->isOption()) {
+            return $this;
+        }
+
+        if (is_object($this->_fieldConfig)) {
+            return $this;
+        }
 
         $fieldConfigClassName = 'KlearMatrix_Model_Field_' . ucfirst($this->_type);
 
@@ -462,9 +466,9 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->isDependant()) {
-            return 'get' . $this->getDbFieldName();
+            return 'get' . ucfirst($this->getDbFieldName());
         } else {
-            return 'get' . $model->columnNameToVar($this->getDbFieldName());
+            return 'get' . ucfirst($model->columnNameToVar($this->getDbFieldName()));
         }
 
     }
@@ -480,9 +484,9 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->isDependant()) {
-            return 'set' . $this->getDbFieldName();
+            return 'set' . ucfirst($this->getDbFieldName());
         } else {
-            return 'set' . $model->columnNameToVar($this->getDbFieldName());
+            return 'set' . ucfirst($model->columnNameToVar($this->getDbFieldName()));
         }
 
     }

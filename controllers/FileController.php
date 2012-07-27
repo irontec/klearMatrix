@@ -144,14 +144,15 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $dwColumn = $this->_getFileColumn();
 
             $mapperName = $this->_item->getMapperName();
-
             $mapper = new $mapperName;
 
             $this->_pk = $this->_mainRouter->getParam("pk");
 
             $this->_helper->log('Download stated for file in '. $mapperName. ' >> PK('.$this->_pk.')');
 
-            if (!$this->_model = $mapper->find($this->_pk)) {
+            $this->_model = $mapper->find($this->_pk);
+
+            if (!$this->_model) {
 
                 $this->_helper->log('Model not found for '. $mapperName. ' >> PK('.$this->_pk.')', Zend_Log::ERR);
 

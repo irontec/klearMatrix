@@ -52,13 +52,13 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 
-        if (!$obj = $mapper->find($pk)) {
-            // Error
-
-        } else {
-            $data->setResults($obj);
-            $data->fixResults($this->_item);
+        $obj = $mapper->find($pk);
+        if (!$obj){
+            throw new Klear_Exception_Default('Record not found. Could not delete.');
         }
+
+        $data->setResults($obj);
+        $data->fixResults($this->_item);
 
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');
@@ -86,32 +86,35 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > PK('.$pk.')');
 
         // TO-DO traducir mensaje?
-        // TO-DO lanzar excepción ?
         // Recuperamos el objeto y realizamos la acción de borrar
 
         $obj = $mapper->find($pk);
-        if ($obj && $obj->delete()) {
 
-            $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.$pk.')');
-
-            $data = array(
-                'error' => false,
-                'pk' => $pk,
-                'message' => 'Registro eliminado correctamente'
+        if (!$obj) {
+            $this->_helper->log(
+                'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
+                Zend_Log::ERR
             );
+            throw new Klear_Exception_Default('Record not found. Could not delete.');
+        }
 
-        } else {
-
+        if (!$obj->delete()) {
             $this->_helper->log(
                 'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
                 Zend_Log::ERR
             );
 
-            $data = array(
-                'error' => true,
-                'message' => 'Algún error eliminado el registro'
-            );
+            throw new Exception('Could not delete record');
         }
+
+        $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.$pk.')');
+
+        $data = array(
+            'error' => false,
+            'pk' => $pk,
+            'message' => 'Registro eliminado correctamente'
+        );
+
 
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);

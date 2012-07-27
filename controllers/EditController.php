@@ -37,7 +37,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $this->_helper->log('edit::save action for mapper:' . $mapperName . ' > PK('.$pk.')');
 
         // TODO: traducir mensaje?
-        if (!$model = $mapper->find($pk)) {
+        $model = $mapper->find($pk);
+        if (!$model) {
             $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
             Throw new Zend_Exception('El registro no se encuentra almacenado.');
         }
@@ -152,17 +153,17 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 
-        if (!$model = $mapper->find($pk)) {
+        $model = $mapper->find($pk);
+
+        if (!$model) {
 
             $this->_helper->log('PK NOT FOUND ' . $mapperName . ' > PK('.$pk.')', Zend_Log::ERR);
-
-            exit;// Error
-
-        } else {
-
-            $data->setResults($model)
-                 ->fixResults($this->_item);
+            throw new Klear_Exception_Default('Element not found. Cannot edit.');
         }
+
+
+        $data->setResults($model)
+             ->fixResults($this->_item);
 
         //TODO: Fix!! c/p from NewController >> Quiero devolver los datos de su padre, para las opciones de columna
         if ($this->_item->isFilteredScreen()) {

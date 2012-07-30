@@ -611,14 +611,9 @@ class KlearMatrix_Model_ResponseItem
         return $this->_filteredField;
     }
 
-    public function getFilteredCondition($_value)
+    public function getFilteredCondition($value)
     {
-        $ret = array(
-                $this->_filteredField . " = :filtered ",
-                array(':filtered' => $_value)
-        );
-
-        return $ret;
+        return $this->_getCondArray($this->_filteredField, $value, 'filtered');
     }
 
     public function hasForcedValues()
@@ -631,15 +626,30 @@ class KlearMatrix_Model_ResponseItem
         $forcedValueConds = array();
 
         foreach ($this->_forcedValues as $field => $value) {
-
+            //FIXME: Aquí se confía demasiado en el rand, podrían repetirse valores...
             $valConstant = 'v' . rand(1000, 9999);
-            $forcedValueConds[] = array(
-                    $field . " = :" .$valConstant,
-                    array(':'.$valConstant => $value)
-            );
+            $forcedValueConds[] = $this->_getCondArray($field, $value, $valConstant);
         }
 
         return $forcedValueConds;
+    }
+
+    public function _getCondArray($field, $value, $paramName = null)
+    {
+        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+        if ($paramName && $dbAdapter->supportsParameters('named')) {
+
+            return array(
+                $field . ' = :' . $paramName,
+                array(':' . $paramName => $value)
+            );
+
+        }
+
+        return array(
+            $field . " = ? ",
+            array($value)
+        );
     }
 
     public function getForcedValues()

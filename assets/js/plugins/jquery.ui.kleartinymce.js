@@ -1,5 +1,5 @@
 (function load($, undefined) {
-    if (!$.klear.checkDeps(['$.fn.tinymce', 'window.tinymce'], load)) {
+    if (!$.klear.checkDeps(['$.fn.tinymce'], load)) {
         return;
     }
 
@@ -42,8 +42,6 @@
             $.extend(tinySettings, options);
             
             $el.tinymce(tinySettings);
-            
         }
-            
     });
 })(jQuery);

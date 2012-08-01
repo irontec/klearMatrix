@@ -1,17 +1,30 @@
 {{if (_readonly)}}
     {{html _fieldValue}}
 {{else}}
-<textarea 
+    <textarea
+        id="${_elemIden}"
+        name="${_elemName}"
+        class="auto"
 
-{{if (_dataConfig.plugin)}}  data-plugin="${_dataConfig.plugin}" {{/if}}
+        {{if (_dataConfig.plugin)}}
+            data-plugin="${_dataConfig.plugin}"
+        {{/if}}
 
-class="auto" 
+        {{if (_readonly)}}
+            disabled="disabled"
+        {{/if}}
 
-name="${_elemName}" 
+        {{if (_multilang)}}
+            data-multilang="${_locale}"
+        {{/if}}
 
-{{each(attribute, value) _dataConfig.settings}}
-    ${$item.dataParser(attribute, value)}
-{{/each}}
+        {{each(attribute, value) _dataConfig.settings}}
+            data-setting-${$item.dataParser(attribute, value)}="${value}"
+        {{/each}}
 
-id="${_elemIden}" {{if (_readonly)}}disabled="disabled"{{/if}}>${_fieldValue}</textarea>
+        {{each(idx,attrValue) _dataConfig.attributes}}
+            ${idx}="${attrValue}"
+        {{/each}}
+
+        >${_fieldValue}</textarea>
 {{/if}}

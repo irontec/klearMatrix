@@ -77,6 +77,14 @@ abstract class KlearMatrix_Model_Field_Textarea_Abstract implements Iterator
         return isset($this->_items[$this->_position]);
     }
 
-}
+    public function getExtraJavascript()
+    {
+        return $this->_js;
 
-//EOF
+    }
+
+    public function getExtraCss()
+    {
+        return $this->_css;
+    }
+}

@@ -1,0 +1,22 @@
+jsController : "/js/plugins/tinymce/templates/jquery.tinymce.simple.js"
+jsController : "Simple"
+
+bar0:
+  buttons:
+    - 'bold'
+    - 'italic'
+    - 'underline'
+    - 'strikethrough'
+    - '|'
+    - 'bullist'
+    - 'numlist'
+    - 'blockquote'
+    - '|'
+    - 'justifyleft'
+    - 'justifycenter'
+    - 'justifyright'
+    - '|'
+    - 'link'
+    - 'unlink'
+    - 'pagebreak'
+    - 'fullscreen'

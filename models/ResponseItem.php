@@ -637,8 +637,13 @@ class KlearMatrix_Model_ResponseItem
     public function _getCondArray($field, $value, $paramName = null)
     {
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        if ($paramName && $dbAdapter->supportsParameters('named')) {
 
+        /*
+         * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
+         * y usamos un namedParameter porque MasterLogic lo espera así
+         * TODO: Molaría sacar esto de aquí porque es específico de Euskaltel
+         */
+        if (!$dbAdapter || ($paramName && $dbAdapter->supportsParameters('named'))) {
             return array(
                 $field . ' = :' . $paramName,
                 array(':' . $paramName => $value)

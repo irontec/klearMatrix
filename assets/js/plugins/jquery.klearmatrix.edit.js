@@ -337,18 +337,18 @@
                 $("input.auto, textarea.auto",this.options.theForm).each(function() {
                     if ($(this).data("plugin")) {
 
-                        var plgSettings = null;
+                        var pluginSettings = null;
 
                         $.each($(this).data(),function(idx, value) {
                             if (idx.match(/setting-*/)) {
                                 
                                 idx = idx.replace('setting', '');
                                 idx = idx.charAt(0).toLowerCase() + idx.substr(1); //lcfirst
-                                if (!plgSettings) {
-                                    plgSettings = {};
+                                if (!pluginSettings) {
+                                    pluginSettings = {};
                                 }
                                 
-                                plgSettings[idx] = value;
+                                pluginSettings[idx] = value;
                             }
                         });
 
@@ -360,7 +360,7 @@
                                     return;
                                 }
                                 setTimeout(function() {
-                                    lazyPluginLoad(target,pluginName,settings);
+                                    lazyPluginLoad(target, pluginName, settings);
                                 },50);
                             }
 
@@ -368,7 +368,7 @@
                                 target[pluginName](settings);
                             }
                             
-                        })($(this), $(this).data("plugin"),plgSettings);
+                        })($(this), $(this).data("plugin"), pluginSettings);
                     }
                 });
             }
@@ -663,6 +663,14 @@
 
             $("select",this.options.theForm).on("change", function() {
                 $(this).trigger("manualchange");
+            });
+            
+            $("select, input, textarea", this.options.theForm).on("keydown", function(e) {
+                if(e.shiftKey && e.ctrlKey && e.which == 13) {
+                    e.preventDefault();
+                    console.log(self);
+                    self.options.theForm.trigger('submit');
+                }
             });
 
 //            $('input, textarea', this.options.theForm).on('focusout', function() {

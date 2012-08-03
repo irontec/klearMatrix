@@ -259,10 +259,9 @@ class KlearMatrix_Model_RouteDispatcher
 
     public function _resolveCurrentProperty($name, $required)
     {
-
         if (!isset($this->_selectedConfig->{$name})) {
             if ($required) {
-                Throw new Zend_Exception("Controller not in selected config");
+                throw new Zend_Exception($name . " controller not in selected config");
             } else {
 
                 return $this;

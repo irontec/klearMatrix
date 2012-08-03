@@ -1,14 +1,33 @@
 {{if (_readonly)}}
     {{html _fieldValue}}
 {{else}}
-<input type="text" name="${_elemName}"
-{{if (_properties.required)}}required="" {{/if}}
-{{if (_properties.placeholder)}}placeholder="${_properties.placeholder}" {{/if}}
-{{if (_properties.pattern)}}pattern="${_properties.pattern}" {{/if}}
-{{if (_errors)}}
-     {{each(eIndex,error) _errors}}
-         data-${eIndex}="${error}"
-     {{/each}}
+    <input
+        type="text"
+        id="${_elemIden}"
+        name="${_elemName}"
+        value="${_fieldValue}"
+
+        {{if (_properties.required)}}
+            required=""
+        {{/if}}
+
+        {{if (_properties.placeholder)}}
+            placeholder="${_properties.placeholder}"
+        {{/if}}
+
+        {{if (_properties.pattern)}}
+            pattern="${_properties.pattern}"
+        {{/if}}
+
+        {{if (_errors)}}
+             {{each(eIndex,error) _errors}}
+                 data-${eIndex}="${error}"
+             {{/each}}
+        {{/if}}
+
+        {{if (_multilang)}}
+            data-multilang="${_locale}"
+        {{/if}}
+    />
 {{/if}}
-id="${_elemIden}" value="${_fieldValue}" />
-{{/if}}
+

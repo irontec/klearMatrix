@@ -15,6 +15,8 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
     protected $_types = array();
 
+    protected $_langDefinitions = array();
+
     public function addCol(KlearMatrix_Model_Column $col)
     {
         $this->_cols[$col->getDbFieldName()] = $col;
@@ -175,7 +177,6 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $this->_klearBootstrap = $bootstrap->getResource('modules')->offsetGet('klear');
 
         $_currentLangs = $this->_klearBootstrap->getOption('siteConfig')->getLangs();
-
         foreach ($_currentLangs as $kLanguage) {
             foreach ($langs as $_langIden) {
                 if ($kLanguage->getLanguage() == $_langIden) {
@@ -184,6 +185,23 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
                 }
             }
         }
+
+        $this->_setLangDefinitions($_currentLangs);
+    }
+
+    /**
+     * @param Klear_Model_Language[] $langs Languages specified in klear.yaml
+     */
+    protected function _setLangDefinitions($langs)
+    {
+        foreach ($langs as $lang) {
+            $this->_langDefinitions[$lang->getLanguage()] = $lang->toArray();
+        }
+    }
+
+    public function getLangDefinitions()
+    {
+        return $this->_langDefinitions;
     }
 
     public function getLangs()

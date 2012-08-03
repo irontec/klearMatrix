@@ -109,9 +109,9 @@
                         _dataConfig : extraConfig,
                         _properties : properties,
                         _fieldValue: _curValue,
-                        _errors : customErrors
-//                        _multilang : true,
-//                        _locale: this.data.langDefinitions[lang]['locale']
+                        _errors : customErrors,
+                        _multilang : true,
+                        _locale: this.data.langDefinitions[lang]['locale']
                     };
 
                     var _node = $("<div />");

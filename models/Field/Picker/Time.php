@@ -4,8 +4,6 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 {
     protected $_config;
 
-    protected $_mapperFormat = 'HH:mm:ss';
-
     public function __construct()
     {
         parent::__construct();
@@ -55,14 +53,12 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 
     public function filterValue($value, $original)
     {
-
         if (empty($value)) {
             return '';
         }
 
         $time = new Iron_Time($value);
-        return $time->getFormattedString($this->_mapperFormat);
-
+        return $time->getFormattedString($this->_timeFormats);
     }
 
 
@@ -73,7 +69,6 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
      */
     public function prepareValue($value, $model)
     {
-
         if (empty($value)) {
             return '';
         }
@@ -81,7 +76,6 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         $time = new Iron_Time($value);
 
         return $time->getFormattedString($this->_timeFormats);
-
     }
 
 

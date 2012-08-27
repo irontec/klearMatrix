@@ -4,8 +4,6 @@ class KlearMatrix_Model_Field_Picker_Abstract
     protected $_locale;
     protected $_jqLocale;
 
-    protected $_mapperFormat = 'YYYY-MM-dd';
-
     protected $_css = array(
             "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
     );
@@ -135,7 +133,7 @@ class KlearMatrix_Model_Field_Picker_Abstract
         'zh-TW' => 'yy/mm/dd',
     );
 
-    protected $_timeFormats = 'hh:mm:ss';
+    protected $_timeFormats = 'HH:mm:ss';
 
     public function __construct()
     {
@@ -220,12 +218,6 @@ class KlearMatrix_Model_Field_Picker_Abstract
 
         return null;
     }
-
-    public function getMapperFormat()
-    {
-        return $this->_mapperFormat;
-    }
-
 
     public function getExtraJavascript()
     {

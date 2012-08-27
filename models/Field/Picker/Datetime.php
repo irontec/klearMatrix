@@ -4,10 +4,6 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 {
     protected $_config;
 
-    protected $_mapperFormat = 'YYYY-MM-dd HH:mm:ss';
-
-    
-    
     public function __construct()
     {
         parent::__construct();
@@ -20,7 +16,7 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 
         return $this;
     }
-    
+
     public function init()
     {
         return $this;
@@ -37,26 +33,21 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 
         return $config;
     }
-    
 
     public function filterValue($value, $original)
     {
-    
         $date = new Zend_Date($value, false, $this->getLocale());
         $date->setTimezone('UTC');
-        
+
         return $date->toString(Zend_Date::ISO_8601);
-        
-    
     }
 
     public function getFormat($locale = null)
     {
-        
         if (isset($this->_settings['format'])) {
             return $this->_setting['format'];
         }
-        
+
         if (empty($locale)) {
             $locale = $this->_jqLocale;
         }

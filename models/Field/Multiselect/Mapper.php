@@ -3,9 +3,9 @@
 class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field_Multiselect_Abstract
 {
     protected $_relationMapper;
+    protected $_relationProperty;
 
     protected $_relatedMapper;
-    protected $_relatedProperty;
 
     protected $_fieldConfig;
 
@@ -18,7 +18,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         // Mapper de las relaciones. Aquí se guardarán las coincidencias.
         $this->_relationMapper = $parsedValues->getProperty("relationMapper");
-        $this->_relatedProperty = $parsedValues->getProperty("relatedProperty", null);
+        $this->_relationProperty = $parsedValues->getProperty("relationProperty", null);
 
         $this->_relatedMapper = $parsedValues->getProperty("relatedMapperName");
         $this->_fieldName = $parsedValues->getProperty("relatedFieldName");
@@ -130,7 +130,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 if (strtolower($parentData['table_name']) == strtolower($tableRelatedName)) {
 
-                    if ($this->_relatedProperty == $parentData['property']) {
+                    if ($this->_relationProperty == $parentData['property']) {
 
                         $fkName = $_fk;
                         break;
@@ -195,7 +195,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 if (false === $fkColumn) {
 
-                    $fkColumn = $model->getColumnForParentTable($tableRelatedName, $this->_relatedProperty);
+                    $fkColumn = $model->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
                 }
 
                 $getter = 'get' . ucfirst($fkColumn);
@@ -220,7 +220,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 if (false === $fkColumn) {
 
-                    $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relatedProperty);
+                    $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
                 }
 
                 $setter = 'set' . ucfirst($fkColumn);

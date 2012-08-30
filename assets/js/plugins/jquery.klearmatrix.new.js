@@ -74,6 +74,7 @@
                         $("input,select,textarea",self.options.theForm).val('');
                         self._initSavedValueHashes();
                         self.options.theForm.trigger('updateChangedState');
+                        
                         if ($("input[name=autoclose]",$self.klearModule("getPanel")).is(":checked")) {
                             $dialog.moduleDialog("close");
                             $self.klearModule("close");
@@ -93,7 +94,7 @@
                                 {
                                     text: $.translate("Add another record", [__namespace__]),
                                     click: function() {
-                                        $(this).moduleDialog("close");
+                                    	$self.klearModule("reDispatch");
                                     }
                                 }
                             ]

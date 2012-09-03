@@ -40,7 +40,7 @@ class KlearMatrix_Model_RouteDispatcher
      * @var string
      * Que tipo de request = dialog | *screen
      */
-    protected $_typeName = 'screen';
+    protected $_typeName;
 
 
 
@@ -76,6 +76,8 @@ class KlearMatrix_Model_RouteDispatcher
     public function setConfig(KlearMatrix_Model_MainConfig $config)
     {
         $this->_config = $config;
+        $this->_typeName  = $this->_config->getDefaultType();
+
     }
 
     public function getConfig()

@@ -13,6 +13,8 @@ class KlearMatrix_Model_MainConfig
     protected $_config;
     protected $_configPath;
 
+    protected $_types = array("screen", "dialog", "command");
+
     static public function getModuleName()
     {
         return self::module;
@@ -42,9 +44,26 @@ class KlearMatrix_Model_MainConfig
         return $this->_configPath;
     }
 
+    public function getDefaultType()
+    {
+        $defaultType = $this->_types[0]; // screen;
+
+        foreach ($this->_types as $itemName) {
+
+            if ($this->_config->exists("main->" . "default" . ucfirst($itemName))) {
+                return $itemName;
+            }
+
+        }
+        return $defaultType;
+    }
+
     protected function _getDefaultItem($itemName)
     {
-        if (!in_array($itemName, array("screen", "dialog", "command"))) {
+
+        $itemName = trim($itemName);
+
+        if (!in_array($itemName, $this->_types)) {
             Throw new Zend_Exception("Error accediendo a la configuración. No se ha especificado un tipo de enrutado válido.");
         }
 
@@ -52,7 +71,7 @@ class KlearMatrix_Model_MainConfig
         $configItemName = "default" . ucfirst($itemName);
         $itemConfigWrapper = $itemName . "s";
 
-        if ($this->_config->exists("main->default" . ucfirst($itemName))) {
+        if ($this->_config->exists("main->" . $configItemName)) {
 
             $this->{$attrName} = $this->_config->getRaw()->main->$configItemName;
 

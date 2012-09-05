@@ -31,6 +31,9 @@ class KlearMatrix_Model_ResponseItem
     // Valores "forzados" desde configuración. condiciones "duras"
     protected $_forcedValues;
 
+    //Condición raw injectadas al where directamente
+    protected $_rawCondition;
+
     protected $_forcedPk;
 
     protected $_calculatedPk;
@@ -56,6 +59,7 @@ class KlearMatrix_Model_ResponseItem
         '_filteredField' => array('filterField', false),
         '_filterClass' => array('filterClass', false),
         '_forcedValues' => array('forcedValues', false),
+        '_rawCondition' => array('rawCondition', false),
         '_forcedPk' => array('forcedPk', false),
         '_calculatedPkConfig' => array('calculatedPk', false),
         '_plugin' => array('plugin', false),
@@ -633,6 +637,23 @@ class KlearMatrix_Model_ResponseItem
 
         return $forcedValueConds;
     }
+
+
+    public function hasRawCondition()
+    {
+
+        return isset($this->_rawCondition);
+    }
+
+    public function getRawCondition()
+    {
+        if ($this->hasRawCondition()) {
+            return $this->_rawCondition;
+        }
+
+        return false;
+    }
+
 
     public function _getCondArray($field, $value, $paramName = null)
     {

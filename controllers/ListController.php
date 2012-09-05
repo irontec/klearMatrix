@@ -245,6 +245,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $where[] = $this->_item->getFilterClassCondition();
         }
 
+        if ($this->_item->hasRawCondition()) {
+            $where[] = $this->_item->getRawCondition();
+        }
+
         if ($this->_item->isFilteredScreen()) {
             $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
         }
@@ -310,8 +314,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             foreach ($where as $condition) {
 
-                $expressions[] = $condition[0];
-                $values = array_merge($values, $condition[1]);
+                if (is_array($condition)) {
+                    $expressions[] = $condition[0];
+                    $values = array_merge($values, $condition[1]);
+                } else {
+                    $expressions[] = $condition;
+                }
             }
 
             $where = array(implode(" and ", $expressions), $values);

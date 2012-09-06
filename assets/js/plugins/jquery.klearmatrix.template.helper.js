@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
 
     $.klearmatrix = $.klearmatrix || {};
     $.klearmatrix.template  = $.klearmatrix.template || {};
@@ -36,19 +36,17 @@
             var extraConfig = column.config || false;
             var properties = column.properties || false;
             var customErrors = column.errors || false;
-
-            if (true === isNew) {
-
-                var _value = '';
-            } else {
+            var _value = '';
+            
+            if (true !== isNew) {
 
                 if (typeof value != 'object' && !column.dirty) {
                     var pattern = column.properties && column.properties.pattern || '';
-                    var _value = this.cleanValue(value,'', pattern);
+                    _value = this.cleanValue(value,'', pattern);
 
                 } else {
 
-                    var _value = value;
+                    _value = value;
                 }
             }
 
@@ -305,7 +303,7 @@
                         count = true;
                     }
 
-                    if (this.data.columns[i].default) {
+                    if (this.data.columns[i]['default'] ) {
                         defaultColumn = this.data.columns[i];
                         break;
                     }

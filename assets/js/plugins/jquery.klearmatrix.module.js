@@ -39,7 +39,7 @@
             $.Widget.prototype.destroy.call( this );
         },
         _setOption : function(key, value) {
-            $.Widget.prototype._setOption.apply(this,arguments)
+            $.Widget.prototype._setOption.apply(this,arguments);
         },
 
         _parseDefaultItems : function() {
@@ -57,7 +57,7 @@
             			 count = true;
             		 }
 
-            		 if (this.options.data.columns[i].default) {
+            		 if (this.options.data.columns[i]['default']) {
             			 defaultColumn = this.options.data.columns[i];
             			 break;
             		 }

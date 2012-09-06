@@ -55,8 +55,8 @@ title="${info.text}"
                     {{if (searchOps[field][_valIdx] == 'gt')}}
                         <strong>&gt;</strong>
                     {{/if}}
-                    
-                    
+
+
                     ${$item.getValuesFromSelectColumn($item.getColumn(columns,field),_val)}
                 </span>
             {{/each}}
@@ -110,7 +110,7 @@ Registros por página: <input value="${paginator.itemCountPerPage}" type="number
 <tr data-id="${$item.getIndex(row,pk)}">
    {{each columns}}
        {{if (type != '_option') }}
-            <td class="ui-widget-content{{if ($value.default)}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
+            <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
         {{else}}
             <td class="ui-widget-content options">
             {{each fieldOptions}}
@@ -145,7 +145,7 @@ Registros por página: <input value="${paginator.itemCountPerPage}" type="number
 {{if ($item.data.csv)}}
     <a class="_generalOption option csv" href="">
         <span class="ui-silk inline ui-silk-page-white-database"></span><?php echo $this->translate('Export to CSV'); ?>
-    </a>    
+    </a>
 {{/if}}
 
 

@@ -16,7 +16,7 @@
 
             <a rel="${_elemIden}" href="#"
             {{if (option.title)}} title="${option.title}" {{/if}}
-            class="option ${option.class} ${option.type}"
+            class="option ${option['class']} ${option.type}"
              {{if (option.type)}}
                 data-${option.type}="${option.target}"
              {{/if}}

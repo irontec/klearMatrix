@@ -38,8 +38,12 @@
             // call the original destroy method since we overwrote it
             $.Widget.prototype.destroy.call( this );
         },
-        _setOption : function(key, value) {
-            $.Widget.prototype._setOption.apply(this,arguments);
+        _setOptions: function() {
+            $.Widget.prototype._setOptions.apply(this, arguments);
+        },
+
+        _setOption: function(key, value) {
+            $.Widget.prototype._setOption.apply(this, arguments);
         },
 
         _parseDefaultItems : function() {
@@ -80,6 +84,14 @@
              								.replace(/\%item\%/,defaultValue);
 
 
+        },
+        getData : function(value) {
+        	
+        	if (this.options.data[value]) {
+        		return this.options.data[value]
+        	}
+        	
+        	return this.options.data; 
         },
         _loadTemplate : function(tmplName) {
 

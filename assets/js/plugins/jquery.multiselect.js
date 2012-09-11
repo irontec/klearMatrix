@@ -279,13 +279,15 @@ $.widget("ech.multiselect", {
 		this.header
 			.delegate('a', 'click.multiselect', function( e ){
 				// close link
+				e.preventDefault();
+				e.stopPropagation(); // Added for KlearMatrix Irontec
+				
 				if( $(this).hasClass('ui-multiselect-close') ){
 					self.close();
 
 				// check all / uncheck all
 				} else {
-					e.preventDefault();
-					e.stopPropagation(); // Added for KlearMatrix Irontec
+					
 					self[ $(this).hasClass('ui-multiselect-all') ? 'checkAll' : 'uncheckAll' ]();
 				}
 

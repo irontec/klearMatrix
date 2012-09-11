@@ -239,6 +239,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected function _getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data)
     {
+
+
         $where = array();
 
         if ($this->_item->hasFilterClass()) {
@@ -257,52 +259,19 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $where = array_merge($where, $this->_item->getForcedValuesConditions());
         }
 
-        //Generamos el where de los filtros
-        $searchFields = $this->getRequest()->getPost("searchFields");
-        $searchOps = $this->getRequest()->getPost("searchOps");
 
-        if ($searchFields) {
+        $whereProccessor = new KlearMatrix_Model_FilterProcessor;
+        $whereProccessor
+            ->setLogger($this->_helper->log)
+            ->setModel($model)
+            ->setResponseData($data)
+            ->setRequest($this->getRequest())
+            ->setColumnCollection($cols);
 
-            $this->_helper->log('Search arguments found for:' . $this->_mapperName);
-
-            $searchWhere = array();
-
-            foreach ($searchFields as $field => $values) {
-
-                $valuesOp = $searchOps[$field];
-                $col = $cols->getColFromDbName($field);
-                if ($col) {
-
-                    $searchWhere[] = $col->getSearchCondition($values, $valuesOp, $model, $cols->getLangs());
-                    $data->addSearchField($field, $values, $valuesOp);
-                }
-            }
-
-            $expressions = $values = array();
-
-            foreach ($searchWhere as $condition) {
-
-                if (is_array($condition)) {
-
-                    $expressions[] = $condition[0];
-                    $values = array_merge($values, $condition[1]);
-
-                } else {
-
-                    $expressions[] = $condition;
-                }
-            }
-
-            if ($this->getRequest()->getPost("searchAddModifier") == '1') {
-
-                $data->addSearchAddModifier(true);
-                $where[] = array('(' . implode(" or ", $expressions) . ')', $values);
-
-            } else {
-
-                $where[] = array('(' . implode(" and ", $expressions) . ')', $values);
-            }
+        if ($whereProccessor->isFilteredRequest()) {
+            $where[] = $whereProccessor->getCondition();
         }
+
 
         if (count($where) == 0) {
 

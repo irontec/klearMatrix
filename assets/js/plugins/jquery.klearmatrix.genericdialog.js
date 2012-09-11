@@ -19,6 +19,12 @@
 
             return this.options.data.message;
         },
+        
+        _getTitle : function() {
+
+            return this.options.data.title;
+        },
+        
         _getButtons : function() {
             var _buttons = [];
 
@@ -81,6 +87,7 @@
 
             $(this.element).moduleDialog("option","buttons",this._getButtons());
             $(this.element).moduleDialog("updateContent",this._getDialogContent());
+            $(this.element).moduleDialog("updateTitle", this._getTitle());
 
         }
 

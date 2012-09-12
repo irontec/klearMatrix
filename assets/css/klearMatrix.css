@@ -84,7 +84,8 @@ table.kMatrix .mlTag {
 	padding:.4em;
 }
 
-.klearMatrix_form p {
+.klearMatrix_form p,
+.klearMatrix_form div.container {
 	padding:.8em;
 	margin:.3em 0;
 }
@@ -230,7 +231,7 @@ a.ui-state-nojump {
     cursor:pointer;
 }
 
-.klearMatrixFiltering .searchOption {	
+.klearMatrixFiltering .searchOption {
 	display:none;
 	margin-right:1em;
 }
@@ -282,7 +283,7 @@ span.klearFieldError {
 }
 
 span.klearFieldError span {
-	float:left;	
+	float:left;
 }
 
 span.klearFieldError span.content {

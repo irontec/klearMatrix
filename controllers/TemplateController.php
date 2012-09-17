@@ -30,6 +30,11 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     {
     }
 
+    public function dashboardAction()
+    {
+    }
+
+
     public function multilangAction()
     {
         $templateTypes = array('list', 'field');

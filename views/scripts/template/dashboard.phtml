@@ -1,0 +1,22 @@
+<div class="klearMatrixDashboard">
+
+<h1 class="ui-state-active  ui-corner-all">${title}</h1>
+
+{{each(idx,section) sections}}
+<fieldset class="ui-widget-content ui-corner-all">
+<legend class="ui-state-active  ui-corner-all">${section.name}</legend>
+    <ul>
+        {{each(idx2,subsection) section.subsects}}
+        <li>
+            <a class="subsection" href="?" id="target-${subsection.file}" >
+            <span class="ui-silk inline ${subsection.class}"></span>
+            ${subsection.name}
+            </a>
+            <strong>${subsection.total}</strong>
+        </li>
+
+    {{/each}}
+    </ul>
+</fieldset>
+{{/each}}
+</div>

@@ -14,8 +14,8 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
     protected $_csv = false;
 
     protected $_configOptionsCustom = array(
-        '_mapper' => array('mapper', true),
-        '_modelFile' => array('modelFile', true),
+        '_mapper' => array('mapper', false),
+        '_modelFile' => array('modelFile', false),
         '_csv' => array('csv', false),
         '_hooks' => array('hooks', false)
     );

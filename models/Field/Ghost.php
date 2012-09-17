@@ -22,6 +22,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     public function init()
     {
+
         $ret = parent::init();
         $this->_column->markAsReadOnly();
 

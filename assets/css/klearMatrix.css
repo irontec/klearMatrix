@@ -297,3 +297,31 @@ span.klearFieldError span.content {
     }
 }
 
+div.klearMatrixDashboard h1 {
+	padding:.7em;
+	margin: .2em .1em .7em .1em;
+	font-size: 1.2em;
+	
+}
+
+div.klearMatrixDashboard fieldset {
+	width:25%;
+	float:left;
+	padding:1em;
+	margin:1em;
+}
+
+div.klearMatrixDashboard fieldset ul {
+	list-style:none;
+}
+
+div.klearMatrixDashboard fieldset a, div.klearMatrixDashboard fieldset a:active, div.klearMatrixDashboard fieldset a:hover {
+	text-decoration:none;
+}
+div.klearMatrixDashboard fieldset li strong {
+	float:right;
+}
+
+div.klearMatrixDashboard fieldset legend {
+	padding: .3em;
+}

@@ -1,6 +1,5 @@
 // JavaScript Document
 
-
 $.widget("ui.form",{
 
         _init:function(){

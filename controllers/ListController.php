@@ -240,7 +240,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     protected function _getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data)
     {
 
-
         $where = array();
 
         if ($this->_item->hasFilterClass()) {
@@ -258,6 +257,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         if ($this->_item->hasForcedValues()) {
             $where = array_merge($where, $this->_item->getForcedValuesConditions());
         }
+
 
 
         $whereProccessor = new KlearMatrix_Model_FilterProcessor;

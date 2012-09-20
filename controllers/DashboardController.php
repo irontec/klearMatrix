@@ -54,7 +54,7 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
                         ->offsetGet('klear')
                         ->getOption('menu');
 
-        $data['sections'] = array();
+            $data['sections'] = array();
 
             foreach ($menuConfig as $section) {
                 $sectionTmp = array(
@@ -83,12 +83,12 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
                         continue;
                     }
 
-                    $_item = $moduleRouter->getCurrentItem();
+                    $this->_item = $moduleRouter->getCurrentItem();
 
-                    $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
+                    $_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_item->getMapperName());
 
-                    $cols = $_item->getVisibleColumns();
-                    $model = $_item->getObjectInstance();
+                    $cols = $this->_item->getVisibleColumns();
+                    $model = $this->_item->getObjectInstance();
                     $fooData = new KlearMatrix_Model_MatrixResponse();
 
                     $where = $this->_getWhere($cols, $model, $fooData);

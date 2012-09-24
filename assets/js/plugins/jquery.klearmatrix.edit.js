@@ -561,7 +561,39 @@
                 .filter("[required]").before(_required.clone())
                 .end()
                 .find(":not(:disabled):eq(0)").trigger("focusin").select();
+            
+            
+            $("p.expandable", this.options.theForm).each(function() {
+                $(this).hide();
+                var expand = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-s"></span></button>';
+                var contract = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-n"></span></button>';
                 
+                $("<p class='ui-widget-content ui-corner-all'/>")
+                    .html($('label:first',$(this)).clone())
+                    .insertAfter($(this))
+                    .find('label:first')
+                    .addClass('pointer')
+                    .append(expand)
+                    .after('<br />')
+                    .on('click',function(){
+                        $(this).parent('p').slideToggle('slow',function(){
+                            $(this).prev('p.expandable').slideToggle('slow');
+                    });
+                });
+                
+                $('label:first',$(this)).append(contract).after('<br />').on('click',function(){
+                    $(this).parent('p').slideToggle('slow',function(){
+                        $(this).next('p').slideToggle('slow');
+                    });
+                });
+                
+                $(this).find('button').on('click',function(e){
+                    e.preventDefault();
+                });
+                $(this).next('p').find('button').on('click',function(e){
+                    e.preventDefault();
+                });
+            });
             return this;
         },
         

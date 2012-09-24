@@ -546,6 +546,11 @@ class KlearMatrix_Model_Column
 
             if ($props = $this->_fieldConfig->getProperties()) {
                 $ret['properties'] = $props;
+                if ($props['expandable']) {
+                    $ret['expandable'] = true;
+                } else {
+                    $ret['expandable'] = false;
+                }
             }
 
             if ($errors = $this->_fieldConfig->getCustomErrors()) {

@@ -325,3 +325,7 @@ div.klearMatrixDashboard fieldset li strong {
 div.klearMatrixDashboard fieldset legend {
 	padding: .3em;
 }
+
+.right {
+	float:right;
+}

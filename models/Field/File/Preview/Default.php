@@ -1,6 +1,6 @@
 <?php
 
-class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Field_File_Preview_Interface
+class KlearMatrix_Model_Field_File_Preview_Default implements KlearMatrix_Model_Field_File_Preview_Interface
 {
 
     protected $_width;
@@ -13,11 +13,6 @@ class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Fi
     {
         $this->_width = $request->getParam('width');
         $this->_height = $request->getParam('height');
-        if ($request->getParam('crop') == 'true') {
-            $this->_crop = true;
-        } else {
-            $this->_crop = false;
-        }
         return;
     }
     
@@ -25,11 +20,8 @@ class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Fi
     {
         $imagick = new Imagick();
         $imagick->readimageblob($binary);
-        if ($this->_crop === true) {
-            $imagick->cropthumbnailimage($this->_width, $this->_height);
-        } else {
-            $imagick->thumbnailimage($this->_width, $this->_height);
-        }
+        $imagick->thumbnailimage($this->_width, $this->_height);
+        $imagick->setimageformat('png32');
         $this->_binary = $imagick->getimageblob();
         return;
     }

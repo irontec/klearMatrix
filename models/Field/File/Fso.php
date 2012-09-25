@@ -92,8 +92,9 @@ class KlearMatrix_Model_Field_File_Fso
 
                 foreach ($defaultOptions as $key => $value) {
 
-                    if (!isset($ret['options'][$key])) {
-                        $ret['options'][$key] = $value;
+                    if (is_array($ret['options'][$option]) &&
+                            !isset($ret['options'][$option][$key])) {
+                        $ret['options'][$option][$key] = $value;
                     }
                 }
             }

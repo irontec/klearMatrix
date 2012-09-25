@@ -20,6 +20,12 @@
              {{if (option.type)}}
                 data-${option.type}="${option.target}"
              {{/if}}
+
+             {{if (option.props)}}
+                 {{each(propName,propValue) option.props}}
+                    data-${propName}="${propValue}"
+                 {{/each}}
+             {{/if}}
             {{if (option.external)}}
                  data-external="true"
             {{/if}}

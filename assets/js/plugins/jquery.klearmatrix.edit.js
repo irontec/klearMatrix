@@ -420,6 +420,49 @@
                 });
             }
             
+            if ($(".filePreview",this.options.theForm).length>0) {
+                $(".filePreview",this.options.theForm).each(function() {
+
+                	var _post = {};
+                	var _validData = ['width','height','crop'];
+                	var $self = $(this);
+                	var imageAttribs = '';
+                	$.each(_validData,function(i,value) {
+                		if ($self.data(value)) {
+                    		_post[value] = $self.data(value);
+                    	}
+                		
+                		if (value == 'width' || value == 'height') {
+                			imageAttribs += value + '="'+_post[value]+'px" ';
+                		}
+                		
+                	});
+                	
+                    var requestData = {
+                            file: _self.klearModule("option","file"),
+                            pk: $(this).parents("form:eq(0)").data("id"),
+                            type : 'command',
+                            post: _post,
+                            command : $(this).data('command')
+                    };
+
+
+                    var item = $("<img class=\"imgFilePreview\" "+imageAttribs+" />");
+
+                    
+                    var request = $.klear.buildRequest(requestData);
+                    var _url = request.action; //encodeURI()
+                    _url += '&' + $.param(request.data);
+                    item.attr("src", _url);
+
+                    $(this).replaceWith(item);
+                    
+                    
+                    
+                });
+            }
+            
+            
             if ($(".password",this.options.theForm).length>0) {
             	var isNew = this.options.theForm.data("type") == "new";
             	

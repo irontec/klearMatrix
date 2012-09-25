@@ -241,5 +241,17 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         return $this->forceDownloadAction();
     }
 
+    /**
+     * TODO: Implementar llamdas a KlearMatrix_Model_Field_File_Preview_*
+     * TODO: Sistema de cacheo
+     */
+    public function previewAction() {
+
+
+        return $this->forceDownloadAction();
+
+
+
+    }
 
 }

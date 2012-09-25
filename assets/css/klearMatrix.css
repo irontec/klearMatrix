@@ -329,3 +329,9 @@ div.klearMatrixDashboard fieldset legend {
 .right {
 	float:right;
 }
+
+img.imgFilePreview {
+	border:1px solid #333;
+	padding:.5em;
+}
+}

@@ -423,7 +423,7 @@
             if ($(".filePreview",this.options.theForm).length>0) {
                 $(".filePreview",this.options.theForm).each(function() {
 
-                	var _post = {};
+                	var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
                 	var _validData = ['width','height','crop'];
                 	var $self = $(this);
                 	var imageAttribs = '';

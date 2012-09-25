@@ -1,12 +1,13 @@
 <span class="klearMatrix_file newFile" id="new_${_elemIden}"></span>
-<span class="klearMatrix_file" id="current_${_elemIden}">
-
+<span class="klearMatrix_file" id="current_${_elemIden}"
 {{if (_fieldValue.name)}}
+    data-filename="${_fieldValue.name}"
+>
     {{if (!_dataConfig.options['hiddenName'])}}
         ${_fieldValue.name}
     {{/if}}
-
 {{else}}
+>
     <?php echo $this->translate('Not available'); ?>
 {{/if}}
 

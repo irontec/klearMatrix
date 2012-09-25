@@ -25,9 +25,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
     protected $_pk;
     protected $_model;
-    
+
     protected $_fileFields;
-    
+
     // Prefix for files uploaded temporaly to get_sys_temp_dir
     protected $_filePrefix = 'kmatrixFSO';
     // On every successfull uploaded file, the "brother" filed uploaded before self::_hoursOld will be deleted.
@@ -144,12 +144,12 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     {
         try {
             $this->_loadModel();
-            
+
             if (!$this->_model) {
                 $this->_helper->log('Model not found for '. $mapperName. ' >> PK('.$this->_pk.')', Zend_Log::ERR);
                 throw new Zend_Exception("No se encuentra la columna solicitada.");
             }
-            
+
             $this->_setFileFields();
 
             if ((bool)$this->_request->getParam("download")) {
@@ -235,22 +235,22 @@ class KlearMatrix_FileController extends Zend_Controller_Action
      * TODO: Sistema de cacheo
      */
     public function previewAction() {
-        
+
         try  {
             $this->_loadModel();
-            
+
             if (!$this->_model) {
                 Throw new Exception("file not exists");
             }
-            
+
             $this->_setFileFields();
-        
+
             $typeGetter = 'get' . $this->_fileFields['mimeName'];
             $nameGetter = 'get' . $this->_fileFields['baseNameName'];
-        
+
             $mimeType = $this->_model->{$typeGetter}();
             $filename = $this->_model->{$nameGetter}();
-            
+
             switch (true) {
                 case preg_match('/^image*[jpg|gif|jpeg|png]/', $mimeType):
                     $previewElement = new KlearMatrix_Model_Field_File_Preview_Image();
@@ -261,19 +261,20 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                     Throw new Exception("file type not valid");
                     break;
             }
-            
+
         } catch(Exception $e) {
             $mimeType = 'image/png';
             $filename = 'default.png';
-            
-            $imageBlob = file_get_contents(APPLICATION_PATH . '/../modules/klearMatrix/assets/bin/default.svg');
+
+            $front = $this->getFrontController();
+            $imageBlob = file_get_contents($front->getModuleDirectory() .'/assets/bin/default.svg');
 
             $previewElement = new KlearMatrix_Model_Field_File_Preview_Default();
             $previewElement->setRequest($this->getRequest());
             $previewElement->setBinary($imageBlob);
         }
-        
-        
+
+
         $this->_helper->log('Sending file to Client: ('.$filename.')');
         $this->_helper->sendFileToClient(
                 $previewElement->getBinary(),
@@ -284,13 +285,13 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 ),
                 true
             );
-        
+
         $response = Zend_Controller_Front::getInstance()->getResponse();
         $response->clearHeaders();
-        
+
         return;
     }
-    
+
     /**
      * Cargar $this->_model
      * @throws Zend_Exception
@@ -301,10 +302,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $mapper = new $mapperName;
         $this->_pk = $this->_mainRouter->getParam("pk");
         $this->_model = $mapper->find($this->_pk);
-        
+
         return;
     }
-    
+
     /**
      * Recuperar el binary del file
      */
@@ -314,7 +315,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $fetchGetter = $column->getFieldConfig()->getFetchMethod($this->_item->getConfigAttribute("mainColumn"));
         return $this->_model->{$fetchGetter}()->getBinary();
     }
-    
+
     protected function _setFileFields()
     {
         $fieldSpecsGetter = "get" . $this->_item->getConfigAttribute("mainColumn") . "Specs";

@@ -33,9 +33,44 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         $this->setInfo();
     }
 
+    /**
+     * Devuelve si está especificado la propiedad csv: true ó csv->active: true
+     * 
+     * @return boolean
+     */
     public function getCsv()
     {
+        if (is_object($this->_csv)
+             && get_class($this->_csv) == 'Zend_Config') {
+            
+            $retValue = (bool)$this->_csv->active;
+            
+        } else {
+            $retValue = $this->_csv;
+        }
         return $this->_csv;
+    }
+    
+    public function getCsvParameters()
+    {
+
+        $CSVoptions = array(
+                "active" => false,
+                "headers" => false,
+                "namefile" => "export",
+                "enclosure" => '"',
+                "separator" => ";");
+    
+        if (is_object($this->_csv)
+                        && get_class($this->_csv) == 'Zend_Config') {
+    
+            foreach($CSVoptions as $option => $value)
+                if (isset($this->_csv->{$option})) {
+                $CSVoptions[$option] = $this->_csv->{$option};
+            }
+    
+        } 
+        return $CSVoptions;
     }
 
     public function getHooks()

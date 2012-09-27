@@ -48,6 +48,11 @@
 
                     _value = value;
                 }
+            } else {
+            	if (column.properties && column.properties.defaultValue) {
+            		_value = column.defaultValue; 
+            	}
+            	
             }
 
             // Tengo prisa...

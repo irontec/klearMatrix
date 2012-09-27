@@ -37,6 +37,7 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
     {
         $baseSettings = parent::getConfig();
 
+
         $config = array(
             "plugin"=>'datepicker',
             "settings" => $baseSettings,

@@ -36,6 +36,7 @@ class KlearMatrix_Model_Column
 
     protected $_isFile = false;
 
+    protected $_searchSpecs = false;
 
     /**
      * Opciones para campos deshabilitados (condicionantes, etc)
@@ -150,6 +151,12 @@ class KlearMatrix_Model_Column
 
             $this->_parseDisabledOptions();
         }
+
+
+        if ($this->_config->getProperty("search")) {
+            $this->_parseSearchSpecsOptions();
+        }
+
 
         $this->_type = $this->_config->getProperty("type");
         if (empty($this->_type)) {
@@ -308,6 +315,38 @@ class KlearMatrix_Model_Column
         return $this->_fieldConfig->filterValue($value, $original);
     }
 
+
+    protected function _parseSearchSpecsOptions()
+    {
+
+        $this->_searchSpecs = array(
+            'options' => null,
+            'plugin' => null,
+            'info' => null
+        );
+
+        $searchConfig = new Klear_Model_ConfigParser();
+        $searchConfig->setConfig($this->_config->getProperty("search"));
+
+        if ($searchConfig->getProperty("options")) {
+            $this->setSearchSpec("options",true);
+        }
+
+        if ($searchConfig->getProperty("plugin")) {
+            $this->setSearchSpec("plugin",$searchConfig->getProperty("plugin"));
+        }
+
+        if ($searchConfig->getProperty("info")) {
+            $this->setSearchSpec("info",$searchConfig->getProperty("info"));
+        }
+
+    }
+
+    public function setSearchSpec($name,$value)
+    {
+        $this->_searchSpecs[$name] = $value;
+
+    }
 
     protected function _parseScreenOptions()
     {
@@ -546,16 +585,15 @@ class KlearMatrix_Model_Column
 
             if ($props = $this->_fieldConfig->getProperties()) {
                 $ret['properties'] = $props;
-                if ($props['expandable']) {
-                    $ret['expandable'] = true;
-                } else {
-                    $ret['expandable'] = false;
-                }
             }
 
             if ($errors = $this->_fieldConfig->getCustomErrors()) {
                 $ret['errors'] = $errors;
             }
+        }
+
+        if ($this->_searchSpecs) {
+            $ret['search'] = $this->_searchSpecs;
         }
 
         return $ret;

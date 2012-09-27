@@ -2,11 +2,11 @@
 
 <div class="ui-widget-content ui-corner-all assistant">
 <span class="
-ui-silk 
-ui-silk-${info.icon} 
+ui-silk
+ui-silk-${info.icon}
 fieldInfo-${info.type}
 fieldInfo-position-${info.position}
-" 
+"
 title="${info.text}"
 ></span>{{if (info.label)}} ${info.label} {{/if}}
 </div>
@@ -19,42 +19,42 @@ title="${info.text}"
 		<legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>
 
 	 	{{each(colIdx,column) columns}}
-        <p class="ui-widget-content ui-corner-all{{if (column.expandable == true)}} expandable{{/if}}">
+        <p class="ui-widget-content ui-corner-all{{if (column.properties && column.properties.expandable == true)}} expandable{{/if}}">
             {{if column.fieldInfo}}
-                <span 
+                <span
                     class="
-                        ui-silk 
-                        ui-silk-${column.fieldInfo.icon} 
+                        ui-silk
+                        ui-silk-${column.fieldInfo.icon}
                         fieldInfo-${column.fieldInfo.type}
                         fieldInfo-position-${column.fieldInfo.position}
-                        " 
+                        "
                     title="${column.fieldInfo.text}"
                 ></span>
             {{/if}}
             <label rel="${id}" for="${id}${randIden}" {{if (column.expandable == true)}}class="pointer"{{/if}}>
-            
+
             ${name}:
-            
+
             </label>
-            
+
             {{html $item.getEditDataForField(row[id],column)}}
-            
+
             {{if (column.options)}}
                 {{each column.options}}
-                    
+
                     {{if (
                         (showOnlyOnNotNull == false && showOnlyOnNull == false) ||
                         (showOnlyOnNotNull == true && row[id]) ||
                         (showOnlyOnNull == true && !row[id])
                     )}}
                         <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
-                        
+
                         href=""
                         data-${type}="${$item.getIndex($value,type)}"
                         title="${$item.getTitle(title,idx,true)}">
                         <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
                      {{/if}}
-                {{/each}} 
+                {{/each}}
             {{/if}}
 		</p>
 		{{/each}}
@@ -69,7 +69,7 @@ title="${info.text}"
 {{if (generalOptions.length>0) }}
     <br /><br />
 {{each generalOptions}}
-    
+
     <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
     <span class="ui-silk inline ${icon}"></span>
     ${$item.getTitle(title,idx,true)}

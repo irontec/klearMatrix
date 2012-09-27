@@ -5,6 +5,8 @@
     source:
       class: Application_Model_GhostTerminals -> Clase para hacer nuestras cosas con el model del registro
       method: getManufacturer -> Método de la clase a la que vamos a enviar el model del registro
+      orderMethod: getOrderForDuration devuelve el campo a aplicar en el "order by" << (se puede lista
+      searchMethod: getSearchConditionsForDuration
       field: modelId -> Si ponemos field, pasamos al ghost el valor del campo que pongamos en field. Si no se pone, se pasa el primaryKey
       cache:
         campo: true -> Los valores de estos campos se añaden al valor del campo para comprobar la cache
@@ -55,7 +57,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             $ghostObject->setConfig($this->_config->getRaw());
         }
 
-        if ($searchCondition = $ghostObject->{$searchMethod}($values, $model)) {
+        if ($searchCondition = $ghostObject->{$searchMethod}($values, $searchOps, $model)) {
             $this->_canBeSearched = true;
             return $searchCondition;
         }
@@ -81,7 +83,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
         // El modelo fantasma tiene un método que devuelve el campo por el que hay que ordenar??
         if (!$this->_config->getRaw()->source->orderMethod) {
-            return false;
+            return $this->_column->getDbFieldName();
         }
 
         $class = $this->_config->getRaw()->source->class;

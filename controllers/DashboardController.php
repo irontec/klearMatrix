@@ -43,7 +43,6 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
     {
 
         $data = array();
-
         $data['title'] = $this->_item->getTitle();
 
 

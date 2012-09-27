@@ -24,7 +24,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $currentCsv = $this->_mainRouter->getCurrentItem()->getCsvParameters();
-        
+
         $csvSpec = array(
             'suffix'=>'csv',
             'headers'=>array(
@@ -57,12 +57,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $context
                 ->initContext($contextParam);
         }
-        
+
         $this->_item = $this->_mainRouter->getCurrentItem();
         $this->_mapperName = $this->_item->getMapperName();
         $this->_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_mapperName);
         $this->_helper->log('List mapper: ' . $this->_mapperName);
-        
+
     }
 
 
@@ -79,7 +79,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             if ($callerScreen) {
 
                $parentScreen = new KlearMatrix_Model_Screen;
-               $parentScreen->segetColFromDbNametRouteDispatcher($this->_mainRouter);
+               $parentScreen->setRouteDispatcher($this->_mainRouter);
                $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
                $parentMapperName = $parentScreen->getMapperName();
 
@@ -412,22 +412,22 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $values = $this->view->data['values'];
 
         $pkName = $this->_item->getPkName();
-        
+
         $columnPk = $this->_item->getVisibleColumns()->getColFromDbName($pkName);
-        
-        if (is_object($columnPk) && 
+
+        if (is_object($columnPk) &&
              get_class($columnPk) == 'KlearMatrix_Model_Column') {
-            
+
             $toBeRemoved = false;
-            
+
         } else {
             // Queremos ocultar $pkName de l array de values y fields
             // El "id" no está en whitelist
             $toBeRemoved = $pkName;
-            
-        } 
+
+        }
         $CSVparams = $this->_item->getCsvParameters();
-        
+
         $toBeChanged = array();
 
         foreach ($fields as $field) {
@@ -443,27 +443,27 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         ob_start();
         $fp = fopen("php://output", "w");
-        
+
         if (is_resource($fp)) {
 
             $firstLine = $values[0];
-            
+
             if ($toBeRemoved) {
                 unset($firstLine[$toBeRemoved]);
             }
-            
+
             if ($CSVparams['headers']==true) {
                 fputcsv($fp, array_keys($firstLine), $CSVparams['separator'], $CSVparams['enclosure']);
             }
-            
+
             foreach ($values as $valLine) {
-                
+
                 foreach ($valLine as $key => $val) {
 
                     if ($toBeRemoved == $key) {
                         unset($valLine[$toBeRemoved]);
                     }
-                    
+
                     if (isset($toBeChanged[$key])) {
 
                         if (isset($toBeChanged[$key][$val])) {
@@ -475,7 +475,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                         }
                     }
                 }
-                
+
                 fputcsv($fp, $valLine, $CSVparams['separator'], $CSVparams['enclosure']);
             }
 

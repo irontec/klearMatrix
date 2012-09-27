@@ -252,7 +252,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $filename = $this->_model->{$nameGetter}();
 
             switch (true) {
-                case preg_match('/^image*[jpg|gif|jpeg|png]/', $mimeType):
+                case preg_match('/^image*[jpg|gif|jpeg|png|bmp]/i', $mimeType):
                     $previewElement = new KlearMatrix_Model_Field_File_Preview_Image();
                     $previewElement->setRequest($this->getRequest());
                     $previewElement->setBinary($this->_getBinary());
@@ -263,6 +263,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             }
 
         } catch(Exception $e) {
+
             $mimeType = 'image/png';
             $filename = 'default.png';
 

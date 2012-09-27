@@ -275,35 +275,53 @@
             
             var currentPlugin = false;
             var originalSearchField = $(".klearMatrixFiltering input.term",panel).clone();
-            
+
             $(".klearMatrixFiltering select[name=searchField]",panel).on('manualchange',function(e) {
 
                 var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns, $(this).val());
+
                 var availableValues = {};
-                
-                var searchField = $(".klearMatrixFiltering input.term",panel);
-                var searchOption = $("span.searchOption",panel);
-                
+                var $container = $(".klearMatrixFiltering",panel);
+                var searchField = $("input.term",$container);
+                var searchOption = $("span.searchOption",$container);
+
 				if (false !== currentPlugin) {
 					searchField[currentPlugin]("destroy");
 					currentPlugin = false;
 				}
-				
+
 				var _newField = originalSearchField.clone();
 				searchField = searchField.replaceWith(_newField);
 				searchField = _newField;
 				
-				//TODO: Determinar cuando mostrar el searchOption (=/</>)
+				
+				column.search = column.search || {};
+				
+				//TODO: Determinar cuando mostrar el searchOption (=/</>) desde el controlador
 				if (column.config && column.config['plugin'] && column.config['plugin'].match(/date|time/g)) {
+					column.search.options = true;
+				}
+				
+				if (column.search.options) {					
 					searchOption.show();
         		} else {
         			searchOption.hide();
         		}
 				
+				$container.find("span.info").remove();
+				
+				if (column.search.info) {
+					$("<span />")
+						.attr("class","info ui-silk ui-silk-help inline")
+						.attr("title",column.search.info)
+						.prependTo($(".filterItem",$container))
+						.tooltip();
+				}
+
+				
 				switch(true) {
                 	// un select!
                 	case  (column.type == 'select'):
-                         
                 		var _availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column);
 
 	                    var sourcedata = [];
@@ -328,15 +346,24 @@
                 		currentPlugin = 'autocomplete';
 
 	                    break;
+	                    
+	                // TODO, hacer que esta configuración venga de serie en column.search
                 	case (column.config && typeof column.config['plugin'] == 'string'):
                 		var _pluginName = column.config['plugin'];
                 		currentPlugin = _pluginName;
-               			searchField[_pluginName](column.config['settings']);
-                		
+                		var _settings = column.config['settings'] || {};
+               			searchField[_pluginName](_settings);
+               			break;
+
+                	case (column.search.plugin && typeof column.search.plugin == 'string'):
+                		var _pluginName = column.config['plugin'];
+                		currentPlugin = column.search.plugin;
+                		var _settings = column.search.settings || {};
+           				searchField[column.search.plugin](_settings);
                 		break;
                     default:
                     	
-                    	break;
+                    break;
             	}
 
             }).trigger('manualchange').trigger('select');

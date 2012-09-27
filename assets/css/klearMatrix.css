@@ -32,6 +32,8 @@ table.kMatrix td {
     padding: 3px;
 }
 
+table.kMatrix td.options {
+}
 .odd {
     background:transparent none;
 }

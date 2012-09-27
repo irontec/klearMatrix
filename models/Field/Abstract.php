@@ -11,7 +11,7 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_canBeSearched = true;
     protected $_canBeSorted = true;
 
-    static protected $_propertyMaster = array("required", "pattern", "placeholder", "nullIfEmpty","expandable");
+    static protected $_propertyMaster = array("required", "pattern", "placeholder", "nullIfEmpty","expandable","defaultValue");
 
     protected $_properties = array();
 

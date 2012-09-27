@@ -551,12 +551,15 @@
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
+                                var $list = $(".qq-upload-list",$(this.element));
+                                
                                 if (result.error) {
+                                	$list.empty();
                                     $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR",[__namespace__])});
                                     return;
                                 }
-
-                                var $list = $(".qq-upload-list",$(this.element));
+                                
+                                
                                 var fName = $(".qq-upload-file",$list).html();
                                 var fSize = $(".qq-upload-size",$list).html();
                                 var _id = _hiddenField.attr("id");
@@ -569,6 +572,7 @@
 
                             showMessage : function(message) {
                                 if (typeof(message) == 'string') {
+                                	$(".qq-upload-list",$(this.element)).html('');	
                                     $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR",[__namespace__])});
                                 }
                             }

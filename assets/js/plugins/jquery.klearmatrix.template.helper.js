@@ -37,10 +37,11 @@
             var properties = column.properties || false;
             var customErrors = column.errors || false;
             var _value = '';
-            
+
             if (true !== isNew) {
 
                 if (typeof value != 'object' && !column.dirty) {
+                    
                     var pattern = column.properties && column.properties.pattern || '';
                     _value = this.cleanValue(value,'', pattern);
 
@@ -48,11 +49,12 @@
 
                     _value = value;
                 }
+
             } else {
             	if (column.properties && column.properties.defaultValue) {
-            		_value = column.defaultValue; 
+            	    
+            		_value = column.properties.defaultValue; 
             	}
-            	
             }
 
             // Tengo prisa...

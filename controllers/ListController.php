@@ -409,14 +409,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     public function exportCsv()
     {
         $fields = $this->view->data['columns'];
-        $values = $this->view->data['values'];
-
+        $values = $this->_normalizeValues($this->view->data['values']);
+        
         $pkName = $this->_item->getPkName();
 
         $columnPk = $this->_item->getVisibleColumns()->getColFromDbName($pkName);
 
         if (is_object($columnPk) &&
-             get_class($columnPk) == 'KlearMatrix_Model_Column') {
+            get_class($columnPk) == 'KlearMatrix_Model_Column') {
 
             $toBeRemoved = false;
 
@@ -426,10 +426,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $toBeRemoved = $pkName;
 
         }
+        
         $CSVparams = $this->_item->getCsvParameters();
 
         $toBeChanged = array();
-
+        
         foreach ($fields as $field) {
             if ($field['type'] == 'select') {
 
@@ -441,64 +442,92 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
         }
 
-        ob_start();
         $fp = fopen("php://output", "w");
+        
+        if (!is_resource($fp)) {
+            throw new Exception('Unable to create output resource for csv.');
+        }
+        
+        ob_start();
+            
+        $firstLine = $values[0];
 
-        if (is_resource($fp)) {
+        if ($toBeRemoved) {
+            unset($firstLine[$toBeRemoved]);
+        }
 
-            $firstLine = $values[0];
+        if ($CSVparams['headers']==true) {
+            fputcsv($fp, array_keys($firstLine), $CSVparams['separator'], $CSVparams['enclosure']);
+        }
 
-            if ($toBeRemoved) {
-                unset($firstLine[$toBeRemoved]);
-            }
+        foreach ($values as $valLine) {
 
-            if ($CSVparams['headers']==true) {
-                fputcsv($fp, array_keys($firstLine), $CSVparams['separator'], $CSVparams['enclosure']);
-            }
+            foreach ($valLine as $key => $val) {
 
-            foreach ($values as $valLine) {
-
-                foreach ($valLine as $key => $val) {
-
-                    if ($toBeRemoved == $key) {
-                        unset($valLine[$toBeRemoved]);
-                    }
-
-                    if (isset($toBeChanged[$key])) {
-
-                        if (isset($toBeChanged[$key][$val])) {
-
-                            $valLine[$key] = $toBeChanged[$key][$val];
-                        } else {
-
-                            $valLine[$key] = '';
-                        }
-                    }
+                if ($toBeRemoved == $key) {
+                    unset($valLine[$toBeRemoved]);
                 }
 
-                fputcsv($fp, $valLine, $CSVparams['separator'], $CSVparams['enclosure']);
+                if (isset($toBeChanged[$key])) {
+
+                    if (isset($toBeChanged[$key][$val])) {
+
+                        $valLine[$key] = $toBeChanged[$key][$val];
+                    } else {
+
+                        $valLine[$key] = '';
+                    }
+                }
             }
 
-            $strContent = ob_get_clean();
-
-            // Excel SYLK-Bug
-            // http://support.microsoft.com/kb/323626/de
-            $strContent = preg_replace('/^ID/', 'id', $strContent);
-
-            //$strContent = utf8_decode($strContent);
-            $intLength = mb_strlen($strContent, 'utf-8');
-
-            // length
-            $this->getResponse()->setHeader('Content-Length', $intLength);
-            // Set a header
-
-            // kein fclose($fp);
-
-            $this->getResponse()->setBody($strContent);
-
-        } else {
-            ob_end_clean();
-            Throw new Exception('Unable to create output resource for csv.');
+            fputcsv($fp, $valLine, $CSVparams['separator'], $CSVparams['enclosure']);
         }
+
+        $strContent = ob_get_clean();
+
+        // Excel SYLK-Bug
+        // http://support.microsoft.com/kb/323626/de
+        $strContent = preg_replace('/^ID/', 'id', $strContent);
+
+        //$strContent = utf8_decode($strContent);
+        $intLength = mb_strlen($strContent, 'utf-8');
+
+        // length
+        $this->getResponse()->setHeader('Content-Length', $intLength);
+        // Set a header
+
+        // kein fclose($fp);
+
+        $this->getResponse()->setBody($strContent);
+
     }
+    
+    protected function _normalizeValues($tmpValues) {
+        /**
+         * Genera las cabeceras y contenidos en multilang 
+         * @param values
+         * @return array
+         */
+        
+        $values = array();
+        
+        for ($i=0;$i<=(count($tmpValues)-1);$i++) {
+            
+            foreach ($tmpValues[$i] as $valMult => $multLang) {
+
+                if(is_array($multLang)){
+                    foreach ($multLang as $keyLang => $contLang) {
+                        $langs = $valMult . '_' . $keyLang;
+                        $values[$i][$langs] = html_entity_decode($contLang);
+                    }
+                } else {
+                    $values[$i][$valMult] = html_entity_decode($multLang);
+                }
+                
+            }
+                    
+        }
+        return $values;
+    }
+    
 }

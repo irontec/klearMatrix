@@ -64,11 +64,11 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         if (is_object($this->_csv)
                         && get_class($this->_csv) == 'Zend_Config') {
     
-            foreach($CSVoptions as $option => $value)
+            foreach($CSVoptions as $option => $value) {
                 if (isset($this->_csv->{$option})) {
-                $CSVoptions[$option] = $this->_csv->{$option};
+                    $CSVoptions[$option] = $this->_csv->{$option};
+                }
             }
-    
         } 
         return $CSVoptions;
     }

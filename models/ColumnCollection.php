@@ -57,25 +57,45 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         }
     }
 
-    //Ordena los campos a mostrar según lo indicado en el screen en fields->order
+    /**
+     * Ordena los campos a mostrar según lo indicado en el screen en fields -> order
+     * @param $orderFields Lista de campos en orden
+     *
+     */
     public function sortCols($orderFields = array())
     {
+        // TODO: Parece que estaría mejor en la declaración del método (Zend_Config $orderFields)
+        // de verdad queremos recibir algo aquí que no sea un Zend_Config?
         if (!$orderFields instanceof Zend_Config) {
             return true;
         }
 
+        $orderFieldsList = $this->_getOrderFieldsArray($orderFields);
+
         $cols = array();
+        foreach ($orderFieldsList as $field) {
 
-        foreach ($orderFields as $order => $field) {
+            if (isset($this->_cols[$field])) {
 
-            if (isset($this->_cols[$order])) {
-
-                $cols[$order] = $this->_cols[$order];
-                unset($this->_cols[$order]);
+                $cols[$field] = $this->_cols[$field];
+                unset($this->_cols[$field]);
             }
         }
 
         $this->_cols = array_merge($cols, $this->_cols);
+    }
+
+    protected function _getOrderFieldsArray(Zend_Config $orderFields)
+    {
+        $newOrderFields = array();
+        foreach ($orderFields as $fieldName => $value) {
+            if (is_numeric($fieldName)) {
+                $newOrderFields[] = $value;
+            } else {
+                $newOrderFields[] = $fieldName;
+            }
+        }
+        return $newOrderFields;
     }
 
     public function toArray()

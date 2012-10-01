@@ -33,7 +33,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 'Cache-Control'=>'must-revalidate, post-check=0, pre-check=0',
                 'Content-Description'=>'File Transfer',
                 'Content-Type'=>'text/csv; charset=utf-8',
-                'Content-disposition'=>'attachment; filename='.$currentCsv['namefile'].'.csv',
+                'Content-disposition'=>'attachment; filename='.$currentCsv['filename'].'.csv',
             ),
             'callbacks'=>array(
                 'init' => 'initJsonContext',

@@ -57,7 +57,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         $csvOptions = array(
                 "active" => false,
                 "headers" => false,
-                "namefile" => "export",
+                "filename" => "export",
                 "enclosure" => '"',
                 "separator" => ";");
 

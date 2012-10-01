@@ -177,7 +177,7 @@ abstract class KlearMatrix_Model_Field_Textarea_Tinymce_Template_Abstract
 
     public function getTinyPlugins()
     {
-        return implode(',', $this->_tinyMcePlugins );
+        return implode(',', $this->_tinyMcePlugins);
     }
 
     public function getButtonsBar()

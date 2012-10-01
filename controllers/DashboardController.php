@@ -12,7 +12,6 @@ require dirname(__FILE__) . '/ListController.php';
  */
 class KlearMatrix_DashboardController extends KlearMatrix_ListController
 {
-
     /**
      * Route Dispatcher desde klear/index/dispatch
      * @var KlearMatrix_Model_RouteDispatcher
@@ -53,60 +52,57 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
                         ->offsetGet('klear')
                         ->getOption('menu');
 
-            $data['sections'] = array();
+        $data['sections'] = array();
 
-            foreach ($menuConfig as $section) {
-                $sectionTmp = array(
-                        'name' => $section->getName(),
-                        'subsects' => array()
-                );
+        foreach ($menuConfig as $section) {
+            $sectionTmp = array(
+                    'name' => $section->getName(),
+                    'subsects' => array()
+            );
 
-                foreach ($section as $subsection) {
+            foreach ($section as $subsection) {
 
-                    $file = $subsection->getMainFile();
+                $file = $subsection->getMainFile();
 
-                    $sectionConfig = new Klear_Model_SectionConfig;
-                    $sectionConfig->setFile($file);
-                    if (!$sectionConfig->isValid()) {
-                        continue;
-                        return;
-                    }
+                $sectionConfig = new Klear_Model_SectionConfig;
+                $sectionConfig->setFile($file);
+                if (!$sectionConfig->isValid()) {
+                    continue;
+                    return;
+                }
 
-                    // Nos devuelve el configurador del módulo concreto instanciado.
-                    $moduleConfig = $sectionConfig->factoryModuleConfig();
-                    $moduleRouter = $moduleConfig->buildRouterConfig();
-                    $moduleRouter->resolveDispatch();
-
-
-                    if (($moduleRouter->getModuleName() != "klearMatrix") || ($moduleRouter->getControllerName() != "list") ) {
-                        continue;
-                    }
-
-                    $this->_item = $moduleRouter->getCurrentItem();
-
-                    $_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_item->getMapperName());
-
-                    $cols = $this->_item->getVisibleColumns();
-                    $model = $this->_item->getObjectInstance();
-                    $fooData = new KlearMatrix_Model_MatrixResponse();
-
-                    $where = $this->_getWhere($cols, $model, $fooData);
-
-                    $totalItems = $_mapper->countByQuery($where);
-
-                    $sectionTmp['subsects'][] = array(
-                            'name' => $subsection->getName(),
-                            'description' => $subsection->getDescription(),
-                            'class' => $subsection->getClass(),
-                            'file' => $subsection->getMainFile(),
-                            'total' => $totalItems
-                            );
+                // Nos devuelve el configurador del módulo concreto instanciado.
+                $moduleConfig = $sectionConfig->factoryModuleConfig();
+                $moduleRouter = $moduleConfig->buildRouterConfig();
+                $moduleRouter->resolveDispatch();
 
 
+                if (($moduleRouter->getModuleName() != "klearMatrix") || ($moduleRouter->getControllerName() != "list") ) {
+                    continue;
+                }
+
+                $this->_item = $moduleRouter->getCurrentItem();
+
+                $_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_item->getMapperName());
+
+                $cols = $this->_item->getVisibleColumns();
+                $model = $this->_item->getObjectInstance();
+                $fooData = new KlearMatrix_Model_MatrixResponse();
+
+                $where = $this->_getWhere($cols, $model, $fooData);
+
+                $totalItems = $_mapper->countByQuery($where);
+
+                $sectionTmp['subsects'][] = array(
+                        'name' => $subsection->getName(),
+                        'description' => $subsection->getDescription(),
+                        'class' => $subsection->getClass(),
+                        'file' => $subsection->getMainFile(),
+                        'total' => $totalItems
+                        );
             }
 
             $data['sections'][] = $sectionTmp;
-
         }
 
         $jsonResponse = new Klear_Model_DispatchResponse();

@@ -329,15 +329,15 @@ class KlearMatrix_Model_Column
         $searchConfig->setConfig($this->_config->getProperty("search"));
 
         if ($searchConfig->getProperty("options")) {
-            $this->setSearchSpec("options",true);
+            $this->setSearchSpec("options", true);
         }
 
         if ($searchConfig->getProperty("plugin")) {
-            $this->setSearchSpec("plugin",$searchConfig->getProperty("plugin"));
+            $this->setSearchSpec("plugin", $searchConfig->getProperty("plugin"));
         }
 
         if ($searchConfig->getProperty("info")) {
-            $this->setSearchSpec("info",$searchConfig->getProperty("info"));
+            $this->setSearchSpec("info", $searchConfig->getProperty("info"));
         }
 
     }

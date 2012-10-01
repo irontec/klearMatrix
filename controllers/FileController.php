@@ -234,9 +234,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
      * TODO: Default preview de default
      * TODO: Sistema de cacheo
      */
-    public function previewAction() {
+    public function previewAction()
+    {
 
-        try  {
+        try {
             $this->_loadModel();
 
             if (!$this->_model) {
@@ -278,14 +279,14 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->_helper->log('Sending file to Client: ('.$filename.')');
         $this->_helper->sendFileToClient(
-                $previewElement->getBinary(),
-                array(
-                    'filename' => $filename,
-                    'type' => $mimeType,
-                    'disposition' => 'inline'
-                ),
-                true
-            );
+            $previewElement->getBinary(),
+            array(
+                'filename' => $filename,
+                'type' => $mimeType,
+                'disposition' => 'inline'
+            ),
+            true
+        );
 
         $response = Zend_Controller_Front::getInstance()->getResponse();
         $response->clearHeaders();

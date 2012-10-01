@@ -410,7 +410,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     {
         $fields = $this->view->data['columns'];
         $values = $this->_normalizeValues($this->view->data['values']);
-        
+
         $pkName = $this->_item->getPkName();
 
         $columnPk = $this->_item->getVisibleColumns()->getColFromDbName($pkName);
@@ -426,11 +426,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $toBeRemoved = $pkName;
 
         }
-        
-        $CSVparams = $this->_item->getCsvParameters();
+
+        $csvParams = $this->_item->getCsvParameters();
 
         $toBeChanged = array();
-        
+
         foreach ($fields as $field) {
             if ($field['type'] == 'select') {
 
@@ -443,21 +443,21 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $fp = fopen("php://output", "w");
-        
+
         if (!is_resource($fp)) {
             throw new Exception('Unable to create output resource for csv.');
         }
-        
+
         ob_start();
-            
+
         $firstLine = $values[0];
 
         if ($toBeRemoved) {
             unset($firstLine[$toBeRemoved]);
         }
 
-        if ($CSVparams['headers']==true) {
-            fputcsv($fp, array_keys($firstLine), $CSVparams['separator'], $CSVparams['enclosure']);
+        if ($csvParams['headers']==true) {
+            fputcsv($fp, array_keys($firstLine), $csvParams['separator'], $csvParams['enclosure']);
         }
 
         foreach ($values as $valLine) {
@@ -480,7 +480,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 }
             }
 
-            fputcsv($fp, $valLine, $CSVparams['separator'], $CSVparams['enclosure']);
+            fputcsv($fp, $valLine, $csvParams['separator'], $csvParams['enclosure']);
         }
 
         $strContent = ob_get_clean();
@@ -499,23 +499,22 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         // kein fclose($fp);
 
         $this->getResponse()->setBody($strContent);
-
     }
-    
-    protected function _normalizeValues($tmpValues) {
-        /**
-         * Genera las cabeceras y contenidos en multilang 
-         * @param values
-         * @return array
-         */
-        
+
+    /**
+     * Genera las cabeceras y contenidos en multilang
+     * @param tmpValues
+     * @return array
+     */
+    protected function _normalizeValues($tmpValues)
+    {
         $values = array();
-        
+
         for ($i=0;$i<=(count($tmpValues)-1);$i++) {
-            
+
             foreach ($tmpValues[$i] as $valMult => $multLang) {
 
-                if(is_array($multLang)){
+                if (is_array($multLang)) {
                     foreach ($multLang as $keyLang => $contLang) {
                         $langs = $valMult . '_' . $keyLang;
                         $values[$i][$langs] = html_entity_decode($contLang);
@@ -523,11 +522,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 } else {
                     $values[$i][$valMult] = html_entity_decode($multLang);
                 }
-                
+
             }
-                    
+
         }
         return $values;
     }
-    
+
 }

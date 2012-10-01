@@ -53,7 +53,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             ->setResponseItem($this->_item);
 
         $obj = $mapper->find($pk);
-        if (!$obj){
+        if (!$obj) {
             throw new Klear_Exception_Default('Record not found. Could not delete.');
         }
 

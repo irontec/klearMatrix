@@ -50,7 +50,8 @@ class KlearMatrix_Model_FilterProcessor
         $this->_log->log($log);
     }
 
-    protected function _addSearchToData($field, $values, $valuesOp) {
+    protected function _addSearchToData($field, $values, $valuesOp)
+    {
         if (false === $this->_data) {
             return;
         }
@@ -58,7 +59,8 @@ class KlearMatrix_Model_FilterProcessor
         $this->_data->addSearchField($field, $values, $valuesOp);
     }
 
-    protected function _addSearchAddModifierToData($value) {
+    protected function _addSearchAddModifierToData($value)
+    {
 
         if (false === $this->_data) {
             return;
@@ -68,7 +70,8 @@ class KlearMatrix_Model_FilterProcessor
     }
 
 
-    protected function _generate() {
+    protected function _generate()
+    {
 
         if ((!isset($this->_request)) || (!isset($this->_cols)) || (!isset($this->_model))) {
             Throw new Exception("FilterProcessor not properly invocated");
@@ -83,7 +86,7 @@ class KlearMatrix_Model_FilterProcessor
             return false;
         }
 
-        $this->_log('Search arguments found for: ' );
+        $this->_log('Search arguments found for: ');
 
         $searchWhere = array();
 
@@ -125,11 +128,13 @@ class KlearMatrix_Model_FilterProcessor
         return true;
     }
 
-    public function isFilteredRequest() {
+    public function isFilteredRequest()
+    {
         return $this->_generate();
     }
 
-    public function getCondition() {
+    public function getCondition()
+    {
         return $this->_where;
     }
 }

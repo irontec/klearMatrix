@@ -80,8 +80,15 @@ class KlearMatrix_Model_FilterProcessor
         $searchFields = $this->_request->getPost("searchFields", false);
         $searchOps = $this->_request->getPost("searchOps");
 
-        if (false === $searchFields) {
+		if (is_array($searchFields)) {
 
+            foreach ($searchFields as $key => $val) {
+
+                if(empty($val)) unset($searchFields[$key]);
+            }
+        }
+
+        if (false === $searchFields || empty($searchFields)) {
 
             return false;
         }

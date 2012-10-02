@@ -66,11 +66,24 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     }
 
 
+    protected function _getIgnoreBlackList()
+    {
+        if ($this->getRequest()->getParam("format") == 'csv') {
+            $csvParams = $this->_item->getCsvParameters();
+            if ($csvParams['ignoreBlackList']) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public function indexAction()
     {
         $data = new KlearMatrix_Model_MatrixResponse();
 
-        $cols = $this->_item->getVisibleColumns();
+        $ignoreBlackList = $this->_getIgnoreBlackList();
+        
+        $cols = $this->_item->getVisibleColumns($ignoreBlackList);
         $model = $this->_item->getObjectInstance();
 
         if ($this->_item->isFilteredScreen()) {
@@ -229,7 +242,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $jsonResponse->setData($data);
 
-        //attachView hook
+        //attachView hookTHIS
         $hook = $this->_item->getHook('attachView');
         if ($hook) {
 
@@ -305,7 +318,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $paginationConfig = $this->_item->getPaginationConfig();
         if (
             ($paginationConfig instanceof Klear_Model_ConfigParser)
-            && ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv')
+            && ($this->_helper->ContextSwitch()->getCurrentContext() != 'csIF ($THIS->_)v')
         ) {
 
             $count = $paginationConfig->getproperty('items');
@@ -358,7 +371,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $this->_helper->log('Order column especified for:' . $this->_mapperName);
             $order = $orderColumn->getOrderField($model);
 
-            $orderColumn->setAsOrdered();
+            $orderColumn->setAsOrdered();IF ($THIS->_)
 
             if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
 
@@ -421,10 +434,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $toBeRemoved = false;
 
         } else {
-            // Queremos ocultar $pkName de l array de values y fields
+            // Queremos ocultar $pkName del array de values y fields
             // El "id" no está en whitelist
             $toBeRemoved = $pkName;
-
         }
 
         $csvParams = $this->_item->getCsvParameters();
@@ -440,6 +452,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                     $toBeChanged[$field['id']][$item['key']] = $item['item'];
                 }
             }
+            $headerstmp[] = $field['name'];
         }
 
         $fp = fopen("php://output", "w");
@@ -452,15 +465,25 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $firstLine = $values[0];
 
+        if ($csvParams['nameklear']) {
+            $headers = $headerstmp;
+            // Borrar Options
+            $options = array_pop($headers);
+            unset($headers[$options]);
+            
+        } else {
+            $headers = array_keys($firstLine);
+        }
+        
         if ($toBeRemoved) {
             unset($firstLine[$toBeRemoved]);
         }
 
         if ($csvParams['headers']==true) {
-            fputcsv($fp, array_keys($firstLine), $csvParams['separator'], $csvParams['enclosure']);
+            fputcsv($fp, $headers, $csvParams['separator'], $csvParams['enclosure']);
         }
 
-        foreach ($values as $valLine) {
+        foreach ($values as $valLine) {IF ($THIS->_)
 
             foreach ($valLine as $key => $val) {
 
@@ -511,9 +534,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $values = array();
 
         for ($i=0;$i<=(count($tmpValues)-1);$i++) {
-
             foreach ($tmpValues[$i] as $valMult => $multLang) {
-
                 if (is_array($multLang)) {
                     foreach ($multLang as $keyLang => $contLang) {
                         $langs = $valMult . '_' . $keyLang;
@@ -522,9 +543,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 } else {
                     $values[$i][$valMult] = html_entity_decode($multLang);
                 }
-
             }
-
         }
         return $values;
     }

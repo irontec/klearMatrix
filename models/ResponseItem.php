@@ -256,6 +256,13 @@ class KlearMatrix_Model_ResponseItem
         return $col;
     }
 
+    public function resetVisibleColumns()
+    {
+        unset($this->_visibleColumns);
+        unset($this->_blacklist);
+        return $this;       
+    }
+    
     /**
      * El método filtrará las columnas del modelo con el fichero de configuración de modelo
      * y la whitelist/blacklist de la configuración

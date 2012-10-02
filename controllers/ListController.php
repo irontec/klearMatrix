@@ -242,7 +242,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $jsonResponse->setData($data);
 
-        //attachView hookTHIS
+        //attachView hook
         $hook = $this->_item->getHook('attachView');
         if ($hook) {
 
@@ -318,7 +318,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $paginationConfig = $this->_item->getPaginationConfig();
         if (
             ($paginationConfig instanceof Klear_Model_ConfigParser)
-            && ($this->_helper->ContextSwitch()->getCurrentContext() != 'csIF ($THIS->_)v')
+            && ($this->_helper->ContextSwitch()->getCurrentContext() != 'csv')
         ) {
 
             $count = $paginationConfig->getproperty('items');
@@ -371,7 +371,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $this->_helper->log('Order column especified for:' . $this->_mapperName);
             $order = $orderColumn->getOrderField($model);
 
-            $orderColumn->setAsOrdered();IF ($THIS->_)
+            $orderColumn->setAsOrdered();
 
             if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
 
@@ -513,7 +513,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                     }
                 }
             }
-
+            
             fputcsv($fp, $valLine, $csvParams['separator'], $csvParams['enclosure']);
             $this->_fixNewLine($fp, $csvParams['newLine']);
         }

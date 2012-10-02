@@ -60,6 +60,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
                 "ignoreBlackList" => false,
                 "nameklear" => false,
                 "filename" => "export",
+                "newLine" => "\r\n",
                 "enclosure" => '"',
                 "separator" => ";");
 

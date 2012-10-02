@@ -418,6 +418,19 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         return $order;
     }
 
+    
+    protected function _fixNewLine($fp, $newLine)
+    {
+        if ($newLine === PHP_EOL) {
+            //El EOL de PHP es el que se está usando.
+            return;
+        }
+        
+        fseek($fp, mb_strlen(PHP_EOL) * -1, SEEK_CUR);
+        fwrite($fp, $newLine);
+        
+    }
+
     //Exportamos los resultados a CSV
     public function exportCsv()
     {
@@ -455,13 +468,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $headerstmp[] = $field['name'];
         }
 
-        $fp = fopen("php://output", "w");
+        $fp = fopen("php://temp", "rw");
 
         if (!is_resource($fp)) {
             throw new Exception('Unable to create output resource for csv.');
         }
-
-        ob_start();
 
         $firstLine = $values[0];
 
@@ -470,7 +481,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             // Borrar Options
             $options = array_pop($headers);
             unset($headers[$options]);
-            
         } else {
             $headers = array_keys($firstLine);
         }
@@ -481,9 +491,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         if ($csvParams['headers']==true) {
             fputcsv($fp, $headers, $csvParams['separator'], $csvParams['enclosure']);
+            $this->_fixNewLine($fp, $csvParams['newLine']);
         }
 
-        foreach ($values as $valLine) {IF ($THIS->_)
+        foreach ($values as $valLine) {
 
             foreach ($valLine as $key => $val) {
 
@@ -504,9 +515,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
 
             fputcsv($fp, $valLine, $csvParams['separator'], $csvParams['enclosure']);
+            $this->_fixNewLine($fp, $csvParams['newLine']);
         }
-
-        $strContent = ob_get_clean();
+        
+        // Read what we have written.
+        rewind($fp);
+        $strContent = stream_get_contents($fp); 
 
         // Excel SYLK-Bug
         // http://support.microsoft.com/kb/323626/de

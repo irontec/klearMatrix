@@ -98,6 +98,10 @@ table.kMatrix .mlTag {
     margin-bottom:.2em;
 }
 
+.klearMatrix_form label.inline {
+    display:inline-block;
+}
+
 .klearMatrix_form label.lang {
     display:block;
     font-size:0.7em;

@@ -52,37 +52,16 @@
         		return;
         	}
 
-            var defaultValue, defaultColumn, count = false;
-
-            if ($.isArray(this.options.data.values) && this.options.data.values.length > 0) {
-            	 for(var i in this.options.data.columns) {
-            		 if (count === false) {
-            			 defaultColumn = this.options.data.columns[i];
-            			 count = true;
-            		 }
-
-            		 if (this.options.data.columns[i]['default']) {
-            			 defaultColumn = this.options.data.columns[i];
-            			 break;
-            		 }
-            	 }
-
-            	 var defaultValue = this.options.data.values[0][defaultColumn.id];
-
-            	 if (defaultColumn.multilang) {
-            		 defaultValue = defaultValue[this.options.data.defaultLang];
-            	 }
-
-             } else {
-
-            	 defaultValue = '';
-
-             }
-
-            this.options.data.title =  this.options.data.title
-             								.replace(/\%parent\%/,this.options.data.parentIden)
-             								.replace(/\%item\%/,defaultValue);
-
+        	
+        	this.options.data.title =  $.klearmatrix.template.helper._parseDefaultValues({
+        		title: this.options.data.title,
+        		replaceParentPerItem : false,
+        		defaultLang : this.options.data.defaultLang,
+        		parentIden: this.options.data.parentIden,
+        		columns: this.options.data.columns,
+        		values: this.options.data.values,
+        		idx: 0
+        	});
 
         },
         getData : function(value) {
@@ -105,21 +84,25 @@
             return $tmplObj;
 
         },
-        _getClearText : function($item) {
-            if (!$item.is(".multilang")) {
-                return $item.contents().first().text()
-            }
+        _getClearText : function($items) {
+        	var retValues = [];        	
+        	$items.each(function() {
+        		
+        		if (!$(this).is(".multilang")) {
+        			retValues.push($(this).contents().first().text());
+        			return;
+        		}
 
-            if ($(".multilangValue",$item).length>0) {
-                if ($(".selected",$item).length == 1) {
-                    return $(".selected",$item).contents().first().text()
-                } else {
-                    return $(".multilangValue:eq(0)",$item).contents().first().text()
-                }
-            } else {
-                return false;
-            }
-
+        		if ($(".multilangValue",$(this)).length>0) {
+        			if ($(".selected",$(this)).length == 1) {
+        				retValues.push($(".selected",$(this)).contents().first().text());
+        			} else {
+        				retValues.push($(".multilangValue:eq(0)",$(this)).contents().first().text());
+        			}
+        		} 
+        	});
+        	
+        	return retValues.join(' ');
         },
 
         _resolveParentHolder : function(element) {

@@ -298,45 +298,84 @@
             return $.template['klearmatrixPaginator'];
         },
 
-        getTitle : function(title,idx,replaceParentPerItem) {
-            if (false !== idx) {
+        _parseDefaultValues : function(settings) {
+        
+        	var title = settings.title;
+        	
+        	if (!title.match(/\%item\%|%parent%/)) {
+        		return title;
+        	}
+        	
+        	
+        	var replaceParentPerItem = settings.replaceParentPerItem;
+        	var defaultLang = settings.defaultLang;
+        	var parentIden = settings.parentIden;
+        	var columns = settings.columns;
+        	var idx = settings.idx;
+        	var values = settings.values;
+        
+        
+            if ($.isArray(values) && (values.length > 0) && (values[idx])) {
+            	values = values[idx];
+            	
+            	var count = false;
+                var defaultColumns = [];
 
-                var count = false;
-                var defaultColumn;
-
-                for(var i in this.data.columns) {
+                for(var i in columns) {
                     if (count === false) {
-                        defaultColumn = this.data.columns[i];
+                        var _firstValue = columns[i];
                         count = true;
                     }
 
-                    if (this.data.columns[i]['default'] ) {
-                        defaultColumn = this.data.columns[i];
-                        break;
+                    if (columns[i]['default'] ) {
+                        defaultColumns.push(columns[i]);
                     }
                 }
-
-                var defaultValue = this.data.values[idx][defaultColumn.id];
-
-                if (defaultColumn.multilang) {
-                    defaultValue = defaultValue[this.data.defaultLang];
+                
+                if (defaultColumns.length == 0) {
+                	defaultColumns.push(_firstValue);
                 }
+                
+                var defaultValues = [];
+                for(var i in defaultColumns) {
+                	var defaultColumn = defaultColumns[i];
+               	
+                	if (defaultColumn.multilang) {
+                		defaultValues.push(values[defaultColumn.id][defaultLang]);
+                	} else {
+                		defaultValues.push(values[defaultColumn.id]);
+                	}
+                }
+                
+                var defaultValue = defaultValues.join(' ');
 
             } else {
-                var defaultColumn = '';
+                var defaultValue = '';
             }
 
             // Si el método es invocado con replaceParentPerItem, éste viene de un listado
             // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
             var parentValue = (replaceParentPerItem)?
                                     this.cleanValue(defaultValue) :
-                                    this.cleanValue(this.data.parentIden);
+                                    this.cleanValue(parentIden);
 
-            return title
+            var _r = title
                     .replace(/\%parent\%/,parentValue)
                     .replace(/\%item\%/,this.cleanValue(defaultValue));
+            
+            return _r;
 
-
+        },
+        getTitle : function(title,idx,replaceParentPerItem) {
+        	return this._parseDefaultValues({
+            		title: title,
+            		replaceParentPerItem : replaceParentPerItem,
+            		defaultLang : this.data.defaultLang,
+            		parentIden: this.data.parentIden,
+            		columns: this.data.columns,
+            		values: this.data.values,
+            		idx: idx
+        	});
         },
 
         mustShowOptionColum : function(option, value) {

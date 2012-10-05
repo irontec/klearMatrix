@@ -165,10 +165,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $mapperName = $this->_item->getMapperName();
-        $mapper = new $mapperName;
-
-        $this->_helper->log('New for mapper:' . $mapperName);
+        $this->_helper->log('New for mapper:' . $this->_item->getMapperName());
 
         $cols = $this->_item->getVisibleColumns();
 

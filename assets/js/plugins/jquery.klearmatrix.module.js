@@ -189,7 +189,7 @@
                 }
 
                 var tabTitle = ($(".default",_parentHolder).length>0) ?
-                        _self._getClearText($(".default",_parentHolder)) : $(this).attr("title");
+                        _self._getClearText($(".default",_parentHolder)) : $(this).tooltip("close").attr("title");
 
                 _container.one( "tabspostadd", function(event, ui) {
 

@@ -135,7 +135,6 @@ class KlearMatrix_Model_Column
 
     protected function _parseField()
     {
-
         $this->_isDefault = (bool)$this->_config->getProperty("default");
         $this->_isReadonly = (bool)$this->_config->getProperty("readonly");
 
@@ -439,14 +438,20 @@ class KlearMatrix_Model_Column
 
     public function getSearchCondition(array $values, array $searchOps, $model, $langs)
     {
-
-
-        if ( (method_exists($this->_fieldConfig, 'getCustomSearchCondition')) &&
-                ($searchCondition = $this->_fieldConfig->getCustomSearchCondition($values, $searchOps, $model)) ) {
-
-            return $searchCondition;
+        if (method_exists($this->_fieldConfig, 'getCustomSearchCondition')) {
+            $searchCondition = $this->_fieldConfig->getCustomSearchCondition($values, $searchOps, $model);
+            if ($searchCondition) {
+                return $searchCondition;
+            }
         }
 
+        $searchFields = $this->_getSearchFields($model, $langs);
+
+        return $this->_getConditions($searchFields, $values);
+    }
+
+    protected function _getSearchFields($model, $langs)
+    {
         if (method_exists($this->_fieldConfig, 'getCustomSearchField')) {
             $searchField = $this->_fieldConfig->getCustomSearchField($model);
         } else {
@@ -454,6 +459,7 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->isMultilang()) {
+
             $searchFields = array();
             foreach ($langs as $_lang) {
                 $searchFields[] = $searchField .'_' . $_lang;
@@ -463,8 +469,11 @@ class KlearMatrix_Model_Column
             $searchFields = array($searchField);
         }
 
-        $vals = $_fieldValues = array();
+        return $searchFields;
+    }
 
+    protected function _getConditions($searchFields, $values)
+    {
         foreach ($searchFields as $searchField) {
             $cont = 1;
 
@@ -472,27 +481,54 @@ class KlearMatrix_Model_Column
                 $template = ':' . $searchField . $cont;
 
                 //Para los select tipo mapper no hacemos like, porque son Ids
-                if ($this->_type == 'select'
-                    and is_object($this->_config->getProperty("source"))
-                    and $this->_config->getProperty("source")->data == 'mapper') {
+                if ($this->_isMapperSelect()) {
 
-                        $vals[] = $searchField .' = ' . $template;
-                        $_fieldValues[$template] = intval($_val);
+                    if ($this->_namedParamsAreSupported()) {
+                        $comparisons[] = $searchField . ' = ' . $template;
+                        $fieldValues[$template] = intval($_val);
+                    } else {
+                        $comparisons[] = $searchField . ' = ?';
+                        $fieldValues[] = intval($_val);
+                    }
 
                 } else {
 
-                    $vals[] = 'concat('.$searchField .') like ' . $template;
-                    $_fieldValues[$template] = '%'. $_val .'%';
+                    if ($this->_namedParamsAreSupported()) {
+                        $comparisons[] = 'concat(' . $searchField . ') like ' . $template;
+                        $fieldValues[$template] = '%' . $_val . '%';
+                    } else {
+                        $comparisons[] = 'concat(' . $searchField . ') like ?';
+                        $fieldValues[] = '%' . $_val . '%';
+                    }
                 }
                 $cont++;
             }
         }
 
         return array(
-                '(' . implode(' or ', $vals). ')',
-                $_fieldValues
+                '(' . implode(' or ', $comparisons). ')',
+                $fieldValues
         );
     }
+
+    protected function _isMapperSelect()
+    {
+        return $this->_type == 'select'
+               && is_object($this->_config->getProperty("source"))
+               && $this->_config->getProperty("source")->data == 'mapper';
+    }
+
+    protected function _namedParamsAreSupported()
+    {
+        /*
+         * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
+         * y usamos un namedParameter porque MasterLogic lo espera así
+         * TODO: Molaría sacar esto de aquí porque es específico de Euskaltel
+         */
+        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+        return !$dbAdapter || $dbAdapter->supportsParameters('named');
+    }
+
 
     public function getGetterName($model, $default = false)
     {

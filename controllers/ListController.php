@@ -76,43 +76,17 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
         return false;
     }
-    
+
     public function indexAction()
     {
         $data = new KlearMatrix_Model_MatrixResponse();
 
         $ignoreBlackList = $this->_getIgnoreBlackList();
-        
+
         $cols = $this->_item->getVisibleColumns($ignoreBlackList);
         $model = $this->_item->getObjectInstance();
 
-        if ($this->_item->isFilteredScreen()) {
-
-            $callerScreen = $this->getRequest()->getPost("callerScreen");
-            if ($callerScreen) {
-
-               $parentScreen = new KlearMatrix_Model_Screen;
-               $parentScreen->setRouteDispatcher($this->_mainRouter);
-               $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
-               $parentMapperName = $parentScreen->getMapperName();
-
-               $parentColumns = $parentScreen->getVisibleColumns();
-               $defaultParentCol = $parentColumns->getDefaultCol();
-
-               $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
-               $parentId = $this->_mainRouter->getParam('pk');
-               $parentData = $parentMapper->find($parentId);
-
-               $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-
-               $data->setParentIden($parentData->$getter());
-               $data->setParentScreen($callerScreen);
-               $data->setParentId($parentId);
-            }
-        } else {
-
-            $parentData = null;
-        }
+        $this->_setParentScreenData($data);
 
         $data
             ->setResponseItem($this->_item)
@@ -143,8 +117,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 $paginator->setItemCountPerPage($count);
 
                 $data->setPaginator($paginator);
-
-
             }
 
             $data->setTotal($totalItems);
@@ -152,47 +124,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             if ($this->_item->hasFieldOptions()) {
 
-                $defaultOption = $cols->getOptionColumn()->getDefaultOption();
-                $fieldOptions = new KlearMatrix_Model_OptionCollection();
-
-                foreach ($this->_item->getScreenFieldsOptionsConfig() as $_screen) {
-
-                    $screenOption = new KlearMatrix_Model_ScreenOption;
-                    $screenOption->setName($_screen);
-
-                    if ($_screen === $defaultOption) {
-
-                        $screenOption->setAsDefault();
-                        $defaultOption = false;
-                    }
-
-                    // Recuperamos la configuración del screen, de la configuración general del módulo
-                    // Supongo que cuando lo vea Alayn, le gustará mucho :)
-                        // Lo he visto y solo digo: http://en.wikipedia.org/wiki/Law_of_Demeter :p
-
-                    // El "nombre" mainRouter apesta... pero... O:)
-                        // Pero habría que cambiarlo, no?
-
-                    $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($_screen));
-                    $fieldOptions->addOption($screenOption);
-                }
-
-                foreach ($this->_item->getDialogsFieldsOptionsConfig() as $_dialog) {
-
-                    $dialogOption = new KlearMatrix_Model_DialogOption;
-                    $dialogOption->setName($_dialog);
-
-                    if ($_dialog === $defaultOption) {
-
-                        $dialogOption->setAsDefault();
-                        $defaultOption = false;
-                    }
-
-                    $dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($_dialog));
-                    $fieldOptions->addOption($dialogOption);
-                }
-
-                $data->setFieldOptions($fieldOptions);
+                $data->setFieldOptions($this->_getFieldOptions($cols));
             }
 
             $data->fixResults($this->_item);
@@ -250,6 +182,65 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _setParentScreenData(KlearMatrix_Model_MatrixResponse $data)
+    {
+        $callerScreen = $this->getRequest()->getPost("callerScreen");
+        $parentScreen = $this->_getParentScreen($callerScreen);
+        if (!$parentScreen) {
+            return;
+        }
+
+        $parentData = $this->_getParentData($parentScreen);
+        if (!$parentData) {
+            return;
+        }
+
+        $parentColumns = $parentScreen->getVisibleColumns();
+        $defaultParentCol = $parentColumns->getDefaultCol();
+        $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+
+        $data->setParentIden($parentData->$getter());
+        $data->setParentScreen($callerScreen);
+        $data->setParentId($parentData->getPrimaryKey());
+    }
+
+    /**
+     * Returns parent screen's configuration
+     * @return KlearMatrix_Model_Screen|NULL
+     */
+    protected function _getParentScreen($callerScreen)
+    {
+        if (!$callerScreen || !$this->_item->isFilteredScreen()) {
+            return null;
+        }
+
+        $parentScreen = new KlearMatrix_Model_Screen;
+        $parentScreen->setRouteDispatcher($this->_mainRouter);
+        $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
+
+        return $parentScreen;
+    }
+
+    /**
+     * Returns parent screen's entity object
+     * @param KlearMatrix_Model_Screen $parentScreen
+     * @return Object Model
+     */
+    protected function _getParentData(KlearMatrix_Model_Screen $parentScreen)
+    {
+        if (is_null($parentScreen)) {
+            return null;
+        }
+
+        $parentMapperName = $parentScreen->getMapperName();
+
+        $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
+        $parentId = $this->_mainRouter->getParam('pk');
+        $parentData = $parentMapper->find($parentId);
+
+        return $parentData;
     }
 
     protected function _getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data)
@@ -418,17 +409,42 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         return $order;
     }
 
-    
-    protected function _fixNewLine($fp, $newLine)
+    protected function _getFieldOptions($cols)
     {
-        if ($newLine === PHP_EOL) {
-            //El EOL de PHP es el que se está usando.
-            return;
+        $defaultOption = $cols->getOptionColumn()->getDefaultOption();
+        $fieldOptions = new KlearMatrix_Model_OptionCollection();
+
+        foreach ($this->_item->getScreenFieldsOptionsConfig() as $screen) {
+
+            $screenOption = new KlearMatrix_Model_ScreenOption;
+            $screenOption->setName($screen);
+
+            if ($screen === $defaultOption) {
+
+                $screenOption->setAsDefault();
+                $defaultOption = false;
+            }
+
+            $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($screen));
+            $fieldOptions->addOption($screenOption);
         }
-        
-        fseek($fp, mb_strlen(PHP_EOL) * -1, SEEK_CUR);
-        fwrite($fp, $newLine);
-        
+
+        foreach ($this->_item->getDialogsFieldsOptionsConfig() as $dialog) {
+
+            $dialogOption = new KlearMatrix_Model_DialogOption;
+            $dialogOption->setName($dialog);
+
+            if ($dialog === $defaultOption) {
+
+                $dialogOption->setAsDefault();
+                $defaultOption = false;
+            }
+
+            $dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($dialog));
+            $fieldOptions->addOption($dialogOption);
+        }
+
+        return $fieldOptions;
     }
 
     //Exportamos los resultados a CSV
@@ -484,7 +500,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         } else {
             $headers = array_keys($firstLine);
         }
-        
+
         if ($toBeRemoved) {
             unset($firstLine[$toBeRemoved]);
         }
@@ -513,14 +529,14 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                     }
                 }
             }
-            
+
             fputcsv($fp, $valLine, $csvParams['separator'], $csvParams['enclosure']);
             $this->_fixNewLine($fp, $csvParams['newLine']);
         }
-        
+
         // Read what we have written.
         rewind($fp);
-        $strContent = stream_get_contents($fp); 
+        $strContent = stream_get_contents($fp);
 
         // Excel SYLK-Bug
         // http://support.microsoft.com/kb/323626/de
@@ -562,4 +578,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         return $values;
     }
 
+    protected function _fixNewLine($fp, $newLine)
+    {
+        if ($newLine === PHP_EOL) {
+            //El EOL de PHP es el que se está usando.
+            return;
+        }
+
+        fseek($fp, mb_strlen(PHP_EOL) * -1, SEEK_CUR);
+        fwrite($fp, $newLine);
+
+    }
 }

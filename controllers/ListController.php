@@ -86,7 +86,20 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $cols = $this->_item->getVisibleColumns($ignoreBlackList);
         $model = $this->_item->getObjectInstance();
 
-        $this->_setParentScreenData($data);
+        $callerScreen = $this->getRequest()->getPost("callerScreen");
+        $parentScreen = $this->_getParentScreen($callerScreen);
+        $parentData = $this->_getParentData($parentScreen);
+
+        if (!is_null($parentData)) {
+            $parentColumns = $parentScreen->getVisibleColumns();
+            $defaultParentCol = $parentColumns->getDefaultCol();
+
+            $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+
+            $data->setParentIden($parentData->$getter());
+            $data->setParentScreen($callerScreen);
+            $data->setParentId($parentData->getPrimaryKey());
+        }
 
         $data
             ->setResponseItem($this->_item)
@@ -184,33 +197,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
-    protected function _setParentScreenData(KlearMatrix_Model_MatrixResponse $data)
-    {
-        $callerScreen = $this->getRequest()->getPost("callerScreen");
-        $parentScreen = $this->_getParentScreen($callerScreen);
-        if (!$parentScreen) {
-            return;
-        }
-
-        $parentData = $this->_getParentData($parentScreen);
-        if (!$parentData) {
-            return;
-        }
-
-        $parentColumns = $parentScreen->getVisibleColumns();
-        $defaultParentCol = $parentColumns->getDefaultCol();
-        $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-
-        $data->setParentIden($parentData->$getter());
-        $data->setParentScreen($callerScreen);
-        $data->setParentId($parentData->getPrimaryKey());
-    }
-
     /**
      * Returns parent screen's configuration
      * @return KlearMatrix_Model_Screen|NULL
      */
-    protected function _getParentScreen($callerScreen)
+    protected function _getParentScreen($callerScreen = null)
     {
         if (!$callerScreen || !$this->_item->isFilteredScreen()) {
             return null;
@@ -228,7 +219,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
      * @param KlearMatrix_Model_Screen $parentScreen
      * @return Object Model
      */
-    protected function _getParentData(KlearMatrix_Model_Screen $parentScreen)
+    protected function _getParentData(KlearMatrix_Model_Screen $parentScreen = null)
     {
         if (is_null($parentScreen)) {
             return null;

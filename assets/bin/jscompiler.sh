@@ -10,6 +10,7 @@ java -jar ../../../klear/assets/bin/closure-compiler.jar --third_party \
 --js ../js/plugins/qq-fileuploader.js \
 --js ../js/plugins/jquery.klearmatrix.module.js \
 --js ../js/plugins/jquery.klearmatrix.genericdialog.js \
+--js ../js/plugins/jquery.klearmatrix.genericscreen.js \
 --js ../js/plugins/jquery.klearmatrix.template.helper.js \
 --js ../js/plugins/jquery.klearmatrix.list.js \
 --js ../js/plugins/jquery.klearmatrix.edit.js \

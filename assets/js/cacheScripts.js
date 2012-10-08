@@ -16,7 +16,8 @@
 		'jsFile_694066308' : 'jquery.klearmatrix.list.js',
 		'jsFile_705185194' : 'jquery.klearmatrix.edit.js',
 		'jsFile_506478294' : 'jquery.klearmatrix.new.js',
-		'jsFile_-1878899213' : 'jquery.klearmatrix.dashboard.js'
+		'jsFile_-1878899213' : 'jquery.klearmatrix.dashboard.js',
+		'jsFile_1575925159' : 'jquery.klearmatrix.genericscreen.js'
 	};
 
 	for(var iden in _kmList) {

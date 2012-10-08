@@ -2,98 +2,92 @@
 
 class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field_Multiselect_Abstract
 {
+    protected $_parsedValues;
+
     protected $_relationMapper;
     protected $_relationProperty;
-
     protected $_relatedMapper;
-
-    protected $_fieldConfig;
 
     protected $_editableFields;
 
     public function init()
     {
-        $parsedValues = new Klear_Model_ConfigParser;
-        $parsedValues->setConfig($this->_config->config);
+        $this->_parsedValues = new Klear_Model_ConfigParser;
+        $this->_parsedValues->setConfig($this->_config->config);
 
         // Mapper de las relaciones. Aquí se guardarán las coincidencias.
-        $this->_relationMapper = $parsedValues->getProperty("relationMapper");
-        $this->_relationProperty = $parsedValues->getProperty("relationProperty", null);
+        $this->_relationMapper = $this->_parsedValues->getProperty("relationMapper");
+        $this->_relationProperty = $this->_parsedValues->getProperty("relationProperty");
+        $this->_relatedMapper = $this->_parsedValues->getProperty("relatedMapperName");
 
-        $this->_relatedMapper = $parsedValues->getProperty("relatedMapperName");
-        $this->_fieldName = $parsedValues->getProperty("relatedFieldName");
+        $dataMapperName = $this->_relatedMapper;
+        $dataMapper = new $dataMapperName;
 
-        $_order = $parsedValues->getProperty("relatedOrder");
+        $where = $this->_getFilterWhere();
+        $order = $this->_parsedValues->getProperty("relatedOrder");
 
-        if (is_object($this->_fieldName)) {
+        $results = $dataMapper->fetchList($where, $order);
 
-            $_fieldConfig = new Klear_Model_ConfigParser;
-            $_fieldConfig->setConfig($this->_fieldName);
+        if ($results) {
 
-            $fields = $_fieldConfig->getProperty("fields");
-            $fieldTemplate = $_fieldConfig->getProperty("template");
+            $relatedFields = $this->_getRelatedFields();
+            $relatedFieldsTemplate = $this->_getRelatedFieldsTemplate();
 
-        } else {
+            foreach ($results as $dataModel) {
 
-            // Si sólo queremos mostrar un campo, falseamos un template simple
-            $fields = array($this->_fieldName);
-            $fieldTemplate = '%' . $this->_fieldName . '%';
-        }
+                $replace = array();
+                foreach ($relatedFields as $fieldName) {
 
-        if ($editableFields = $parsedValues->getProperty("editableFields")) {
+                    $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
+                    $replace['%' . $fieldName . '%'] = $dataModel->$getter();
+                }
 
-            foreach ($editableFields as $_name => $_editableField) {
-
-                $this->_editableFields[] = $this->_parseEditableField($_name, $_editableField);
+                $this->_keys[] = $dataModel->getPrimaryKey();
+                $this->_items[] = str_replace(array_keys($replace), $replace, $relatedFieldsTemplate);
             }
         }
+    }
 
+    protected function _getFilterWhere()
+    {
         //TODO: Control de errores?
-        $_where = null;
-
-        if ($filterClassName = $parsedValues->getProperty("filterClass")) {
+        $filterClassName = $this->_parsedValues->getProperty("filterClass");
+        if ($filterClassName) {
 
             $filter = new $filterClassName;
 
             if ($filter->setRouteDispatcher($this->_column->getRouteDispatcher())) {
 
-                $_where = $filter->getCondition();
+                return $filter->getCondition();
             }
         }
-
-        $dataMapperName = $this->_relatedMapper;
-        $dataMapper = new $dataMapperName;
-
-        if ($results = $dataMapper->fetchList($_where, $_order)) {
-
-            $posCounter = 0;
-            foreach ($results as $dataModel) {
-
-                $replace = array();
-                foreach ($fields as $_fieldName) {
-
-                    $_getter = 'get' . ucfirst($dataModel->columnNameToVar($_fieldName));
-                    $replace['%' . $_fieldName . '%'] = $dataModel->$_getter();
-                }
-
-                $this->_keys[] = $dataModel->getPrimaryKey();
-                $this->_items[] = str_replace(array_keys($replace), $replace, $fieldTemplate);
-            }
-        }
+        return null;
     }
 
-    protected function _parseEditableField($name, Zend_Config $editableField)
+    protected function _getRelatedFields()
     {
-        $_editFieldConfig = new Klear_Model_ConfigParser;
-        $_editFieldConfig->setConfig($editableField);
+        $fieldName = $this->_parsedValues->getProperty("relatedFieldName");
 
-        $_field = array(
-            'name' => $name,
-            'type' => $_editFieldConfig->getProperty("type"),
-            'label' => $_editFieldConfig->getProperty("label")
-        );
+        if (!is_object($fieldName)) {
+            return array($fieldName);
+        }
 
-        return $_field;
+        $fieldConfig = new Klear_model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty('fields');
+    }
+
+    protected function _getRelatedFieldsTemplate()
+    {
+        $fieldName = $this->_parsedValues->getProperty("relatedFieldName");
+
+        if (!is_object($fieldName)) {
+            return '%' . $fieldName . '%';
+        }
+
+        $fieldConfig = new Klear_model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("template");
     }
 
     public function prepareValue($value, $model)
@@ -235,9 +229,40 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     public function getEditableFieldsConfig()
     {
+        if (!isset($this->_editableFields)) {
+            $this->_editableFields = $this->_getEditableFields();
+        }
         return $this->_editableFields;
     }
 
-}
+    protected function _getEditableFields()
+    {
+        $editableFieldList = $this->_parsedValues->getProperty("editableFields");
 
-//EOF
+        $parsedEditableFields = array();
+
+        if ($editableFieldList) {
+
+            foreach ($editableFieldList as $name => $editableField) {
+
+                $parsedEditableFields[] = $this->_parseEditableField($name, $editableField);
+            }
+        }
+
+        return $parsedEditableFields;
+    }
+
+    protected function _parseEditableField($name, Zend_Config $editableField)
+    {
+        $_editFieldConfig = new Klear_Model_ConfigParser;
+        $_editFieldConfig->setConfig($editableField);
+
+        $_field = array(
+            'name' => $name,
+            'type' => $_editFieldConfig->getProperty("type"),
+            'label' => $_editFieldConfig->getProperty("label")
+        );
+
+        return $_field;
+    }
+}

@@ -208,7 +208,7 @@
                         screen : _menuLink.data("screen"),
                         pk : _parentHolder.data("id"),
                         post : {
-                            callerScreen : _self.options.data.screen,
+                            callerScreen : _self.options.data.screen
                         }
                     };
 
@@ -272,7 +272,7 @@
                 $_dialog.moduleDialog("setAsLoading");
                 $_dialog.data("dialogName", $(this).data("dialog"));
                 var _postData = {
-                    callerScreen : _self.options.data.screen,
+                    callerScreen : _self.options.data.screen
                 };
 
                 // Si la pantalla llamante tiene condición (parentId -- en data --
@@ -356,7 +356,7 @@
                 }
 
                 var _postData = {
-                    callerScreen : _self.options.data.screen,
+                    callerScreen : _self.options.data.screen
                 };
 
                 // Si la pantalla llamante tiene condición (parentId -- en data --

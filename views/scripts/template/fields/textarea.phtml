@@ -6,6 +6,10 @@
         name="${_elemName}"
         class="auto"
 
+        {{if (_properties.required)}}
+            required=""
+        {{/if}}
+
         {{if (_dataConfig.plugin)}}
             data-plugin="${_dataConfig.plugin}"
         {{/if}}

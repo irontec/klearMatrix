@@ -7,10 +7,50 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
+
+        $this->_helper->ContextSwitch()
+            ->addActionContext('cache', 'json')
+            ->initContext('json');
+    }
+
+    public function cacheAction()
+    {
+        $cacheTemplates = array(
+            "klearmatrixList" => "list",
+            "klearmatrixEdit" => "edit",
+            "klearmatrixNew" => "new",
+            "klearmatrixPaginator" => "paginator",
+            "klearmatrixDelete" => "delete",
+            "klearmatrixDashboard" => "dashboard"
+        );
+        /**
+         * Field type templates :)
+         */
+        $prefix = "klearMatrixFields";
+        foreach($this->_getAvailableFieldTypes() as $type) {
+            $cacheTemplates[$prefix . $type] = '/fields/' . $type;
+        }
+
+        /**
+         * Cache them all!!
+         */
+
+        $templates = array();
+        $view = new Zend_View();
+        $view->setBasePath($this->getFrontController()->getModuleDirectory() . '/views');
+
+        foreach ($cacheTemplates as $template => $action) {
+            $script = $this->getViewScript($action, true);
+            $templates[$template] = $view->render('template/' .  $action . '.phtml');
+        }
+
+        $this->view->templates = $templates;
+
     }
 
     public function listAction()
     {
+
     }
 
     public function editAction()

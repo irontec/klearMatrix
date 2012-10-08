@@ -113,5 +113,6 @@
         }
     });
 
-    $.widget.bridge("klearMatrixNew", $.klearmatrix.new);
+    $.widget.bridge("klearMatrixNew", $.klearmatrix['new']);
+    
 })(jQuery);

@@ -89,7 +89,7 @@
 			$(this.element).moduleDialog("updateContent",$appliedTemplate);
 			
 				
-		},
+		}
 	});
 	
 })(jQuery);

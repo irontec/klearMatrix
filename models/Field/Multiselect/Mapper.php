@@ -50,7 +50,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     protected function _getFilterWhere()
     {
-        //TODO: Control de errores?
         $filterClassName = $this->_parsedValues->getProperty("filterClass");
         if ($filterClassName) {
 
@@ -85,7 +84,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             return '%' . $fieldName . '%';
         }
 
-        $fieldConfig = new Klear_model_ConfigParser();
+        $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
         return $fieldConfig->getProperty("template");
     }

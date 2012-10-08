@@ -7,85 +7,106 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
     public function init()
     {
-        $_mapper = $this->_config->getProperty("config")->mapperName;
-        $_fieldConf = $this->_config->getProperty('config')->fieldName;
+        $mapperName = $this->_config->getProperty("config")->mapperName;
+        $dataMapper = new $mapperName;
 
-        $visualFilter = $this->_config->getProperty('config')->visualFilter;
+        $where = $this->_getFilterWhere();
+        $order = $this->_config->getProperty('config')->order;
 
-        $_where = null;
+        $results = $dataMapper->fetchList($where, $order);
 
-        if ($filterClassName = $this->_config->getProperty('config')->filterClass) {
+        if ($results) {
+
+            $fields = $this->_getFields();
+            $fieldsTemplate = $this->_getFieldsTemplate();
+
+            foreach ($results as $dataModel) {
+
+                $replace = array();
+                foreach ($fields as $fieldName) {
+
+                    $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
+                    $replace['%' . $fieldName . '%'] = $dataModel->$getter();
+                }
+
+                $this->_keys[] = $dataModel->getPrimaryKey();
+                $this->_items[] = str_replace(array_keys($replace), $replace, $fieldsTemplate);
+
+                $this->_initVisualFilter($dataModel);
+            }
+        }
+    }
+
+    protected function _getFilterWhere()
+    {
+        $filterClassName = $this->_config->getProperty('config')->filterClass;
+        if ($filterClassName) {
 
             $filter = new $filterClassName;
 
             if ($filter->setRouteDispatcher($this->_column->getRouteDispatcher())) {
 
-                $_where = $filter->getCondition();
+                return $filter->getCondition();
             }
         }
+        return null;
+    }
 
-        $_order = $this->_config->getProperty('config')->order;
+    protected function _getFields()
+    {
+        $fieldName = $this->_config->getProperty('config')->fieldName;
 
-        if (is_object($_fieldConf)) {
-
-            $_fieldConfig = new Klear_Model_ConfigParser;
-            $_fieldConfig->setConfig($_fieldConf);
-
-            $fields = $_fieldConfig->getProperty("fields");
-            $fieldTemplate = $_fieldConfig->getProperty("template");
-
-        } else {
-
-             // Si sólo queremos mostrar un campo, falseamos un template simple
-            $_fieldName = $_fieldConf;
-
-            $fields = array($_fieldName);
-            $fieldTemplate = '%' . $_fieldName . '%';
+        if (!is_object($fieldName)) {
+            return array($fieldName);
         }
 
-        $dataMapper = new $_mapper;
-        $results = $dataMapper->fetchList($_where, $_order);
-        if ($results) {
+        $fieldConfig = new Klear_Model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("fields");
+    }
 
-            foreach ($results as $dataModel) {
+    protected function _getFieldsTemplate()
+    {
+        $fieldName = $this->_config->getProperty('config')->fieldName;
 
-                $replace = array();
-                foreach ($fields as $_fieldName) {
+        if (!is_object($fieldName)) {
+            return '%' . $fieldName . '%';
+        }
 
-                    $_getter = 'get' . $dataModel->columnNameToVar($_fieldName);
-                    $replace['%' . $_fieldName . '%'] = $dataModel->$_getter();
+        $fieldConfig = new Klear_Model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("template");
+    }
+
+    public function _initVisualFilter($dataModel)
+    {
+        $visualFilter = $this->_config->getProperty('config')->visualFilter;
+
+        if ($visualFilter) {
+
+            foreach ($visualFilter as $key => $config) {
+
+                if ($this->_config->getProperty("null")) {
+
+                    if ($config->null) {
+
+                        $this->_showOnSelect['__null__'] = $config->null->show;
+                        $this->_hideOnSelect['__null__'] = $config->null->hide;
+
+                    } else {
+
+                        $this->_showOnSelect['__null__'] = array();
+                        $this->_hideOnSelect['__null__'] = array();
+                    }
                 }
 
-                $this->_items[] = str_replace(array_keys($replace), $replace, $fieldTemplate);
-                $this->_keys[] = $dataModel->getPrimaryKey();
+                $getter = 'get' . ucfirst($dataModel->columnNameToVar($key));
+                $value = $dataModel->$getter();
 
-                if ($visualFilter) {
+                if ($config->$value) {
 
-                    foreach ($visualFilter as $key => $config) {
-
-                        if ($this->_config->getProperty("null")) {
-
-                            if ($config->null) {
-
-                                $this->_showOnSelect['__null__'] = $config->null->show;
-                                $this->_hideOnSelect['__null__'] = $config->null->hide;
-
-                            } else {
-
-                                $this->_showOnSelect['__null__'] = array();
-                                $this->_hideOnSelect['__null__'] = array();
-                            }
-                        }
-
-                        $_getter = 'get' . $dataModel->columnNameToVar($key);
-                        $value = $dataModel->$_getter();
-
-                        if ($config->$value) {
-
-                            $this->_showOnSelect[$dataModel->getPrimaryKey()] = $config->$value->show;
-                            $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $config->$value->hide;
-                        }
-                    }
+                    $this->_showOnSelect[$dataModel->getPrimaryKey()] = $config->$value->show;
+                    $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $config->$value->hide;
                 }
             }
         }

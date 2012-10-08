@@ -23,6 +23,7 @@ class KlearMatrix_Model_MainConfig
 
     public function setConfig(Zend_Config $config)
     {
+
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
         return $this;
@@ -109,7 +110,6 @@ class KlearMatrix_Model_MainConfig
 
     public function getScreenConfig($screen)
     {
-
 
         if (!$this->_config->exists("screens->" . $screen)) {
             Throw new Zend_Exception("Configuration for selected screen [".$screen."] not found");

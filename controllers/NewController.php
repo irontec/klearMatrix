@@ -172,8 +172,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $data = new KlearMatrix_Model_MatrixResponse;
 
         $data->setResponseItem($this->_item)
-            ->setTitle($this->_item->getTitle())
-            ->setColumnWraper($cols);
+             ->setTitle($this->_item->getTitle())
+             ->setColumnWraper($cols);
 
         // La pantalla "nuevo" tiene filtro? cae de otro listado?
         if ($this->_item->isFilteredScreen()) {
@@ -207,6 +207,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $data->setParentScreen($parentScreenName);
             }
         } else {
+
             $parentData = null;
         }
 
@@ -221,7 +222,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         $data->setInfo($this->_item->getInfo());
-
         $data->setGeneralOptions($this->_item->getScreenOptions());
         $data->setActionMessages($this->_item->getActionMessages());
 
@@ -276,31 +276,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
-        //addCssArray hook
-        if ($this->_item->getHook('addCssArray')) {
-
-            $hook = $this->_item->getHook('addCssArray');
-            $css = $this->_helper->{$hook->helper}->{$hook->action}($cols);
-
-        } else {
-
-            $css = $cols->getColsCssArray();
-        }
-        $jsonResponse->addCssArray($css);
-
-        //setData hook
-        if ($this->_item->getHook('setData')) {
-
-            $hook = $this->_item->getHook('setData');
-            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
-
-        } else {
-
-            $data = $data->toArray();
-        }
-        $jsonResponse->setData($data);
+        $jsonResponse->addCssArray($this->_getCssArray($cols));
+        $jsonResponse->setData($this->_getResponseData($data, $parentData));
 
         //attachView hook
+        //TODO: Repasar esto, parece que en la segunda línea faltaría una asignación...
         if ($this->_item->getHook('attachView')) {
 
             $hook = $this->_item->getHook('attachView');
@@ -308,4 +288,27 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
         $jsonResponse->attachView($this->view);
     }
+
+    protected function _getCssArray(KlearMatrix_Model_ColumnCollection $columns)
+    {
+        if ($this->_item->getHook('addCssArray')) {
+
+            $hook = $this->_item->getHook('addCssArray');
+            return $css = $this->_helper->{$hook->helper}->{$hook->action}($cols);
+        }
+
+        return $cols->getColsCssArray();
+    }
+
+    protected function _getResponseData($data, $parentData = null)
+    {
+        if ($this->_item->getHook('setData')) {
+
+            $hook = $this->_item->getHook('setData');
+            return $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
+        }
+
+        return $data->toArray();
+    }
+
 }

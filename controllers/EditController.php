@@ -141,23 +141,12 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $mapperName = $this->_item->getMapperName();
-        $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
-
-
         $pk = $this->_item->getCurrentPk();
+        $mapperName = $this->_item->getMapperName();
 
         $this->_helper->log('Edit for mapper:' . $mapperName . ' > PK('.$pk.')');
 
-        $data = new KlearMatrix_Model_MatrixResponse;
-        $cols = $this->_item->getVisibleColumns();
-
-        $data
-            ->setTitle($this->_item->getTitle())
-            ->setColumnWraper($cols)
-            ->setPK($this->_item->getPkName())
-            ->setResponseItem($this->_item);
-
+        $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
         $model = $mapper->find($pk);
 
         if (!$model) {
@@ -166,6 +155,16 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             throw new Klear_Exception_Default('Element not found. Cannot edit.');
         }
 
+
+        $cols = $this->_item->getVisibleColumns();
+
+        $data = new KlearMatrix_Model_MatrixResponse;
+
+        $data
+            ->setTitle($this->_item->getTitle())
+            ->setColumnWraper($cols)
+            ->setPK($this->_item->getPkName())
+            ->setResponseItem($this->_item);
 
         $data->setResults($model)
              ->fixResults($this->_item);
@@ -201,7 +200,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $data->setParentId($parentId);
                 $data->setParentScreen($parentScreenName);
             }
-
         } else {
 
             $parentData = null;
@@ -216,6 +214,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->setPlugin($this->_item->getPlugin('edit'));
 
         $customTemplate = $this->_item->getCustomTemplate();
+
         if (isset($customTemplate->module) && isset($customTemplate->name)) {
             $jsonResponse->addTemplate(
                 "/bin/template/" . $customTemplate->name, $customTemplate->name,
@@ -236,10 +235,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             "klearmatrixMultiLangField"
         );
 
-        $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
-
-        $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
         $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
+        $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
+        $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 
         //addJsArray hook
         if ($this->_item->getHook('addJsArray')) {
@@ -257,37 +255,15 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 
         $customScripts = $this->_item->getCustomScripts();
-        if (isset($customScripts->module) and isset($customScripts->name)) {
+        if (isset($customScripts->module) && isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
-        //addCssArray hook
-        if ($this->_item->getHook('addCssArray')) {
-
-            $hook = $this->_item->getHook('addCssArray');
-            $css = $this->_helper->{$hook->helper}->{$hook->action}($cols);
-
-        } else {
-
-            $css = $cols->getColsCssArray();
-        }
-
-        $jsonResponse->addCssArray($css);
-
-        //setData hook
-        if ($this->_item->getHook('setData')) {
-
-            $hook = $this->_item->getHook('setData');
-            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
-
-        } else {
-
-            $data = $data->toArray();
-        }
-
-        $jsonResponse->setData($data);
+        $jsonResponse->addCssArray($this->_getCssArray($cols));
+        $jsonResponse->setData($this->_getResponseData($data, $parentData));
 
         //attachView hook
+        //TODO: Repasar esto, parece que en la segunda línea faltaría una asignación...
         if ($this->_item->getHook('attachView')) {
 
             $hook = $this->_item->getHook('attachView');
@@ -295,5 +271,27 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _getCssArray(KlearMatrix_Model_ColumnCollection $columns)
+    {
+        if ($this->_item->getHook('addCssArray')) {
+
+            $hook = $this->_item->getHook('addCssArray');
+            return $css = $this->_helper->{$hook->helper}->{$hook->action}($cols);
+        }
+
+        return $cols->getColsCssArray();
+    }
+
+    protected function _getResponseData($data, $parentData = null)
+    {
+        if (!$this->_item->getHook('setData')) {
+
+            $hook = $this->_item->getHook('setData');
+            return $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
+        }
+
+        return $data->toArray();
     }
 }

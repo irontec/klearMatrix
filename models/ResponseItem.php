@@ -423,7 +423,7 @@ class KlearMatrix_Model_ResponseItem
     protected function _getVisibleFileColumns($model)
     {
         $columns = array();
-        $blacklistSubfields = array('sizeName', 'mimeName', 'baseNameName');
+        $blacklistSubfields = array('sizeName', 'mimeName', 'baseNameName', 'md5SumName');
 
         // TODO: Revisar esto, deberíamos estar seguros de que getFileObjects existe, con que devuelva un array vacío basta.
         if (method_exists($model, 'getFileObjects')) {

@@ -15,6 +15,7 @@ class KlearMatrix_Model_Fso
     protected $_size = null;
     protected $_mimeType;
     protected $_baseName = '';
+    protected $_md5Sum = '';
 
     protected $_mustFlush = false;
 
@@ -90,6 +91,14 @@ class KlearMatrix_Model_Fso
     }
 
     /**
+     * @var string
+     */
+    public function getMd5Sum()
+    {
+        return $this->_md5sum;
+    }
+
+    /**
      * Prepara el módelo para poder guardar el fichero pasado como parámetro.
      * No guarda el fichero, lo prepara para guardarlo al llamar a flush
      * @var string $file Ruta al fichero
@@ -108,6 +117,7 @@ class KlearMatrix_Model_Fso
         $this->_setSrcFile($file);
         $this->_setSize(filesize($file));
         $this->_setMimeType($file);
+        $this->_setMd5Sum($file);
         $this->_updateModelSpecs();
         $this->_mustFlush = true;
         return $this;
@@ -122,6 +132,9 @@ class KlearMatrix_Model_Fso
         return $this;
     }
 
+    /**
+     * @var
+     */
     protected function _setSrcFile($filepath)
     {
         $this->_srcFile = $filepath;
@@ -147,6 +160,17 @@ class KlearMatrix_Model_Fso
                 $this->_mimeType = $finfo->file($file);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @var string
+     */
+    public function _setMd5Sum($file)
+    {
+        $this->_md5sum = md5_file($file);
+        return $this;
     }
 
     protected function _updateModelSpecs()
@@ -158,6 +182,15 @@ class KlearMatrix_Model_Fso
         $this->_model->{$sizeSetter}($this->getSize());
         $this->_model->{$mimeSetter}($this->getMimeType());
         $this->_model->{$nameSetter}($this->getBaseName());
+
+        if (isset($this->_modelSpecs['md5SumName'])) {
+
+            $md5Setter = 'set' . $this->_modelSpecs['md5SumName'];
+            if (method_exists($this->_model,$md5Setter)) {
+
+                $this->_model->{$md5Setter}($this->getMd5Sum());
+            }
+        }
     }
 
     /**
@@ -255,6 +288,7 @@ class KlearMatrix_Model_Fso
         $this->_setSize(filesize($file));
         $this->_setSrcFile($file);
         $this->_setMimeType($file);
+        $this->_setMd5Sum($file);
 
         return $this;
     }

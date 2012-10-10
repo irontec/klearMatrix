@@ -225,10 +225,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $data->setGeneralOptions($this->_item->getScreenOptions());
         $data->setActionMessages($this->_item->getActionMessages());
 
-        Zend_Json::$useBuiltinEncoderDecoder = true;
-
-        $jsonResponse = new Klear_Model_DispatchResponse();
-        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin($this->_item->getPlugin('klearMatrixNew'));
 
         $customTemplate = $this->_item->getCustomTemplate();
@@ -253,13 +250,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             "klearmatrixMultiLangField"
         );
 
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
-        $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
 
         //addJsArray hook
         if ($this->_item->getHook('addJsArray')) {
@@ -282,8 +275,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         if (isset($customScripts->module) && isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
-
-        $jsonResponse->addCssFile("/css/klearMatrixNew.css");
 
         //addCssArray hook
         if ($this->_item->getHook('addCssArray')) {

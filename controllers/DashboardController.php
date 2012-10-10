@@ -105,19 +105,11 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
             $data['sections'][] = $sectionTmp;
         }
 
-        $jsonResponse = new Klear_Model_DispatchResponse();
-        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin('dashboard');
         $jsonResponse->addTemplate("/template/dashboard", "klearmatrixDashboard");
-        $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
-        $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.dashboard.js");
-        $jsonResponse->addCssFile("/css/klearMatrix.css");
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }
-
-
 }

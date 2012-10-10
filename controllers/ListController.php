@@ -146,32 +146,24 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $data->setInfo($this->_item->getInfo());
         $data->setGeneralOptions($this->_item->getScreenOptions());
 
-        Zend_Json::$useBuiltinEncoderDecoder = true;
-
-        $jsonResponse = new Klear_Model_DispatchResponse;
-        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin($this->_item->getPlugin('list'));
 
         $jsonResponse->addTemplate("/template/paginator", "klearmatrixPaginator");
         $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(), "klearmatrixList");
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/", 'list'), "klearmatrixMultiLangList");
-        $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.ui.spinner.js");
 
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
-        $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
+        $jsonResponse->addJsFile("/js/plugins/jquery.ui.spinner.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.list.js");
 
         // Añadimos JS de los campos - tema filtrados -
         $jsonResponse->addJsArray($cols->getColsJsArray());
 
         $customScripts = $this->_item->getCustomScripts();
-        if (isset($customScripts->module) and isset($customScripts->name)) {
+        if (isset($customScripts->module) && isset($customScripts->name)) {
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
-        $jsonResponse->addCssFile("/css/klearMatrix.css");
         $jsonResponse->addCssFile("/css/jquery.ui.spinner.css");
         //setData hook
 

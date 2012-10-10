@@ -6,8 +6,6 @@
 */
 class KlearMatrix_Model_RouteDispatcher
 {
-
-
     const module = 'klearMatrix';
 
     /**
@@ -25,7 +23,6 @@ class KlearMatrix_Model_RouteDispatcher
      */
     protected $_command;
 
-
     /**
      * @var string
      */
@@ -35,14 +32,11 @@ class KlearMatrix_Model_RouteDispatcher
 
     protected $_selectedConfig;
 
-
     /**
      * @var string
      * Que tipo de request = dialog | *screen
      */
     protected $_typeName;
-
-
 
     /**
      * @var unknown_type
@@ -55,14 +49,12 @@ class KlearMatrix_Model_RouteDispatcher
 
     protected $_mapper;
 
-
     protected $_params = array();
 
     /**
      * @var KlearMatrix_Model_MainConfig
      */
     protected $_config;
-
 
     public function getModuleName()
     {
@@ -77,7 +69,6 @@ class KlearMatrix_Model_RouteDispatcher
     {
         $this->_config = $config;
         $this->_typeName  = $this->_config->getDefaultType();
-
     }
 
     public function getConfig()
@@ -87,14 +78,12 @@ class KlearMatrix_Model_RouteDispatcher
 
     public function setParams(array $params)
     {
-
-        foreach ($params as $param=>$value) {
+        foreach ($params as $param => $value) {
 
             switch($param) {
                 case 'screen':
                 case 'dialog':
                 case 'command':
-
                 case 'type':
                     $attrName = "_" . $param . "Name";
                     $this->{$attrName} = $value;
@@ -102,13 +91,9 @@ class KlearMatrix_Model_RouteDispatcher
                 default:
                     $this->_params[$param] = $value;
                     break;
-
             }
-
         }
-
     }
-
 
     public function getParam($param, $required = true)
     {
@@ -119,7 +104,7 @@ class KlearMatrix_Model_RouteDispatcher
         if (false === $required) {
             return false;
         }
-        throw new Zend_Exception('Parámetro ['. $param .'] no encontrado.', 9999);
+        throw new Zend_Exception('Parámetro [' . $param . '] no encontrado.', 9999);
     }
 
     public function getParams()
@@ -127,19 +112,15 @@ class KlearMatrix_Model_RouteDispatcher
         return $this->_params;
     }
 
-
     public function getActionName()
     {
         return $this->_action;
     }
 
-
     public function getControllerName()
     {
         return $this->_controller;
     }
-
-
 
     public function getCurrentScreen()
     {
@@ -161,7 +142,6 @@ class KlearMatrix_Model_RouteDispatcher
         }
         return $this->_dialog;
     }
-
 
     public function getCurrentCommand()
     {
@@ -240,14 +220,11 @@ class KlearMatrix_Model_RouteDispatcher
         return $this;
     }
 
-
-
     public function _resolveCurrentConfig()
     {
-
         // Aquí resolvemos a que métodos de MainConfig llamar:
         // getScreenConfig | getDialogConfig
-        // a partir al atributo de entidad que corresponda según el type
+        // a partir del atributo de entidad que corresponda según el type
         // _screenName | _dialogName | _commandName
 
         $configGetter = "get" . ucfirst($this->_typeName) . "Config";
@@ -305,7 +282,6 @@ class KlearMatrix_Model_RouteDispatcher
 
     public function resolveDispatch()
     {
-
         $this
             ->_resolveCurrentItem()
             ->_resolveCurrentConfig()
@@ -313,6 +289,4 @@ class KlearMatrix_Model_RouteDispatcher
             ->_resolveAction();
 
     }
-
-
 }

@@ -139,7 +139,6 @@ class KlearMatrix_Model_MainConfig
         return $this->_config->getRaw()->commands->{$command};
     }
 
-
     protected function _parseSelectedConfig()
     {
 
@@ -156,7 +155,6 @@ class KlearMatrix_Model_MainConfig
         }
     }
 
-
     /**
      * @return KlearMatrix_Model_RouteDispatcher
      */
@@ -166,8 +164,5 @@ class KlearMatrix_Model_MainConfig
         $router->setConfig($this);
         return $router;
     }
-
-
-
 
 }

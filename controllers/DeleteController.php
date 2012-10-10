@@ -44,7 +44,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $defaultCol = $cols->getDefaultCol();
 
         $cols->clear()
-            ->addCol($defaultCol);
+             ->addCol($defaultCol);
 
         $data = new KlearMatrix_Model_MatrixResponse;
 
@@ -60,20 +60,14 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $data->setResults($obj);
         $data->fixResults($this->_item);
 
-        $jsonResponse = new Klear_Model_DispatchResponse();
-        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin('delete');
         $jsonResponse->addTemplate("/template/delete/type/" . $this->_item->getType(), "klearmatrixDelete");
         $jsonResponse->addTemplateArray($cols->getTypesTemplateArray("/template/field/type/", "clearMatrixFields"));
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.template.helper.js");
-        $jsonResponse->addJsFile("/js/translation/jquery.klearmatrix.translation.js");
-        $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.module.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.delete.js");
-        $jsonResponse->addCssFile("/css/klearMatrixEdit.css");
         $jsonResponse->setData($data->toArray());
         $jsonResponse->attachView($this->view);
     }
-
 
     public function deleteAction()
     {

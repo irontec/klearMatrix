@@ -37,10 +37,10 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         $this->_helper->log('new::save action for mapper:' . $mapperName);
 
-        $cols = $this->_item->getVisibleColumns();
+        $columns = $this->_item->getVisibleColumns();
         $hasDependant = false;
 
-        foreach ($cols as $column) {
+        foreach ($columns as $column) {
             if ($this->_columnIsNotEditable($column)) {
                 continue;
             }
@@ -50,7 +50,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
             if ($column->isMultilang()) {
                 $value = array();
-                foreach ($cols->getLangs() as $lang) {
+                foreach ($columns->getLangs() as $lang) {
                     $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
                 }
             } else {
@@ -167,13 +167,13 @@ class KlearMatrix_NewController extends Zend_Controller_Action
     {
         $this->_helper->log('New for mapper:' . $this->_item->getMapperName());
 
-        $cols = $this->_item->getVisibleColumns();
+        $columns = $this->_item->getVisibleColumns();
 
         $data = new KlearMatrix_Model_MatrixResponse;
 
         $data->setResponseItem($this->_item)
              ->setTitle($this->_item->getTitle())
-             ->setColumnWraper($cols);
+             ->setColumnWraper($columns);
 
         // La pantalla "nuevo" tiene filtro? cae de otro listado?
         if ($this->_item->isFilteredScreen()) {
@@ -243,29 +243,16 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         $jsonResponse->addTemplateArray(
-            $cols->getTypesTemplateArray("/template/field/type/", "klearMatrixFields")
+            $columns->getTypesTemplateArray("/template/field/type/", "klearMatrixFields")
         );
         $jsonResponse->addTemplate(
-            $cols->getMultiLangTemplateArray("/template/", 'field'),
+            $columns->getMultiLangTemplateArray("/template/", 'field'),
             "klearmatrixMultiLangField"
         );
 
         $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
-
-        //addJsArray hook
-        if ($this->_item->getHook('addJsArray')) {
-
-            $hook = $this->_item->getHook('addJsArray');
-            $js = $this->_helper->{$hook->helper}->{$hook->action}($cols);
-
-        } else {
-
-            $js = $cols->getColsJsArray();
-        }
-
-        $jsonResponse->addJsArray($js);
 
         // klearmatrix.new hereda de klearmatrix.edit
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
@@ -276,7 +263,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
-        $jsonResponse->addCssArray($this->_getCssArray($cols));
+        // Get data from hooks (if any)
+        $jsonResponse->addJsArray($this->_getJsArray($columns));
+        $jsonResponse->addCssArray($this->_getCssArray($columns));
         $jsonResponse->setData($this->_getResponseData($data, $parentData));
 
         //attachView hook
@@ -287,6 +276,18 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $this->_helper->{$hook->helper}->{$hook->action}($this->view);
         }
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _getJsArray(KlearMatrix_Model_ColumnCollection $columns)
+    {
+        //addJsArray hook
+        if ($this->_item->getHook('addJsArray')) {
+
+            $hook = $this->_item->getHook('addJsArray');
+            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
+        }
+
+        return $columns->getColsJsArray();
     }
 
     protected function _getCssArray(KlearMatrix_Model_ColumnCollection $columns)

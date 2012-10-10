@@ -239,19 +239,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.h5validate.js");
 
-        //addJsArray hook
-        if ($this->_item->getHook('addJsArray')) {
-
-            $hook = $this->_item->getHook('addJsArray');
-            $js = $this->_helper->{$hook->helper}->{$hook->action}($cols);
-
-        } else {
-
-            $js = $cols->getColsJsArray();
-        }
-
-        $jsonResponse->addJsArray($js);
-
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.edit.js");
 
         $customScripts = $this->_item->getCustomScripts();
@@ -259,6 +246,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
+        // Get data from hooks (if any)
+        $jsonResponse->addJsArray($this->_getJsArray($columns));
         $jsonResponse->addCssArray($this->_getCssArray($cols));
         $jsonResponse->setData($this->_getResponseData($data, $parentData));
 
@@ -271,6 +260,18 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _getJsArray(KlearMatrix_Model_ColumnCollection $columns)
+    {
+        //addJsArray hook
+        if ($this->_item->getHook('addJsArray')) {
+
+            $hook = $this->_item->getHook('addJsArray');
+            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
+        }
+
+        return $columns->getColsJsArray();
     }
 
     protected function _getCssArray(KlearMatrix_Model_ColumnCollection $columns)

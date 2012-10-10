@@ -3,7 +3,7 @@
 class KlearMatrix_Model_FilterProcessor
 {
     protected $_request;
-    protected $_cols;
+    protected $_columns;
     protected $_model;
 
     protected $_where = false;
@@ -19,7 +19,13 @@ class KlearMatrix_Model_FilterProcessor
 
     public function setColumnCollection(KlearMatrix_Model_ColumnCollection $cols)
     {
-        $this->_cols = $cols;
+        $this->_columns = $cols;
+        return $this;
+    }
+
+    public function setModel($model)
+    {
+        $this->_model = $model;
         return $this;
     }
 
@@ -33,12 +39,6 @@ class KlearMatrix_Model_FilterProcessor
     public function setResponseData(KlearMatrix_Model_MatrixResponse $data)
     {
         $this->_data = $data;
-        return $this;
-    }
-
-    public function setModel($model)
-    {
-        $this->_model = $model;
         return $this;
     }
 
@@ -72,39 +72,14 @@ class KlearMatrix_Model_FilterProcessor
 
     protected function _generate()
     {
-
-        if ((!isset($this->_request)) || (!isset($this->_cols)) || (!isset($this->_model))) {
+        if ((!isset($this->_request)) || (!isset($this->_columns)) || (!isset($this->_model))) {
             Throw new Exception("FilterProcessor not properly invocated");
         }
 
-        $searchFields = $this->_request->getPost("searchFields", false);
-        $searchOps = $this->_request->getPost("searchOps");
+        $searchWhere = $this->_getSearchWhere();
 
-        if (is_array($searchFields)) {
-
-            foreach ($searchFields as $key => $val) {
-
-                if(empty($val)) unset($searchFields[$key]);
-            }
-        }
-
-        if (false === $searchFields || empty($searchFields)) {
-
+        if (!$searchWhere) {
             return false;
-        }
-
-        $this->_log('Search arguments found for: ');
-
-        $searchWhere = array();
-
-        foreach ($searchFields as $field => $values) {
-
-            $valuesOp = $searchOps[$field];
-            $col = $this->_cols->getColFromDbName($field);
-            if ($col) {
-                $searchWhere[] = $col->getSearchCondition($values, $valuesOp, $this->_model, $this->_cols->getLangs());
-                $this->_addSearchToData($field, $values, $valuesOp);
-            }
         }
 
         $expressions = $values = array();
@@ -133,6 +108,50 @@ class KlearMatrix_Model_FilterProcessor
         }
 
         return true;
+    }
+
+    protected function _getSearchWhere()
+    {
+        $searchWhere = array();
+        $searchOps = $this->_request->getPost("searchOps");
+
+        $searchFields = $this->_getSearchFields();
+        if (!$searchFields) {
+
+            return null;
+        }
+        $this->_log('Search arguments found for: ');
+
+        foreach ($searchFields as $field => $values) {
+
+            $valuesOp = $searchOps[$field];
+            $column = $this->_columns->getColFromDbName($field);
+            if ($column) {
+                $searchWhere[] = $column->getSearchCondition($values, $valuesOp, $this->_model, $this->_columns->getLangs());
+                $this->_addSearchToData($field, $values, $valuesOp);
+            }
+        }
+
+        return $searchWhere;
+    }
+
+    protected function _getSearchFields()
+    {
+        $searchFields = $this->_request->getPost("searchFields");
+        if (is_array($searchFields)) {
+
+            foreach ($searchFields as $key => $val) {
+
+                if(empty($val)) {
+                    unset($searchFields[$key]);
+                }
+            }
+
+            if (empty($searchFields)) {
+                $searchFields = null;
+            }
+        }
+        return $searchFields;
     }
 
     public function isFilteredRequest()

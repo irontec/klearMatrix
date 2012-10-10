@@ -278,10 +278,10 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         if ($this->_item->getHook('addCssArray')) {
 
             $hook = $this->_item->getHook('addCssArray');
-            return $css = $this->_helper->{$hook->helper}->{$hook->action}($cols);
+            return $css = $this->_helper->{$hook->helper}->{$hook->action}($columns);
         }
 
-        return $cols->getColsCssArray();
+        return $columns->getColsCssArray();
     }
 
     protected function _getResponseData($data, $parentData = null)

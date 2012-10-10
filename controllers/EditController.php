@@ -63,10 +63,15 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $value = $this->getRequest()->getPost($column->getDbFieldName());
             }
 
+            // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
+            if (is_null($value)) {
+                continue;
+            }
+
             switch(true) {
                 case ($column->isMultilang()):
                     foreach ($value as $lang => $_value) {
-                        $_value =  $column->filterValue($_value, $model->{$getter}($lang));
+                        $_value = $column->filterValue($_value, $model->{$getter}($lang));
                         $model->$setter($_value, $lang);
                     }
                     break;
@@ -208,7 +213,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $data->setDisableSave($this->_item->getDisableSave());
 
         Zend_Json::$useBuiltinEncoderDecoder = true;
-
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->setPlugin($this->_item->getPlugin('edit'));

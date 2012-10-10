@@ -97,19 +97,24 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         try {
             $this->_save($model, $hasDependant);
-            $this->_helper->log('model save succesfully for ' . $mapperName . ' > PK('.$pk.')');
+            $this->_helper->log(
+                'model save succesfully for ' . $mapperName . ' > PK('.$pk.')'
+            );
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
                 'message' => 'Registro salvado correctamente.'
             );
-        } catch (Zend_Exception $exception) {
+        } catch (\Zend_Exception $exception) {
             $data = array(
                 'error' => true,
                 'message'=> $exception->getMessage()
             );
 
-            $this->_helper->log('Error saving in edit::save for ' . $mapperName . ' > PK('.$pk.') ['.$exception->getMessage().']', Zend_Log::CRIT);
+            $this->_helper->log(
+                'Error saving in edit::save for ' . $mapperName . ' > PK('.$pk.') ['.$exception->getMessage().']', 
+                Zend_Log::CRIT
+            );
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
@@ -124,17 +129,17 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
     protected function _save($model, $hasDependant)
     {
-        if (method_exists($model, 'saveRecursive')) {
-            if ($hasDependant) {
-                $pk = $model->saveRecursive();
+        try {
+            if (method_exists($model, 'saveRecursive')) {
+                if ($hasDependant) {
+                    $model->saveRecursive();
+                } else {
+                    $model->save();
+                }
             } else {
-                $pk = $model->save();
+                $model->save(false, $hasDependant);
             }
-        } else {
-            $pk = $model->save(false, $hasDependant);
-        }
-
-        if (!$pk) {
+        } catch (\Zend_Exception $exception) {
             throw new \Zend_Exception('Error salvando el registro');
         }
     }
@@ -217,7 +222,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         if (isset($customTemplate->module) && isset($customTemplate->name)) {
             $jsonResponse->addTemplate(
-                "/bin/template/" . $customTemplate->name, $customTemplate->name,
+                "/bin/template/" . $customTemplate->name,
+                $customTemplate->name,
                 $customTemplate->module
             );
         } else {
@@ -258,7 +264,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $hook = $this->_item->getHook('attachView');
             $this->_helper->{$hook->helper}->{$hook->action}($this->view);
         }
-
         $jsonResponse->attachView($this->view);
     }
 
@@ -287,7 +292,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
     protected function _getResponseData($data, $parentData = null)
     {
-        if (!$this->_item->getHook('setData')) {
+        if ($this->_item->getHook('setData')) {
 
             $hook = $this->_item->getHook('setData');
             return $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);

@@ -60,7 +60,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             switch(true) {
                 case ($column->isMultilang()):
                     foreach ($value as $lang => $_value) {
-                        $_value =  $column->filterValue($_value, $model->{$getter}($lang));
+                        $_value = $column->filterValue($_value, $model->{$getter}($lang));
                         $model->$setter($_value, $lang);
                     }
                     break;
@@ -119,7 +119,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         try {
             $this->_save($model, $hasDependant);
-            $this->_helper->log('model created succesfully for ' . $mapperName);
+            $this->_helper->log(
+                'model created succesfully for ' . $mapperName
+            );
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
@@ -194,7 +196,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $defaultParentCol = $parentColumns->getDefaultCol();
 
                 // Recuperamos mapper, para recuperar datos principales (default value)
-                $parentMapper = new $parentMapperName;
+                $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
                 $parentId = $this->_mainRouter->getParam('parentId');
                 $parentData = $parentMapper->find($parentId);
 
@@ -233,7 +235,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         if (isset($customTemplate->module) && isset($customTemplate->name)) {
             $jsonResponse->addTemplate(
                 "/bin/template/" . $customTemplate->name,
-                $customTemplate->name, $customTemplate->module
+                $customTemplate->name,
+                $customTemplate->module
             );
         } else {
             $jsonResponse->addTemplate(
@@ -311,5 +314,4 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         return $data->toArray();
     }
-
 }

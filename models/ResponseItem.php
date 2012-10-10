@@ -211,10 +211,36 @@ class KlearMatrix_Model_ResponseItem
         return $this->_customScripts;
     }
 
+
+
     public function getConfigAttribute($attribute)
     {
         return $this->_config->getProperty($attribute);
     }
+
+
+    /**
+     * Devuelve un "cacho" de configuración de sección especificada con nomenclatura de clases
+     * Ej. "fields->blacklist"
+     * @param string $path
+     * @return Zend_config|boolean
+     */
+    public function getRawConfigAttribute($path)
+    {
+
+        if ($this->_config->exists($path)) {
+            $items = explode("->", $path);
+            $ret = $this->_config->getRaw();
+            foreach($items as $item) {
+                $ret = $ret->{$item};
+            }
+            return $ret;
+        }
+
+        return false;
+
+    }
+
 
     public function getDisableSave()
     {
@@ -338,7 +364,8 @@ class KlearMatrix_Model_ResponseItem
         $pk = $model->getPrimaryKeyName();
 
         // Si la clave primaria no está en la lista blanca no la mostramos
-        $this->_blacklist[$pk] = true;
+        //TODO: comprobación de que no esté en el whitelist? sigue estando?
+        $this->addFieldToBlackList($pk);
 
         /*
          * LLenamos el array blacklist en base al fichero de configuración
@@ -351,7 +378,7 @@ class KlearMatrix_Model_ResponseItem
 
                 foreach ($blackListConfig as $field => $value) {
 
-                    $this->_blacklist[$field] = (bool)$value;
+                    $this->addFieldToBlackList($field, (bool)$value);
                 }
             }
         }
@@ -361,7 +388,7 @@ class KlearMatrix_Model_ResponseItem
         */
         if ($this->isFilteredScreen()) {
 
-            $this->_blacklist[$this->_filteredField] = true;
+            $this->addFieldToBlackList($this->_filteredField);
         }
 
         /*
@@ -372,7 +399,7 @@ class KlearMatrix_Model_ResponseItem
 
             foreach (array_keys($this->getForcedValues()) as $field) {
 
-                $this->_blacklist[$field] = true;
+                $this->addFieldToBlackList($field);
             }
         }
 
@@ -384,6 +411,12 @@ class KlearMatrix_Model_ResponseItem
         foreach ($multiLangFields as $field) {
             $this->_blacklist[$field] = true;
         }
+    }
+
+    public function addFieldToBlackList($field, $toBlaklist = true)
+    {
+        $this->_blacklist[$field] = $toBlaklist;
+
     }
 
     protected function _getMultilangFields($model)

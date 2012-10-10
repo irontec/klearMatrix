@@ -161,7 +161,25 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
 
+        if ($conditionalConfig = $this->_item->getRawConfigAttribute('fields->conditionalBlacklist')) {
+
+            foreach($conditionalConfig as $field => $fieldConfig) {
+
+                $curFieldGetter ='get' .  $model->columnNameToVar($field);
+                if ($model->{$curFieldGetter}() == $fieldConfig->condition) {
+
+                    foreach($fieldConfig->toHideFields as $toHideField => $value) {
+
+                        $this->_item->addFieldToBlackList($toHideField, (bool)$value);
+                    }
+                }
+            }
+        }
+
+
         $columns = $this->_item->getVisibleColumns();
+
+
 
         $data = new KlearMatrix_Model_MatrixResponse;
 

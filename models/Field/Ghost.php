@@ -114,7 +114,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         $method = $this->_config->getProperty('source')->method;
         $md5method = md5($className . $method);
 
-        $cache = $this->_getCacheData();
+        $cache = $this->_getCacheData($model);
         $md5cache = md5($cache);
 
         if ($this->_dataIsCached($md5method, $md5cache)) {

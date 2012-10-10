@@ -43,10 +43,10 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             Throw new Zend_Exception('El registro no se encuentra almacenado.');
         }
 
-        $cols = $this->_item->getVisibleColumns();
+        $columns = $this->_item->getVisibleColumns();
         $hasDependant = false;
 
-        foreach ($cols as $column) {
+        foreach ($columns as $column) {
             if ($this->_columnIsNotEditable($column)) {
                 continue;
             }
@@ -56,7 +56,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
             if ($column->isMultilang()) {
                 $value = array();
-                foreach ($cols->getLangs() as $lang) {
+                foreach ($columns->getLangs() as $lang) {
                     $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
                 }
             } else {
@@ -156,13 +156,13 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
 
-        $cols = $this->_item->getVisibleColumns();
+        $columns = $this->_item->getVisibleColumns();
 
         $data = new KlearMatrix_Model_MatrixResponse;
 
         $data
             ->setTitle($this->_item->getTitle())
-            ->setColumnWraper($cols)
+            ->setColumnWraper($columns)
             ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 
@@ -228,10 +228,10 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
 
         $jsonResponse->addTemplateArray(
-            $cols->getTypesTemplateArray("/template/field/type/", "klearMatrixFields")
+            $columns->getTypesTemplateArray("/template/field/type/", "klearMatrixFields")
         );
         $jsonResponse->addTemplate(
-            $cols->getMultiLangTemplateArray("/template/", 'field'),
+            $columns->getMultiLangTemplateArray("/template/", 'field'),
             "klearmatrixMultiLangField"
         );
 
@@ -248,7 +248,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         // Get data from hooks (if any)
         $jsonResponse->addJsArray($this->_getJsArray($columns));
-        $jsonResponse->addCssArray($this->_getCssArray($cols));
+        $jsonResponse->addCssArray($this->_getCssArray($columns));
         $jsonResponse->setData($this->_getResponseData($data, $parentData));
 
         //attachView hook

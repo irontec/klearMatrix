@@ -260,9 +260,9 @@ class KlearMatrix_Model_ResponseItem
     {
         unset($this->_visibleColumns);
         unset($this->_blacklist);
-        return $this;       
+        return $this;
     }
-    
+
     /**
      * El método filtrará las columnas del modelo con el fichero de configuración de modelo
      * y la whitelist/blacklist de la configuración
@@ -523,17 +523,17 @@ class KlearMatrix_Model_ResponseItem
     protected function _getVisibleDependantColumns($model, $ignoreBlacklist = false)
     {
         $columns = array();
-        foreach ($model->getDependentList() as $dependatConfig) {
+        foreach ($model->getDependentList() as $dependantConfig) {
 
-            if (!$ignoreBlacklist && isset($this->_blacklist[$dependatConfig['property']])) {
+            if (!$ignoreBlacklist && isset($this->_blacklist[$dependantConfig['property']])) {
 
                 continue;
             }
 
-            $colConfig = $this->_modelSpec->getField($dependatConfig['property']);
+            $colConfig = $this->_modelSpec->getField($dependantConfig['property']);
             if ($colConfig) {
 
-                $col = $this->_createDependantColumn($colConfig, $dependatConfig);
+                $col = $this->_createDependantColumn($colConfig, $dependantConfig);
                 $columns[] = $col;
             }
         }
@@ -557,21 +557,18 @@ class KlearMatrix_Model_ResponseItem
             return $col;
         }
 
-        foreach ($model->getDependentList() as $dependatConfig) {
+        foreach ($model->getDependentList() as $dependantConfig) {
 
-            if ($colName == $dependatConfig['table_name']) {
+            if ($colName == $dependantConfig['table_name']) {
 
-                $colConfig = $this->_modelSpec->getField($dependatConfig['table_name']);
-                if ($colConfig) {
-
-                    $col = $this->_createDependantColumn($colConfig, $dependantConfig);
-
-                    return $col;
-
-                } else {
+                $colConfig = $this->_modelSpec->getField($dependantConfig['table_name']);
+                if (!$colConfig) {
 
                     return false;
                 }
+
+                $col = $this->_createDependantColumn($colConfig, $dependantConfig);
+                return $col;
             }
         }
 

@@ -112,7 +112,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             );
 
             $this->_helper->log(
-                'Error saving in edit::save for ' . $mapperName . ' > PK('.$pk.') ['.$exception->getMessage().']', 
+                'Error saving in edit::save for ' . $mapperName . ' > PK('.$pk.') ['.$exception->getMessage().']',
                 Zend_Log::CRIT
             );
         }
@@ -284,7 +284,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         if ($this->_item->getHook('addCssArray')) {
 
             $hook = $this->_item->getHook('addCssArray');
-            return $css = $this->_helper->{$hook->helper}->{$hook->action}($columns);
+            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
         }
 
         return $columns->getColsCssArray();

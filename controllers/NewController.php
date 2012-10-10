@@ -298,7 +298,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         if ($this->_item->getHook('addCssArray')) {
 
             $hook = $this->_item->getHook('addCssArray');
-            return $css = $this->_helper->{$hook->helper}->{$hook->action}($columns);
+            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
         }
 
         return $columns->getColsCssArray();

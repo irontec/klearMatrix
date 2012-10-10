@@ -142,7 +142,7 @@ class KlearMatrix_Model_FilterProcessor
 
             foreach ($searchFields as $key => $val) {
 
-                if(empty($val)) {
+                if (empty($val)) {
                     unset($searchFields[$key]);
                 }
             }

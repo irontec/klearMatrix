@@ -24,7 +24,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     public function init()
     {
-
         $ret = parent::init();
         $this->_column->markAsReadOnly();
 
@@ -80,7 +79,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     public function getCustomOrderField($model)
     {
-
         // El modelo fantasma tiene un método que devuelve el campo por el que hay que ordenar??
         if (!$this->_config->getRaw()->source->orderMethod) {
             return $this->_column->getDbFieldName();
@@ -105,63 +103,97 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     }
 
-
-    public function prepareValue($rValue, $model)
+    public function prepareValue($value, $model)
     {
-        //Comprobamos si se cumplean las condiciones para hacer el ghost
-        if ($this->_config->getProperty('source')->conditions) {
+        if (!$this->_conditionsAreMet($model)) {
+            return $value;
+        }
 
-            foreach ($this->_config->getProperty('source')->conditions as $key => $condition) {
+        // Class and Method options to get the result
+        $className = $this->_config->getProperty('source')->class;
+        $method = $this->_config->getProperty('source')->method;
+        $md5method = md5($className . $method);
 
-                $get = 'get' . $model->columnNameToVar($key);
-                $res = $model->$get();
-                if ($res != $condition) {
+        $cache = $this->_getCacheData();
+        $md5cache = md5($cache);
 
-                    return $rValue;
+        if ($this->_dataIsCached($md5method, $md5cache)) {
+            return $this->_cache[$md5method][$md5cache];
+        }
+
+        $ghostModel = new $className;
+        $this->_configureGhostModel($ghostModel);
+        $returnValue = $ghostModel->{$method}($model);
+        $this->_cacheData($md5method, $md5cache, $returnValue);
+
+        return $returnValue;
+    }
+
+    /**
+     * Comprobar si se cumplen las condiciones para hacer el ghost (source->conditions)
+     * @return boolean
+     */
+    protected function _conditionsAreMet($model)
+    {
+        $conditions = $this->_config->getProperty('source')->conditions;
+        if ($conditions) {
+
+            foreach ($conditions as $fieldName => $condition) {
+
+                $getter = 'get' . $model->columnNameToVar($fieldName);
+                $fieldValue = $model->$getter();
+                if ($fieldValue != $condition) {
+
+                    return false;
                 }
             }
         }
 
-        //Añadimos a las condiciones de cache si existen
+        return true;
+    }
+
+    /**
+     * Devuelve el string que identifica la tupla actual para generar el identificador de cache (source->cache)
+     * @param object $model
+     * @return string
+     */
+    protected function _getCacheData($model)
+    {
+        $cacheIdentifiers = $this->_config->getProperty('source')->cache;
+        if (!$cacheIdentifiers) {
+            return '';
+        }
+
         $cache = '';
-        if ($this->_config->getProperty('source')->cache) {
+        foreach ($cacheIdentifiers as $fieldName => $condition) {
 
-            foreach ($this->_config->getProperty('source')->cache as $key => $condition) {
-
-                $get = 'get' . $model->columnNameToVar($key);
-                $res = $model->$get();
-                $cache .= $key . $res;
-            }
+            $getter = 'get' . $model->columnNameToVar($fieldName);
+            $fieldValue = $model->$getter();
+            $cache .= $fieldName . $fieldValue;
         }
 
-        //Cogemos class y method para enviar el resultado
-        $class = $this->_config->getProperty('source')->class;
-        $method = $this->_config->getProperty('source')->method;
+        return $cache;
+    }
 
-        $md5cache = md5($cache);
-        $md5method = md5($class . $method);
+    protected function _dataIsCached($md5method, $md5cache)
+    {
+        return $this->_config->getProperty('source')->cache && isset($this->_cache[$md5method][$md5cache]);
+    }
 
-        if ($this->_config->getProperty('source')->cache
-            && isset($this->_cache[$md5method][$md5cache])) {
+    protected function _configureGhostModel($ghostModel)
+    {
+        if (method_exists($ghostModel, 'setConfig')) {
 
-                return $this->_cache[$md5method][$md5cache];
+            $ghostModel->setConfig($this->_config->getRaw());
         }
+    }
 
-        $ghost = new $class;
-
-        if ( method_exists($ghost, 'setConfig') ) {
-
-            $ghost->setConfig($this->_config->getRaw());
-        }
-
-        $value = $ghost->{$method}($model);
-
+    protected function _cacheData($md5method, $md5cache, $value)
+    {
         if ($this->_config->getProperty('source')->cache) {
 
             $this->_cache[$md5method][$md5cache] = $value;
         }
-
-        return $value;
     }
 }
 

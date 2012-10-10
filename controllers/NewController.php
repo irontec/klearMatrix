@@ -270,15 +270,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->addJsArray($this->_getJsArray($columns));
         $jsonResponse->addCssArray($this->_getCssArray($columns));
         $jsonResponse->setData($this->_getResponseData($data, $parentData));
-
-        //attachView hook
-        //TODO: Repasar esto, parece que en la segunda línea faltaría una asignación...
-        if ($this->_item->getHook('attachView')) {
-
-            $hook = $this->_item->getHook('attachView');
-            $this->_helper->{$hook->helper}->{$hook->action}($this->view);
-        }
-        $jsonResponse->attachView($this->view);
+        $jsonResponse->attachView($this->_getView());
     }
 
     protected function _getJsArray(KlearMatrix_Model_ColumnCollection $columns)
@@ -313,5 +305,16 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         return $data->toArray();
+    }
+
+    protected function _getView()
+    {
+        if ($this->_item->getHook('attachView')) {
+
+            $hook = $this->_item->getHook('attachView');
+            return $this->_helper->{$hook->helper}->{$hook->action}($this->view);
+        }
+
+        return $this->view;
     }
 }

@@ -25,6 +25,11 @@
             return this.options.data.title;
         },
         
+        _getOptions :  function() {
+            
+            return this.options.data.options;
+        },
+        
         _getButtons : function() {
             var _buttons = [];
 
@@ -84,10 +89,15 @@
         _init: function() {
 
             var self = this;
-
-            $(this.element).moduleDialog("option","buttons",this._getButtons());
+            $(this.element).moduleDialog("option", "buttons", this._getButtons());
             $(this.element).moduleDialog("updateContent",this._getDialogContent());
             $(this.element).moduleDialog("updateTitle", this._getTitle());
+            
+            
+            var options = this._getOptions();
+            $.each(options, function(optionName, value) {
+                $(self.element).moduleDialog("option", optionName, value);
+            });
 
         }
 

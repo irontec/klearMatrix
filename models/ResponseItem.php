@@ -419,7 +419,8 @@ class KlearMatrix_Model_ResponseItem
 
     }
 
-    public function addFieldsToBlackList($fields) {
+    public function addFieldsToBlackList($fields)
+    {
         foreach ($fields as $field => $value) {
             $this->addFieldToBlackList($field, $value);
         }

@@ -1,19 +1,19 @@
 
 {{each(idx,row) values}}
 
-	<p><?php echo $this->translate('Do you want delete this record?'); ?></p>
+    <p><?php echo $this->translate('Do you want delete this record?'); ?></p>
 
-	<p class="deleteable-item" data-id="${$item.getIndex(row,pk)}">
+    <p class="deleteable-item" data-id="${$item.getIndex(row,pk)}">
 
-	{{each(colIdx,column) columns}}
+    {{each(colIdx,column) columns}}
 
-		{{if (column['default'])}}
-			${name}:
-			<strong>{{html $item.getIndexFromColumn(row,column)}}</strong>
+        {{if (column['default'])}}
+            ${name}:
+            <strong>{{html $item.getIndexFromColumn(row,column)}}</strong>
 
-		{{/if}}
-	{{/each}}
-		<em>(#${$item.getIndex(row,pk)})</em>
-	</p>
+        {{/if}}
+    {{/each}}
+        <em>(#${$item.getIndex(row,pk)})</em>
+    </p>
 
 {{/each}}

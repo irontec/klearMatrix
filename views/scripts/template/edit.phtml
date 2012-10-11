@@ -15,10 +15,10 @@ title="${info.text}"
 
 {{each(idx,row) values}}
 <form class="klearMatrix_form" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
-	<fieldset class="ui-widget-content ui-corner-all">
-		<legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>
+    <fieldset class="ui-widget-content ui-corner-all">
+        <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>
 
-	 	{{each(colIdx,column) columns}}
+         {{each(colIdx,column) columns}}
         <p class="ui-widget-content ui-corner-all{{if (column.properties && column.properties.expandable == true)}} expandable{{/if}}">
             {{if column.fieldInfo}}
                 <span
@@ -56,9 +56,9 @@ title="${info.text}"
                      {{/if}}
                 {{/each}}
             {{/if}}
-		</p>
-		{{/each}}
-	</fieldset>
+        </p>
+        {{/each}}
+    </fieldset>
 
     <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
         <a class="closeTab" href="" title="<?php echo $this->translate('Close'); ?>"><span class="ui-silk inline ui-silk-cross"></span><?php echo $this->translate('Close'); ?></a>

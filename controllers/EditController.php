@@ -160,26 +160,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             throw new Klear_Exception_Default('Element not found. Cannot edit.');
         }
 
-
-        if ($conditionalConfig = $this->_item->getRawConfigAttribute('fields->conditionalBlacklist')) {
-
-            foreach($conditionalConfig as $field => $fieldConfig) {
-
-                $curFieldGetter ='get' .  $model->columnNameToVar($field);
-                if ($model->{$curFieldGetter}() == $fieldConfig->condition) {
-
-                    foreach($fieldConfig->toHideFields as $toHideField => $value) {
-
-                        $this->_item->addFieldToBlackList($toHideField, (bool)$value);
-                    }
-                }
-            }
-        }
-
+        $this->_addConditionalBlackList($model);
 
         $columns = $this->_item->getVisibleColumns();
-
-
 
         $data = new KlearMatrix_Model_MatrixResponse;
 
@@ -275,6 +258,22 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse->addCssArray($this->_getCssArray($columns));
         $jsonResponse->setData($this->_getResponseData($data, $parentData));
         $jsonResponse->attachView($this->_getView());
+    }
+
+    protected function _addConditionalBlackList($model)
+    {
+        $conditionalConfig = $this->_item->getRawConfigAttribute('fields->conditionalBlacklist');
+
+        if ($conditionalConfig) {
+            foreach ($conditionalConfig as $field => $fieldConfig) {
+
+                $curFieldGetter ='get' .  $model->columnNameToVar($field);
+                if ($model->{$curFieldGetter}() == $fieldConfig->condition) {
+
+                    $this->_item->addFieldsToBlackList($fieldConfig->toHideFields);
+                }
+            }
+        }
     }
 
     protected function _getJsArray(KlearMatrix_Model_ColumnCollection $columns)

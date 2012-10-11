@@ -231,7 +231,7 @@ class KlearMatrix_Model_ResponseItem
         if ($this->_config->exists($path)) {
             $items = explode("->", $path);
             $ret = $this->_config->getRaw();
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $ret = $ret->{$item};
             }
             return $ret;
@@ -413,10 +413,16 @@ class KlearMatrix_Model_ResponseItem
         }
     }
 
-    public function addFieldToBlackList($field, $toBlaklist = true)
+    public function addFieldToBlackList($field, $toBlacklist = true)
     {
-        $this->_blacklist[$field] = $toBlaklist;
+        $this->_blacklist[$field] = (bool)$toBlacklist;
 
+    }
+
+    public function addFieldsToBlackList($fields) {
+        foreach ($fields as $field => $value) {
+            $this->addFieldToBlackList($field, $value);
+        }
     }
 
     protected function _getMultilangFields($model)

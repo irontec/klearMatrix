@@ -27,7 +27,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
          * Field type templates :)
          */
         $prefix = "klearMatrixFields";
-        foreach($this->_getAvailableFieldTypes() as $type) {
+        foreach ($this->_getAvailableFieldTypes() as $type) {
             $cacheTemplates[$prefix . $type] = '/fields/' . $type;
         }
 

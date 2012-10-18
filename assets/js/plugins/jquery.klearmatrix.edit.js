@@ -747,7 +747,6 @@
             $("select, input, textarea", this.options.theForm).on("keydown", function(e) {
                 if(e.shiftKey && e.ctrlKey && e.which == 13) {
                     e.preventDefault();
-                    console.log(self);
                     self.options.theForm.trigger('submit');
                 }
             });

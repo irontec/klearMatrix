@@ -48,29 +48,29 @@
 
         _parseDefaultItems : function() {
 
-        	if (!this.options.data.title) {
-        		return;
-        	}
+            if (!this.options.data.title) {
+                return;
+            }
 
-        	
-        	this.options.data.title =  $.klearmatrix.template.helper._parseDefaultValues({
-        		title: this.options.data.title,
-        		replaceParentPerItem : false,
-        		defaultLang : this.options.data.defaultLang,
-        		parentIden: this.options.data.parentIden,
-        		columns: this.options.data.columns,
-        		values: this.options.data.values,
-        		idx: 0
-        	});
+            
+            this.options.data.title =  $.klearmatrix.template.helper._parseDefaultValues({
+                title: this.options.data.title,
+                replaceParentPerItem : false,
+                defaultLang : this.options.data.defaultLang,
+                parentIden: this.options.data.parentIden,
+                columns: this.options.data.columns,
+                values: this.options.data.values,
+                idx: 0
+            });
 
         },
         getData : function(value) {
-        	
-        	if (this.options.data[value]) {
-        		return this.options.data[value]
-        	}
-        	
-        	return this.options.data; 
+            
+            if (this.options.data[value]) {
+                return this.options.data[value]
+            }
+            
+            return this.options.data; 
         },
         _loadTemplate : function(tmplName) {
 
@@ -85,51 +85,51 @@
 
         },
         _getClearText : function($items) {
-        	var retValues = [];        	
-        	$items.each(function() {
-        		
-        		if (!$(this).is(".multilang")) {
-        			retValues.push($(this).contents().first().text());
-        			return;
-        		}
+            var retValues = [];            
+            $items.each(function() {
+                
+                if (!$(this).is(".multilang")) {
+                    retValues.push($(this).contents().first().text());
+                    return;
+                }
 
-        		if ($(".multilangValue",$(this)).length>0) {
-        			if ($(".selected",$(this)).length == 1) {
-        				retValues.push($(".selected",$(this)).contents().first().text());
-        			} else {
-        				retValues.push($(".multilangValue:eq(0)",$(this)).contents().first().text());
-        			}
-        		} 
-        	});
-        	
-        	return retValues.join(' ');
+                if ($(".multilangValue", $(this)).length>0) {
+                    if ($(".selected", $(this)).length == 1) {
+                        retValues.push($(".selected", $(this)).contents().first().text());
+                    } else {
+                        retValues.push($(".multilangValue:eq(0)", $(this)).contents().first().text());
+                    }
+                } 
+            });
+            
+            return retValues.join(' ');
         },
 
         _resolveParentHolder : function(element) {
 
-        	// Si es un módulo con parent
-        	if (this.options.moduleParent) {
-        		var modulecheck = this.options.moduleParent;
-        	} else {
-        		var modulecheck = this.options.moduleName;
-        	}
+            // Si es un módulo con parent
+            if (this.options.moduleParent) {
+                var modulecheck = this.options.moduleParent;
+            } else {
+                var modulecheck = this.options.moduleName;
+            }
 
             switch (modulecheck) {
                 case 'list':
-                	return $(element).parents("tr:eq(0)");
+                    return $(element).parents("tr:eq(0)");
                 break;
                 case 'new':
                 case 'edit':
-                	return $(element).parents("form:eq(0)");
+                    return $(element).parents("form:eq(0)");
 
                 break;
                 default:
 
-                	if ($(element).data("parentHolderSelector")) {
-                		return $(element).parents($(element).data("parentHolderSelector"));
-                	} else {
-                		throw 'no parentHolder found for option';
-                	}
+                    if ($(element).data("parentHolderSelector")) {
+                        return $(element).parents($(element).data("parentHolderSelector"));
+                    } else {
+                        throw 'no parentHolder found for option';
+                    }
                 break;
             }
 
@@ -141,35 +141,35 @@
             var _self = this;
 
             $(self.klearModule("getPanel"))
-            	.off('click.closeTab')
-            	.on('click.closeTab','.closeTab',function(e) {
+                .off('click.closeTab')
+                .on('click.closeTab', '.closeTab', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 self.klearModule("close");
             });
 
-            $('select:not(.multiselect,.notcombo)',this.element.klearModule("getPanel"))
-            	.combobox({
-            		'selected' : function(event,ui) {
-            			$(this).trigger("manualchange")
-            		}
-            	});
+            $('select:not(.multiselect, .notcombo)', this.element.klearModule("getPanel"))
+                .combobox({
+                    'selected' : function(event, ui) {
+                        $(this).trigger("manualchange")
+                    }
+                });
 
-            $('a.option.screen',this.element.klearModule("getPanel"))
-            	.on('mouseup.screenOption')
-            	.on('mouseup.screenOption',function(e) {
+            $('a.option.screen', this.element.klearModule("getPanel"))
+                .on('mouseup.screenOption')
+                .on('mouseup.screenOption', function(e) {
 
                 e.preventDefault();
                 e.stopPropagation();
 
                 var _container = self.klearModule("getContainer");
 
-                var _iden = "#tabs-" + self.klearModule("option","file")
+                var _iden = "#tabs-" + self.klearModule("option", "file")
                             + '_' + $(this).data("screen");
 
                 if ($(this).data("multiinstance")) {
-                    _iden += '_' + Math.round(Math.random(1000,9999)*100000);
+                    _iden += '_' + Math.round(Math.random(1000, 9999)*100000);
                 } else {
                     _iden += '_' + $(this).parents("tr:eq(0)").data("id");
                 }
@@ -179,7 +179,7 @@
                     return;
                 }
 
-                var _newIndex = self.klearModule("option","tabIndex")+1;
+                var _newIndex = self.klearModule("option", "tabIndex")+1;
                 var _menuLink = $(this);
 
                 var _parentHolder = _self._resolveParentHolder(this);
@@ -188,20 +188,20 @@
                     _menuLink.addClass("ui-state-highlight");
                 }
 
-                var tabTitle = ($(".default",_parentHolder).length>0) ?
-                        _self._getClearText($(".default",_parentHolder)) : $(this).tooltip("close").attr("title");
+                var tabTitle = ($(".default", _parentHolder).length>0) ?
+                        _self._getClearText($(".default", _parentHolder)) : $(this).tooltip("close").attr("title");
 
                 _container.one( "tabspostadd", function(event, ui) {
 
                     var $tabLi = $(ui.tab).parent("li");
 
                     // Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
-                    $tabLi.klearModule("option","menuLink",_menuLink);
-                    $tabLi.klearModule("option","parentScreen",self);
-                    $tabLi.klearModule("option","title",tabTitle);
+                    $tabLi.klearModule("option", "menuLink", _menuLink);
+                    $tabLi.klearModule("option", "parentScreen", self);
+                    $tabLi.klearModule("option", "title", tabTitle);
 
                     // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
-                    $tabLi.klearModule("option","file",self.klearModule("option","file"));
+                    $tabLi.klearModule("option", "file", self.klearModule("option", "file"));
 
                     // Seteamos el valor para dispatchOptions
                     var _dispatchOptions = {
@@ -221,9 +221,9 @@
 
 
                     // hioghlight on hover
-                    _menuLink.data("relatedtab",$tabLi);
+                    _menuLink.data("relatedtab", $tabLi);
 
-                    $tabLi.klearModule("option","dispatchOptions",_dispatchOptions)
+                    $tabLi.klearModule("option", "dispatchOptions", _dispatchOptions)
                         .klearModule("reload");
 
 
@@ -232,11 +232,11 @@
                 // Klear open in background
                 $.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(), $(this));
 
-                _container.tabs( "add", _iden, tabTitle,_newIndex);
+                _container.tabs( "add", _iden, tabTitle, _newIndex);
 
             })
-            	.off('click.screenOption')
-            	.on('click.screenOption',function(e) {
+                .off('click.screenOption')
+                .on('click.screenOption', function(e) {
                 // Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
                 e.preventDefault();
                 e.stopPropagation();
@@ -247,9 +247,9 @@
             /*
              * Capturar opciones de diálogo.
              */
-            $('a.option.dialog',this.element.klearModule("getPanel"))
-            	.off('click.dialogOptions')
-            	.on('click.dialogOptions',function(e,data) {
+            $('a.option.dialog', this.element.klearModule("getPanel"))
+                .off('click.dialogOptions')
+                .on('click.dialogOptions', function(e, data) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -276,24 +276,24 @@
                 };
 
                 // Si la pantalla llamante tiene condición (parentId -- en data --
-	            // enviarlos a la nueva pantalla
+                // enviarlos a la nueva pantalla
 
-	            if (_self.options.data.parentId) {
-	            	_postData.parentId = _self.options.data.parentId;
-	            	_postData.parentScreen = _self.options.data.parentScreen;
-	            }
+                if (_self.options.data.parentId) {
+                    _postData.parentId = _self.options.data.parentId;
+                    _postData.parentScreen = _self.options.data.parentScreen;
+                }
 
-	            if (data && typeof data.params != undefined) {
-		            $.extend(_postData,data.params);
-	            }
+                if (data && typeof data.params != undefined) {
+                    $.extend(_postData, data.params);
+                }
 
-	            if ($(this).data("params")) {
-	            	$.extend(_postData,$(this).data("params"));
-	            }
+                if ($(this).data("params")) {
+                    $.extend(_postData, $(this).data("params"));
+                }
 
-	            $.klear.request(
+                $.klear.request(
                         {
-                            file: self.klearModule("option","file"),
+                            file: self.klearModule("option", "file"),
                             type: 'dialog',
                             dialog : $_dialog.data("dialogName"),
                             pk : _parentHolder.data("id"),
@@ -315,8 +315,8 @@
 
 
             })
-            	.off('mouseup.dialogOptions')
-                .on('mouseup.dialogOptions',function(e) {
+                .off('mouseup.dialogOptions')
+                .on('mouseup.dialogOptions', function(e) {
                 // Paramos el evento mouseup, para no llegar al tr
                 e.preventDefault();
                 e.stopPropagation();
@@ -327,9 +327,9 @@
              * TO-DO: Callback JS? when-ever need will be implemented
              */
 
-            $('a.option.command',this.element.klearModule("getPanel"))
-            	.off('click.commandAction')
-            	.on('click.commandAction',function(e,data) {
+            $('a.option.command', this.element.klearModule("getPanel"))
+                .off('click.commandAction')
+                .on('click.commandAction', function(e, data) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -342,7 +342,7 @@
                 switch (_self.options.moduleName) {
                     case 'list':
                         var _parentHolder = $(this).parents("tr:eq(0)");
-                        $(this).on('mouseup',function(e) {
+                        $(this).on('mouseup', function(e) {
                             // Paramos el evento mouseup, para no llegar al tr
                             e.preventDefault();
                             e.stopPropagation();
@@ -360,19 +360,19 @@
                 };
 
                 // Si la pantalla llamante tiene condición (parentId -- en data --
-	            // enviarlos a la nueva pantalla
-	            if (_self.options.data.parentId) {
-	            	_postData.parentId = _self.options.data.parentId;
-	            	_postData.parentScreen = _self.options.data.parentScreen;
-	            }
+                // enviarlos a la nueva pantalla
+                if (_self.options.data.parentId) {
+                    _postData.parentId = _self.options.data.parentId;
+                    _postData.parentScreen = _self.options.data.parentScreen;
+                }
 
-	            if (data && typeof data.params != undefined) {
-		            $.extend(_postData,data.params);
-	            }
+                if (data && typeof data.params != undefined) {
+                    $.extend(_postData, data.params);
+                }
 
                 $.klear.request(
                         {
-                            file: self.klearModule("option","file"),
+                            file: self.klearModule("option", "file"),
                             type: 'command',
                             command : $(this).data("command"),
                             pk : _parentHolder.data("id"),
@@ -391,65 +391,78 @@
             });
 
 
-            $("[title]:not(.fieldInfo-box)",this.element.klearModule("getPanel")).tooltip();
+            $("[title]:not(.fieldInfo-box)", this.element.klearModule("getPanel")).tooltip();
 
-            $(".fieldInfo-box",this.element.klearModule("getPanel")).toggle(function(){
+            $(".fieldInfo-box", this.element.klearModule("getPanel")).toggle(function(){
 
-            	var $self = $(this);
+                var $self = $(this);
 
-            	var $box = $self.parent().find('.fieldInfo-boxinfo');
-            	if ($box.length<=0) {
-            		$box = $('<div />', {
-                		'class' : 'fieldInfo-boxinfo ui-state-highlight ui-corner-all',
-                		html: '<p>' + $self.attr('title') + '</p>'
-                	});
-                	$box.hide();
-                	$self.parent().prepend($box);
-            	}
-            	$box.slideDown('slow');
+                var $box = $self.parent().find('.fieldInfo-boxinfo');
+                if ($box.length<=0) {
+                    $box = $('<div />', {
+                        'class' : 'fieldInfo-boxinfo ui-state-highlight ui-corner-all',
+                        html: '<p>' + $self.attr('title') + '</p>'
+                    });
+                    $box.hide();
+                    $self.parent().prepend($box);
+                }
+                $box.slideDown('slow');
             },
             function(){
 
-            	var $box = $(this).parent().find('.fieldInfo-boxinfo:eq(0)');
-            	$box.slideUp('slow', function(){
-            		$(this).remove();
-            	});
+                var $box = $(this).parent().find('.fieldInfo-boxinfo:eq(0)');
+                $box.slideUp('slow', function(){
+                    $(this).remove();
+                });
             });
 
             return this;
         },
+        
         standardError : function(data) {
-        	var self = this;
-
+            var self = this;
             var $_dialog = $(self.element).klearModule("getModuleDialog");
+            var $message = $('<div><p>' + data.message + '</p></div>');
 
-
-            $_dialog.moduleDialog("option","buttons",
-                     [
-                          {
-                            text: $.translate("Close", [__namespace__]),
-                            click: function() {
-                                $_dialog.moduleDialog("close");
-                            }
+            $_dialog.moduleDialog(
+                "option", 
+                "buttons",
+                 [
+                    {
+                        text: $.translate("Close", [__namespace__]),
+                        click: function() {
+                            $_dialog.moduleDialog("close");
                         }
-                    ]
+                    }
+                ]
             );
 
             if (typeof data.code != 'undefined') {
-            	var errorDesc;
-            	if (errorDesc = $.klear.fetchErrorByCode(data.code)) {
-            		var _oldMessage = data.message;
-            		data.message = errorDesc;
-
-            		data.message = data.message.replace(/%message%/,_oldMessage);
-            	}
-
+                var errorDesc = $.klear.fetchErrorByCode(data.code);
+                if (errorDesc) {
+                    $message.html(errorDesc.replace(/%message%/, data.message));
+                }
             }
 
+            if (typeof data.traceString != 'undefined') {
+                var $showTrace = $('<p><a class="show-trace" href="#">Show trace string</a></p>');
+                var $trace = $('<div class="trace">' + data.traceString.replace(/\n/g, '<br />') + '</div>');
+                var $traceDiv = $('<div />').append($showTrace).append($trace);
+                
+                $message.append($showTrace).append($trace);
+                
+                $trace.hide();
+                $showTrace.on('click', function(e) {
+                    e.preventDefault();
+                    $trace.toggle();
+                    $_dialog.moduleDialog('option', 'width', 800);
+                });
+                
+            }
+                
 
-            $_dialog.moduleDialog("option","title",$.translate("Error", [__namespace__]));
-            $_dialog.moduleDialog("updateContent",data.message);
-
+            $_dialog.moduleDialog("option", "title", $.translate("Error", [__namespace__]));
+            $_dialog.moduleDialog("updateContent", $message);
         }
 
     });

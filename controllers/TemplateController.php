@@ -105,6 +105,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
             "ghost",
             "file",
             "picker",
+            "checkbox"
         );
     }
 }

@@ -1,0 +1,18 @@
+<input
+    type="checkbox"
+    rel="${_elemName}"
+
+    {{if (_fieldValue)}}
+        checked="checked"
+    {{/if}}
+
+    data-on="${_onValue}"
+    data-off="${_offValue}"
+/>
+<input
+    type="hidden"
+    id="${_elemIden}"
+    name="${_elemName}"
+    value="${_fieldValue}"
+    class="checkbox"
+/>

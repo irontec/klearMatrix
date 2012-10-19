@@ -495,6 +495,27 @@
                 });
             }
             
+            if ($(".checkbox",this.options.theForm).length>0) {
+                
+                $(".checkbox", this.options.theForm).each(function() {
+                
+                    var $self = $(this);
+                    var _parent = $self.parent();
+                    var _checkbox = $("input:checkbox[rel=" + $self.attr("name") + "]", _parent);
+                    
+                    _checkbox.on("change",function() {
+                        if ($(this).is(":checked")) {
+                            $self.val('1');
+                        } else {
+                            $self.val('0');
+                        }
+                    });
+                    
+                    
+                });
+            }
+
+            
             
             
             if ($(".qq-uploader",this.options.theForm).length>0) {

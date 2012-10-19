@@ -176,23 +176,23 @@ class KlearMatrix_Model_Column
     protected function _loadConfigClass()
     {
         if ($this->isOption()) {
-            return $this;
-        }
-
-        if (is_object($this->_fieldConfig)) {
-            return $this;
+            return;
         }
 
         $this->_fieldConfig = KlearMatrix_Model_Field_Abstract::create($this->_type, $this);
-
-        return $this;
+        return $this->_fieldConfig;
     }
 
     /**
+     * Lazy loader for getFieldConfig
      * @return KlearMatrix_Model_Field_Abstract
      */
     public function getFieldConfig()
     {
+        if (!is_object($this->_fieldConfig)) {
+            return $this->_loadConfigClass();
+        }
+
         return $this->_fieldConfig;
     }
 
@@ -210,14 +210,12 @@ class KlearMatrix_Model_Column
             return array();
         }
 
-        $this->_loadConfigClass();
-        return $this->_fieldConfig->getExtraJavascript();
+        return $this->getFieldConfig()->getExtraJavascript();
     }
 
     public function getCssPaths()
     {
-
-        return $this->_fieldConfig->getExtraCss();
+        return $this->getFieldConfig()->getExtraCss();
     }
 
     public function isDefault()
@@ -254,8 +252,8 @@ class KlearMatrix_Model_Column
 
     public function getOrderField($model)
     {
-        if (method_exists($this->_fieldConfig, 'getCustomOrderField')) {
-            return $this->_fieldConfig->getCustomOrderField($model);
+        if (method_exists($this->getFieldConfig(), 'getCustomOrderField')) {
+            return $this->getFieldConfig()->getCustomOrderField($model);
         }
 
         return $this->_dbFieldName;
@@ -303,14 +301,12 @@ class KlearMatrix_Model_Column
      */
     public function prepareValue($value, $model)
     {
-        $this->_loadConfigClass();
-        return $this->_fieldConfig->prepareValue($value, $model);
+        return $this->getFieldConfig()->prepareValue($value, $model);
     }
 
     public function filterValue($value, $original)
     {
-        $this->_loadConfigClass();
-        return $this->_fieldConfig->filterValue($value, $original);
+        return $this->getFieldConfig()->filterValue($value, $original);
     }
 
 
@@ -437,8 +433,8 @@ class KlearMatrix_Model_Column
 
     public function getSearchCondition(array $values, array $searchOps, $model, $langs)
     {
-        if (method_exists($this->_fieldConfig, 'getCustomSearchCondition')) {
-            $searchCondition = $this->_fieldConfig->getCustomSearchCondition($values, $searchOps, $model);
+        if (method_exists($this->getFieldConfig(), 'getCustomSearchCondition')) {
+            $searchCondition = $this->getFieldConfig()->getCustomSearchCondition($values, $searchOps, $model);
             if ($searchCondition) {
                 return $searchCondition;
             }
@@ -451,8 +447,8 @@ class KlearMatrix_Model_Column
 
     protected function _getSearchFields($model, $langs)
     {
-        if (method_exists($this->_fieldConfig, 'getCustomSearchField')) {
-            $searchField = $this->_fieldConfig->getCustomSearchField($model);
+        if (method_exists($this->getFieldConfig(), 'getCustomSearchField')) {
+            $searchField = $this->getFieldConfig()->getCustomSearchField($model);
         } else {
             $searchField = $this->_dbFieldName;
         }
@@ -535,8 +531,8 @@ class KlearMatrix_Model_Column
             return false;
         }
 
-        if (method_exists($this->_fieldConfig, 'getCustomGetterName') && $default === false) {
-            return $this->_fieldConfig->getCustomGetterName($model);
+        if (method_exists($this->getFieldConfig(), 'getCustomGetterName') && $default === false) {
+            return $this->getFieldConfig()->getCustomGetterName($model);
         }
 
         if ($this->isDependant()) {
@@ -544,7 +540,6 @@ class KlearMatrix_Model_Column
         } else {
             return 'get' . ucfirst($model->columnNameToVar($this->getDbFieldName()));
         }
-
     }
 
     public function getSetterName($model, $default = false)
@@ -553,8 +548,8 @@ class KlearMatrix_Model_Column
             return false;
         }
 
-        if (method_exists($this->_fieldConfig, 'getCustomSetterName') && $default === false) {
-            return $this->_fieldConfig->getCustomSetterName($model);
+        if (method_exists($this->getFieldConfig(), 'getCustomSetterName') && $default === false) {
+            return $this->getFieldConfig()->getCustomSetterName($model);
         }
 
         if ($this->isDependant()) {
@@ -565,13 +560,9 @@ class KlearMatrix_Model_Column
 
     }
 
-
     public function toArray()
     {
-
-        $this->_loadConfigClass();
-
-        $ret= array();
+        $ret = array();
 
         $ret["id"] = $this->_dbFieldName;
         $ret["name"] = $this->getPublicName();
@@ -609,20 +600,21 @@ class KlearMatrix_Model_Column
             $ret['disabledOptions'] = $this->_disabledOptions;
         }
 
-        if ($this->_fieldConfig) {
+        $fieldConfig = $this->getFieldConfig();
+        if ($fieldConfig) {
 
-            $ret['searchable'] = (bool)$this->_fieldConfig->canBeSearched();
-            $ret['sortable'] = (bool)$this->_fieldConfig->canBeSorted();
+            $ret['searchable'] = (bool)$fieldConfig->canBeSearched();
+            $ret['sortable'] = (bool)$fieldConfig->canBeSorted();
 
-            if ($config = $this->_fieldConfig->getConfig()) {
+            if ($config = $fieldConfig->getConfig()) {
                 $ret['config'] = $config;
             }
 
-            if ($props = $this->_fieldConfig->getProperties()) {
+            if ($props = $fieldConfig->getProperties()) {
                 $ret['properties'] = $props;
             }
 
-            if ($errors = $this->_fieldConfig->getCustomErrors()) {
+            if ($errors = $fieldConfig->getCustomErrors()) {
                 $ret['errors'] = $errors;
             }
         }

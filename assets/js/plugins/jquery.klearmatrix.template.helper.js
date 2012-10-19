@@ -219,7 +219,7 @@
             }
         },
 
-        getIndexFromColumn : function(values,column) {
+        getIndexFromColumn : function(values, column) {
 
             if (typeof values[column.id] == 'undefined') {
 
@@ -266,6 +266,16 @@
                     case 'file':
 
                         return this.cleanValue(values[column.id]['name'])
+                        break;
+                        
+                    case 'checkbox':
+                        var icon = 'cross';
+
+                        if (values[column.id] == 1) {
+                            icon = 'tick';
+                        }
+                        
+                        return '<span class="ui-silk ui-silk-' + icon + '" />';
                         break;
 
                     default:

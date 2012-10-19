@@ -259,10 +259,10 @@
         
             this.options.theForm
                 .h5Validate({
-                	focusout: false,
-                	focusin: false,
-                	change: false,
-                	keyup: false
+                    focusout: false,
+                    focusin: false,
+                    change: false,
+                    keyup: false
                 })
                 .on('validated',function(formElement,validation) {
                     
@@ -423,21 +423,21 @@
             if ($(".filePreview",this.options.theForm).length>0) {
                 $(".filePreview",this.options.theForm).each(function() {
 
-                	var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
-                	var _validData = ['width','height','crop'];
-                	var $self = $(this);
-                	var imageAttribs = '';
-                	$.each(_validData,function(i,value) {
-                		if ($self.data(value)) {
-                    		_post[value] = $self.data(value);
-                    	}
-                		
-                		if (value == 'width' || value == 'height') {
-                			imageAttribs += value + '="'+_post[value]+'px" ';
-                		}
-                		
-                	});
-                	
+                    var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
+                    var _validData = ['width','height','crop'];
+                    var $self = $(this);
+                    var imageAttribs = '';
+                    $.each(_validData,function(i,value) {
+                        if ($self.data(value)) {
+                            _post[value] = $self.data(value);
+                        }
+                        
+                        if (value == 'width' || value == 'height') {
+                            imageAttribs += value + '="'+_post[value]+'px" ';
+                        }
+                        
+                    });
+                    
                     var requestData = {
                             file: _self.klearModule("option","file"),
                             pk: $(this).parents("form:eq(0)").data("id"),
@@ -464,35 +464,35 @@
             
             
             if ($(".password",this.options.theForm).length>0) {
-            	var isNew = this.options.theForm.data("type") == "new";
-            	
-            	$(".password", this.options.theForm).each(function() {
-            	
-            		var $self = $(this);
-            		var _parent = $self.parent();
-            		var _checkbox = $("input:checkbox[rel="+$self.attr("name")+"]",_parent);
-            		
-            		if (isNew) {
-            			_checkbox.parents("span:eq(0)").remove();
-            			return;
-            		}
-            		
-            		$(this)
-            			.attr("disabled","disabled")
-            			.addClass("ui-state-disabled");
-            		
-            		_checkbox.on("change",function() {
-            			if ($(this).is(":checked")) {
-            				$self.removeAttr("disabled").removeClass("ui-state-disabled");
-            				$self.select().trigger("focus");
-            				
-            			} else {
-            				$self.attr("disabled","disabled").addClass("ui-state-disabled");
-            			}
-            		});
-            		
-            		
-            	});
+                var isNew = this.options.theForm.data("type") == "new";
+                
+                $(".password", this.options.theForm).each(function() {
+                
+                    var $self = $(this);
+                    var _parent = $self.parent();
+                    var _checkbox = $("input:checkbox[rel="+$self.attr("name")+"]",_parent);
+                    
+                    if (isNew) {
+                        _checkbox.parents("span:eq(0)").remove();
+                        return;
+                    }
+                    
+                    $(this)
+                        .attr("disabled","disabled")
+                        .addClass("ui-state-disabled");
+                    
+                    _checkbox.on("change",function() {
+                        if ($(this).is(":checked")) {
+                            $self.removeAttr("disabled").removeClass("ui-state-disabled");
+                            $self.select().trigger("focus");
+                            
+                        } else {
+                            $self.attr("disabled","disabled").addClass("ui-state-disabled");
+                        }
+                    });
+                    
+                    
+                });
             }
             
             
@@ -554,7 +554,7 @@
                                 var $list = $(".qq-upload-list",$(this.element));
                                 
                                 if (result.error) {
-                                	$list.empty();
+                                    $list.empty();
                                     $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR",[__namespace__])});
                                     return;
                                 }
@@ -572,7 +572,7 @@
 
                             showMessage : function(message) {
                                 if (typeof(message) == 'string') {
-                                	$(".qq-upload-list",$(this.element)).html('');	
+                                    $(".qq-upload-list",$(this.element)).html('');    
                                     $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR",[__namespace__])});
                                 }
                             }

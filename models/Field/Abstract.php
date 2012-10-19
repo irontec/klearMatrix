@@ -157,6 +157,27 @@ abstract class KlearMatrix_Model_Field_Abstract
         return $this->_errorMessages;
     }
 
+    /**
+     * Factory method to create any of KlearMatrix_Model_Field_Abstract subtypes
+     *
+     * @param string $fieldType Name of Field Type to construct
+     * @param KlearMatrix_Model_Column $column
+     * @return KlearMatrix_Model_Field_Abstract
+     */
+    public static function create($fieldType, KlearMatrix_Model_Column $column)
+    {
+        $fieldClassName = 'KlearMatrix_Model_Field_' . ucfirst($fieldType);
+        $field = new $fieldClassName;
+        $field->setColumn($column)->init();
+
+        return $field;
+    }
+
+    /**
+     * Constructor must not be directly called from outside. Use the factory method instead
+     */
+    private function __construct()
+    {}
 }
 
 //EOF

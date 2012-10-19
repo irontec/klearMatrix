@@ -183,15 +183,14 @@ class KlearMatrix_Model_Column
             return $this;
         }
 
-        $fieldConfigClassName = 'KlearMatrix_Model_Field_' . ucfirst($this->_type);
+        $this->_fieldConfig = KlearMatrix_Model_Field_Abstract::create($this->_type, $this);
 
-        $this->_fieldConfig = new $fieldConfigClassName;
-        $this->_fieldConfig
-                    ->setColumn($this)
-                    ->init();
-
+        return $this;
     }
 
+    /**
+     * @return KlearMatrix_Model_Field_Abstract
+     */
     public function getFieldConfig()
     {
         return $this->_fieldConfig;
@@ -308,7 +307,7 @@ class KlearMatrix_Model_Column
         return $this->_fieldConfig->prepareValue($value, $model);
     }
 
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
         $this->_loadConfigClass();
         return $this->_fieldConfig->filterValue($value, $original);
@@ -341,7 +340,7 @@ class KlearMatrix_Model_Column
 
     }
 
-    public function setSearchSpec($name,$value)
+    public function setSearchSpec($name, $value)
     {
         $this->_searchSpecs[$name] = $value;
 

@@ -31,7 +31,7 @@ class KlearMatrix_Model_Field_Datepicker extends KlearMatrix_Model_Field_Abstrac
 
     private function getDateFormat()
     {
-        $ret = str_replace(array('mm', 'yy'), array('MM','yyyy'), $this->_control->getDateFormat());
+        $ret = str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $this->_control->getDateFormat());
 
         return $ret;
     }
@@ -40,7 +40,7 @@ class KlearMatrix_Model_Field_Datepicker extends KlearMatrix_Model_Field_Abstrac
      * Filtra (y adecua) el valor del campo antes del setter
      *
      */
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
         $value = new Zend_Date($value, $this->getDateFormat());
         return $value;

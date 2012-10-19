@@ -77,7 +77,7 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         return $this->_adapter->getFetchMethod($dbFieldName);
     }
 
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
         if (empty($value)) {
 

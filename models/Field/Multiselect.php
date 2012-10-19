@@ -66,7 +66,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         return $this->_adapter->prepareValue($value, $model);
     }
 
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
         return $this->_adapter->filterValue($value, $original);
     }

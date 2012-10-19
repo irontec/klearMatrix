@@ -25,7 +25,7 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
                     ->init();
     }
 
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
         if ($value == '__NULL__') {
 

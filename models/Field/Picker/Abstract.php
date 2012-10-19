@@ -196,7 +196,7 @@ class KlearMatrix_Model_Field_Picker_Abstract
     {
 
         $_dateFormat = $this->_dateFormats[$locale];
-        return str_replace(array('mm', 'yy'), array('MM','yyyy'), $_dateFormat);
+        return str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $_dateFormat);
 
     }
 

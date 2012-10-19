@@ -23,7 +23,7 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_properties = array();
 
     /*valid error index */
-    protected $_errorIndex = array('patternMismatch','rangeOverflow','rangeUnderflow','stepMismatch','tooLong','typeMismatch','valueMissing');
+    protected $_errorIndex = array('patternMismatch', 'rangeOverflow', 'rangeUnderflow', 'stepMismatch', 'tooLong', 'typeMismatch', 'valueMissing');
     protected $_errorMessages = array();
 
     public function setColumn($column)
@@ -93,7 +93,7 @@ abstract class KlearMatrix_Model_Field_Abstract
      * Filtra (y adecua) el valor del campo antes del setter
      *
      */
-    public function filterValue($value,$original)
+    public function filterValue($value, $original)
     {
 
         if (isset($this->_properties['nullIfEmpty'])

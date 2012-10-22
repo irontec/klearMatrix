@@ -275,7 +275,7 @@
                             icon = 'tick';
                         }
                         
-                        return '<span class="ui-silk ui-silk-' + icon + '" />';
+                        return '<span class="ui-icon ui-icon-' + icon + '" />';
                         break;
 
                     default:

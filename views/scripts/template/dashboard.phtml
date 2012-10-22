@@ -8,12 +8,20 @@
     <ul>
         {{each(idx2,subsection) section.subsects}}
         <li>
+{{if (subsection.file)}}
             <a class="subsection" href="?" id="target-${subsection.file}" >
+{{/if}}
+{{if (subsection.class)}}
             <span class="ui-silk inline ${subsection.class}"></span>
+{{/if}}
             ${subsection.name}
+{{if (subsection.file)}}
             </a>
-            <strong>${subsection.total}</strong>
-        </li>
+{{/if}}
+{{if (subsection.subtitle)}}
+            <strong>${subsection.subtitle}</strong>
+{{/if}}
+            </li>
 
     {{/each}}
     </ul>

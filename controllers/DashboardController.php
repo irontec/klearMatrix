@@ -1,16 +1,13 @@
 <?php
 
-//TO-DO: Sacar el método getWHere de ListController, hacer que este controlador herede de Zend_Controller_Action
-
-require dirname(__FILE__) . '/ListController.php';
-
 /**
- * Pequeño dashboard, que recorre el ficherod e configuración de klear, discrimina los klearMatric::List
+ * Pequeño dashboard, que recorre el ficherod e configuración de klear, discrimina los klearMatrix::List
  * y muestra su nombre+class, enlace y número de registros
+ *
  * @author jabi
  *
  */
-class KlearMatrix_DashboardController extends KlearMatrix_ListController
+class KlearMatrix_DashboardController extends Zend_Controller_Action
 {
     /**
      * Route Dispatcher desde klear/index/dispatch
@@ -37,6 +34,33 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
         $this->_item = $this->_mainRouter->getCurrentItem();
     }
 
+
+    protected function _calculateForKMatrixList($moduleRouter, $subsection)
+    {
+
+        $_item = $moduleRouter->getCurrentItem();
+
+        $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
+
+        $cols = $_item->getVisibleColumns();
+        $model = $_item->getObjectInstance();
+        $fooData = new KlearMatrix_Model_MatrixResponse();
+
+        // NO AUTOLOAD for controllers? (or should not be on the Controller O:)
+        require_once dirname(__FILE__) . '/ListController.php';
+
+        $where = KlearMatrix_ListController::getWhere($cols, $model, $fooData, $_item);
+
+        $totalItems = $_mapper->countByQuery($where);
+
+        return array(
+                'name' => $subsection->getName(),
+                'class' => $subsection->getClass(),
+                'file' => $subsection->getMainFile(),
+                'subtitle' => $totalItems
+        );
+
+    }
 
     public function indexAction()
     {
@@ -77,29 +101,35 @@ class KlearMatrix_DashboardController extends KlearMatrix_ListController
                 $moduleRouter->resolveDispatch();
 
 
-                if (($moduleRouter->getModuleName() != "klearMatrix") || ($moduleRouter->getControllerName() != "list") ) {
+                if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class"))
+                {
+
+                    $dashElementClassName = $moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class");
+                    $dashSection = new $dashElementClassName;
+                    $dashSection->setConfig($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard"));
+                    $sectionTmp['subsects'][] = array(
+                            'name' => $dashSection->getName(),
+                            'class' => $dashSection->getClass(),
+                            'file' => $dashSection->getFile(),
+                            'subtitle' => $dashSection->getSubTitle()
+                    );
+
                     continue;
                 }
 
-                $this->_item = $moduleRouter->getCurrentItem();
 
-                $_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_item->getMapperName());
+                /*
+                 * Para KMatrix List, se calcula automáticamente.
+                 */
+                if (($moduleRouter->getModuleName() == "klearMatrix") &&
+                        ($moduleRouter->getControllerName() == "list") ) {
+                    $sectionTmp['subsects'][] = $this->_calculateForKMatrixList($moduleRouter, $subsection);
+                    continue;
+                }
 
-                $cols = $this->_item->getVisibleColumns();
-                $model = $this->_item->getObjectInstance();
-                $fooData = new KlearMatrix_Model_MatrixResponse();
 
-                $where = $this->_getWhere($cols, $model, $fooData);
 
-                $totalItems = $_mapper->countByQuery($where);
 
-                $sectionTmp['subsects'][] = array(
-                        'name' => $subsection->getName(),
-                        'description' => $subsection->getDescription(),
-                        'class' => $subsection->getClass(),
-                        'file' => $subsection->getMainFile(),
-                        'total' => $totalItems
-                        );
             }
 
             $data['sections'][] = $sectionTmp;

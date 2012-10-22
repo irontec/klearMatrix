@@ -67,7 +67,7 @@ class KlearMatrix_Model_ResponseItem
         '_customTemplate' => array('template', false),
         '_customScripts' => array('scripts', false),
         '_actionMessages' => array('actionMessages', false),
-        '_disableSave' => array('disableSave', false),
+        '_disableSave' => array('disableSave', false)
     );
 
     //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
@@ -170,6 +170,11 @@ class KlearMatrix_Model_ResponseItem
     {
         $this->_routeDispatcher = $routeDispatcher;
         return $this;
+    }
+
+    public function getRouteDispatcher()
+    {
+        return $this->_routeDispatcher;
     }
 
     public function getMapperName()

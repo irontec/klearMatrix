@@ -109,7 +109,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setResults(array())
             ->setCsv((bool)$this->_item->getCsv());
 
-        $where = $this->_getWhere($cols, $model, $data);
+        $where = self::getWhere($cols, $model, $data, $this->_item, $this->_helper->log);
         $order = $this->_getListOrder($cols, $model);
         $count = $this->_getItemsPerPage();
         $page = $this->_getCurrentPage();
@@ -226,35 +226,35 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         return $parentData;
     }
 
-    protected function _getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data)
+    public static function getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data, KlearMatrix_Model_ResponseItem $item, $logger = null)
     {
 
         $where = array();
 
-        if ($this->_item->hasFilterClass()) {
-            $where[] = $this->_item->getFilterClassCondition();
+        if ($item->hasFilterClass()) {
+            $where[] = $item->getFilterClassCondition();
         }
 
-        if ($this->_item->hasRawCondition()) {
-            $where[] = $this->_item->getRawCondition();
+        if ($item->hasRawCondition()) {
+            $where[] = $item->getRawCondition();
         }
 
-        if ($this->_item->isFilteredScreen()) {
-            $where[] = $this->_item->getFilteredCondition($this->_mainRouter->getParam('pk'));
+        if ($item->isFilteredScreen()) {
+            $where[] = $item->getFilteredCondition($item->getRouteDispatcher()->getParam('pk'));
         }
 
-        if ($this->_item->hasForcedValues()) {
-            $where = array_merge($where, $this->_item->getForcedValuesConditions());
+        if ($item->hasForcedValues()) {
+            $where = array_merge($where, $item->getForcedValuesConditions());
         }
 
-
+        $request = Zend_Controller_Front::getInstance()->getRequest();
 
         $whereProccessor = new KlearMatrix_Model_FilterProcessor;
         $whereProccessor
-            ->setLogger($this->_helper->log)
+            ->setLogger($logger)
             ->setModel($model)
             ->setResponseData($data)
-            ->setRequest($this->getRequest())
+            ->setRequest($request)
             ->setColumnCollection($cols);
 
         if ($whereProccessor->isFilteredRequest()) {

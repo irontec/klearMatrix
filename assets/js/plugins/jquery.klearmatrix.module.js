@@ -265,7 +265,7 @@
                         '<br />',
                         {
                             title: $(this).attr("title") || '',
-                            template : '<div class="ui-widget">{{html text}}</div>'
+                            template : '<div class="ui-widget">{{html text}}</div>'                            
                         });
 
                 var $_dialog = $(self).klearModule("getModuleDialog");

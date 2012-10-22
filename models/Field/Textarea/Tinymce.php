@@ -66,7 +66,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
 
         // Language Settings
         $this->_lang = Zend_Registry::get('currentSystemLanguage');
-        $this->_mainConfig['language'] = $this->_lang->getIden();
+        $this->_mainConfig['language'] = $this->_lang->getLanguage();
 
         // Location of TinyMCE script
         $this->_mainConfig['script_url'] = $this->_jsPluginPath . '/tiny_mce.js';

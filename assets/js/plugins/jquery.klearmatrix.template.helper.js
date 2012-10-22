@@ -269,10 +269,10 @@
                         break;
                         
                     case 'checkbox':
-                        var icon = 'cross';
+                        var icon = 'closethick';
 
                         if (values[column.id] == 1) {
-                            icon = 'tick';
+                            icon = 'check';
                         }
                         
                         return '<span class="ui-icon ui-icon-' + icon + '" />';

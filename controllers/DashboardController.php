@@ -64,11 +64,8 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
 
     public function indexAction()
     {
-
         $data = array();
         $data['title'] = $this->_item->getTitle();
-
-
 
         $menuConfig = Zend_Controller_Front::getInstance()
                         ->getParam('bootstrap')
@@ -100,13 +97,13 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 $moduleRouter = $moduleConfig->buildRouterConfig();
                 $moduleRouter->resolveDispatch();
 
-
                 if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class"))
                 {
 
                     $dashElementClassName = $moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class");
                     $dashSection = new $dashElementClassName;
                     $dashSection->setConfig($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard"));
+                    $dashSection->setItem($moduleRouter->getCurrentItem());
                     $sectionTmp['subsects'][] = array(
                             'name' => $dashSection->getName(),
                             'class' => $dashSection->getClass(),
@@ -117,7 +114,6 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                     continue;
                 }
 
-
                 /*
                  * Para KMatrix List, se calcula automáticamente.
                  */
@@ -126,10 +122,6 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                     $sectionTmp['subsects'][] = $this->_calculateForKMatrixList($moduleRouter, $subsection);
                     continue;
                 }
-
-
-
-
             }
 
             $data['sections'][] = $sectionTmp;

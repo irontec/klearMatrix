@@ -109,7 +109,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setResults(array())
             ->setCsv((bool)$this->_item->getCsv());
 
-        $where = self::getWhere($cols, $model, $data, $this->_item, $this->_helper->log);
+        $where = $this->_helper->createListWhere($cols, $model, $data, $this->_item, $this->_helper->log);
         $order = $this->_getListOrder($cols, $model);
         $count = $this->_getItemsPerPage();
         $page = $this->_getCurrentPage();
@@ -228,62 +228,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public static function getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data, KlearMatrix_Model_ResponseItem $item, $logger = null)
     {
-
-        $where = array();
-
-        if ($item->hasFilterClass()) {
-            $where[] = $item->getFilterClassCondition();
-        }
-
-        if ($item->hasRawCondition()) {
-            $where[] = $item->getRawCondition();
-        }
-
-        if ($item->isFilteredScreen()) {
-            $where[] = $item->getFilteredCondition($item->getRouteDispatcher()->getParam('pk'));
-        }
-
-        if ($item->hasForcedValues()) {
-            $where = array_merge($where, $item->getForcedValuesConditions());
-        }
-
-        $request = Zend_Controller_Front::getInstance()->getRequest();
-
-        $whereProccessor = new KlearMatrix_Model_FilterProcessor;
-        $whereProccessor
-            ->setLogger($logger)
-            ->setModel($model)
-            ->setResponseData($data)
-            ->setRequest($request)
-            ->setColumnCollection($cols);
-
-        if ($whereProccessor->isFilteredRequest()) {
-            $where[] = $whereProccessor->getCondition();
-        }
-
-
-        if (count($where) == 0) {
-
-            $where = null;
-
-        } else {
-
-            $values = $expressions = array();
-
-            foreach ($where as $condition) {
-
-                if (is_array($condition)) {
-                    $expressions[] = $condition[0];
-                    $values = array_merge($values, $condition[1]);
-                } else {
-                    $expressions[] = $condition;
-                }
-            }
-
-            $where = array(implode(" and ", $expressions), $values);
-        }
-
-        return $where;
     }
 
     protected function _getItemsPerPage()

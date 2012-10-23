@@ -35,33 +35,6 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
     }
 
 
-    protected function _calculateForKMatrixList($moduleRouter, $subsection)
-    {
-
-        $_item = $moduleRouter->getCurrentItem();
-
-        $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
-
-        $cols = $_item->getVisibleColumns();
-        $model = $_item->getObjectInstance();
-        $fooData = new KlearMatrix_Model_MatrixResponse();
-
-        // NO AUTOLOAD for controllers? (or should not be on the Controller O:)
-        require_once dirname(__FILE__) . '/ListController.php';
-
-        $where = KlearMatrix_ListController::getWhere($cols, $model, $fooData, $_item);
-
-        $totalItems = $_mapper->countByQuery($where);
-
-        return array(
-                'name' => $subsection->getName(),
-                'class' => $subsection->getClass(),
-                'file' => $subsection->getMainFile(),
-                'subtitle' => $totalItems
-        );
-
-    }
-
     public function indexAction()
     {
         $data = array();
@@ -115,11 +88,11 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 }
 
                 /*
-                 * Para KMatrix List, se calcula automáticamente.
+                 * Para KlearMatrix List, se calcula automáticamente.
                  */
                 if (($moduleRouter->getModuleName() == "klearMatrix") &&
                         ($moduleRouter->getControllerName() == "list") ) {
-                    $sectionTmp['subsects'][] = $this->_calculateForKMatrixList($moduleRouter, $subsection);
+                    $sectionTmp['subsects'][] = $this->_calculateForKlearMatrixList($moduleRouter, $subsection);
                     continue;
                 }
             }
@@ -133,5 +106,29 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.dashboard.js");
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
+    }
+
+    protected function _calculateForKlearMatrixList($moduleRouter, $subsection)
+    {
+
+        $_item = $moduleRouter->getCurrentItem();
+
+        $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
+
+        $cols = $_item->getVisibleColumns();
+        $model = $_item->getObjectInstance();
+        $fakeData = new KlearMatrix_Model_MatrixResponse();
+
+        $where = $this->_helper->createListWhere($cols, $model, $fakeData, $_item);
+
+        $totalItems = $_mapper->countByQuery($where);
+
+        return array(
+                'name' => $subsection->getName(),
+                'class' => $subsection->getClass(),
+                'file' => $subsection->getMainFile(),
+                'subtitle' => $totalItems
+        );
+
     }
 }

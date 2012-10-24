@@ -72,6 +72,6 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
             KlearMatrix_Model_ResponseItem $responseItem,
             $logger = null)
     {
-        return $this->createListWhere($columns, $model, $responseData, $responseItem);
+        return $this->createListWhere($columns, $model, $responseData, $responseItem, $logger);
     }
 }

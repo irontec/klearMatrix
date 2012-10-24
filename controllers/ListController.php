@@ -226,10 +226,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         return $parentData;
     }
 
-    public static function getWhere(KlearMatrix_Model_ColumnCollection $cols, $model, KlearMatrix_Model_MatrixResponse $data, KlearMatrix_Model_ResponseItem $item, $logger = null)
-    {
-    }
-
     protected function _getItemsPerPage()
     {
         //Calculamos la página en la que estamos y el offset

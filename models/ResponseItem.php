@@ -908,7 +908,7 @@ class KlearMatrix_Model_ResponseItem
     {
         if ($this->_hasInfo) {
 
-            return $this->_fieldInfo->getJSONArray();
+            return $this->_fieldInfo->getJsonArray();
         }
 
         return false;

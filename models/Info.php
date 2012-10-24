@@ -1,17 +1,11 @@
 <?php
-
-/**
- * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
-* @author Lander de los bosques
-*
-*/
 class KlearMatrix_Model_Info
 {
 
     protected $_config;
     protected $_fieldInfo = array();
 
-    public function setCOnfig(Zend_Config $info)
+    public function setConfig(Zend_Config $info)
     {
         $this->_config = new Klear_Model_ConfigParser();
         $this->_config->setConfig($info);
@@ -30,7 +24,7 @@ class KlearMatrix_Model_Info
      * Por favor, poner el nombre que deseeis;
      * @return multitype:
      */
-    public function getJSONArray()
+    public function getJsonArray()
     {
         return $this->_fieldInfo;
     }

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * Clase que devuelve la ruta al forward de _dispatch en base a la configuración a los parámetros de request
- * @author jabi
-*
-*/
 class KlearMatrix_Model_Column
 {
     protected $_dbFieldName;
@@ -585,7 +579,7 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->hasInfo()) {
-            $ret['fieldInfo'] = $this->_fieldInfo->getJSONArray();
+            $ret['fieldInfo'] = $this->_fieldInfo->getJsonArray();
         }
 
         if ($this->_ordered) {

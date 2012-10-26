@@ -29,15 +29,25 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
         return $this;
     }
 
-    public function toArray()
+    public function getConfig()
+    {
+        $config = array(
+            'values' => $this->_toArray(),
+            'editableFields' => $this->_getEditableFieldsConfig()
+        );
+
+        return $config;
+    }
+
+    public function _toArray()
     {
         $ret = array();
 
         foreach ($this as $key => $value) {
 
             $ret[] = array(
-                'key' => $key,
-                'item' => $value
+                    'key' => $key,
+                    'item' => $value
             );
         }
 
@@ -51,10 +61,9 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
      *         -
      * @return array:
      */
-    abstract public function getEditableFieldsConfig();
+    abstract protected function _getEditableFieldsConfig();
     abstract public function filterValue($value, $original);
     abstract public function prepareValue($value, $model);
-
 
     public function getIterator()
     {

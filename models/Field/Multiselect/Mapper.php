@@ -226,7 +226,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         return $retRelations;
     }
 
-    public function getEditableFieldsConfig()
+    protected function _getEditableFieldsConfig()
     {
         if (!isset($this->_editableFields)) {
             $this->_editableFields = $this->_getEditableFields();

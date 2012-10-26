@@ -1,7 +1,7 @@
 <?php
 class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
 {
-    protected $_control;
+    protected $_adapter;
     protected $_language = 'es';
 
     public function init()
@@ -12,10 +12,10 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
 
         $controlClassName = "KlearMatrix_Model_Field_Picker_" . ucfirst($sourceConfig->control);
 
-        $this->_control = new $controlClassName($sourceConfig);
+        $this->_adapter = new $controlClassName($sourceConfig);
 
-        $this->_js = $this->_control->getExtraJavascript();
-        $this->_css = $this->_control->getExtraCss();
+        $this->_js = $this->_adapter->getExtraJavascript();
+        $this->_css = $this->_adapter->getExtraCss();
     }
 
     public function getCustomSearchCondition($values, $searchOps, $model)
@@ -50,14 +50,11 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
                 '(' . implode(' and ', $vals). ')',
                 $_fieldValues
         );
-
-
-
     }
 
     public function getConfig()
     {
-        return $this->_control->getConfig();
+        return $this->_adapter->getConfig();
     }
 
     /*
@@ -67,7 +64,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
     public function filterValue($value, $original)
     {
 
-        return $this->_control->filterValue($value, $original);
+        return $this->_adapter->filterValue($value, $original);
 
     }
 
@@ -82,8 +79,8 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
     public function prepareValue($value, $model)
     {
 
-        if (method_exists($this->_control, 'prepareValue')) {
-            return $this->_control->prepareValue($value, $model);
+        if (method_exists($this->_adapter, 'prepareValue')) {
+            return $this->_adapter->prepareValue($value, $model);
         }
 
         $getter = $this->_column->getGetterName($model);
@@ -91,7 +88,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
 
         if ($zendDateValue instanceof Zend_Date) {
             $zendDateValue->setTimezone('Europe/Madrid');
-            return $zendDateValue->toString($this->_control->getFormat());
+            return $zendDateValue->toString($this->_adapter->getFormat());
         }
 
         return $value;

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Clase de campo tipo Ghost. Configuración en yaml para el campo.
     source:

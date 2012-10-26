@@ -33,12 +33,7 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
 
     public function getConfig()
     {
-        $ret = array_merge(
-            $this->_adapter->getExtraConfigArray(),
-            array('values' => $this->_adapter->toArray())
-        );
-
-        return $ret;
+        return $this->_adapter->getConfig();
     }
 
 }

@@ -2,7 +2,7 @@
 class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
 {
 
-    protected $_control;
+    protected $_adapter;
 
     public function init()
     {
@@ -13,23 +13,20 @@ class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
         if ($sourceConfig) {
 
             $controlClassName = "KlearMatrix_Model_Field_Textarea_" . ucfirst($sourceConfig->control);
-            $this->_control = new $controlClassName($sourceConfig);
+            $this->_adapter = new $controlClassName($sourceConfig);
 
-            $this->_js = $this->_control->getExtraJavascript();
-            $this->_css = $this->_control->getExtraCss();
+            $this->_js = $this->_adapter->getExtraJavascript();
+            $this->_css = $this->_adapter->getExtraCss();
         }
     }
 
     public function getConfig()
     {
-        if ($this->_control) {
-
-            return $this->_control->getConfig();
-
-        } else {
-
-            return parent::getConfig();
+        if ($this->_adapter) {
+            return $this->_adapter->getConfig();
         }
+
+        return false;
     }
 }
 

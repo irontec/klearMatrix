@@ -29,17 +29,6 @@ class KlearMatrix_Model_Field_Password extends KlearMatrix_Model_Field_Abstract
     {
         return "********";
     }
-
-    public function getExtraJavascript()
-    {
-        return false;
-    }
-
-    public function getExtraCss()
-    {
-        return false;
-    }
-
 }
 
 //EOF

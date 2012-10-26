@@ -17,7 +17,13 @@ class KlearMatrix_Model_Field_Number_Spinner
         "/css/jquery.ui.spinner.css"
     );
 
-    public function setConfig($config)
+    public function __construct(Zend_Config $config)
+    {
+        $this->setConfig($config);
+        $this->init();
+    }
+
+    public function setConfig(Zend_Config $config)
     {
         $this->_config = $config;
 
@@ -67,7 +73,6 @@ class KlearMatrix_Model_Field_Number_Spinner
 
         return $ret;
     }
-
 }
 
 //EOF

@@ -2,7 +2,7 @@
 
 class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 {
-    protected $_cols = array();
+    protected $_columns = array();
     protected $_position;
 
     protected $_optionColumnIdx = false;
@@ -17,33 +17,33 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
     protected $_langDefinitions = array();
 
-    public function addCol(KlearMatrix_Model_Column $col)
+    public function addCol(KlearMatrix_Model_Column $column)
     {
-        $this->_cols[$col->getDbFieldName()] = $col;
+        $this->_columns[$column->getDbFieldName()] = $column;
 
         // Estamos dando por hecho, que hay sólo una columna de opciones por listado.
-        if ($col->isOption()) {
+        if ($column->isOption()) {
 
-            $this->_optionColumnsIdx = $col->getDbFieldName();
+            $this->_optionColumnsIdx = $column->getDbFieldName();
         } else {
 
-            $this->_types[$col->getType()] = $col->getDbFieldName();
+            $this->_types[$column->getType()] = $column->getDbFieldName();
         }
 
-        if ($col->isDefault()) {
-            $this->_defaultColumnIdx = $col->getDbFieldName();
+        if ($column->isDefault()) {
+            $this->_defaultColumnIdx = $column->getDbFieldName();
         }
 
-        if ($col->isDependant()) {
-            $this->_dependantColumnIdx[] = $col->getDbFieldName();
+        if ($column->isDependant()) {
+            $this->_dependantColumnIdx[] = $column->getDbFieldName();
         }
 
-        if ($col->isMultilang()) {
-            $this->_multilangColumnIdx[] = $col->getDbFieldName();
+        if ($column->isMultilang()) {
+            $this->_multilangColumnIdx[] = $column->getDbFieldName();
         }
 
-        if ($col->isFile()) {
-            $this->_fileColumnIdx[] = $col->getDbFieldName();
+        if ($column->isFile()) {
+            $this->_fileColumnIdx[] = $column->getDbFieldName();
         }
     }
 
@@ -52,8 +52,8 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
      */
     public function addCols(array $columns)
     {
-        foreach ($columns as $col) {
-            $this->addCol($col);
+        foreach ($columns as $column) {
+            $this->addCol($column);
         }
     }
 
@@ -75,14 +75,14 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $cols = array();
         foreach ($orderFieldsList as $field) {
 
-            if (isset($this->_cols[$field])) {
+            if (isset($this->_columns[$field])) {
 
-                $cols[$field] = $this->_cols[$field];
-                unset($this->_cols[$field]);
+                $cols[$field] = $this->_columns[$field];
+                unset($this->_columns[$field]);
             }
         }
 
-        $this->_cols = array_merge($cols, $this->_cols);
+        $this->_columns = array_merge($cols, $this->_columns);
     }
 
     protected function _getOrderFieldsArray(Zend_Config $orderFields)
@@ -101,9 +101,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
     public function toArray()
     {
         $retArray = array();
-        foreach ($this->_cols as $col) {
+        foreach ($this->_columns as $column) {
 
-            $retArray[$col->getDbFieldName()] = $col->toArray();
+            $retArray[$column->getDbFieldName()] = $column->toArray();
         }
 
         return $retArray;
@@ -115,9 +115,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
      */
     public function getColFromDbName($field)
     {
-        if (isset($this->_cols[$field])) {
+        if (isset($this->_columns[$field])) {
 
-            return $this->_cols[$field];
+            return $this->_columns[$field];
         }
 
         return null;
@@ -154,11 +154,10 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
     {
         $retJs = array();
 
-        foreach ($this->_cols as $col) {
-            if ($aJs = $col->getJsPaths()) {
-                foreach ($aJs as $script) {
-                    $retJs['jsFile_' . crc32($script)] = $script;
-                }
+        foreach ($this->_columns as $column) {
+            $jsPaths = $column->getJsPaths();
+            foreach ($jsPaths as $script) {
+                $retJs['jsFile_' . crc32($script)] = $script;
             }
         }
         return $retJs;
@@ -168,8 +167,8 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
     {
         $retCss = array();
 
-        foreach ($this->_cols as $col) {
-            if ($aCss = $col->getCssPaths()) {
+        foreach ($this->_columns as $column) {
+            if ($aCss = $column->getCssPaths()) {
                 foreach ($aCss as $css) {
                     $retCss['cssFile_' . crc32($css)] = $css;
                 }
@@ -181,10 +180,10 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
     public function getDefaultCol()
     {
         if (false === $this->_defaultColumnIdx) {
-            return array_shift($this->_cols);
+            return array_shift($this->_columns);
         }
 
-        return $this->_cols[$this->_defaultColumnIdx];
+        return $this->_columns[$this->_defaultColumnIdx];
     }
 
     /**
@@ -240,7 +239,7 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
     public function clear()
     {
-        $this->_cols = array();
+        $this->_columns = array();
         $this->_types = array();
         $this->_defaultColumnIdx = false;
         $this->_optionColumnIdx = false;
@@ -253,12 +252,12 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
             return false;
         }
 
-        return $this->_cols[$this->_optionColumnsIdx];
+        return $this->_columns[$this->_optionColumnsIdx];
     }
 
     public function getIterator()
     {
-        return new ArrayIterator($this->_cols);
+        return new ArrayIterator($this->_columns);
     }
 
 }

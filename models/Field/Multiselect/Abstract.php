@@ -1,46 +1,18 @@
 <?php
 
-abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator
+abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorAggregate
 {
     protected $_config;
-    protected $_items;
-    protected $_keys;
-    protected $_position;
-
     protected $_column;
 
-    public function filterValue($value, $original)
+    protected $_items;
+    protected $_keys;
+
+
+    public function __construct(Zend_Config $config, KlearMatrix_Model_Column $column)
     {
-        return $value;
-    }
-
-    public function prepareValue($value, $model)
-    {
-        return $value;
-    }
-
-    public function toArray()
-    {
-        $ret = array();
-
-        foreach ($this as $key => $value) {
-
-            $ret[] = array('key' => $key, 'item' => $value);
-        }
-
-        return $ret;
-    }
-
-    public function __construct()
-    {
-        $this->rewind();
-    }
-
-    public function setColumn($column)
-    {
-        $this->_column = $column;
-
-        return $this;
+        $this->setConfig($config)->setColumn($column);
+        $this->init();
     }
 
     public function setConfig(Zend_Config $config)
@@ -50,29 +22,26 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator
         return $this;
     }
 
-    public function rewind()
+    public function setColumn(KlearMatrix_Model_Column $column)
     {
-        $this->_position = 0;
+        $this->_column = $column;
+
+        return $this;
     }
 
-    public function current()
+    public function toArray()
     {
-        return $this->_items[$this->_position];
-    }
+        $ret = array();
 
-    public function key()
-    {
-        return $this->_keys[$this->_position];
-    }
+        foreach ($this as $key => $value) {
 
-    public function next()
-    {
-        ++$this->_position;
-    }
+            $ret[] = array(
+                'key' => $key,
+                'item' => $value
+            );
+        }
 
-    public function valid()
-    {
-        return isset($this->_items[$this->_position]);
+        return $ret;
     }
 
     /**
@@ -82,9 +51,14 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements Iterator
      *         -
      * @return array:
      */
-    public function getEditableFieldsConfig()
+    abstract public function getEditableFieldsConfig();
+    abstract public function filterValue($value, $original);
+    abstract public function prepareValue($value, $model);
+
+
+    public function getIterator()
     {
-        return array();
+        return new ArrayIterator(array_combine($this->_keys, $this->_items));
     }
 
 }

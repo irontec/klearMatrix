@@ -13,6 +13,9 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $controlClassName = "KlearMatrix_Model_Field_Picker_" . ucfirst($sourceConfig->control);
 
         $this->_control = new $controlClassName($sourceConfig);
+
+        $this->_js = $this->_control->getExtraJavascript();
+        $this->_css = $this->_control->getExtraCss();
     }
 
     public function getCustomSearchCondition($values, $searchOps, $model)
@@ -92,23 +95,5 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         }
 
         return $value;
-    }
-
-    public function getExtraJavascript()
-    {
-        if ($this->_control) {
-            return $this->_control->getExtraJavascript();
-        }
-        return parent::getExtraJavascript();
-    }
-
-
-    public function getExtraCss()
-    {
-        if ($this->_control) {
-            return $this->_control->getExtraCss();
-        }
-
-        return parent::getExtraCss();
     }
 }

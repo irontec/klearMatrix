@@ -2,7 +2,6 @@
 
 abstract class KlearMatrix_Model_Field_Abstract
 {
-
     /**
      * @var KlearMatrix_Model_Column
      */
@@ -25,6 +24,9 @@ abstract class KlearMatrix_Model_Field_Abstract
     /*valid error index */
     protected $_errorIndex = array('patternMismatch', 'rangeOverflow', 'rangeUnderflow', 'stepMismatch', 'tooLong', 'typeMismatch', 'valueMissing');
     protected $_errorMessages = array();
+
+    protected $_js = array();
+    protected $_css = array();
 
     public function setColumn($column)
     {
@@ -123,12 +125,12 @@ abstract class KlearMatrix_Model_Field_Abstract
 
     public function getExtraJavascript()
     {
-        return false;
+        return $this->_js;
     }
 
     public function getExtraCss()
     {
-        return false;
+        return $this->_css;
     }
 
     public function canBeSearched()

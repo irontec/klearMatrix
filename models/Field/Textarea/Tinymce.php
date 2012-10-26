@@ -2,17 +2,11 @@
 
 class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_Textarea_Abstract
 {
-    protected $_mainConfig = array();
-
-    protected $_css = array();
-
     /**
      *
      * @var Klear_Model_Language
      */
     protected $_lang;
-
-    protected $_js = array();
 
     protected $_jsPluginPath = 'klearMatrix/js/plugins/tinymce/jscripts/tiny_mce';
 
@@ -23,8 +17,6 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
     protected $_template;
 
     protected $_defaultTemplate = 'simple';
-
-
 
     public function init()
     {
@@ -62,46 +54,42 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
         $this->_jsPluginPath = $baseUrl . DIRECTORY_SEPARATOR . $this->_jsPluginPath;
 
         // JS template
-        $this->_mainConfig['tinyJsController'] = $this->_template->getJsControllerClass();
+        $this->_settings['tinyJsController'] = $this->_template->getJsControllerClass();
 
         // Language Settings
         $this->_lang = Zend_Registry::get('currentSystemLanguage');
-        $this->_mainConfig['language'] = $this->_lang->getLanguage();
+        $this->_settings['language'] = $this->_lang->getLanguage();
 
         // Location of TinyMCE script
-        $this->_mainConfig['script_url'] = $this->_jsPluginPath . '/tiny_mce.js';
+        $this->_settings['script_url'] = $this->_jsPluginPath . '/tiny_mce.js';
 
         // Libraries
-        $this->_mainConfig['content_css'] = $this->_jsPluginPath . 'css/content.css';
-        $this->_mainConfig['template_external_list_url'] = $this->_jsPluginPath . '/plugins/lists/template_list.js';
-        $this->_mainConfig['external_link_list_url'] = $this->_jsPluginPath . '/plugins/lists/link_list.js';
-        $this->_mainConfig['external_image_list_url'] = $this->_jsPluginPath . '/plugins/lists/image_list.js';
-        $this->_mainConfig['media_external_list_url'] = $this->_jsPluginPath . '/plugins/lists/media_list.js';
+        $this->_settings['content_css'] = $this->_jsPluginPath . 'css/content.css';
+        $this->_settings['template_external_list_url'] = $this->_jsPluginPath . '/plugins/lists/template_list.js';
+        $this->_settings['external_link_list_url'] = $this->_jsPluginPath . '/plugins/lists/link_list.js';
+        $this->_settings['external_image_list_url'] = $this->_jsPluginPath . '/plugins/lists/image_list.js';
+        $this->_settings['media_external_list_url'] = $this->_jsPluginPath . '/plugins/lists/media_list.js';
 
         // Theme
-        $this->_mainConfig['theme'] = $this->_template->getTinyTemplate();
+        $this->_settings['theme'] = $this->_template->getTinyTemplate();
 
-        $this->_mainConfig['theme_advanced_toolbar_location'] = $this->_template->getTinyToolBarLocation();//'top';
-        $this->_mainConfig['theme_advanced_toolbar_align'] = $this->_template->getTinyToolBarAlign();//'left';
-        $this->_mainConfig['theme_advanced_statusbar_location'] = $this->_template->getTinyStatusBarLocation();//'bottom';
-        $this->_mainConfig['theme_advanced_resizing'] = $this->_template->getTinyResizing();//true;
+        $this->_settings['theme_advanced_toolbar_location'] = $this->_template->getTinyToolBarLocation();//'top';
+        $this->_settings['theme_advanced_toolbar_align'] = $this->_template->getTinyToolBarAlign();//'left';
+        $this->_settings['theme_advanced_statusbar_location'] = $this->_template->getTinyStatusBarLocation();//'bottom';
+        $this->_settings['theme_advanced_resizing'] = $this->_template->getTinyResizing();//true;
 
         // Plugins
-        $this->_mainConfig['plugins'] = $this->_template->getTinyPlugins();
+        $this->_settings['plugins'] = $this->_template->getTinyPlugins();
 
         $buttonsBars = $this->_template->getButtonsBar();
 
         foreach ($buttonsBars as $index => $set) {
-            $this->_mainConfig['theme_advanced_buttons' . ($index+1)] = implode(',', $set);
+            $this->_settings['theme_advanced_buttons' . ($index+1)] = implode(',', $set);
         }
     }
 
-    public function getConfig()
+    protected function _setPlugin()
     {
-        return
-            array(
-                "plugin" => 'kleartinymce',
-                "settings" => $this->_mainConfig
-            );
+        $this->_plugin = 'kleartinymce';
     }
 }

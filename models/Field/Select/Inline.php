@@ -40,19 +40,6 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
         }
     }
 
-    public function getExtraConfigArray()
-    {
-        $ret = array();
-
-        if (sizeof($this->_showOnSelect)>0 || sizeof($this->_hideOnSelect)>0) {
-
-            $ret['visualFilter']['show'] = (array)$this->_showOnSelect;
-            $ret['visualFilter']['hide'] = (array)$this->_hideOnSelect;
-        }
-
-        return $ret;
-    }
-
 }
 
 //EOF

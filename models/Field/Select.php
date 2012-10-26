@@ -14,15 +14,11 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
     public function init()
     {
         parent::init();
-        $sourceConfig = $this->_config->getRaw()->source;
 
+        $sourceConfig = $this->_config->getRaw()->source;
         $adapterClassName = "KlearMatrix_Model_Field_Select_" . ucfirst($sourceConfig->data);
 
-        $this->_adapter = new $adapterClassName;
-        $this->_adapter
-                    ->setConfig($sourceConfig)
-                    ->setColumn($this->_column)
-                    ->init();
+        $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
     }
 
     public function filterValue($value, $original)

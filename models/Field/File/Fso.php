@@ -21,15 +21,16 @@ class KlearMatrix_Model_Field_File_Fso
         "/css/qq-fileuploader.css"
     );
 
+    public function __construct($config)
+    {
+        $this->setConfig($config);
+    }
+
     public function setConfig($config)
     {
         $this->_config = $config;
 
         return $this;
-    }
-
-    public function init()
-    {
     }
 
     protected function _getAllowedExtensions()

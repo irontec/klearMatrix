@@ -8,7 +8,6 @@
 
 class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 {
-
     /**
      * @var KlearMatrix_Model_Field_Password_Abstract
      */
@@ -20,10 +19,9 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         $sourceConfig = $this->_config->getRaw()->source;
         $adapterClassName = "KlearMatrix_Model_Field_File_" . ucfirst($sourceConfig->data);
 
-        $this->_adapter = new $adapterClassName;
-        $this->_adapter
-            ->setConfig($sourceConfig)
-            ->init();
+        $this->_adapter = new $adapterClassName($sourceConfig);
+        $this->_js = $this->_adapter->getExtraJavascript();
+        $this->_css = $this->_adapter->getExtraCss();
     }
 
     /*
@@ -95,18 +93,6 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 
         return false;
     }
-
-
-    public function getExtraJavascript()
-    {
-        return $this->_adapter->getExtraJavascript();
-    }
-
-    public function getExtraCss()
-    {
-        return $this->_adapter->getExtraCss();
-    }
-
 }
 
 //EOF

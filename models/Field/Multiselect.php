@@ -21,21 +21,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
         $adapterClassName = "KlearMatrix_Model_Field_Multiselect_" . ucfirst($sourceConfig->data);
 
-        $this->_adapter = new $adapterClassName;
-        $this->_adapter
-             ->setConfig($sourceConfig)
-             ->setColumn($this->_column)
-             ->init();
-    }
-
-    public function getExtraJavascript()
-    {
-        return $this->_js;
-    }
-
-    public function getExtraCss()
-    {
-        return $this->_css;
+        $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
     }
 
     public function getConfig()

@@ -19,7 +19,7 @@ title="${info.text}"
         <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>
 
          {{each(colIdx,column) columns}}
-        <p class="ui-widget-content ui-corner-all{{if (column.properties && column.properties.expandable == true)}} expandable{{/if}}">
+        <div class="container ui-widget-content ui-corner-all{{if (column.properties && column.properties.expandable == true)}} expandable{{/if}}">
             {{if column.fieldInfo}}
                 <span
                     class="
@@ -56,7 +56,7 @@ title="${info.text}"
                      {{/if}}
                 {{/each}}
             {{/if}}
-        </p>
+        </div>
         {{/each}}
     </fieldset>
 

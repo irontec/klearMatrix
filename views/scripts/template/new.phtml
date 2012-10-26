@@ -2,11 +2,11 @@
 
 <div class="ui-widget-content ui-corner-all assistant">
 <span class="
-ui-silk 
-ui-silk-${info.icon} 
+ui-silk
+ui-silk-${info.icon}
 fieldInfo-${info.type}
 fieldInfo-position-${info.position}
-" 
+"
 title="${info.text}"
 ></span>{{if (info.label)}} ${info.label} {{/if}}
 </div>
@@ -17,15 +17,15 @@ title="${info.text}"
         <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,false)}</legend>
 
         {{each(colIdx,column) columns}}
-        <p class="ui-widget-content ui-corner-all">
+        <div class="container ui-widget-content ui-corner-all">
          {{if column.fieldInfo}}
-                <span 
+                <span
                     class="
-                        ui-silk 
-                        ui-silk-${column.fieldInfo.icon} 
+                        ui-silk
+                        ui-silk-${column.fieldInfo.icon}
                         fieldInfo-${column.fieldInfo.type}
                         fieldInfo-position-${column.fieldInfo.position}
-                        " 
+                        "
                     title="${column.fieldInfo.text}"
                 ></span>
             {{/if}}
@@ -40,7 +40,7 @@ title="${info.text}"
                 <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,false)}{{/if}}</a>
                 {{/each}}
             {{/if}}
-        </p>
+        </div>
         {{/each}}
     </fieldset>
     <div class="generalOptionsToolbar ui-widget-content ui-corner-all">

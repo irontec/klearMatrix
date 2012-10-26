@@ -422,7 +422,7 @@
         standardError : function(data) {
             var self = this;
             var $_dialog = $(self.element).klearModule("getModuleDialog");
-            var $message = $('<div><p>' + data.message + '</p></div>');
+            var $message = $('<div><div class="dialogMessage">' + data.message + '</div></div>');
 
             $_dialog.moduleDialog(
                 "option", 

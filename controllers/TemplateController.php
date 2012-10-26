@@ -2,6 +2,19 @@
 
 class KlearMatrix_TemplateController extends Zend_Controller_Action
 {
+    protected $_availabeFields = array(
+            "checkbox",
+            "file",
+            "ghost",
+            "multiselect",
+            "number",
+            "password",
+            "picker",
+            "radio",
+            "select",
+            "text",
+            "textarea",
+    );
 
     public function init()
     {
@@ -27,7 +40,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
          * Field type templates :)
          */
         $prefix = "klearMatrixFields";
-        foreach ($this->_getAvailableFieldTypes() as $type) {
+        foreach ($this->_availabeFields as $type) {
             $cacheTemplates[$prefix . $type] = '/fields/' . $type;
         }
 
@@ -87,24 +100,9 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     {
         $fieldType = $this->getRequest()->getParam("type");
 
-        if (in_array($fieldType, $this->_getAvailableFieldTypes())) {
+        if (in_array($fieldType, $this->_availabeFields)) {
             $this->_helper->viewRenderer('fields/' . $fieldType);
         }
     }
 
-    protected function _getAvailableFieldTypes()
-    {
-        return array(
-            "text",
-            "textarea",
-            "select",
-            "multiselect",
-            "password",
-            "number",
-            "ghost",
-            "file",
-            "picker",
-            "checkbox"
-        );
-    }
 }

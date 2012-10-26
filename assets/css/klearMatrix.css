@@ -140,6 +140,20 @@ table.kMatrix .mlTag {
     width:10em;
 }
 
+.klearMatrix_form li {
+    list-style: none;
+    margin: 10px;
+}
+
+.klearMatrix_form li label {
+    font-weight: normal;
+    margin-left: 30px;
+}
+
+.klearMatrix_form span.selectable {
+    display:inline-block; width:15px; height:15px; margin:0 3px; clear:both;
+}
+
 .paginator {
     clear: both;
     margin: 0.2em;

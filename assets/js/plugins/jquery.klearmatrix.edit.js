@@ -266,7 +266,7 @@
                 })
                 .on('validated',function(formElement,validation) {
                     
-                    var _inputContainer = $(formElement.target).parents("p:eq(0)");
+                    var _inputContainer = $(formElement.target).parents("div:eq(0)");
                     
                     if (true === validation.valid) {
                         $(".klearFieldError",_inputContainer).slideUp(function() {
@@ -631,12 +631,12 @@
                 .find(":not(:disabled):eq(0)").trigger("focusin").select();
             
             
-            $("p.expandable", this.options.theForm).each(function() {
+            $("div.expandable", this.options.theForm).each(function() {
                 $(this).hide();
                 var expand = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-s"></span></button>';
                 var contract = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-n"></span></button>';
                 
-                $("<p class='ui-widget-content ui-corner-all'/>")
+                $("<div class='container ui-widget-content ui-corner-all'/>")
                     .html($('label:first',$(this)).clone())
                     .insertAfter($(this))
                     .find('label:first')
@@ -644,21 +644,21 @@
                     .append(expand)
                     .after('<br />')
                     .on('click',function(){
-                        $(this).parent('p').slideToggle('slow',function(){
-                            $(this).prev('p.expandable').slideToggle('slow');
+                        $(this).parent('div').slideToggle('slow',function(){
+                            $(this).prev('div.expandable').slideToggle('slow');
                     });
                 });
                 
                 $('label:first',$(this)).append(contract).after('<br />').on('click',function(){
-                    $(this).parent('p').slideToggle('slow',function(){
-                        $(this).next('p').slideToggle('slow');
+                    $(this).parent('div').slideToggle('slow',function(){
+                        $(this).next('div').slideToggle('slow');
                     });
                 });
                 
                 $(this).find('button').on('click',function(e){
                     e.preventDefault();
                 });
-                $(this).next('p').find('button').on('click',function(e){
+                $(this).next('div').find('button').on('click',function(e){
                     e.preventDefault();
                 });
             });
@@ -725,7 +725,7 @@
                     var fName = $.trim(val);
                     if (fName == '') return;
                     
-                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
+                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
                     if (manual) field.hide();
                     else field.slideUp();
                 });
@@ -733,7 +733,7 @@
                 $.each(curOption.data("show").split(","),function(i,val) {
                     var fName = $.trim(val);
                     if (fName == '') return;
-                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("p:eq(0)");
+                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
                     if (manual) field.show();
                     else {
                         field.slideDown();

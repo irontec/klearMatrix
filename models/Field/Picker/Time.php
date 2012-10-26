@@ -2,54 +2,10 @@
 
 class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker_Abstract
 {
-    protected $_config;
-
-    public function __construct()
+    protected function _setPlugin()
     {
-        parent::__construct();
+        $this->_plugin = 'timepicker';
     }
-
-    public function setConfig($config)
-    {
-        parent::setConfig($config);
-
-        return $this;
-    }
-
-    public function init()
-    {
-        //TODO: lang global getter (lander donde andaba eso¿)
-
-        return $this;
-    }
-
-    public function getConfig()
-    {
-        $baseSettings = parent::getConfig();
-
-        $config = array(
-            "plugin" => 'timepicker',
-            "settings" => $baseSettings,
-        );
-
-        return $config;
-    }
-
-    public function getFormat($locale = null)
-    {
-        return $this->_timeFormats;
-    }
-
-    public function getExtraJavascript()
-    {
-        return $this->_js;
-    }
-
-    public function getExtraCss()
-    {
-        return $this->_css;
-    }
-
 
     public function filterValue($value, $original)
     {

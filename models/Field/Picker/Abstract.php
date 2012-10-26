@@ -1,5 +1,5 @@
 <?php
-class KlearMatrix_Model_Field_Picker_Abstract
+abstract class KlearMatrix_Model_Field_Picker_Abstract
 {
     protected $_locale;
     protected $_jqLocale;
@@ -12,54 +12,53 @@ class KlearMatrix_Model_Field_Picker_Abstract
             "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
     );
 
-    protected $_settings = array(
-
-        'altField' => null,
-        'altFormat' => null,
-        'appendText' => null,
-        'autoSize' => null,
-        'buttonImage' => null,
-        'buttonImageOnly' => null,
-        'buttonText' => null,
-        'calculateWeek' => null,
-        'changeMonth' => null,
-        'changeYear' => null,
-        'closeText' => null,
-        'constrainInput' => null,
-        'currentText' => null,
-        'dateFormat' => null,
-        'timeFormat' => null,
-        'dayNames' => null,
-        'dayNamesMin' => null,
-        'dayNamesShort' => null,
-        'defaultDate' => null,
-        'duration' => null,
-        'firstDay' => null,
-        'gotoCurrent' => null,
-        'hideIfNoPrevNext' => null,
-        'isRTL' => null,
-        'maxDate' => null,
-        'minDate' => null,
-        'monthNames' => null,
-        'monthNamesShort' => null,
-        'navigationAsDateFormat' => null,
-        'nextText' => null,
-        'numberOfMonths' => null,
-        'prevText' => null,
-        'selectOtherMonths' => null,
-        'shortYearCutoff' => null,
-        'showAnim' => null,
-        'showButtonPanel' => null,
-        'showCurrentAtPos' => null,
-        'showMonthAfterYear' => null,
-        'showOn' => null,
-        'showOptions' => null,
-        'showOtherMonths' => null,
-        'showWeek' => null,
-        'stepMonths' => null,
-        'weekHeader' => null,
-        'yearRange' => null,
-        'yearSuffix' => null
+    protected $_availableSettings = array(
+        'altField' ,
+        'altFormat' ,
+        'appendText' ,
+        'autoSize' ,
+        'buttonImage' ,
+        'buttonImageOnly' ,
+        'buttonText' ,
+        'calculateWeek' ,
+        'changeMonth' ,
+        'changeYear' ,
+        'closeText' ,
+        'constrainInput' ,
+        'currentText' ,
+        'dateFormat' ,
+        'timeFormat' ,
+        'dayNames' ,
+        'dayNamesMin' ,
+        'dayNamesShort' ,
+        'defaultDate' ,
+        'duration' ,
+        'firstDay' ,
+        'gotoCurrent' ,
+        'hideIfNoPrevNext' ,
+        'isRTL' ,
+        'maxDate' ,
+        'minDate' ,
+        'monthNames' ,
+        'monthNamesShort' ,
+        'navigationAsDateFormat' ,
+        'nextText' ,
+        'numberOfMonths' ,
+        'prevText' ,
+        'selectOtherMonths' ,
+        'shortYearCutoff' ,
+        'showAnim' ,
+        'showButtonPanel' ,
+        'showCurrentAtPos' ,
+        'showMonthAfterYear' ,
+        'showOn' ,
+        'showOptions' ,
+        'showOtherMonths' ,
+        'showWeek' ,
+        'stepMonths' ,
+        'weekHeader' ,
+        'yearRange' ,
+        'yearSuffix'
     );
 
     protected $_dateFormats = array(
@@ -135,7 +134,10 @@ class KlearMatrix_Model_Field_Picker_Abstract
 
     protected $_timeFormats = 'HH:mm:ss';
 
-    public function __construct()
+    protected $_settings = array();
+    protected $_plugin;
+
+    public function __construct($config)
     {
 
         $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
@@ -148,64 +150,64 @@ class KlearMatrix_Model_Field_Picker_Abstract
         }
 
         $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$this->_jqLocale.".js";
-        return $this;
 
+        $this->_setConfig($config);
+        $this->_setPlugin();
     }
+
+    protected function _setConfig($config)
+    {
+        if ($config->settings) {
+
+            foreach ($config->settings as $key => $value) {
+
+                $this->_setSetting($key, $value);
+
+            }
+        }
+
+        return $this;
+    }
+
+    protected function _setSetting($key, $value)
+    {
+        if (in_array($key, $this->_availableSettings)) {
+            $this->_settings[$key] = $value;
+        }
+        return $this;
+    }
+
+    abstract protected function _setPlugin();
 
     public function getLocale()
     {
         return $this->_locale;
     }
 
-    public function setConfig($config)
+    protected function _hasSetting($key)
     {
-        if ($config->settings) {
-
-            foreach ($config->settings as $key => $value) {
-
-                if (array_key_exists($key, $this->_settings)) {
-
-                    $this->_settings[$key] = $value;
-                }
-            }
-        }
-
-        return $this;
+        return isset($this->_settings[$key]);
     }
 
-    public function getConfig()
+    protected function _getSetting($key)
     {
-        $filteredSettings = array();
-
-        foreach ($this->_settings as $key => $val) {
-
-            if (! is_null($val)) {
-
-                 $filteredSettings[$key] = $val;
-            }
-        }
-        return $filteredSettings;
+        return $this->_settings[$key];
     }
 
-
+    public function getConfig() {
+        return array(
+            'settings' => $this->_settings,
+            'plugin' => $this->_plugin
+        );
+    }
 
     /**
      * Devuelve el formato de fecha "Localizado" segun jQ; y fixeado para formato Zend_Date
      */
-    protected function _getDateFormatFixed($locale)
-    {
-
-        $_dateFormat = $this->_dateFormats[$locale];
-        return str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $_dateFormat);
-
-    }
-
-
     public function getFormat($locale = null)
     {
-
-        if (isset($this->_settings['format'])) {
-            return $this->_setting['format'];
+        if ($this->_hasSetting('format')) {
+            return $this->_getSetting('format');
         }
 
         if (empty($locale)) {
@@ -217,6 +219,14 @@ class KlearMatrix_Model_Field_Picker_Abstract
         }
 
         return null;
+    }
+
+    protected function _getDateFormatFixed($locale)
+    {
+
+        $_dateFormat = $this->_dateFormats[$locale];
+        return str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $_dateFormat);
+
     }
 
     public function getExtraJavascript()

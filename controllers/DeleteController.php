@@ -84,21 +84,24 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $obj = $mapper->find($pk);
 
-        if (!$obj) {
+        try {
+            if (!$obj) {
+                $this->_helper->log(
+                    'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
+                    Zend_Log::ERR
+                );
+                throw new Klear_Exception_Default('Record not found. Could not delete.');
+            }
+
+            if (!$obj->delete()) {
+                throw new Exception('Unknown error');
+            }
+        } catch (Exception $e) {
             $this->_helper->log(
                 'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
                 Zend_Log::ERR
             );
-            throw new Klear_Exception_Default('Record not found. Could not delete.');
-        }
-
-        if (!$obj->delete()) {
-            $this->_helper->log(
-                'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
-                Zend_Log::ERR
-            );
-
-            throw new Exception('Could not delete record');
+            throw new Klear_Exception_Default('Could not delete record: ' . $e->getMessage());
         }
 
         $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.$pk.')');

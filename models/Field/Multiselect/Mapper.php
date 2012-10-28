@@ -24,7 +24,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $dataMapper = new $dataMapperName;
 
         $where = $this->_getFilterWhere();
-        $order = $this->_parsedValues->getProperty("relatedOrder");
+        $order = $this->_getRelatedOrder();
 
         $results = $dataMapper->fetchList($where, $order);
 
@@ -61,6 +61,15 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
         }
         return null;
+    }
+
+    protected function _getRelatedOrder()
+    {
+        $order = $this->_parsedValues->getProperty("relatedOrder");
+        if ($order instanceof Zend_Config) {
+            return $order->toArray();
+        }
+        return $order;
     }
 
     protected function _getRelatedFields()

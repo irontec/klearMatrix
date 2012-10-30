@@ -18,49 +18,75 @@
 
 class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 {
-
     protected $_cache = array();
+    protected $_ghostClassName;
+    protected $_ghostMethod;
 
-    public function init()
+    protected $_searchMethod;
+    protected $_orderMethod;
+
+    protected $_ghostObject;
+
+    protected function _init()
     {
-        $ret = parent::init();
-        $this->_column->markAsReadOnly();
+        // Required configuration
 
-        if ($this->_config->getProperty('order')) {
-            $this->_customOrderField = $this->_config->getProperty('order');
+        if (!$this->_config->getRaw()->source->class) {
+            throw new Klear_Exception_MissingConfiguration('Missing "class" in Ghost field configuration');
         }
 
-        if ($this->_config->getRaw()->source->searchMethod) {
-            $this->_canBeSearched = true;
+        if (!$this->_config->getRaw()->source->method) {
+            throw new Klear_Exception_MissingConfiguration('Missing "method" in Ghost field configuration');
+        }
+
+
+        $this->_ghostClassName = $this->_config->getRaw()->source->class;
+        $this->_ghostMethod = $this->_config->getRaw()->source->method;
+
+
+        // Optional configuration
+
+        if (!$this->_config->getRaw()->source->searchMethod) {
+            $this->_isSearchable = true;
         } else {
-            $this->_canBeSearched = false;
+            $this->_searchMethod = $this->_config->getRaw()->source->searchMethod;
         }
 
-        return $ret;
+        if (!$this->_config->getRaw()->source->orderMethod) {
+            $this->_isSortable = false;
+        } else {
+            $this->_orderMethod = $this->_config->getRaw()->source->orderMethod;
+        }
+
+
+        $this->_column->markAsReadOnly();
     }
 
     public function getCustomSearchCondition($values, $searchOps, $model)
     {
-        if (!$this->_config->getRaw()->source->searchMethod) {
+        if (!$this->isSearchable()) {
+            //FIXME: Should not get into this function... And false doesn't seem a nice return value
             return false;
         }
 
-        $class = $this->_config->getRaw()->source->class;
-        $searchMethod = $this->_config->getRaw()->source->searchMethod;
-
-        $ghostObject = new $class;
-
-        if ( method_exists($ghostObject, 'setConfig') ) {
-
-            $ghostObject->setConfig($this->_config->getRaw());
-        }
-
-        if ($searchCondition = $ghostObject->{$searchMethod}($values, $searchOps, $model)) {
-            $this->_canBeSearched = true;
+        $searchCondition = $this->_getGhostModel()->{$this->_searchMethod}($values, $searchOps, $model);
+        if ($searchCondition) {
             return $searchCondition;
         }
 
         return false;
+    }
+
+    protected function _getGhostModel()
+    {
+        if (!isset($this->_ghostObject)) {
+            $this->_ghostObject = new $this->_ghostClassName;
+            if (method_exists($this->_ghostObject, 'setConfig')) {
+                $this->_ghostObject->setConfig($this->_config->getRaw());
+            }
+        }
+
+        return $this->_ghostObject;
     }
 
     public function getCustomGetterName($model)
@@ -79,27 +105,17 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
     public function getCustomOrderField($model)
     {
         // El modelo fantasma tiene un método que devuelve el campo por el que hay que ordenar??
-        if (!$this->_config->getRaw()->source->orderMethod) {
+        if (!$this->_orderMethod) {
             return $this->_column->getDbFieldName();
         }
 
-        $class = $this->_config->getRaw()->source->class;
-        $orderMethod = $this->_config->getRaw()->source->orderMethod;
+        $orderField = $this->_getGhostModel()->{$this->_orderMethod}($model);
 
-        $ghostObject = new $class;
-
-        if ( method_exists($ghostObject, 'setConfig') ) {
-
-            $ghostObject->setConfig($this->_config->getRaw());
-        }
-
-        if ($orderField = $ghostObject->{$orderMethod}($model)) {
-
+        if ($orderField) {
             return $orderField;
         }
 
         return false;
-
     }
 
     public function prepareValue($value, $model)
@@ -109,9 +125,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         }
 
         // Class and Method options to get the result
-        $className = $this->_config->getProperty('source')->class;
-        $method = $this->_config->getProperty('source')->method;
-        $md5method = md5($className . $method);
+        $md5method = md5($this->_ghostClassName . $this->_ghostMethod);
 
         $cache = $this->_getCacheData($model);
         $md5cache = md5($cache);
@@ -120,9 +134,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             return $this->_cache[$md5method][$md5cache];
         }
 
-        $ghostModel = new $className;
-        $this->_configureGhostModel($ghostModel);
-        $returnValue = $ghostModel->{$method}($model);
+        $returnValue = $this->_getGhostModel()->{$this->_ghostMethod}($model);
         $this->_cacheData($md5method, $md5cache, $returnValue);
 
         return $returnValue;
@@ -177,14 +189,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
     protected function _dataIsCached($md5method, $md5cache)
     {
         return $this->_config->getProperty('source')->cache && isset($this->_cache[$md5method][$md5cache]);
-    }
-
-    protected function _configureGhostModel($ghostModel)
-    {
-        if (method_exists($ghostModel, 'setConfig')) {
-
-            $ghostModel->setConfig($this->_config->getRaw());
-        }
     }
 
     protected function _cacheData($md5method, $md5cache, $value)

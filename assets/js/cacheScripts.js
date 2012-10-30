@@ -1,5 +1,8 @@
 (function() {
 
+	$.klear = $.klear || {};
+	$.klear.baseurl = $.klear.baseurl || $("base").attr("href");
+	
 	var _kmList = {
 		'jsFile_-1824558962' : '2.5.3-crypto-md5.js',
 		'jsFile_472193935' : 'jquery.autoresize.js',
@@ -23,6 +26,7 @@
 	for(var iden in _kmList) {
 		$.klear.loadedScripts[iden] = true;
 	}
+	
 	
 
 	$.ajax({

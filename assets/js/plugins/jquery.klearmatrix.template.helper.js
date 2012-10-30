@@ -41,7 +41,7 @@
             if (true !== isNew) {
 
                 if (typeof value != 'object' && !column.dirty) {
-                    
+
                     var pattern = column.properties && column.properties.pattern || '';
                     _value = this.cleanValue(value,'', pattern);
 
@@ -51,10 +51,10 @@
                 }
 
             } else {
-            	if (column.properties && column.properties.defaultValue) {
-            	    
-            		_value = column.properties.defaultValue; 
-            	}
+                if (column.properties && column.properties.defaultValue) {
+
+                    _value = column.properties.defaultValue;
+                }
             }
 
             // Tengo prisa...
@@ -267,18 +267,30 @@
 
                         return this.cleanValue(values[column.id]['name'])
                         break;
-                        
+
                     case 'checkbox':
                         var icon = 'closethick';
 
                         if (values[column.id] == 1) {
                             icon = 'check';
                         }
-                        
+
                         return '<span class="ui-icon ui-icon-' + icon + '" />';
                         break;
 
                     default:
+
+                        if(column.properties.maxLength) {
+
+                            for (idx in values[column.id]) {
+
+                                if (values[column.id][idx].length > column.properties.maxLength) {
+
+                                    values[column.id][idx] = values[column.id][idx].substring(0,column.properties.maxLength);
+                                    values[column.id][idx] += '...';
+                                }
+                            }
+                        }
 
                         if (column.multilang) {
 
@@ -309,26 +321,25 @@
         },
 
         _parseDefaultValues : function(settings) {
-        
-        	var title = settings.title;
-        	
-        	if (!title.match(/\%item\%|%parent%/)) {
-        		return title;
-        	}
-        	
-        	
-        	var replaceParentPerItem = settings.replaceParentPerItem;
-        	var defaultLang = settings.defaultLang;
-        	var parentIden = settings.parentIden;
-        	var columns = settings.columns;
-        	var idx = settings.idx;
-        	var values = settings.values;
-        
-        
+
+            var title = settings.title;
+
+            if (typeof settings.title != 'string' || !title.match(/\%item\%|%parent%/)) {
+                return title;
+            }
+
+            var replaceParentPerItem = settings.replaceParentPerItem;
+            var defaultLang = settings.defaultLang;
+            var parentIden = settings.parentIden;
+            var columns = settings.columns;
+            var idx = settings.idx;
+            var values = settings.values;
+
+
             if ($.isArray(values) && (values.length > 0) && (values[idx])) {
-            	values = values[idx];
-            	
-            	var count = false;
+                values = values[idx];
+
+                var count = false;
                 var defaultColumns = [];
 
                 for(var i in columns) {
@@ -341,22 +352,22 @@
                         defaultColumns.push(columns[i]);
                     }
                 }
-                
+
                 if (defaultColumns.length == 0) {
-                	defaultColumns.push(_firstValue);
+                    defaultColumns.push(_firstValue);
                 }
-                
+
                 var defaultValues = [];
                 for(var i in defaultColumns) {
-                	var defaultColumn = defaultColumns[i];
-               	
-                	if (defaultColumn.multilang) {
-                		defaultValues.push(values[defaultColumn.id][defaultLang]);
-                	} else {
-                		defaultValues.push(values[defaultColumn.id]);
-                	}
+                    var defaultColumn = defaultColumns[i];
+
+                    if (defaultColumn.multilang) {
+                        defaultValues.push(values[defaultColumn.id][defaultLang]);
+                    } else {
+                        defaultValues.push(values[defaultColumn.id]);
+                    }
                 }
-                
+
                 var defaultValue = defaultValues.join(' ');
 
             } else {
@@ -372,20 +383,20 @@
             var _r = title
                     .replace(/\%parent\%/,parentValue)
                     .replace(/\%item\%/,this.cleanValue(defaultValue));
-            
+
             return _r;
 
         },
         getTitle : function(title,idx,replaceParentPerItem) {
-        	return this._parseDefaultValues({
-            		title: title,
-            		replaceParentPerItem : replaceParentPerItem,
-            		defaultLang : this.data.defaultLang,
-            		parentIden: this.data.parentIden,
-            		columns: this.data.columns,
-            		values: this.data.values,
-            		idx: idx
-        	});
+            return this._parseDefaultValues({
+                    title: title,
+                    replaceParentPerItem : replaceParentPerItem,
+                    defaultLang : this.data.defaultLang,
+                    parentIden: this.data.parentIden,
+                    columns: this.data.columns,
+                    values: this.data.values,
+                    idx: idx
+            });
         },
 
         mustShowOptionColum : function(option, value) {

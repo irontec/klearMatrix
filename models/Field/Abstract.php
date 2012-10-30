@@ -15,6 +15,7 @@ abstract class KlearMatrix_Model_Field_Abstract
             "pattern",
             "placeholder",
             "nullIfEmpty",
+            "maxLength",
             "expandable",
             "defaultValue" // Valor por defecto en caso de new
             );

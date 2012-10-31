@@ -7,19 +7,18 @@ class KlearMatrix_Model_Field_Password extends KlearMatrix_Model_Field_Abstract
      */
     protected $_adapter;
 
+    protected function _init()
+    {
+        $adapterClassName = "KlearMatrix_Model_Field_Password_" . ucfirst($this->_config->getProperty("adapter"));
+
+        $this->_adapter = new $adapterClassName;
+    }
+
     public function filterValue($value, $original)
     {
         $this->_adapter->setClearValue($value);
 
         return $this->_adapter->cryptValue();
-    }
-
-    public function init()
-    {
-        parent::init();
-        $adapterClassName = "KlearMatrix_Model_Field_Password_" . ucfirst($this->_config->getProperty("adapter"));
-
-        $this->_adapter = new $adapterClassName;
     }
 
     /*

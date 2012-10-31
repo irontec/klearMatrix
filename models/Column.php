@@ -597,8 +597,8 @@ class KlearMatrix_Model_Column
         $fieldConfig = $this->getFieldConfig();
         if ($fieldConfig) {
 
-            $ret['searchable'] = (bool)$fieldConfig->canBeSearched();
-            $ret['sortable'] = (bool)$fieldConfig->canBeSorted();
+            $ret['searchable'] = $fieldConfig->isSearchable();
+            $ret['sortable'] = $fieldConfig->isSortable();
 
             if ($config = $fieldConfig->getConfig()) {
                 $ret['config'] = $config;

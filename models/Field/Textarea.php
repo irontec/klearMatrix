@@ -4,10 +4,8 @@ class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
 
     protected $_adapter;
 
-    public function init()
+    protected function _init()
     {
-        parent::init();
-
         $sourceConfig = $this->_config->getRaw()->source;
 
         if ($sourceConfig) {

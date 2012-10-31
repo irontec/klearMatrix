@@ -14,9 +14,8 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
        "/css/jquery.multiselect.filter.css"
     );
 
-    public function init()
+    protected function _init()
     {
-        parent::init();
         $sourceConfig = $this->_config->getRaw()->source;
 
         $adapterClassName = "KlearMatrix_Model_Field_Multiselect_" . ucfirst($sourceConfig->data);

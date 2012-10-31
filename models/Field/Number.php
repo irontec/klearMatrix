@@ -4,10 +4,8 @@ class KlearMatrix_Model_Field_Number extends KlearMatrix_Model_Field_Abstract
 
     protected $_adapter;
 
-    public function init()
+    protected function _init()
     {
-        parent::init();
-
         $sourceConfig = $this->_config->getRaw()->source;
 
         $controlClassName = "KlearMatrix_Model_Field_Number_" . ucfirst($sourceConfig->control);

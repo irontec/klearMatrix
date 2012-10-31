@@ -7,10 +7,10 @@ abstract class KlearMatrix_Model_Field_Abstract
      */
     protected $_column;
     protected $_config;
-    protected $_canBeSearched = true;
-    protected $_canBeSorted = true;
+    protected $_isSearchable = true;
+    protected $_isSortable = true;
 
-    static protected $_propertyMaster = array(
+    protected $_propertyMaster = array(
             "required",
             "pattern",
             "placeholder",
@@ -23,11 +23,49 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_properties = array();
 
     /*valid error index */
-    protected $_errorIndex = array('patternMismatch', 'rangeOverflow', 'rangeUnderflow', 'stepMismatch', 'tooLong', 'typeMismatch', 'valueMissing');
+    protected $_errorIndex = array(
+        'patternMismatch',
+        'rangeOverflow',
+        'rangeUnderflow',
+        'stepMismatch',
+        'tooLong',
+        'typeMismatch',
+        'valueMissing'
+    );
     protected $_errorMessages = array();
 
     protected $_js = array();
     protected $_css = array();
+
+    /**
+     * Constructor must not be directly called from outside. Use the factory method instead
+     */
+    private function __construct(KlearMatrix_Model_Column $column)
+    {
+        $this->setColumn($column);
+        $this->_config = $this->_column->getKlearConfig();
+
+        if (is_object($this->_config)) {
+
+            foreach ($this->_propertyMaster as $property) {
+
+                $this->_properties[$property] = $this->_config->getProperty($property);
+            }
+
+            $this->_parseErrorMessages();
+        }
+
+        $this->_initSortable();
+
+        $this->_init();
+    }
+
+    protected function _initSortable()
+    {
+        $this->_sortable = is_object($this->_config)
+                           && $this->_config->exists("sortable")
+                           && (bool)$this->_config->getProperty('sortable');
+    }
 
     public function setColumn($column)
     {
@@ -40,14 +78,19 @@ abstract class KlearMatrix_Model_Field_Abstract
         return $this->_column;
     }
 
+    protected function _init()
+    {
+        // Leave this body empty in the abstract class
+    }
+
     protected function _parseErrorMessages()
     {
-
         $_errorMsgs = $this->_config->getProperty("errorMessages");
 
         if (!$_errorMsgs) {
             return;
         }
+
         $errorConfig = new Klear_Model_ConfigParser;
         $errorConfig->setConfig($_errorMsgs);
 
@@ -59,25 +102,9 @@ abstract class KlearMatrix_Model_Field_Abstract
     }
 
     /**
-     * Dejar este método vacio, se invocara siempre que se genera desde Column
+     * Returns array with field's view configuration
+     * @return array
      */
-    public function init()
-    {
-        $this->_config = $this->_column->getKlearConfig();
-
-        if (is_object($this->_config)) {
-
-            foreach (self::$_propertyMaster as $_prop) {
-
-                $this->_properties[$_prop] = $this->_config->getProperty($_prop);
-            }
-
-            $this->_parseErrorMessages();
-        }
-
-        return $this;
-    }
-
     public function getConfig()
     {
         return false;
@@ -98,23 +125,22 @@ abstract class KlearMatrix_Model_Field_Abstract
      */
     public function filterValue($value, $original)
     {
-
-        if (isset($this->_properties['nullIfEmpty'])
-            && (bool)$this->_properties['nullIfEmpty']) {
-
-                if (empty($value)) {
-
-                    return NULL;
-                }
+        if ($this->_isNullIfEmpty()) {
+            if (empty($value)) {
+                return NULL;
+            }
         }
 
         return $value;
     }
 
-    /*
-     * Prepara el valor de un campo, después del getter
-     */
+    protected function _isNullIfEmpty()
+    {
+        return  isset($this->_properties['nullIfEmpty']) && (bool)$this->_properties['nullIfEmpty'];
+    }
+
     /**
+     * Prepara el valor de un campo, después del getter
      * @param mixed $value Valor devuelto por el getter del model
      * @param object $model Modelo cargado
      * @return unknown
@@ -124,31 +150,33 @@ abstract class KlearMatrix_Model_Field_Abstract
         return $value;
     }
 
+    /**
+     * Returns paths to extra javascript to be loaded
+     * @return array
+     */
     public function getExtraJavascript()
     {
         return $this->_js;
     }
 
+    /**
+     * Returns paths to extra css to be loaded
+     * @return array
+     */
     public function getExtraCss()
     {
         return $this->_css;
     }
 
-    public function canBeSearched()
+    public function isSearchable()
     {
-        return $this->_canBeSearched;
+        return (bool)$this->_isSearchable;
     }
 
     //Si existe sortable en la configuración del campo en el model de yaml, lo devuelve. Sino, devuelve true.
-    public function canBeSorted()
+    public function isSortable()
     {
-        if (is_object($this->_config)
-            && $this->_config->exists("sortable")) {
-
-                return $this->_config->getProperty("sortable");
-        }
-
-        return true;
+        return $this->_isSortable;
     }
 
     public function getCustomErrors()
@@ -170,17 +198,9 @@ abstract class KlearMatrix_Model_Field_Abstract
     public static function create($fieldType, KlearMatrix_Model_Column $column)
     {
         $fieldClassName = 'KlearMatrix_Model_Field_' . ucfirst($fieldType);
-        $field = new $fieldClassName;
-        $field->setColumn($column)->init();
-
+        $field = new $fieldClassName($column);
         return $field;
     }
-
-    /**
-     * Constructor must not be directly called from outside. Use the factory method instead
-     */
-    private function __construct()
-    {}
 }
 
 //EOF

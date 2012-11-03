@@ -3,7 +3,7 @@ class KlearMatrix_Model_DispatchResponseFactory
 {
     public static function build()
     {
-        Zend_Json::$useBuiltinEncoderDecoder = true;
+//         Zend_Json::$useBuiltinEncoderDecoder = true;
         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->addJsFile("/js/plugins/jquery.ui.form.js");

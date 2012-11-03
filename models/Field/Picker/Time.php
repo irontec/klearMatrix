@@ -23,7 +23,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
      * @param object $model Modelo cargado
      * @return unknown
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
         if (empty($value)) {
             return '';

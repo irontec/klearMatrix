@@ -58,7 +58,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             $this->_orderMethod = $this->_config->getRaw()->source->orderMethod;
         }
 
-
         $this->_column->markAsReadOnly();
     }
 
@@ -104,22 +103,17 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     public function getCustomOrderField($model)
     {
-        // El modelo fantasma tiene un método que devuelve el campo por el que hay que ordenar??
         if (!$this->_orderMethod) {
-            return $this->_column->getDbFieldName();
+            return null;
         }
 
-        $orderField = $this->_getGhostModel()->{$this->_orderMethod}($model);
-
-        if ($orderField) {
-            return $orderField;
-        }
-
-        return false;
+        return $this->_getGhostModel()->{$this->_orderMethod}($model);
     }
 
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
+        $model = $this->_column->getModel();
+
         if (!$this->_conditionsAreMet($model)) {
             return $value;
         }

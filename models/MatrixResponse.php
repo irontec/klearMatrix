@@ -40,9 +40,9 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_pk;
 
-    public function setColumnWraper(KlearMatrix_Model_ColumnCollection $columnWrapper)
+    public function setColumnCollection(KlearMatrix_Model_ColumnCollection $columnCollection)
     {
-        $this->_columns = $columnWrapper;
+        $this->_columns = $columnCollection;
         return $this;
     }
 
@@ -214,7 +214,7 @@ class KlearMatrix_Model_MatrixResponse
                         $rValue = $result->{$getter}();
                     }
 
-                    $_newResult[$column->getDbFieldName()] = $column->prepareValue($rValue, $result);
+                    $_newResult[$column->getDbFieldName()] = $column->prepareValue($rValue);
 
                 }
 

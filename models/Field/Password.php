@@ -24,7 +24,7 @@ class KlearMatrix_Model_Field_Password extends KlearMatrix_Model_Field_Abstract
     /*
      * Prepara el valor de un campo, después del getter
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
         return "********";
     }

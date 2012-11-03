@@ -25,15 +25,15 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
     /*
      * Prepara el valor de un campo, después del getter
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
         // Debemos devolver un array con size / mime / name del fichero
         // value nos ha devuelto las specs del campo file
 
         $ret = array(
-            'size' => $model->{'get' . ucfirst($value['sizeName'])}(),
-            'mime' => $model->{'get' . ucfirst($value['mimeName'])}(),
-            'name' => $model->{'get' . ucfirst($value['baseNameName'])}()
+            'size' => $this->_column->getModel()->{'get' . ucfirst($value['sizeName'])}(),
+            'mime' => $this->_column->getModel()->{'get' . ucfirst($value['mimeName'])}(),
+            'name' => $this->_column->getModel()->{'get' . ucfirst($value['baseNameName'])}()
         );
 
         return $ret;

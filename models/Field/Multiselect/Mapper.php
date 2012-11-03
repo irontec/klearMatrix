@@ -98,7 +98,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         return $fieldConfig->getProperty("template");
     }
 
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
         if (sizeof($value) == 0) {
 

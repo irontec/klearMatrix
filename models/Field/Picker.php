@@ -74,9 +74,9 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      * @param object $model Modelo cargado
      * @return unknown
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
-
+        $model = $this->_column->getModel();
         if (method_exists($this->_adapter, 'prepareValue')) {
             return $this->_adapter->prepareValue($value, $model);
         }
@@ -85,7 +85,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $zendDateValue = $model->$getter(true);
 
         if ($zendDateValue instanceof Zend_Date) {
-            $zendDateValue->setTimezone('Europe/Madrid');
+            $zendDateValue->setTimezone(date_default_timezone_get());
             return $zendDateValue->toString($this->_adapter->getFormat());
         }
 

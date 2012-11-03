@@ -104,7 +104,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $data
             ->setResponseItem($this->_item)
             ->setTitle($this->_item->getTitle())
-            ->setColumnWraper($cols)
+            ->setColumnCollection($cols)
             ->setPK($this->_item->getPkName())
             ->setResults(array())
             ->setCsv((bool)$this->_item->getCsv());
@@ -283,7 +283,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         if ($orderField && $orderColumn) {
             $this->_helper->log('Order column especified for:' . $this->_mapperName);
-            $order = $orderColumn->getOrderField($model);
+            $order = $orderColumn->getOrderField();
 
             $orderColumn->setAsOrdered();
 
@@ -376,19 +376,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $fields = $this->view->data['columns'];
         $values = $this->_normalizeValues($this->view->data['values']);
 
+        $removePk = true;
         $pkName = $this->_item->getPkName();
-
-        $columnPk = $this->_item->getVisibleColumns()->getColFromDbName($pkName);
-
-        if (is_object($columnPk) &&
-            get_class($columnPk) == 'KlearMatrix_Model_Column') {
-
-            $toBeRemoved = false;
-
-        } else {
-            // Queremos ocultar $pkName del array de values y fields
-            // El "id" no está en whitelist
-            $toBeRemoved = $pkName;
+        $pkColumn = $this->_item->getVisibleColumns()->getColFromDbName($pkName);
+        if ($pkColumn) {
+            $removePk = false;
         }
 
         $csvParams = $this->_item->getCsvParameters();
@@ -424,8 +416,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $headers = array_keys($firstLine);
         }
 
-        if ($toBeRemoved) {
-            unset($firstLine[$toBeRemoved]);
+        if ($removePk) {
+            unset($firstLine[$pkName]);
         }
 
         if ($csvParams['headers']==true) {
@@ -435,11 +427,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         foreach ($values as $valLine) {
 
-            foreach ($valLine as $key => $val) {
+            if ($removePk) {
+                unset($valLine[$pkName]);
+            }
 
-                if ($toBeRemoved == $key) {
-                    unset($valLine[$toBeRemoved]);
-                }
+            foreach ($valLine as $key => $val) {
 
                 if (isset($toBeChanged[$key])) {
 
@@ -485,19 +477,26 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     protected function _normalizeValues($tmpValues)
     {
         $values = array();
+        $valuesSize = count($tmpValues);
 
-        for ($i=0;$i<=(count($tmpValues)-1);$i++) {
-            foreach ($tmpValues[$i] as $valMult => $multLang) {
-                if (is_array($multLang)) {
-                    foreach ($multLang as $keyLang => $contLang) {
-                        $langs = $valMult . '_' . $keyLang;
-                        $values[$i][$langs] = html_entity_decode($contLang);
+        for ($i = 0; $i < $valuesSize; $i++) {
+
+            foreach ($tmpValues[$i] as $fieldName => $value) {
+
+                if (is_array($value)) {
+
+                    foreach ($value as $langKey => $content) {
+
+                        $langs = $fieldName . '_' . $langKey;
+                        $values[$i][$langs] = html_entity_decode($content);
                     }
                 } else {
-                    $values[$i][$valMult] = html_entity_decode($multLang);
+
+                    $values[$i][$fieldName] = html_entity_decode($value);
                 }
             }
         }
+
         return $values;
     }
 

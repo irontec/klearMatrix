@@ -63,7 +63,7 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
      */
     abstract protected function _getEditableFieldsConfig();
     abstract public function filterValue($value, $original);
-    abstract public function prepareValue($value, $model);
+    abstract public function prepareValue($value);
 
     public function getIterator()
     {

@@ -34,9 +34,9 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
      * Gateway hacia el adapter.
      * @see KlearMatrix_Model_Field_Abstract::filterValue()
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
-        return $this->_adapter->prepareValue($value, $model);
+        return $this->_adapter->prepareValue($value);
     }
 
     public function filterValue($value, $original)

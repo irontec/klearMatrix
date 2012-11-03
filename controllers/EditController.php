@@ -168,7 +168,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $data
             ->setTitle($this->_item->getTitle())
-            ->setColumnWraper($columns)
+            ->setColumnCollection($columns)
             ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 

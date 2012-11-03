@@ -32,6 +32,8 @@ class KlearMatrix_Model_Column
 
     protected $_searchSpecs = false;
 
+    protected $_model;
+
     /**
      * Opciones para campos deshabilitados (condicionantes, etc)
      * @var mixed
@@ -54,6 +56,17 @@ class KlearMatrix_Model_Column
     {
         $this->_routeDispatcher = $routeDispatcher;
         return $this;
+    }
+
+    public function setModel($model)
+    {
+        $this->_model = $model;
+        return $this;
+    }
+
+    public function getModel()
+    {
+        return $this->_model;
     }
 
     public function markAsOption()
@@ -162,19 +175,6 @@ class KlearMatrix_Model_Column
             $this->_hasFieldOptions = true;
             $this->_parseColumnOptions();
         }
-
-        $this->_loadConfigClass();
-
-    }
-
-    protected function _loadConfigClass()
-    {
-        if ($this->isOption()) {
-            return;
-        }
-
-        $this->_fieldConfig = KlearMatrix_Model_Field_Abstract::create($this->_type, $this);
-        return $this->_fieldConfig;
     }
 
     /**
@@ -184,10 +184,20 @@ class KlearMatrix_Model_Column
     public function getFieldConfig()
     {
         if (!is_object($this->_fieldConfig)) {
-            return $this->_loadConfigClass();
+            $this->_loadConfigClass();
         }
 
         return $this->_fieldConfig;
+    }
+
+    protected function _loadConfigClass()
+    {
+        if ($this->isOption()) {
+            $this->_fieldConfig = null;
+        } else {
+            $this->_fieldConfig = KlearMatrix_Model_Field_Abstract::create($this->_type, $this);
+            $this->_fieldConfig;
+        }
     }
 
     /**
@@ -244,10 +254,11 @@ class KlearMatrix_Model_Column
         $this->_orderedType = $_orderType;
     }
 
-    public function getOrderField($model)
+    public function getOrderField()
     {
-        if (method_exists($this->getFieldConfig(), 'getCustomOrderField')) {
-            return $this->getFieldConfig()->getCustomOrderField($model);
+        $orderField = $this->getFieldConfig()->getCustomOrderField();
+        if ($orderField) {
+            return $orderField;
         }
 
         return $this->_dbFieldName;
@@ -293,9 +304,9 @@ class KlearMatrix_Model_Column
      * @param mixed $value
      * @return mixed
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
-        return $this->getFieldConfig()->prepareValue($value, $model);
+        return $this->getFieldConfig()->prepareValue($value);
     }
 
     public function filterValue($value, $original)

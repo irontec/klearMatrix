@@ -40,7 +40,7 @@ abstract class KlearMatrix_Model_Field_Abstract
     /**
      * Constructor must not be directly called from outside. Use the factory method instead
      */
-    private function __construct(KlearMatrix_Model_Column $column)
+    public function __construct(KlearMatrix_Model_Column $column)
     {
         $this->setColumn($column);
         $this->_config = $this->_column->getKlearConfig();
@@ -119,6 +119,11 @@ abstract class KlearMatrix_Model_Field_Abstract
         return $this->_properties;
     }
 
+    public function getCustomOrderField()
+    {
+        return null;
+    }
+
     /*
      * Filtra (y adecua) el valor del campo antes del setter
      *
@@ -142,10 +147,9 @@ abstract class KlearMatrix_Model_Field_Abstract
     /**
      * Prepara el valor de un campo, después del getter
      * @param mixed $value Valor devuelto por el getter del model
-     * @param object $model Modelo cargado
      * @return unknown
      */
-    public function prepareValue($value, $model)
+    public function prepareValue($value)
     {
         return $value;
     }

@@ -175,7 +175,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         $data->setResponseItem($this->_item)
              ->setTitle($this->_item->getTitle())
-             ->setColumnWraper($columns);
+             ->setColumnCollection($columns);
 
         // La pantalla "nuevo" tiene filtro? cae de otro listado?
         if ($this->_item->isFilteredScreen()) {

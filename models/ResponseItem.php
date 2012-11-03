@@ -125,16 +125,33 @@ class KlearMatrix_Model_ResponseItem
     {
         $filePath = 'klear.yaml:///model/' . $this->_modelFile;
 
-        $modelConfig = new Zend_Config_Yaml(
-            $filePath,
-            APPLICATION_ENV,
-            array(
-                "yamldecoder"=>"yaml_parse"
-            )
-        );
+        $cache = $this->_getCache($filePath);
+        $modelConfig = $cache->load(md5($filePath));
+
+        if (!$modelConfig) {
+            $modelConfig = new Zend_Config_Yaml(
+                $filePath,
+                APPLICATION_ENV,
+                array(
+                    "yamldecoder"=>"yaml_parse"
+                )
+            );
+            $cache->save($modelConfig);
+        }
 
         $this->_modelSpec = new KlearMatrix_Model_ModelSpecification;
         $this->_modelSpec->setConfig($modelConfig);
+    }
+
+    protected function _getCache($filePath)
+    {
+        $cacheManager = Zend_Controller_Front::getInstance()
+        ->getParam('bootstrap')
+        ->getResource('cachemanager');
+
+        $cache = $cacheManager->getCache('klearconfig');
+        $cache->setMasterFile($filePath);
+        return $cache;
     }
 
     public function hasModelFile()
@@ -257,34 +274,35 @@ class KlearMatrix_Model_ResponseItem
      * @param unknown_type $config
      * @return KlearMatrix_Model_Column
      */
-    protected function _createCol($name, $config)
+    protected function _createColumn($name, $config)
     {
-        $col = new KlearMatrix_Model_Column;
-        $col->setDbFieldName($name);
-        $col->setRouteDispatcher($this->_routeDispatcher);
+        $column = new KlearMatrix_Model_Column;
+        $column->setDbFieldName($name);
+        $column->setRouteDispatcher($this->_routeDispatcher);
+        $column->setModel($this->getObjectInstance());
 
         if ($config) {
 
-            $col->setConfig($config);
+            $column->setConfig($config);
         }
 
-        return $col;
+        return $column;
     }
 
     protected function _createFileColumn($config, $fileColumn)
     {
-        $col = $this->_createCol($fileColumn, $config);
-        $col->markAsFile();
+        $column = $this->_createColumn($fileColumn, $config);
+        $column->markAsFile();
 
-        return $col;
+        return $column;
     }
 
-    protected function _createDependantColumn($colConfig, $dependantConfig)
+    protected function _createDependantColumn($columnConfig, $dependantConfig)
     {
-        $col = $this->_createCol($dependantConfig['property'], $colConfig);
-        $col->markAsDependant();
+        $column = $this->_createColumn($dependantConfig['property'], $columnConfig);
+        $column->markAsDependant();
 
-        return $col;
+        return $column;
     }
 
     public function resetVisibleColumns()
@@ -344,9 +362,9 @@ class KlearMatrix_Model_ResponseItem
 
         if ($this->hasFieldOptions()) {
 
-            $col = $this->_createCol("_fieldOptions", $this->_config->getRaw()->fields->options);
-            $col->markAsOption();
-            $this->_visibleColumns->addCol($col);
+            $column = $this->_createColumn("_fieldOptions", $this->_config->getRaw()->fields->options);
+            $column->markAsOption();
+            $this->_visibleColumns->addCol($column);
         }
 
         //Ordenamos los campos si existe la configuración
@@ -477,9 +495,9 @@ class KlearMatrix_Model_ResponseItem
 
             foreach ($fileObjects as $_fileCol) {
 
-                $colConfig = $this->_modelSpec->getField($_fileCol);
+                $columnConfig = $this->_modelSpec->getField($_fileCol);
 
-                if ($colConfig) {
+                if ($columnConfig) {
 
                     $fieldSpecsGetter = "get" . $_fileCol . "Specs";
                     $involvedFields = $model->{$fieldSpecsGetter}();
@@ -487,8 +505,8 @@ class KlearMatrix_Model_ResponseItem
                     foreach ($blacklistSubfields as $blSubfield) {
                         if (isset($involvedFields[$blSubfield])) {
 
-                            $colName = $model->varNameToColumn($involvedFields[$blSubfield]);
-                            $this->_blacklist[$colName] = true;
+                            $columnName = $model->varNameToColumn($involvedFields[$blSubfield]);
+                            $this->_blacklist[$columnName] = true;
                         }
                     }
 
@@ -498,8 +516,8 @@ class KlearMatrix_Model_ResponseItem
                         continue;
                     }
 
-                    $col = $this->_createFileColumn($colConfig, $_fileCol);
-                    $columns[] = $col;
+                    $column = $this->_createFileColumn($columnConfig, $_fileCol);
+                    $columns[] = $column;
                 }
             }
         }
@@ -516,7 +534,7 @@ class KlearMatrix_Model_ResponseItem
 
             if ($field->type == 'ghost' && !isset($this->_blacklist[$key])) {
 
-                $columns[] = $this->_createCol($key, $field);
+                $columns[] = $this->_createColumn($key, $field);
             }
         }
         return $columns;
@@ -547,15 +565,15 @@ class KlearMatrix_Model_ResponseItem
                 continue;
             }
 
-            $col = $this->_createCol($dbFieldName, $config);
+            $column = $this->_createColumn($dbFieldName, $config);
 
             $multiLangFields = $model->getMultiLangColumnsList();
             if (isset($multiLangFields[$dbFieldName])) {
 
-                $col->markAsMultilang();
+                $column->markAsMultilang();
             }
 
-            $columns[] = $col;
+            $columns[] = $column;
         }
 
         return $columns;
@@ -575,11 +593,11 @@ class KlearMatrix_Model_ResponseItem
                 continue;
             }
 
-            $colConfig = $this->_modelSpec->getField($dependantConfig['property']);
-            if ($colConfig) {
+            $columnConfig = $this->_modelSpec->getField($dependantConfig['property']);
+            if ($columnConfig) {
 
-                $col = $this->_createDependantColumn($colConfig, $dependantConfig);
-                $columns[] = $col;
+                $column = $this->_createDependantColumn($columnConfig, $dependantConfig);
+                $columns[] = $column;
             }
         }
         return $columns;
@@ -588,32 +606,32 @@ class KlearMatrix_Model_ResponseItem
 
     /**
      * Recuperar y crear una objeto tipo Column
-     * @param unknown_type $colName
+     * @param unknown_type $columnName
      */
-    public function getColumn($colName)
+    public function getColumn($columnName)
     {
         $model = $this->getObjectInstance();
 
         $columnList = $model->getColumnsList();
-        if (isset($columnList[$colName])) {
+        if (isset($columnList[$columnName])) {
 
-            $col = $this->_createCol($colName, $this->_modelSpec->getField($colName));
+            $column = $this->_createColumn($columnName, $this->_modelSpec->getField($columnName));
 
-            return $col;
+            return $column;
         }
 
         foreach ($model->getDependentList() as $dependantConfig) {
 
-            if ($colName == $dependantConfig['table_name']) {
+            if ($columnName == $dependantConfig['table_name']) {
 
-                $colConfig = $this->_modelSpec->getField($dependantConfig['table_name']);
-                if (!$colConfig) {
+                $columnConfig = $this->_modelSpec->getField($dependantConfig['table_name']);
+                if (!$columnConfig) {
 
                     return false;
                 }
 
-                $col = $this->_createDependantColumn($colConfig, $dependantConfig);
-                return $col;
+                $column = $this->_createDependantColumn($columnConfig, $dependantConfig);
+                return $column;
             }
         }
 
@@ -624,12 +642,12 @@ class KlearMatrix_Model_ResponseItem
         }
 
         $fileObjects = $model->getFileObjects();
-        if (in_array($colName, $fileObjects)) {
+        if (in_array($columnName, $fileObjects)) {
 
-            $colConfig = $this->_modelSpec->getField($colName);
-            if ($colConfig) {
+            $columnConfig = $this->_modelSpec->getField($columnName);
+            if ($columnConfig) {
 
-                return $this->_createFileColumn($colConfig, $colName);
+                return $this->_createFileColumn($columnConfig, $columnName);
             }
         }
 

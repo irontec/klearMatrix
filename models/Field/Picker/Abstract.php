@@ -139,7 +139,6 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
 
     public function __construct($config)
     {
-
         $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
         $this->_locale = $currentKlearLanguage->getLocale();
 
@@ -153,6 +152,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
 
         $this->_setConfig($config);
         $this->_setPlugin();
+        $this->_init();
     }
 
     protected function _setConfig($config)
@@ -169,15 +169,24 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         return $this;
     }
 
+    abstract protected function _setPlugin();
+
+    protected function _init()
+    {
+        // To be overriden by child objects
+    }
+
     protected function _setSetting($key, $value)
     {
         if (in_array($key, $this->_availableSettings)) {
             $this->_settings[$key] = $value;
         }
+        if (!$value) {
+            var_dump(debug_backtrace());
+        }
         return $this;
     }
 
-    abstract protected function _setPlugin();
 
     public function getLocale()
     {
@@ -194,7 +203,8 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         return $this->_settings[$key];
     }
 
-    public function getConfig() {
+    public function getConfig()
+    {
         return array(
             'settings' => $this->_settings,
             'plugin' => $this->_plugin
@@ -223,10 +233,8 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
 
     protected function _getDateFormatFixed($locale)
     {
-
         $_dateFormat = $this->_dateFormats[$locale];
         return str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $_dateFormat);
-
     }
 
     public function getExtraJavascript()
@@ -239,5 +247,3 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         return $this->_css;
     }
 }
-
-//EOF

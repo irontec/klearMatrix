@@ -19,7 +19,4 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
     {
         return parent::_getDateFormatFixed($locale) . ' ' . $this->_timeFormats;
     }
-
 }
-
-//EOF

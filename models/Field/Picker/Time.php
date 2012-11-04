@@ -33,8 +33,4 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 
         return $time->getFormattedString($this->_timeFormats);
     }
-
-
 }
-
-//EOF

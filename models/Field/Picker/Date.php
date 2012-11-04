@@ -2,10 +2,12 @@
 // TODO: Crear clase abstracta
 class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker_Abstract
 {
-    public function __construct($config)
+    public function __init()
     {
-        parent::__construct($config);
-        $this->_setSetting('dateFormat', $this->getFormat($this->getLocale()));
+        $format = $this->getFormat($this->getLocale());
+        if ($format) {
+            $this->_setSetting('dateFormat', $format);
+        }
     }
 
     protected function _setPlugin()
@@ -23,5 +25,3 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
         return $date->toString(Zend_Date::ISO_8601);
     }
 }
-
-//EOF

@@ -19,13 +19,11 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
     }
 
-    public function filterValue($value, $original)
+    protected function _filterValue($value)
     {
         if ($value == '__NULL__') {
-
             return NULL;
         }
-
         return $value;
     }
 

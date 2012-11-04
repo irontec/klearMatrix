@@ -51,8 +51,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 continue;
             }
 
-            $setter = $column->getSetterName($model);
-            $getter = $column->getGetterName($model);
+            $setter = $column->getSetterName();
+            $getter = $column->getGetterName();
 
             if ($column->isMultilang()) {
                 $value = array();
@@ -68,29 +68,27 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 continue;
             }
 
+            $value = $column->filterValue($value);
+
             switch(true) {
                 case ($column->isMultilang()):
                     foreach ($value as $lang => $_value) {
-                        $_value = $column->filterValue($_value, $model->{$getter}($lang));
                         $model->$setter($_value, $lang);
                     }
                     break;
 
                 case ($column->isDependant()):
-                    $value = $column->filterValue($value, $model->{$getter}());
                     $model->$setter($value, true);
                     $hasDependant = true;
                     break;
 
                 case ($column->isFile()):
-                    $value = $column->filterValue($value, $model->{$getter}());
                     if ($value !== false) {
                         $model->$setter($value['path'], $value['basename']);
                     }
                     break;
 
                 default:
-                    $value = $column->filterValue($value, $model->{$getter}());
                     $model->$setter($value);
             }
         }

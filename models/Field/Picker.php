@@ -16,7 +16,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $this->_css = $this->_adapter->getExtraCss();
     }
 
-    public function getCustomSearchCondition($values, $searchOps, $model)
+    public function getCustomSearchCondition($values, $searchOps)
     {
         $searchField = $this->_column->getDbFieldName();
         $_fieldValues = $vals = array();
@@ -37,7 +37,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
             }
 
             $vals[] = $searchField .' '.$op.' '. $template;
-            $_fieldValues[$template] = $this->filterValue($_val, $model);
+            $_fieldValues[$template] = $this->filterValue($_val);
 
             $cont++;
 
@@ -59,11 +59,9 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      * Filtra (y adecua) el valor del campo antes del setter
      *
      */
-    public function filterValue($value, $original)
+    protected function _filterValue($value)
     {
-
-        return $this->_adapter->filterValue($value, $original);
-
+        return $this->_adapter->filterValue($value);
     }
 
     /*
@@ -71,7 +69,6 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
      */
     /**
      * @param mixed $value Valor devuelto por el getter del model
-     * @param object $model Modelo cargado
      * @return unknown
      */
     public function prepareValue($value)
@@ -81,7 +78,7 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
             return $this->_adapter->prepareValue($value, $model);
         }
 
-        $getter = $this->_column->getGetterName($model);
+        $getter = $this->_column->getGetterName();
         $zendDateValue = $model->$getter(true);
 
         if ($zendDateValue instanceof Zend_Date) {

@@ -7,7 +7,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         $this->_plugin = 'timepicker';
     }
 
-    public function filterValue($value, $original)
+    public function filterValue($value)
     {
         if (empty($value)) {
             return '';

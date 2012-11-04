@@ -39,9 +39,20 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         return $this->_adapter->prepareValue($value);
     }
 
-    public function filterValue($value, $original)
+    protected function _filterValue($value)
     {
-        return $this->_adapter->filterValue($value, $original);
+        $model = $this->_column->getModel();
+        $getter = $this->_column->getGetterName();
+
+/*
+ * TODO: No elimino estas líneas para recordar que hay que comprobar que el multilang funciona en los multiselect...
+ *
+ */
+//         if ($this->_column->isMultilang()) {
+//             return $this->_adapter->filterValue($value, $model->$getter($lang));
+//         }
+
+        return $this->_adapter->filterValue($value, $model->$getter());
     }
 }
 

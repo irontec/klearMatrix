@@ -127,7 +127,7 @@ class KlearMatrix_Model_FilterProcessor
             $valuesOp = $searchOps[$field];
             $column = $this->_columns->getColFromDbName($field);
             if ($column) {
-                $searchWhere[] = $column->getSearchCondition($values, $valuesOp, $this->_model, $this->_columns->getLangs());
+                $searchWhere[] = $column->getSearchCondition($values, $valuesOp, $this->_columns->getLangs());
                 $this->_addSearchToData($field, $values, $valuesOp);
             }
         }

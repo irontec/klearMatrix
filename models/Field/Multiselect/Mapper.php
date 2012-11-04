@@ -189,10 +189,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
             foreach ($original as $model) {
 
-                if ( (!is_object($model))
-                    || (!$model->getMapper() instanceof $this->_relationMapper) ) {
+                if ((!is_object($model))
+                    || (!$model->getMapper() instanceof $this->_relationMapper)) {
 
-                        Throw New Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
+                        throw new Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
                 }
 
                 if (false === $fkColumn) {
@@ -201,7 +201,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 }
 
                 $getter = 'get' . ucfirst($fkColumn);
-                foreach ($value as $idx=>$idRelatedItem) {
+                foreach ($value as $idx => $idRelatedItem) {
 
                     if ($idRelatedItem ==  $model->{$getter}()) {
 

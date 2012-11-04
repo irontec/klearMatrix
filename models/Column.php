@@ -128,6 +128,10 @@ class KlearMatrix_Model_Column
         } else {
             $this->_parseField();
         }
+
+        // Es importante que el loadconficlass esté aquí para que el readonly funcione en los campos Ghost.
+        // TODO: Habría que mejorar la comprobación si queremos mantener el lazyload
+        $this->_loadConfigClass();
     }
 
     protected function _parseOption()
@@ -309,9 +313,9 @@ class KlearMatrix_Model_Column
         return $this->getFieldConfig()->prepareValue($value);
     }
 
-    public function filterValue($value, $original)
+    public function filterValue($value)
     {
-        return $this->getFieldConfig()->filterValue($value, $original);
+        return $this->getFieldConfig()->filterValue($value);
     }
 
 
@@ -436,24 +440,24 @@ class KlearMatrix_Model_Column
         $this->_disabledOptions = $disabledOptions;
     }
 
-    public function getSearchCondition(array $values, array $searchOps, $model, $langs)
+    public function getSearchCondition(array $values, array $searchOps, $langs)
     {
         if (method_exists($this->getFieldConfig(), 'getCustomSearchCondition')) {
-            $searchCondition = $this->getFieldConfig()->getCustomSearchCondition($values, $searchOps, $model);
+            $searchCondition = $this->getFieldConfig()->getCustomSearchCondition($values, $searchOps);
             if ($searchCondition) {
                 return $searchCondition;
             }
         }
 
-        $searchFields = $this->_getSearchFields($model, $langs);
+        $searchFields = $this->_getSearchFields($langs);
 
         return $this->_getConditions($searchFields, $values);
     }
 
-    protected function _getSearchFields($model, $langs)
+    protected function _getSearchFields($langs)
     {
         if (method_exists($this->getFieldConfig(), 'getCustomSearchField')) {
-            $searchField = $this->getFieldConfig()->getCustomSearchField($model);
+            $searchField = $this->getFieldConfig()->getCustomSearchField();
         } else {
             $searchField = $this->_dbFieldName;
         }
@@ -530,37 +534,37 @@ class KlearMatrix_Model_Column
     }
 
 
-    public function getGetterName($model, $default = false)
+    public function getGetterName($default = false)
     {
         if ($this->isOption()) {
             return false;
         }
 
         if (method_exists($this->getFieldConfig(), 'getCustomGetterName') && $default === false) {
-            return $this->getFieldConfig()->getCustomGetterName($model);
+            return $this->getFieldConfig()->getCustomGetterName();
         }
 
         if ($this->isDependant()) {
             return 'get' . ucfirst($this->getDbFieldName());
         } else {
-            return 'get' . ucfirst($model->columnNameToVar($this->getDbFieldName()));
+            return 'get' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
         }
     }
 
-    public function getSetterName($model, $default = false)
+    public function getSetterName($default = false)
     {
         if ($this->isOption()) {
             return false;
         }
 
         if (method_exists($this->getFieldConfig(), 'getCustomSetterName') && $default === false) {
-            return $this->getFieldConfig()->getCustomSetterName($model);
+            return $this->getFieldConfig()->getCustomSetterName();
         }
 
         if ($this->isDependant()) {
             return 'set' . ucfirst($this->getDbFieldName());
         } else {
-            return 'set' . ucfirst($model->columnNameToVar($this->getDbFieldName()));
+            return 'set' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
         }
 
     }

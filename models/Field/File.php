@@ -39,16 +39,20 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         return $ret;
     }
 
-    public function getCustomOrderField($model)
+    public function getCustomOrderField()
     {
-        $fields = $model->{$this->getCustomGetterName($model)}();
+        $model = $this->_column->getModel();
+        $getter = $this->getCustomGetterName();
+        $fields = $model->$getter();
 
         return $model->varNameToColumn($fields['baseNameName']);
     }
 
-    public function getCustomSearchField($model)
+    public function getCustomSearchField()
     {
-        $fields = $model->{$this->getCustomGetterName($model)}();
+        $model = $this->_column->getModel();
+        $getter = $this->getCustomGetterName();
+        $fields = $model->$getter();
 
         return $model->varNameToColumn($fields['baseNameName']);
     }
@@ -58,12 +62,12 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         return $this->_adapter->getConfig();
     }
 
-    public function getCustomGetterName($model)
+    public function getCustomGetterName()
     {
         return 'get' . ucfirst($this->_column->getDbFieldName()) . 'Specs';
     }
 
-    public function getCustomSetterName($model)
+    public function getCustomSetterName()
     {
         return 'put' . ucfirst($this->_column->getDbFieldName());
     }
@@ -73,7 +77,7 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         return $this->_adapter->getFetchMethod($dbFieldName);
     }
 
-    public function filterValue($value, $original)
+    protected function _filterValue($value)
     {
         if (empty($value)) {
 

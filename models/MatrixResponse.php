@@ -198,8 +198,8 @@ class KlearMatrix_Model_MatrixResponse
             $_newResult = array();
             if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
                 foreach ($this->_columns as $column) {
-
-                    if (!$getter = $column->getGetterName($result)) {
+                    $column->setModel($result);
+                    if (!$getter = $column->getGetterName()) {
                         continue;
                     }
 

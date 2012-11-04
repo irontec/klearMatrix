@@ -30,7 +30,6 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
     protected function _init()
     {
         // Required configuration
-
         if (!$this->_config->getRaw()->source->class) {
             throw new Klear_Exception_MissingConfiguration('Missing "class" in Ghost field configuration');
         }
@@ -61,14 +60,14 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         $this->_column->markAsReadOnly();
     }
 
-    public function getCustomSearchCondition($values, $searchOps, $model)
+    public function getCustomSearchCondition($values, $searchOps)
     {
         if (!$this->isSearchable()) {
             //FIXME: Should not get into this function... And false doesn't seem a nice return value
             return false;
         }
 
-        $searchCondition = $this->_getGhostModel()->{$this->_searchMethod}($values, $searchOps, $model);
+        $searchCondition = $this->_getGhostModel()->{$this->_searchMethod}($values, $searchOps, $this->_column->getModel());
         if ($searchCondition) {
             return $searchCondition;
         }
@@ -88,12 +87,12 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         return $this->_ghostObject;
     }
 
-    public function getCustomGetterName($model)
+    public function getCustomGetterName()
     {
         if ($this->_config->getProperty('source')->field) {
 
             //Si existe el parámetro field, devolvemos el getter para ese campo
-            $method = 'get' . $model->columnNameToVar($this->_config->getProperty('source')->field);
+            $method = 'get' . $this->_column->getModel()->columnNameToVar($this->_config->getProperty('source')->field);
             return $method;
         }
 
@@ -101,13 +100,13 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
     }
 
 
-    public function getCustomOrderField($model)
+    public function getCustomOrderField()
     {
         if (!$this->_orderMethod) {
             return null;
         }
 
-        return $this->_getGhostModel()->{$this->_orderMethod}($model);
+        return $this->_getGhostModel()->{$this->_orderMethod}($this->_column->getModel());
     }
 
     public function prepareValue($value)

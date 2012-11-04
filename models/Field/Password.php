@@ -14,7 +14,7 @@ class KlearMatrix_Model_Field_Password extends KlearMatrix_Model_Field_Abstract
         $this->_adapter = new $adapterClassName;
     }
 
-    public function filterValue($value, $original)
+    protected function _filterValue($value)
     {
         $this->_adapter->setClearValue($value);
 

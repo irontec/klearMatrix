@@ -128,7 +128,25 @@ abstract class KlearMatrix_Model_Field_Abstract
      * Filtra (y adecua) el valor del campo antes del setter
      *
      */
-    public function filterValue($value, $original)
+    public function filterValue($value)
+    {
+        if ($this->_column->isMultilang()) {
+
+            $retValue = array();
+            foreach ($value as $lang => $_value) {
+                $retValue[$lang] = $this->_filterValue($_value);
+            }
+
+        } else {
+
+            $retValue = $this->_filterValue($value);
+
+        }
+
+        return $retValue;
+    }
+
+    protected function _filterValue($value)
     {
         if ($this->_isNullIfEmpty()) {
             if (empty($value)) {

@@ -7,7 +7,7 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
         $this->_plugin = 'datetimepicker';
     }
 
-    public function filterValue($value, $original)
+    public function filterValue($value)
     {
         $date = new Zend_Date($value, false, $this->getLocale());
         $date->setTimezone('UTC');

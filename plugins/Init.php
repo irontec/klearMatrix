@@ -50,6 +50,11 @@ class KlearMatrix_Plugin_Init extends Zend_Controller_Plugin_Abstract
                      ->getParam('bootstrap');
         $cacheManager = $bootstrap->getResource('cachemanager');
 
+        if (!$cacheManager) {
+            $cacheManager = new Zend_Cache_Manager();
+            $bootstrap->getContainer()->cachemanager = $cacheManager;
+        }
+
         //Default frontend config
         $frontend = array(
             'name' => 'Page',

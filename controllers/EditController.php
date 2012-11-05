@@ -174,6 +174,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
              ->fixResults($this->_item);
 
         //TODO: Fix!! c/p from NewController >> Quiero devolver los datos de su padre, para las opciones de columna
+        $parentData = null;
+
         if ($this->_item->isFilteredScreen()) {
 
             // Informamos a la respuesta de que campo es el "padre"
@@ -204,9 +206,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $data->setParentId($parentId);
                 $data->setParentScreen($parentScreenName);
             }
-        } else {
-
-            $parentData = null;
         }
 
         $data->setInfo($this->_item->getInfo());

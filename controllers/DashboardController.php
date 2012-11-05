@@ -23,6 +23,10 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
 
     public function init()
     {
+        $cacheManager = $this->getInvokeArg('bootstrap')->getResource('cachemanager');
+        $cache = $cacheManager->getCache('klearmatrixDashboard');
+        $cache->start();
+
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
 

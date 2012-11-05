@@ -3,6 +3,12 @@
 class KlearMatrix_Bootstrap extends Zend_Application_Module_Bootstrap
 {
 
+    protected function _initKlearMatrix()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin(new KlearMatrix_Plugin_Init());
+
+    }
     protected function _initSyslog()
     {
         $writer = new \Zend_Log_Writer_Syslog(

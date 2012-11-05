@@ -62,7 +62,9 @@ class KlearMatrix_Plugin_Init extends Zend_Controller_Plugin_Abstract
                 'default_options' => array(
                         'cache_with_get_variables' => true,
                         'cache_with_session_variables' => true,
-                        'cache_with_cookie_variables' => true
+                        'cache_with_cookie_variables' => true,
+                        'make_id_with_session_variables' => false,
+                        'make_id_with_cookie_variables' => false
                 ),
                 'lifetime' => 300,
                 'memorize_headers' => array(
@@ -75,10 +77,7 @@ class KlearMatrix_Plugin_Init extends Zend_Controller_Plugin_Abstract
             $cache = array(
                     'frontend' => $frontend,
                     'backend' => array(
-                        'name' => 'File',
-                        'options' => array(
-                            'cache_dir' => APPLICATION_PATH . '/cache'
-                        )
+                        'name' => 'Black_Hole',
                     )
             );
 

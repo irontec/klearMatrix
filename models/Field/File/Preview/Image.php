@@ -11,8 +11,8 @@ class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Fi
 
     public function setRequest(Zend_Controller_Request_Http $request)
     {
-        $this->_width = $request->getParam('width');
-        $this->_height = $request->getParam('height');
+        $this->_width = $request->getParam('width', '200');
+        $this->_height = $request->getParam('height', '200');
         if ($request->getParam('crop') == 'true') {
             $this->_crop = true;
         } else {

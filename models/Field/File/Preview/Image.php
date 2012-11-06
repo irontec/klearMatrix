@@ -5,7 +5,7 @@ class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Fi
 
     protected $_width;
     protected $_height;
-    protected $_crop = false;
+    protected $_crop = true;
     protected $_binary;
     
 
@@ -13,9 +13,7 @@ class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Fi
     {
         $this->_width = $request->getParam('width', '200');
         $this->_height = $request->getParam('height', '200');
-        if ($request->getParam('crop') == 'true') {
-            $this->_crop = true;
-        } else {
+        if ($request->getParam('crop','true') == 'false') {
             $this->_crop = false;
         }
         return;

@@ -154,6 +154,9 @@ table.kMatrix .mlTag {
     display:inline-block; width:15px; height:15px; margin:0 3px; clear:both;
 }
 
+.klearMatrixFilteringForm span.selectable {
+	display:inline-block; width:15px; height:15px; margin:0 3px; clear:none;
+}
 .paginator {
     clear: both;
     margin: 0.2em;

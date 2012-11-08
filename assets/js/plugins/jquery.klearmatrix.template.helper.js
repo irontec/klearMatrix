@@ -280,7 +280,7 @@
 
                     default:
 
-                        if(column.properties.maxLength) {
+                        if(column.properties && column.properties.maxLength) {
 
                             for (idx in values[column.id]) {
 

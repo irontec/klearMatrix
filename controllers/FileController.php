@@ -180,10 +180,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                     'pk'=>$this->_pk,
                     'message'=> $this->_model->{$nameGetter}().'<br />('.$this->_model->{$sizeGetter}().')' ,
                     'buttons'=>array(
-                            $this->view->translate('Cancel') => array(
+                            $this->_helper->translate('Cancel') => array(
                                     'recall'=>false,
                             ),
-                            $this->view->translate('Download') => array(
+                            $this->_helper->translate('Download') => array(
                                     'recall'=>true,
                                     'external'=>true,
                                     'params'=>array(

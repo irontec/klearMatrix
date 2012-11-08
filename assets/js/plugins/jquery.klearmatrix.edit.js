@@ -12,16 +12,16 @@
             moduleName: 'edit',
             theForm : false
         },
-        
+
         _super: $.klearmatrix.module.prototype,
 
         _create : function() {
             this._super._create.apply(this);
         },
-        
+
         _formValidationErrors : {
-            'customError' : $.translate('undefined error',[__namespace__]), 
-            'patternMismatch' : $.translate('invalid pattern',[__namespace__]), 
+            'customError' : $.translate('undefined error',[__namespace__]),
+            'patternMismatch' : $.translate('invalid pattern',[__namespace__]),
             'rangeOverflow' : $.translate('range overflow',[__namespace__]),
             'rangeUnderflow' : $.translate('range underflow',[__namespace__]),
             'stepMismatch' : $.translate('step mismatch',[__namespace__]),
@@ -50,14 +50,14 @@
                 ._registerMainActionEvent();
 
         },
-        
+
         _applyDecorators : function() {
             $(".generalOptionsToolbar a",this.element.klearModule("getPanel")).each(function() {
                 $(this).button();
             });
             return this;
         },
-        
+
         _registerReDispatchSavers : function() {
             var self = this;
 
@@ -82,7 +82,7 @@
 
             return this;
         },
-        
+
         _registerMainActionEvent : function() {
 
             var self = this;
@@ -173,7 +173,7 @@
 
             return this;
         },
-        
+
         _doAction : function() {
 
             (function(self) {
@@ -254,9 +254,9 @@
             });
 
             var self = this;
-            var _errorTemplate = $('<span class="ui-widget ui-state-error ui-corner-all klearFieldError">'  
+            var _errorTemplate = $('<span class="ui-widget ui-state-error ui-corner-all klearFieldError">'
                                     + '<span class="ui-icon ui-icon-alert"></span><span class="content"></span></span>');
-        
+
             this.options.theForm
                 .h5Validate({
                     focusout: false,
@@ -265,22 +265,22 @@
                     keyup: false
                 })
                 .on('validated',function(formElement,validation) {
-                    
+
                     var _inputContainer = $(formElement.target).parents("div:eq(0)");
-                    
+
                     if (true === validation.valid) {
                         $(".klearFieldError",_inputContainer).slideUp(function() {
                             $(this).remove();
                         });
 
-                        return;                                    
+                        return;
                     }
-                    
+
                     var errorCollection = [];
-                    
+
                     for (errorType in self._formValidationErrors) {
                         if (validation[errorType] === true) {
-                            
+
                             var _dataIndex = errorType.toLowerCase();
                             if ($(formElement.target).data(_dataIndex)) {
                                 errorCollection.push($(formElement.target).data(_dataIndex));
@@ -289,24 +289,24 @@
                             }
                         }
                     }
-                    
+
                     if (errorCollection.length > 0) {
                         if (!$(".klearFieldError",_inputContainer).is("span")) {
                             _errorTemplate.clone().prependTo(_inputContainer);
-                        } 
+                        }
                         $(".klearFieldError .content",_inputContainer).html(errorCollection.join('<br />'));
-                        
+
                     } else {
-                        
+
                         $(".klearFieldError",_inputContainer).slideUp(function() {
                             $(this).remove();
                         });
-                        
+
                     }
-                    
+
                 });
         },
-        
+
         //TODO: Este método está creciendo demasiado. Revisar para que no acabe demasiado inflado
         _initFormElements : function() {
             var self = this;
@@ -341,18 +341,18 @@
 
                         $.each($(this).data(),function(idx, value) {
                             if (idx.match(/setting-*/)) {
-                                
+
                                 idx = idx.replace('setting', '');
                                 idx = idx.charAt(0).toLowerCase() + idx.substr(1); //lcfirst
                                 if (!pluginSettings) {
                                     pluginSettings = {};
                                 }
-                                
+
                                 pluginSettings[idx] = value;
                             }
                         });
 
-                        
+
                         (function lazyPluginLoad(target, pluginName, settings) {
                             if (!$.fn[pluginName]) {
                                 this.count++;
@@ -367,12 +367,12 @@
                             if (target[pluginName]) {
                                 target[pluginName](settings);
                             }
-                            
+
                         })($(this), $(this).data("plugin"), pluginSettings);
                     }
                 });
             }
-            
+
             if ($(".jmedia",this.options.theForm).length>0) {
                 $(".jmedia",this.options.theForm).each(function() {
 
@@ -419,7 +419,7 @@
                                 });
                 });
             }
-            
+
             if ($(".filePreview",this.options.theForm).length>0) {
                 $(".filePreview",this.options.theForm).each(function() {
 
@@ -431,13 +431,13 @@
                         if ($self.data(value)) {
                             _post[value] = $self.data(value);
                         }
-                        
+
                         if (value == 'width' || value == 'height') {
                             imageAttribs += value + '="'+_post[value]+'px" ';
                         }
-                        
+
                     });
-                    
+
                     var requestData = {
                             file: _self.klearModule("option","file"),
                             pk: $(this).parents("form:eq(0)").data("id"),
@@ -449,60 +449,60 @@
 
                     var item = $("<img class=\"imgFilePreview\" "+imageAttribs+" />");
 
-                    
+
                     var request = $.klear.buildRequest(requestData);
                     var _url = request.action; //encodeURI()
                     _url += '&' + $.param(request.data);
                     item.attr("src", _url);
 
                     $(this).replaceWith(item);
-                    
-                    
-                    
+
+
+
                 });
             }
-            
-            
+
+
             if ($(".password",this.options.theForm).length>0) {
                 var isNew = this.options.theForm.data("type") == "new";
-                
+
                 $(".password", this.options.theForm).each(function() {
-                
+
                     var $self = $(this);
                     var _parent = $self.parent();
                     var _checkbox = $("input:checkbox[rel="+$self.attr("name")+"]",_parent);
-                    
+
                     if (isNew) {
                         _checkbox.parents("span:eq(0)").remove();
                         return;
                     }
-                    
+
                     $(this)
                         .attr("disabled","disabled")
                         .addClass("ui-state-disabled");
-                    
+
                     _checkbox.on("change",function() {
                         if ($(this).is(":checked")) {
                             $self.removeAttr("disabled").removeClass("ui-state-disabled");
                             $self.select().trigger("focus");
-                            
+
                         } else {
                             $self.attr("disabled","disabled").addClass("ui-state-disabled");
                         }
                     });
-                    
-                    
+
+
                 });
             }
-            
+
             if ($(".checkbox",this.options.theForm).length>0) {
-                
+
                 $(".checkbox", this.options.theForm).each(function() {
-                
+
                     var $self = $(this);
                     var _parent = $self.parent();
                     var _checkbox = $("input:checkbox[rel=" + $self.attr("name") + "]", _parent);
-                    
+
                     _checkbox.on("change",function() {
                         if ($(this).is(":checked")) {
                             $self.val('1');
@@ -510,14 +510,11 @@
                             $self.val('0');
                         }
                     });
-                    
-                    
+
+
                 });
             }
 
-            
-            
-            
             if ($(".qq-uploader",this.options.theForm).length>0) {
                 $(".qq-uploader",this.options.theForm).each(function() {
 
@@ -525,14 +522,14 @@
                     if (_hiddenField.length == 0) {
                         return;
                     }
-                    
+
                     var item = $("<div />");
                     item
                         .attr("rel",$(this).attr("rel"))
                         .data("command",$(this).data("command"));
 
                     $(this).replaceWith(item);
-                    
+
                     _hiddenField.on("postmanualchange",function() {
                         var $shownFDesc = $('#new_'+ $(this).attr("id"));
                         if ($(this).hasClass("changed")) {
@@ -573,14 +570,14 @@
                              '</div>',
                             onComplete : function(id, fileName, result) {
                                 var $list = $(".qq-upload-list",$(this.element));
-                                
+
                                 if (result.error) {
                                     $list.empty();
                                     $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR",[__namespace__])});
                                     return;
                                 }
-                                
-                                
+
+
                                 var fName = $(".qq-upload-file",$list).html();
                                 var fSize = $(".qq-upload-size",$list).html();
                                 var _id = _hiddenField.attr("id");
@@ -593,7 +590,7 @@
 
                             showMessage : function(message) {
                                 if (typeof(message) == 'string') {
-                                    $(".qq-upload-list",$(this.element)).html('');    
+                                    $(".qq-upload-list",$(this.element)).html('');
                                     $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR",[__namespace__])});
                                 }
                             }
@@ -616,7 +613,7 @@
                     })();
                 });
             }
-            
+
             var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
 
             $("input, select, textarea", this.options.theForm)
@@ -629,13 +626,13 @@
                 .filter("[required]").before(_required.clone())
                 .end()
                 .find(":not(:disabled):eq(0)").trigger("focusin").select();
-            
-            
+
+
             $("div.expandable", this.options.theForm).each(function() {
                 $(this).hide();
                 var expand = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-s"></span></button>';
                 var contract = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-n"></span></button>';
-                
+
                 $("<div class='container ui-widget-content ui-corner-all'/>")
                     .html($('label:first',$(this)).clone())
                     .insertAfter($(this))
@@ -648,13 +645,13 @@
                             $(this).prev('div.expandable').slideToggle('slow');
                     });
                 });
-                
+
                 $('label:first',$(this)).append(contract).after('<br />').on('click',function(){
                     $(this).parent('div').slideToggle('slow',function(){
                         $(this).next('div').slideToggle('slow');
                     });
                 });
-                
+
                 $(this).find('button').on('click',function(e){
                     e.preventDefault();
                 });
@@ -664,7 +661,7 @@
             });
             return this;
         },
-        
+
         //TODO: Este método está creciendo demasiado. Revisar para que no acabe demasiado inflado
         _registerEvents : function() {
 
@@ -713,34 +710,65 @@
             });
 
             $(".visualFilter",this.element.klearModule("getPanel")).on('manualchange.visualFilter',function(e,manual) {
-                
+
+                //Si es manual y es un campo oculto no hacemos los filtros
+                //porque este campo oculto puede tener a su vez otros filtros
+                //y mostrar campos que no debería
+                //Ejemplo: A oculta B y C, pero B muestra C. Primero se comprueba A ocultando B y C.
+                //Después se comprueba B mostrando C, pero no debería, ya que B está oculto de antes.
+                if (manual && $(this).parents("div:eq(0)").is(':hidden')) {
+
+                    return;
+                }
+
                 if ($(this).is("input:hidden")) {
+
                     var curOption = $(this);
+
                 } else {
+
                     var curOption = $("option[value="+$(this).val()+"]",$(this));
                 }
 
-                $.each(curOption.data("hide").split(","),function(i,val) {
-                    
-                    var fName = $.trim(val);
-                    if (fName == '') return;
-                    
-                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
-                    if (manual) field.hide();
-                    else field.slideUp();
-                });
-
                 $.each(curOption.data("show").split(","),function(i,val) {
+
                     var fName = $.trim(val);
                     if (fName == '') return;
                     var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
-                    if (manual) field.show();
-                    else {
-                        field.slideDown();
-                        field.addClass("ui-state-highlight");
+
+                    if (manual) {
+
+                        field.show();
+
+                    } else {
+
+                        //Cuando mostramos un campo, lanzamos el visualFilter si tiene
+                        //por si está relacionado con otro campo que debemos ocultar o mostrar
+                        field.slideDown('normal', function(){
+                            $(".visualFilter", field).trigger("manualchange.visualFilter",true);
+                        }).addClass("ui-state-highlight");
+
                         setTimeout(function() {
                             field.removeClass('ui-state-highlight');
                         },1300);
+                    }
+                });
+
+                $.each(curOption.data("hide").split(","),function(i,val) {
+
+                    var fName = $.trim(val);
+                    if (fName == '') return;
+
+                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
+
+                    if (manual) {
+
+                        field.hide();
+
+                    } else {
+
+                        //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
+                        field.slideUp();
                     }
                 });
 
@@ -749,14 +777,14 @@
             $("select, input, textarea", this.options.theForm).on('manualchange', function() {
                 var _val = $(this).val()? $(this).val() : '';
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
-                    
+
                     $(this).addClass("changed ui-state-highlight");
-                    
+
                 } else {
-                    
+
                     $(this).removeClass("changed ui-state-highlight");
                 }
-                
+
                 self.options.theForm.trigger("updateChangedState");
                 $(this).trigger("postmanualchange");
             });
@@ -764,7 +792,7 @@
             $("select",this.options.theForm).on("change", function() {
                 $(this).trigger("manualchange");
             });
-            
+
             $("select, input, textarea", this.options.theForm).on("keydown", function(e) {
                 if(e.shiftKey && e.ctrlKey && e.which == 13) {
                     e.preventDefault();

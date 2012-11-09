@@ -44,6 +44,10 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
         $data = array();
         $data['title'] = $this->_item->getTitle();
 
+        if ($this->_item->getUseExplain()) {
+            $data['title'] .= ' ' . $this->_helper->translate('(Aproximated values)');
+        }
+
         $menuConfig = Zend_Controller_Front::getInstance()
                         ->getParam('bootstrap')
                         ->getResource('modules')

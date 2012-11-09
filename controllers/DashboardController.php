@@ -74,8 +74,7 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 $moduleRouter = $moduleConfig->buildRouterConfig();
                 $moduleRouter->resolveDispatch();
 
-                if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class"))
-                {
+                if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class")) {
 
                     $dashElementClassName = $moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class");
                     $dashSection = new $dashElementClassName;
@@ -114,7 +113,6 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
 
     protected function _calculateForKlearMatrixList($moduleRouter, $subsection)
     {
-
         $_item = $moduleRouter->getCurrentItem();
 
         $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
@@ -125,7 +123,11 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
 
         $where = $this->_helper->createListWhere($cols, $model, $fakeData, $_item);
 
-        $totalItems = $_mapper->countByQuery($where);
+        if (!$where) {
+            $totalItems = $_mapper->countAllRows($this->_item->getUseExplain());
+        } else {
+            $totalItems = $_mapper->countByQuery($where);
+        }
 
         return array(
                 'name' => $subsection->getName(),

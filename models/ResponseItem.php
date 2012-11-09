@@ -52,6 +52,8 @@ class KlearMatrix_Model_ResponseItem
     protected $_hasInfo = false;
     protected $_fieldInfo;
 
+    protected $_useExplain = false;
+
     //Configuraciones comunes para todos los tipos de ResponseItem
     protected $_configOptions = array(
         '_mapper' => array('mapper', false),
@@ -67,7 +69,8 @@ class KlearMatrix_Model_ResponseItem
         '_customTemplate' => array('template', false),
         '_customScripts' => array('scripts', false),
         '_actionMessages' => array('actionMessages', false),
-        '_disableSave' => array('disableSave', false)
+        '_disableSave' => array('disableSave', false),
+        '_useExplain' => array('useExplain', false)
     );
 
     //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
@@ -221,6 +224,11 @@ class KlearMatrix_Model_ResponseItem
     public function getTitle()
     {
         return $this->_title;
+    }
+
+    public function getUseExplain()
+    {
+        return $this->_useExplain;
     }
 
     public function getCustomTemplate()

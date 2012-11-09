@@ -50,7 +50,6 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
 
         $templates = array();
         $this->view->setBasePath($this->getFrontController()->getModuleDirectory() . '/views');
-
         foreach ($cacheTemplates as $template => $action) {
             $templates[$template] = $this->view->render('template/' .  $action . '.phtml');
         }

@@ -86,9 +86,30 @@ class KlearMatrix_Plugin_Init extends Zend_Controller_Plugin_Abstract
         } else {
 
             $bootstrapConfig = $cacheManager->getCacheTemplate('klearmatrixDashboard');
-            if (isset($bootstrapConfig['frontend']['options'])) {
-                $frontend['options'] = array_merge($frontend['options'], $bootstrapConfig['frontend']['options']);
+
+
+            if (isset($bootstrapConfig['frontend']['options']['default_options'])) {
+
+                $mergedDefaultOptions = false;
+                if (isset($bootstrapConfig['frontend']['options']['default_options'])) {
+                    $mergedDefaultOptions = array_merge(
+                            $frontend['options']['default_options'],
+                            $bootstrapConfig['frontend']['options']['default_options']
+                    );
+                }
+
+                $frontend['options'] = array_merge(
+                        $frontend['options'],
+                        $bootstrapConfig['frontend']['options']
+                );
+
+                if ($mergedDefaultOptions) {
+                    $frontend['options']['default_options'] = $mergedDefaultOptions;
+                }
+
+
             }
+
 
             $cacheManager->setTemplateOptions(
                     'klearmatrixDashboard',

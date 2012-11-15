@@ -49,6 +49,22 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_blacklist = array();
 
+    /*
+     * Definir subarrays si el tag depende de subfijos en los nombres de campo,
+     * en caso contrario indicar el tag como string
+     */
+    protected $_metadataBlacklist = array(
+        'video' => array(
+            'Source',
+            'Title',
+            'Thumbnail'
+        )
+    );
+    /**
+     * @var bool
+     */
+    protected $_ignoreMetadataBlacklist = false;
+
     protected $_hasInfo = false;
     protected $_fieldInfo;
 
@@ -434,6 +450,11 @@ class KlearMatrix_Model_ResponseItem
             }
         }
 
+        if ($this->_ignoreMetadataBlacklist == false) {
+
+            $this->_blacklistFieldsByMeta($model);
+        }
+
         /*
          * Metemos en la lista negra los campos multi-idioma.
         * Preguntaremos a sus getter genéricos con argumento de idioma.
@@ -444,10 +465,79 @@ class KlearMatrix_Model_ResponseItem
         }
     }
 
+    /**
+     * Allow /Deny field blacklisting based on ddbb tags
+     * @param $ignore bool
+     */
+    public function setIgnoreMetadataBlacklist($ignore) {
+
+        $this->_ignoreMetadataBlacklist = (bool) $ignore;
+    }
+
+    /**
+     * Hace una criba de columnas visibles a los COMMENT del campo en ddbb
+     * @return bool
+     */
+    protected function _blacklistFieldsByMeta ($model)
+    {
+        //FIXME method_exists condition, just for backward compatibility reasons
+        if (method_exists($model, 'getColumnsMeta')) {
+
+            $fieldsMetadata = $model->getColumnsMeta();
+            foreach ($fieldsMetadata as $field => $metatags) {
+
+                if (in_array($field, $this->_getBlacklistedFields())) {
+
+                    continue;
+                }
+
+                foreach ($metatags as $tag) {
+
+                    if (! $this->_blacklistFieldMetaMatch($tag)) {
+
+                        continue;
+                    }
+
+                    if (is_array($this->_metadataBlacklist[$tag])) {
+
+                        foreach ($this->_metadataBlacklist[$tag] as $suffix) {
+
+                            $this->addFieldToBlackList($field . $suffix, true);
+                        }
+
+                    } else {
+
+                        $this->addFieldToBlackList($field, true);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function _blacklistFieldMetaMatch($tag)
+    {
+        $tag = is_array($tag) ? key($tag) : $tag;
+
+        if (in_array($tag, $this->_metadataBlacklist)) {
+
+            return true;
+        }
+
+        if (in_array($tag, array_keys($this->_metadataBlacklist))) {
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function addFieldToBlackList($field, $toBlacklist = true)
     {
         $this->_blacklist[$field] = (bool)$toBlacklist;
-
     }
 
     public function addFieldsToBlackList($fields)
@@ -455,6 +545,11 @@ class KlearMatrix_Model_ResponseItem
         foreach ($fields as $field => $value) {
             $this->addFieldToBlackList($field, $value);
         }
+    }
+
+    protected function _getBlacklistedFields()
+    {
+        return array_keys($this->_blacklist);
     }
 
     protected function _getMultilangFields($model)

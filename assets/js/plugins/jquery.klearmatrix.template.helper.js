@@ -226,6 +226,7 @@
                 return '';
 
             } else {
+
                 switch(column.type){
 
                     case 'select':
@@ -276,6 +277,11 @@
                         }
 
                         return '<span class="ui-icon ui-icon-' + icon + '" />';
+                        break;
+
+                    case 'video':
+
+                        return this.cleanValue(values[column.id]['title']);
                         break;
 
                     default:
@@ -335,8 +341,8 @@
             var idx = settings.idx;
             var values = settings.values;
 
-
             if ($.isArray(values) && (values.length > 0) && (values[idx])) {
+
                 values = values[idx];
 
                 var count = false;

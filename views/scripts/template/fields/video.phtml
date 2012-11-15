@@ -1,0 +1,100 @@
+{{if (_readonly)}}
+{{html _fieldValue}}
+{{else}}
+
+<input
+type="text"
+class="video auto{{if (_properties.paste)}} paste{{/if}}"
+{{if (_fieldValue.video)}}
+value="http://youtu.be/${_fieldValue.video}"
+{{/if}}
+
+data-plugin="video"
+
+{{if (_properties.required)}}
+required=""
+{{/if}}
+
+{{if (_properties.placeholder)}}
+placeholder="${_properties.placeholder}"
+{{/if}}
+
+{{if (_properties.pattern)}}
+pattern="${_properties.pattern}"
+{{/if}}
+
+{{if (_errors)}}
+{{each(eIndex,error) _errors}}
+data-${eIndex}="${error}"
+{{/each}}
+{{/if}}
+
+{{if (_multilang)}}
+data-multilang="${_locale}"
+{{/if}}
+/>
+{{if (_properties.feed.youtube)}}
+{{each(idx,url) _properties.feed.youtube}}
+<div class="feed container ui-widget-content ui-corner-all" data-channel="{{html url }}" data-source="youtube">
+    <ol>
+        <li style="display:none;" title="Previous" class="ui-state-default prev">
+            <a href="#"><span class="ui-icon ui-icon-carat-1-w"><<</span></a>
+        </li>
+        <li style="display:none;" title="Next" class="ui-state-default next" style="display: list-item;">
+            <a href="#"><span class="ui-icon ui-icon-carat-1-e">>></span></a>
+        </li>
+    </ol>
+    <div class="wrapper"><div class="content"></div></div>
+</div>
+{{/each}}
+{{/if}}
+
+{{if (_properties.feed.vimeo)}}
+{{each(idx,url) _properties.feed.vimeo}}
+<div class="feed container ui-widget-content ui-corner-all" data-channel="{{html url }}" data-source="vimeo">
+    <ol>
+        <li style="display:none;" title="Previous" class="ui-state-default prev">
+            <a href="#"><span class="ui-icon ui-icon-carat-1-w"><<</span></a>
+        </li>
+        <li style="display:none;" title="Next" class="ui-state-default next" style="display: list-item;">
+            <a href="#"><span class="ui-icon ui-icon-carat-1-e">>></span></a>
+        </li>
+    </ol>
+    <div class="wrapper"><div class="content"></div></div>
+</div>
+{{/each}}
+{{/if}}
+
+<input
+type="hidden"
+class="video auto"
+id="${_elemIden}"
+name="${_elemName}"
+value="${_fieldValue.video}"
+/>
+
+<input
+type="hidden"
+class="source_video"
+placeholder="source"
+name="${_elemName}Source"
+value="${_fieldValue.source}"
+/>
+
+<input
+type="hidden"
+class="title_video"
+placeholder="title"
+name="${_elemName}Title"
+value="${_fieldValue.title}"
+/>
+
+<input
+type="hidden"
+class="thumbnail_video"
+placeholder="thumbnail"
+name="${_elemName}Thumbnail"
+value="${_fieldValue.thumbnail}"
+/>
+{{/if}}
+

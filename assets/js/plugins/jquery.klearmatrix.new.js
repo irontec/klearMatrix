@@ -11,13 +11,13 @@
             data : null,
             moduleName: 'new'
         },
-        
+
         _super: $.klearmatrix.module.prototype,
-        
+
         _create : function() {
             this._super._create.apply(this);
         },
-        
+
         _init: function() {
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
@@ -29,14 +29,14 @@
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 
             this._applyDecorators()
-            	._registerReDispatchSavers()
+                ._registerReDispatchSavers()
                 ._registerBaseEvents()
                 ._initFormElements()
                 ._registerEvents()
                 ._registerMainActionEvent();
 
         },
-        
+
         _doAction : function() {
 
             var self = this;
@@ -48,10 +48,10 @@
             if (typeof this.options.data.parentId != 'undefined') {
                 postData.push({ name:this.options.data.parentItem, value:this.options.data.parentId});
             }
-            
+
             // Es una pantalla nueva "heredada" de una edición (pk será el elemento 'llamante'
             if (self.options.data.parentPk) {
-            	postData.push({name:'parentPk',value: self.options.data.parentPk});           	
+                postData.push({name:'parentPk',value: self.options.data.parentPk});
             }
 
             $.klear.request(
@@ -74,7 +74,7 @@
                         $("input,select,textarea",self.options.theForm).val('');
                         self._initSavedValueHashes();
                         self.options.theForm.trigger('updateChangedState');
-                        
+
                         if ($("input[name=autoclose]",$self.klearModule("getPanel")).is(":checked")) {
                             $dialog.moduleDialog("close");
                             $self.klearModule("close");
@@ -94,7 +94,7 @@
                                 {
                                     text: $.translate("Add another record", [__namespace__]),
                                     click: function() {
-                                    	$self.klearModule("reDispatch");
+                                        $self.klearModule("reDispatch");
                                     }
                                 }
                             ]
@@ -107,12 +107,12 @@
                 },
                 // Error from new/index/save
                 function(data) {
-                	self.standardError(data);
+                    self.standardError(data);
                 }
             );
         }
     });
 
     $.widget.bridge("klearMatrixNew", $.klearmatrix['new']);
-    
+
 })(jQuery);

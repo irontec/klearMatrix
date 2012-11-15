@@ -1,0 +1,40 @@
+div.feed {
+
+    padding: 0.8em 0;
+    overflow-x:hidden;
+}
+
+div.feed  div.wrapper {
+
+    overflow:hidden;
+}
+
+div.feed  div.wrapper div.content {
+
+    max-height: 80px;
+    height:90px;
+    position:relative;
+    width:1000px;
+}
+
+
+div.feed li {
+
+    width:20px;
+    margin: 1px!important;
+}
+
+div.feed li.prev {
+
+    float:left;
+}
+
+div.feed li.next {
+
+    float:right;
+}
+
+div.feed li.next span {
+
+
+}

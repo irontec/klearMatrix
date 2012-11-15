@@ -26,6 +26,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
+
+        if ('save' === $this->getRequest()->getActionName()) {
+
+            $this->_item->setIgnoreMetadataBlacklist(true);
+        }
     }
 
     public function saveAction()

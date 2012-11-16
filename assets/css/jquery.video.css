@@ -2,11 +2,14 @@ div.feed {
 
     padding: 0.8em 0;
     overflow-x:hidden;
+    width:600px;
 }
 
 div.feed  div.wrapper {
 
     overflow:hidden;
+    clear:left;
+    width:600px;
 }
 
 div.feed  div.wrapper div.content {
@@ -14,7 +17,6 @@ div.feed  div.wrapper div.content {
     max-height: 80px;
     height:90px;
     position:relative;
-    width:1000px;
 }
 
 
@@ -28,6 +30,13 @@ div.feed li.prev {
 
     float:left;
 }
+
+div.feed li.title {
+
+    float:left;
+    min-width:400px;
+}
+
 
 div.feed li.next {
 

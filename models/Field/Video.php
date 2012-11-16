@@ -45,7 +45,7 @@ class KlearMatrix_Model_Field_Video extends KlearMatrix_Model_Field_Abstract
         if (in_array($key, $this->_availableSettings)) {
             $this->_properties[$key] = $value;
         }
-        if (!$value) {
+        if (! isset($value)) {
             var_dump(debug_backtrace());
         }
         return $this;

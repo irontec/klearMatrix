@@ -1,22 +1,22 @@
 /*List controller */
 
 table.kMatrix {
-	margin-top:1em;
-	width:100%;
+    margin-top:1em;
+    width:100%;
 }
 
 table.kMatrix caption {
-	text-align: left;
-	padding:.3em;
-	font-size:1.1em;
+    text-align: left;
+    padding:.3em;
+    font-size:1.1em;
 }
 
 table.kMatrix caption span.extraCaptionInfo {
-	font-size: .8em;
-	float: right;
+    font-size: .8em;
+    float: right;
 }
 table.kMatrix caption span.extraCaptionInfo input {
-	width: 4em;
+    width: 4em;
 }
 
 table.kMatrix th {
@@ -42,34 +42,34 @@ table.kMatrix td.options {
     display:none;
 }
 table.kMatrix .multilangValue {
-	display:none;
+    display:none;
 
 }
 
 table.kMatrix .multilangValue.selected {
-	display:block;
-	overflow:hidden;
+    display:block;
+    overflow:hidden;
 }
 
 table.kMatrix .multilangValue span.langIden {
-	padding-left:2px;
+    padding-left:2px;
 }
 
 table.kMatrix .mlTag {
-	float:right;
-	cursor:pointer;
+    float:right;
+    cursor:pointer;
 }
 
 
 .generalOptionsToolbar {
-	padding:1em;
-	margin:1em 0 1em 0;
+    padding:1em;
+    margin:1em 0 1em 0;
 }
 
 /* Form */
 
 .klearMatrix_form {
-	margin:1em;
+    margin:1em;
 
 }
 
@@ -78,22 +78,22 @@ table.kMatrix .mlTag {
 }
 
 .klearMatrix_form fieldset {
-	padding:1em;
-	width:48%;
+    padding:1em;
+    width:50%;
 }
 
 .klearMatrix_form legend {
-	padding:.4em;
+    padding:.4em;
 }
 
 .klearMatrix_form p,
 .klearMatrix_form div.container {
-	padding:.8em;
-	margin:.3em 0;
+    padding:.8em;
+    margin:.3em 0;
 }
 
 .klearMatrix_form label {
-	font-weight: bold;
+    font-weight: bold;
     display:block;
     margin-bottom:.2em;
 }
@@ -114,11 +114,11 @@ table.kMatrix .mlTag {
 }
 
 .pointer {
-	cursor:pointer;
+    cursor:pointer;
 }
 
 .klearMatrix_form .fieldDisabled {
-	border:0;
+    border:0;
 }
 
 .klearMatrix_form .klearMatrix_file {
@@ -155,7 +155,7 @@ table.kMatrix .mlTag {
 }
 
 .klearMatrixFilteringForm span.selectable {
-	display:inline-block; width:15px; height:15px; margin:0 3px; clear:none;
+    display:inline-block; width:15px; height:15px; margin:0 3px; clear:none;
 }
 .paginator {
     clear: both;
@@ -217,9 +217,9 @@ a.ui-state-nojump {
 }
 
  .klearMatrixFiltering .filterItem {
-	margin-left: 3em;
-	padding-top:.5em;
-	float:left;
+    margin-left: 3em;
+    padding-top:.5em;
+    float:left;
     clear: both;
  }
 
@@ -228,8 +228,8 @@ a.ui-state-nojump {
  }
 
  .klearMatrixFiltering .addToggle {
- 	padding-top:.8em;
- 	display:inline-block;
+     padding-top:.8em;
+     display:inline-block;
  }
  .klearMatrixFiltering .disabled {
     cursor:default;
@@ -255,12 +255,12 @@ a.ui-state-nojump {
 }
 
 .klearMatrixFiltering .searchOption {
-	display:none;
-	margin-right:1em;
+    display:none;
+    margin-right:1em;
 }
 
 .klearMatrixFiltering .searchOption select {
-	width:35px;
+    width:35px;
 }
 
 .fieldInfo-tooltip {
@@ -288,29 +288,29 @@ a.ui-state-nojump {
 }
 
 .assistant {
-	font-size: 0.8em;
+    font-size: 0.8em;
     margin-bottom: 0.5em;
     padding: 0.6em 1em;
 }
 
 .assistant p {
-	padding:1em;
-	width:auto;
+    padding:1em;
+    width:auto;
 }
 
 span.klearFieldError {
-	padding:.6em;
-	margin:.3em;
-	display:block;
-	overflow: hidden;
+    padding:.6em;
+    margin:.3em;
+    display:block;
+    overflow: hidden;
 }
 
 span.klearFieldError span {
-	float:left;
+    float:left;
 }
 
 span.klearFieldError span.content {
-	margin-left:20px;
+    margin-left:20px;
 }
 
 
@@ -321,40 +321,40 @@ span.klearFieldError span.content {
 }
 
 div.klearMatrixDashboard h1 {
-	padding:.7em;
-	margin: .2em .1em .7em .1em;
-	font-size: 1.2em;
-	
+    padding:.7em;
+    margin: .2em .1em .7em .1em;
+    font-size: 1.2em;
+
 }
 
 div.klearMatrixDashboard fieldset {
-	width:25%;
-	float:left;
-	padding:1em;
-	margin:1em;
+    width:25%;
+    float:left;
+    padding:1em;
+    margin:1em;
 }
 
 div.klearMatrixDashboard fieldset ul {
-	list-style:none;
+    list-style:none;
 }
 
 div.klearMatrixDashboard fieldset a, div.klearMatrixDashboard fieldset a:active, div.klearMatrixDashboard fieldset a:hover {
-	text-decoration:none;
+    text-decoration:none;
 }
 div.klearMatrixDashboard fieldset li strong {
-	float:right;
+    float:right;
 }
 
 div.klearMatrixDashboard fieldset legend {
-	padding: .3em;
+    padding: .3em;
 }
 
 .right {
-	float:right;
+    float:right;
 }
 
 img.imgFilePreview {
-	border:1px solid #333;
-	padding:.5em;
+    border:1px solid #333;
+    padding:.5em;
 }
 }

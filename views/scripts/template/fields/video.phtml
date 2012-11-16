@@ -3,8 +3,8 @@
 {{else}}
 
 <input
-type="text"
-class="video auto{{if (_properties.paste)}} paste{{/if}}"
+type="{{if (_properties.paste)}}text{{else}}hidden{{/if}}"
+class="video auto paste"
 {{if (_fieldValue.video)}}
 value="http://youtu.be/${_fieldValue.video}"
 {{/if}}
@@ -40,6 +40,9 @@ data-multilang="${_locale}"
         <li style="display:none;" title="Previous" class="ui-state-default prev">
             <a href="#"><span class="ui-icon ui-icon-carat-1-w"><<</span></a>
         </li>
+        <li class="title">
+            <a><?php echo $this->translate('Canal de'); ?> <strong><i>{{html url }}</i></strong>, youtube</a>
+        </li>
         <li style="display:none;" title="Next" class="ui-state-default next" style="display: list-item;">
             <a href="#"><span class="ui-icon ui-icon-carat-1-e">>></span></a>
         </li>
@@ -55,6 +58,9 @@ data-multilang="${_locale}"
     <ol>
         <li style="display:none;" title="Previous" class="ui-state-default prev">
             <a href="#"><span class="ui-icon ui-icon-carat-1-w"><<</span></a>
+        </li>
+        <li class="title">
+            <a><?php echo $this->translate('Canal de'); ?> <strong><i>{{html url }}</i></strong>, vimeo</a>
         </li>
         <li style="display:none;" title="Next" class="ui-state-default next" style="display: list-item;">
             <a href="#"><span class="ui-icon ui-icon-carat-1-e">>></span></a>

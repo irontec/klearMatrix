@@ -302,10 +302,11 @@
      * the callback
      */
     function _request(url, callback){
+
         var res = {};
         $.ajax({
             type: "GET",
-            dataType: "json",
+            dataType: "jsonp",
             url: url,
             async: true,
             success: function(xhr){

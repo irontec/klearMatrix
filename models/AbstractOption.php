@@ -1,6 +1,8 @@
 <?php
 abstract class KlearMatrix_Model_AbstractOption
 {
+    use Klear_Model_Trait_Gettext;
+    
     protected $_config;
     protected $_class;
     protected $_title;
@@ -42,7 +44,9 @@ abstract class KlearMatrix_Model_AbstractOption
     public function getTitle()
     {
         if (null != $this->_title) {
-            return $this->_title;
+            
+            
+            return $this->_gettextCheck($this->_title);
         }
 
         return '';

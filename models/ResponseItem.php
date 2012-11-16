@@ -6,6 +6,9 @@
 
 class KlearMatrix_Model_ResponseItem
 {
+    
+    use Klear_Model_Trait_Gettext;
+    
     const module = 'klearMatrix';
 
     protected $_item;
@@ -239,7 +242,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function getTitle()
     {
-        return $this->_title;
+        return $this->_gettextCheck($this->_title);
     }
 
     public function getUseExplain()

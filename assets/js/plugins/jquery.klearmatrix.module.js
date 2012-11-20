@@ -436,10 +436,12 @@
                     }
                 ]
             );
-
+            var _extraCode  = '';
+            
             if (typeof data.exceptionCode != 'undefined') {
                 var errorDesc = $.klear.fetchErrorByCode(data.exceptionCode);
                 if (errorDesc) {
+                	_extraCode = ' (' + data.exceptionCode + ')';
                     $message.html(errorDesc.replace(/%message%/, data.message));
                 }
             }
@@ -461,7 +463,7 @@
             }
                 
 
-            $_dialog.moduleDialog("option", "title", $.translate("Error", [__namespace__]));
+            $_dialog.moduleDialog("option", "title", $.translate("Error", [__namespace__])  + _extraCode);
             $_dialog.moduleDialog("updateContent", $message);
         }
 

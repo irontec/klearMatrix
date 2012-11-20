@@ -223,7 +223,7 @@ class KlearMatrix_Model_Fso
 
         if ($this->getSize() != $srcFileSize) {
 
-            unlink($srcFileSize);
+            unlink($this->_srcFile);
 
             throw new KlearMatrix_Exception_File(
                 'Something went wrong. New filesize: ' . $srcFileSize . '. Expected: ' . $this->getSize()

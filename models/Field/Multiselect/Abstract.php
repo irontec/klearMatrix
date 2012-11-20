@@ -67,7 +67,14 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
 
     public function getIterator()
     {
-        return new ArrayIterator(array_combine($this->_keys, $this->_items));
+
+        $parentArray = array();
+        if (is_array($this->_keys) && is_array($this->_items))
+        {
+            $parentArray = array_combine($this->_keys, $this->_items);
+        }
+
+        return new ArrayIterator($parentArray);
     }
 
 }

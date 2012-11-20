@@ -437,8 +437,8 @@
                 ]
             );
 
-            if (typeof data.code != 'undefined') {
-                var errorDesc = $.klear.fetchErrorByCode(data.code);
+            if (typeof data.exceptionCode != 'undefined') {
+                var errorDesc = $.klear.fetchErrorByCode(data.exceptionCode);
                 if (errorDesc) {
                     $message.html(errorDesc.replace(/%message%/, data.message));
                 }

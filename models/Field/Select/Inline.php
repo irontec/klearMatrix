@@ -37,6 +37,8 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
                 }
             }
 
+            $value = $this->_gettextCheck($value);
+            
             $this->_items[] = $value;
             $this->_keys[] = $key;
         }

@@ -1,24 +1,20 @@
 <?php
-class KlearMatrix_Model_Field_Video extends KlearMatrix_Model_Field_Abstract
+class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
 {
     protected $_availableSettings = array(
-        'feed',
-        'paste'
+        'width',
+        'height',
+        'zoom'
     );
 
     public function _init()
     {
         $this->_js = array(
-           "/js/plugins/jquery.video.youtube.js",
-           "/js/plugins/jquery.video.vimeo.js",
-           "/js/plugins/jquery.video.js",
-        );
-
-        $this->_css = array(
-           "/css/jquery.video.css",
+           "/js/plugins/jquery.gmaps.js",
         );
 
         $config = $this->_config->getRaw()->source;
+
         $this->_setConfig($config);
     }
 
@@ -43,8 +39,10 @@ class KlearMatrix_Model_Field_Video extends KlearMatrix_Model_Field_Abstract
         }
 
         if (in_array($key, $this->_availableSettings)) {
+
             $this->_properties[$key] = $value;
         }
+
         if (! isset($value)) {
             var_dump(debug_backtrace());
         }
@@ -59,13 +57,11 @@ class KlearMatrix_Model_Field_Video extends KlearMatrix_Model_Field_Abstract
         $columnName = $this->_column->getDbFieldName();
 
         $ret = array(
-            'video' => $value,
-            'source' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Source'}(),
-            'title' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Title'}(),
-            'thumbnail' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Thumbnail'}(),
+            'address' => $value,
+            'lat' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Lat'}(),
+            'lng' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Lng'}(),
         );
 
         return $ret;
     }
-
 }

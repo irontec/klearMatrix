@@ -1,0 +1,70 @@
+{{if (_readonly)}}
+{{html _fieldValue}}
+{{else}}
+
+<input
+type="text" class="auto gmaps"
+{{if (_fieldValue.address)}} value="${_fieldValue.address}" {{/if}} data-plugin="gmaps"
+
+{{if (_properties.zoom)}}
+data-setting-zoom="${_properties.zoom}"
+{{/if}}
+
+{{if (_properties.height)}}
+data-setting-height="${_properties.height}"
+{{/if}}
+
+{{if (_properties.width)}}
+data-setting-width="${_properties.width}"
+{{/if}}
+
+{{if (_properties.required)}}
+required=""
+{{/if}}
+
+{{if (_properties.placeholder)}}
+placeholder="${_properties.placeholder}"
+{{/if}}
+
+{{if (_properties.pattern)}}
+pattern="${_properties.pattern}"
+{{/if}}
+
+{{if (_errors)}}
+{{each(eIndex,error) _errors}}
+data-${eIndex}="${error}"
+{{/each}}
+{{/if}}
+
+{{if (_multilang)}}
+data-multilang="${_locale}"
+{{/if}}
+/>
+<input type="button" value="Ir" />
+
+<div class="mapCanvas"></div>
+
+<input
+type="hidden"
+class="map auto"
+id="${_elemIden}"
+name="${_elemName}"
+value="${_fieldValue.address}"
+/>
+
+<input
+type="hidden"
+class="map_lat"
+name="${_elemName}Lat"
+value="${_fieldValue.lat}"
+/>
+
+<input
+type="hidden"
+class="map_lng"
+name="${_elemName}Lng"
+value="${_fieldValue.lng}"
+/>
+
+{{/if}}
+

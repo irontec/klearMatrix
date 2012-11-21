@@ -61,6 +61,10 @@ class KlearMatrix_Model_ResponseItem
             'Source',
             'Title',
             'Thumbnail'
+        ),
+        'map' => array(
+            'Lat',
+            'Lng',
         )
     );
     /**

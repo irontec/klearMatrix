@@ -7,6 +7,12 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         $this->_plugin = 'timepicker';
     }
 
+
+    protected function _init()
+    {
+        $this->_availableSettings[] = 'showSeconds';
+    }
+
     public function filterValue($value)
     {
         if (empty($value)) {
@@ -16,7 +22,6 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         $time = new Iron_Time($value);
         return $time->getFormattedString($this->_timeFormats);
     }
-
 
     /**
      * @param mixed $value Valor devuelto por el getter del model

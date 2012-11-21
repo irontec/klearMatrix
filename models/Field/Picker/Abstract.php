@@ -150,9 +150,9 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
 
         $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$this->_jqLocale.".js";
 
+        $this->_init();
         $this->_setConfig($config);
         $this->_setPlugin();
-        $this->_init();
     }
 
     protected function _setConfig($config)

@@ -6,7 +6,12 @@
 type="{{if (_properties.paste)}}text{{else}}hidden{{/if}}"
 class="video auto paste"
 {{if (_fieldValue.video)}}
-value="http://youtu.be/${_fieldValue.video}"
+{{if (_fieldValue.source == 'youtube')}}
+    value="http://youtu.be/${_fieldValue.video}"
+{{/if}}
+{{if (_fieldValue.source == 'vimeo')}}
+    value="http://vimeo.com/${_fieldValue.video}"
+{{/if}}
 {{/if}}
 
 data-plugin="video"

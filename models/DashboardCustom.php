@@ -29,7 +29,7 @@ class KlearMatrix_Model_DashboardCustom implements KlearMatrix_Model_Interfaces_
     }
     public function getSubtitle()
     {
-        return false;
+        return null;
     }
 
 }

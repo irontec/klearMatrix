@@ -203,6 +203,14 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 $getter = 'get' . ucfirst($fkColumn);
                 foreach ($value as $idx => $idRelatedItem) {
 
+                    //En EditController se comprueba si llega un campo para guardarlo.
+                    //Cuando se deja un multiselect vacío, no se enviaba el campo, por lo que no actualizaba
+                    //En el template del multiselect siempre va un input[hidden] con el nombre del campo y value=""
+                    //Ese valor siempre se desecha
+                    if (empty($idRelatedItem)) {
+                        continue;
+                    }
+
                     if ($idRelatedItem ==  $model->{$getter}()) {
 
                         $retRelations[] = $model;
@@ -216,6 +224,11 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         if (is_array($value)) {
 
             foreach ($value as $idRelated) {
+
+                //Ver comentario del foreach de $value de arriba
+                if (empty($idRelated)) {
+                    continue;
+                }
 
                 $relationMapper = new $relationMapperName;
                 $relationModel = $relationMapper->loadModel(null);

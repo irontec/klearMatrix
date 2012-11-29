@@ -281,12 +281,13 @@
 
                     case 'video':
 
-                        return this.cleanValue(values[column.id]['address']);
+                        return this.cleanValue(values[column.id]['title']);
                         break;
 
                     case 'map':
 
-                        return this.cleanValue(values[column.id]['title']);
+
+                        return this.cleanValue(values[column.id]['address']);
                         break;
 
                     default:

@@ -20,20 +20,21 @@
             //this.options.data.title = this.options.data.title || this.options.title;
 
             var $appliedTemplate = this._loadTemplate("klearmatrixDashboard");
-            
+
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 
             this
                 ._applyDecorators()
                 ._registerBaseEvents()
-                ._registerEvents();
+                ._registerEvents()
+                ._css3Columns();
 
         },
         _applyDecorators : function() {
-        	
-        	var self = this.element;
+
+            var self = this.element;
             var _self = this;
-            
+
             var $container = $(this.element.klearModule("getPanel"));
 
             $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
@@ -45,7 +46,52 @@
             var self = this.element;
             var _self = this;
             var $container = $(this.element.klearModule("getPanel"));
-            
+
+            return this;
+        },
+       _css3Columns: function () {
+
+            var self = this.element;
+            var _self = this;
+            var $container = $(this.element.klearModule("getPanel"));
+
+            var wrapper = $container.find('div.klearMatrixDashboard > div');
+            var boxes = wrapper.children('fieldset');
+            var box = boxes.filter(':eq(0)');
+
+            var boxWidth = box.width();
+
+            var css3VendorPrefixes = [
+                '-moz',
+                '-webkit',
+                '-o',
+                '-ms',
+                '-khtml'
+            ];
+
+            for (prefix in css3VendorPrefixes) {
+
+                var boxWidth = prefix + '-column-width';
+
+                wrapper.css({ boxWidth : '240px'});
+            }
+
+            wrapper.css({'column-width' : '240px'});
+
+            for (prefix in css3VendorPrefixes) {
+
+                var boxColumnBreak = prefix + "-column-break-inside";
+                boxes.css({ boxColumnBreak : 'avoid'});
+            }
+
+            boxes.css({ 'column-break-inside' : 'avoid'});
+
+            if (boxWidth != box.width()) {
+
+                boxes.removeClass("legacy");
+                boxes.css({'width': '75%'});
+            }
+
             return this;
         }
     });

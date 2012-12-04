@@ -329,9 +329,12 @@ div.klearMatrixDashboard h1 {
 
 div.klearMatrixDashboard fieldset {
     width:25%;
-    float:left;
     padding:1em;
-    margin:1em;
+    margin:0 1em 1em;
+}
+
+div.klearMatrixDashboard fieldset.legacy {
+    float:left;
 }
 
 div.klearMatrixDashboard fieldset ul {

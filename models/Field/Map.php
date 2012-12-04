@@ -2,9 +2,12 @@
 class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
 {
     protected $_availableSettings = array(
+        'draggable',
+        'zoom',
         'width',
         'height',
-        'zoom'
+        'defaultLat',
+        'defaultLng',
     );
 
     public function _init()

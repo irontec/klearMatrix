@@ -5,10 +5,12 @@
 
         options: {
             cache: {},
+            draggable: true,
             zoom: 15,
             height: 450,
             width: 500,
-
+            defaultLat : 43.262951899365135,
+            defaultLng : -2.9352541503906195,
         },
 
         geocoder: null,
@@ -61,8 +63,8 @@
 
             if (lat == '' || lng == '') {
 
-                lat = 43.262951899365135;
-                lng = -2.9352541503906195;
+                lat = this.options.defaultLat;
+                lng = this.options.defaultLng;
             }
 
             var latLng = new google.maps.LatLng(lat, lng);
@@ -77,7 +79,7 @@
                 position: latLng,
                 title: 'Point A',
                 map: this.map,
-                draggable: true
+                draggable: this.options.draggable
             });
 
             // Update current position info.

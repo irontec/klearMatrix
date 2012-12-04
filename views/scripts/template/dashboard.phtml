@@ -1,9 +1,9 @@
 <div class="klearMatrixDashboard">
 
 <h1 class="ui-state-active  ui-corner-all">${title}</h1>
-
+<div>
 {{each(idx,section) sections}}
-<fieldset class="ui-widget-content ui-corner-all">
+<fieldset class="ui-widget-content ui-corner-all legacy">
 <legend class="ui-state-active  ui-corner-all">${section.name}</legend>
     <ul>
         {{each(idx2,subsection) section.subsects}}
@@ -25,4 +25,5 @@
     </ul>
 </fieldset>
 {{/each}}
+</div>
 </div>

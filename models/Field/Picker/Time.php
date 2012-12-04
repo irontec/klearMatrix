@@ -10,7 +10,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 
     protected function _init()
     {
-        $this->_availableSettings[] = 'showSeconds';
+        $this->_availableSettings[] = 'showSecond';
     }
 
     public function filterValue($value)

@@ -73,10 +73,10 @@
 
                 var boxWidth = prefix + '-column-width';
 
-                wrapper.css({ boxWidth : '240px'});
+                wrapper.css({ boxWidth : '300px'});
             }
 
-            wrapper.css({'column-width' : '240px'});
+            wrapper.css({'column-width' : '300px'});
 
             for (prefix in css3VendorPrefixes) {
 
@@ -89,7 +89,7 @@
             if (boxWidth != box.width()) {
 
                 boxes.removeClass("legacy");
-                boxes.css({'width': '75%'});
+                boxes.css({'width': '85%'});
             }
 
             return this;

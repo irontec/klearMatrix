@@ -121,11 +121,15 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
 
         $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
 
-        $cols = $_item->getVisibleColumns();
+        //$cols = $_item->getVisibleColumns();
         $model = $_item->getObjectInstance();
         $fakeData = new KlearMatrix_Model_MatrixResponse();
 
-        $where = $this->_helper->createListWhere($cols, $model, $fakeData, $_item);
+        /**
+         * El primer paramétro de createListWhere solamente se usa para construir
+         * la condición para filtrar resultados en ListControllers
+         */
+        $where = $this->_helper->createListWhere(new KlearMatrix_Model_ColumnCollection(), $model, $fakeData, $_item);
 
         if (!$where) {
             $totalItems = $_mapper->countAllRows($this->_item->getUseExplain());

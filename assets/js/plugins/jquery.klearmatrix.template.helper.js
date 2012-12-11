@@ -294,12 +294,23 @@
 
                         if(column.properties && column.properties.maxLength) {
 
-                            for (idx in values[column.id]) {
+                            if (typeof(values[column.id]) == "string") {
 
-                                if (values[column.id][idx].length > column.properties.maxLength) {
+                                if (values[column.id].length > column.properties.maxLength) {
 
-                                    values[column.id][idx] = values[column.id][idx].substring(0,column.properties.maxLength);
-                                    values[column.id][idx] += '...';
+                                    values[column.id] = values[column.id].substring(0,column.properties.maxLength);
+                                    values[column.id] += '...';
+                                }
+
+                            } else {
+
+                                for (idx in values[column.id]) {
+
+                                    if (values[column.id][idx].length > column.properties.maxLength) {
+
+                                        values[column.id][idx] = values[column.id][idx].substring(0,column.properties.maxLength);
+                                        values[column.id][idx] += '...';
+                                    }
                                 }
                             }
                         }

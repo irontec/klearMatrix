@@ -44,6 +44,14 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         $model = $this->_column->getModel();
         $getter = $this->_column->getGetterName();
 
+        $front = Zend_Controller_Front::getInstance();
+        $pk = $front->getRequest()->getParam("pk");
+
+        if (is_numeric($pk)) {
+
+            $model->find($pk);
+        }
+
 /*
  * TODO: No elimino estas líneas para recordar que hay que comprobar que el multilang funciona en los multiselect...
  *

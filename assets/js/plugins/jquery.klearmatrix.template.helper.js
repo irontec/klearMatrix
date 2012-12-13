@@ -152,18 +152,38 @@
 
         getColumn : function(columns, columnId) {
 
-            for(var idx in columns) {
+            for (var idx in columns) {
                 if (columns[idx].id == columnId) {
                     return columns[idx];
                 }
             }
-            return false;
 
+            return false;
         },
 
         getIndex : function(values,idx) {
             if (!values[idx]) return 'error';
             return values[idx];
+        },
+
+        parseAlterOption : function(alterOptions,config) {
+
+            var response =  '';
+            if (!alterOptions) {
+
+                return response;
+            }
+
+            if (typeof(alterOptions[config[config.type]]) == "undefined") {
+
+                return response;
+            }
+
+            response = $("<" + alterOptions[config[config.type]].wrapper  + "/>");
+            response.addClass(alterOptions[config[config.type]].class);
+            response.html(alterOptions[config[config.type]].result);
+
+            return response.wrap("<div></div>").parent().html();
         },
 
         getMultiLangValue : function(value,langs,defaultLang) {
@@ -176,7 +196,6 @@
                 };
                 _compiled = $.tmpl('klearmatrixMultiLangList',mlData);
                 retItem.append(_compiled);
-
             }
 
             return retItem.html();

@@ -19,6 +19,8 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 
     protected function _init()
     {
+        $this->_type = 'screen';
+
         $this->_filterField = $this->_config->getProperty("filterField");
         $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
     }
@@ -26,6 +28,11 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
     public function getFilterField()
     {
         return $this->_filterField;
+    }
+
+    public function getType() {
+
+        return $this->_type;
     }
 
     public function toArray()

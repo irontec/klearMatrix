@@ -110,11 +110,17 @@ Registros por página: <input value="${paginator.itemCountPerPage}" type="number
 <tr data-id="${$item.getIndex(row,pk)}">
    {{each columns}}
        {{if (type != '_option') }}
-            <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">{{html $item.getIndexFromColumn(row,$value)}}</td>
+            <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">
+                {{html $item.getIndexFromColumn(row,$value)}}
+            </td>
         {{else}}
             <td class="ui-widget-content options">
             {{each fieldOptions}}
-                <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"><span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
+                <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}">
+                    <span class="ui-silk inline ${icon}"></span>
+                    {{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}
+                </a>
+                {{html $item.parseAlterOption(row._alterOptions, $value) }}
             {{/each}}
             </td>
         {{/if}}

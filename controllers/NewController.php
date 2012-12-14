@@ -132,7 +132,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             );
         } catch (\Zend_Exception $exception) {
 
-            Throw $exception;
             $data = array(
                 'error' => true,
                 'message'=> $exception->getMessage()

@@ -131,6 +131,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 'message' => 'Registro salvado correctamente.'
             );
         } catch (\Zend_Exception $exception) {
+
+            Throw $exception;
             $data = array(
                 'error' => true,
                 'message'=> $exception->getMessage()

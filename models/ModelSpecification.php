@@ -5,7 +5,10 @@ class KlearMatrix_Model_ModelSpecification
     protected $_config;
     protected $_class;
 
-    public function setConfig(Zend_Config $config)
+    protected $_pk;
+    protected $_instance;
+
+    public function __construct(Zend_Config $config)
     {
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
@@ -16,6 +19,11 @@ class KlearMatrix_Model_ModelSpecification
 
     public function getInstance()
     {
+        if ($this->_instance->getPrimaryKey() != $this->_pk) {
+
+            $this->_instance = $this->_instance->getMapper()->find($this->_pk);
+        }
+
         return $this->_instance;
     }
 
@@ -42,5 +50,11 @@ class KlearMatrix_Model_ModelSpecification
             }
         }
         return $fields;
+    }
+
+    public function setPrimaryKey($pk)
+    {
+        $this->_pk = $pk;
+        return $this;
     }
 }

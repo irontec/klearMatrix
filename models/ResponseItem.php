@@ -6,9 +6,9 @@
 
 class KlearMatrix_Model_ResponseItem
 {
-    
+
     use Klear_Model_Trait_Gettext;
-    
+
     const module = 'klearMatrix';
 
     protected $_item;
@@ -165,8 +165,13 @@ class KlearMatrix_Model_ResponseItem
             $cache->save($modelConfig);
         }
 
-        $this->_modelSpec = new KlearMatrix_Model_ModelSpecification;
-        $this->_modelSpec->setConfig($modelConfig);
+        $this->_modelSpec = new KlearMatrix_Model_ModelSpecification($modelConfig);
+    }
+
+    public function getModelSpec()
+    {
+        return $this->_modelSpec;
+
     }
 
     protected function _getCache($filePath)

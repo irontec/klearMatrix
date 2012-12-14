@@ -43,6 +43,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         // TODO: traducir mensaje?
         $model = $mapper->find($pk);
+
+        // TODO: traducir mensaje?
+        $modelSpec = $this->_item->getModelSpec();
+        $model = $modelSpec->setPrimaryKey($pk)->getInstance();
+
         if (!$model) {
             $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
             Throw new Zend_Exception('El registro no se encuentra almacenado.');

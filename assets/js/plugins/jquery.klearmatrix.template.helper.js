@@ -166,22 +166,22 @@
             return values[idx];
         },
 
-        parseAlterOption : function(alterOptions,config) {
+        parseOptionCustimization : function(customOptions,config) {
 
             var response =  '';
-            if (!alterOptions) {
+            if (!customOptions) {
 
                 return response;
             }
 
-            if (typeof(alterOptions[config[config.type]]) == "undefined") {
+            if (typeof(customOptions[config[config.type]]) == "undefined") {
 
                 return response;
             }
 
-            response = $("<" + alterOptions[config[config.type]].wrapper  + "/>");
-            response.addClass(alterOptions[config[config.type]].class);
-            response.html(alterOptions[config[config.type]].result);
+            response = $("<" + customOptions[config[config.type]].wrapper  + "/>");
+            response.addClass(customOptions[config[config.type]].class);
+            response.html(customOptions[config[config.type]].result);
 
             return response.wrap("<div></div>").parent().html();
         },

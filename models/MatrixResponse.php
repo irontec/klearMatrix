@@ -197,7 +197,9 @@ class KlearMatrix_Model_MatrixResponse
 
             $_newResult = array();
             if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
+
                 foreach ($this->_columns as $column) {
+
                     $column->setModel($result);
                     if (!$getter = $column->getGetterName()) {
                         continue;
@@ -211,19 +213,39 @@ class KlearMatrix_Model_MatrixResponse
                         }
 
                     } else {
+
                         $rValue = $result->{$getter}();
                     }
 
                     $_newResult[$column->getDbFieldName()] = $column->prepareValue($rValue);
-
                 }
 
                 // Recuperamos también la clave primaria
                 $_newResult[$primaryKeyName] = $result->getPrimaryKey();
+
+                if (! empty($this->_fieldOptions)) {
+
+                    foreach ($this->_fieldOptions as $option) {
+
+                        if ($option->musBeAltered() === true) {
+
+                            if (! isset($_newResult['_optionCustimization'])) {
+
+                                $_newResult['_optionCustimization'] = array();
+                            }
+
+                            $customization = $option->customizeParentOption($result);
+
+                            if (! is_null($customization)) {
+
+                                $_newResult['_optionCustimization'] += $customization;
+                            }
+                        }
+                    }
+                }
+
                 $_newResults[] = $_newResult;
-
             }
-
         }
 
         $this->_results = $_newResults;
@@ -242,9 +264,11 @@ class KlearMatrix_Model_MatrixResponse
         $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
 
         $ret['values'] = $this->_results;
+
         $ret['pk'] = $this->_pk;
 
         if (false !== $this->_fieldOptions) {
+
             $ret['fieldOptions'] = $this->_fieldOptions->toArray();
         }
 
@@ -284,7 +308,5 @@ class KlearMatrix_Model_MatrixResponse
         $ret[$this->_item->getType()] = $this->_item->getItemName();
 
         return $ret;
-
     }
-
 }

@@ -14,11 +14,10 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_showOnlyOnNotNull = false;
     protected $_showOnlyOnNull = false;
 
-    protected $_alterClasses = array();
+    protected $_alterParentOptionCustomizers = array();
 
     public function setConfig(Zend_Config $config)
     {
-
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
@@ -28,7 +27,7 @@ abstract class KlearMatrix_Model_AbstractOption
         $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
         $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
 
-        $this->_loadAlterClasses($this->_config->getProperty("alter"));
+        $this->_loadParentOptionCustomizers($this->_config->getProperty("parentOptionCustomizer"));
 
         $this->_init();
     }
@@ -39,23 +38,23 @@ abstract class KlearMatrix_Model_AbstractOption
     }
 
     /**
-     * @param Zend_Config | null $alterClasses
+     * @param Zend_Config | string | null $alterClasses
      */
-    protected function _loadAlterClasses($alterClasses) {
+    protected function _loadParentOptionCustomizers($parentOptionCustomizerClasses)
+    {
+        if (is_null($parentOptionCustomizerClasses)) {
+
+            return null;
+        }
 
         $response = array();
 
-        if (!$alterClasses instanceof Zend_Config) {
+        if ( !$parentOptionCustomizerClasses instanceof Zend_Config && !is_array($parentOptionCustomizerClasses)) {
 
-            return $response;
+            $parentOptionCustomizerClasses = array($parentOptionCustomizerClasses);
         }
 
-        if (! isset($alterClasses->options)) {
-
-            return $response;
-        }
-
-        foreach ($alterClasses->options as $className) {
+        foreach ($parentOptionCustomizerClasses as $className) {
 
             if (is_null($className) || empty($className)) {
 
@@ -64,55 +63,55 @@ abstract class KlearMatrix_Model_AbstractOption
 
             if (! class_exists($className)) {
 
-                if (! class_exists('KlearMatrix_Model_Alter_Options_' . ucfirst($className))) {
+                if (! class_exists('KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className))) {
 
                     Throw new Exception($className . " not found");
                 }
 
-                $className = 'KlearMatrix_Model_Alter_Options_' . ucfirst($className);
+                $className = 'KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className);
             }
-
             $classNameSegments = explode("_", $className);
             $lastClassNameSegment = end($classNameSegments);
 
             $class = new $className;
 
-            if (! $class instanceof KlearMatrix_Model_Interfaces_Alter) {
+            if (! $class instanceof KlearMatrix_Model_Interfaces_ParentOptionCustomizer) {
 
-                Throw new Exception($className . " does not implement KlearMatrix_Model_Interfaces_Alter");
+                Throw new Exception($className . " does not implement KlearMatrix_Model_Interfaces_ParentOptionCustomizer");
             }
 
             $class->setOption($this);
-            $this->_alterClasses[$lastClassNameSegment] = $class;
+            $this->_alterParentOptionCustomizers[$lastClassNameSegment] = $class;
         }
     }
 
     protected function _init()
     {
-
     }
 
-    public function musBeAltered() {
-
-        return count($this->_alterClasses) > 0 ? true : false;
+    public function musBeAltered()
+    {
+        return count($this->_alterParentOptionCustomizers) > 0 ? true : false;
     }
 
-    public function alterResult($model) {
+    /**
+     * @return array | null
+     */
+    public function customizeParentOption($model)
+    {
+        foreach ($this->_alterParentOptionCustomizers as $name => $parser) {
 
-        $response = array(
-        );
+            $values = $parser->customize($model);
 
-        foreach ($this->_alterClasses as $name => $parser) {
+            if ($values instanceof KlearMatrix_Model_ParentOptionCustomizer_Response) {
 
-            $values = $parser->alter($model);
-
-            if (! is_null($values)) {
-
-                $response[$this->_name] = $values;
+                return array(
+                    $this->_name => $values->toArray()
+                );
             }
         }
 
-        return $response;
+        return null;
     }
 
     /**

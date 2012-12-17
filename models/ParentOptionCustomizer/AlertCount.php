@@ -1,5 +1,5 @@
 <?php
-class KlearMatrix_Model_ParentOptionCustomizer_RecordCount implements KlearMatrix_Model_Interfaces_ParentOptionCustomizer
+class KlearMatrix_Model_ParentOptionCustomizer_AlertCount implements KlearMatrix_Model_Interfaces_ParentOptionCustomizer
 {
     /**
      * @var KlearMatrix_Model_RouteDispatcher
@@ -21,11 +21,25 @@ class KlearMatrix_Model_ParentOptionCustomizer_RecordCount implements KlearMatri
      */
     protected $_option = null;
 
-    protected $_resultWrapper = 'span';
-    protected $_cssClass = 'recordCount';
+    /**
+     * @var string sql condition
+     */
+    protected $_sqlCondition;
 
-    public function __construct()
+    protected $_resultWrapper = 'span';
+    protected $_cssClass = 'alertCount';
+
+    /**
+     * @param string $sqlCondition
+     */
+    public function __construct($sqlCondition)
     {
+        if (!$sqlCondition) {
+
+            Throw new Exception("AlertCount requires a SQL condition");
+        }
+
+        $this->_sqlCondition = $sqlCondition;
         $this->_createListWhere = new KlearMatrix_Controller_Helper_CreateListWhere;
 
         $front = Zend_Controller_Front::getInstance();
@@ -55,10 +69,25 @@ class KlearMatrix_Model_ParentOptionCustomizer_RecordCount implements KlearMatri
                                                           new KlearMatrix_Model_MatrixResponse(),
                                                           $item);
 
+        if (is_array($where)) {
+
+            $where[0] = "(" . $where[0] . ") and " . $this->_sqlCondition;
+
+        } else {
+
+            $where = "($where) and " . $this->_sqlCondition;
+        }
+
+        $alertNum = $mapper->countByQuery($where);
+        if ($alertNum == 0) {
+
+            return null;
+        }
+
         $this->_mainRouter->setParams($this->_mainRouterOriginalParams);
 
         $response = new KlearMatrix_Model_ParentOptionCustomizer_Response();
-        $response->setResult($mapper->countByQuery($where))
+        $response->setResult($alertNum)
                  ->setWrapper($this->_resultWrapper)
                  ->setCssClass($this->_cssClass);
 

@@ -47,6 +47,7 @@ abstract class KlearMatrix_Model_AbstractOption
             return null;
         }
 
+
         $response = array();
 
         if ( !$parentOptionCustomizerClasses instanceof Zend_Config && !is_array($parentOptionCustomizerClasses)) {
@@ -55,6 +56,15 @@ abstract class KlearMatrix_Model_AbstractOption
         }
 
         foreach ($parentOptionCustomizerClasses as $className) {
+
+            $parameters = null;
+
+            if ($className instanceof Zend_Config) {
+
+                $key = $className->key();
+                $parameters = $className->$key;
+                $className = $key;
+            }
 
             if (is_null($className) || empty($className)) {
 
@@ -73,7 +83,7 @@ abstract class KlearMatrix_Model_AbstractOption
             $classNameSegments = explode("_", $className);
             $lastClassNameSegment = end($classNameSegments);
 
-            $class = new $className;
+            $class = new $className($parameters);
 
             if (! $class instanceof KlearMatrix_Model_Interfaces_ParentOptionCustomizer) {
 

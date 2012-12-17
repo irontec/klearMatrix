@@ -120,7 +120,7 @@ Registros por página: <input value="${paginator.itemCountPerPage}" type="number
                     <span class="ui-silk inline ${icon}"></span>
                     {{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}
                 </a>
-                {{html $item.parseOptionCustimization(row._optionCustimization, $value) }}
+                {{html $item.parseOptionCustomization(row._optionCustomization, $value) }}
             {{/each}}
             </td>
         {{/if}}

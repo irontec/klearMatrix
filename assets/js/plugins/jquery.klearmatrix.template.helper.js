@@ -166,7 +166,7 @@
             return values[idx];
         },
 
-        parseOptionCustimization : function(customOptions,config) {
+        parseOptionCustomization : function(customOptions,config) {
 
             var response =  '';
             if (!customOptions) {

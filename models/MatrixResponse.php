@@ -229,16 +229,16 @@ class KlearMatrix_Model_MatrixResponse
 
                         if ($option->musBeAltered() === true) {
 
-                            if (! isset($_newResult['_optionCustimization'])) {
+                            if (! isset($_newResult['_optionCustomization'])) {
 
-                                $_newResult['_optionCustimization'] = array();
+                                $_newResult['_optionCustomization'] = array();
                             }
 
                             $customization = $option->customizeParentOption($result);
 
                             if (! is_null($customization)) {
 
-                                $_newResult['_optionCustimization'] += $customization;
+                                $_newResult['_optionCustomization'] += $customization;
                             }
                         }
                     }

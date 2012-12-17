@@ -33,8 +33,8 @@ class KlearMatrix_Model_ParentOptionCustomizer_RecordCount implements KlearMatri
         $this->_mainRouterOriginalParams = $this->_mainRouter ->getParams();
     }
 
-    public function setOption (KlearMatrix_Model_AbstractOption $option) {
-
+    public function setOption (KlearMatrix_Model_AbstractOption $option)
+    {
         $this->_option = $option;
     }
 
@@ -64,5 +64,4 @@ class KlearMatrix_Model_ParentOptionCustomizer_RecordCount implements KlearMatri
 
         return $response;
     }
-
 }

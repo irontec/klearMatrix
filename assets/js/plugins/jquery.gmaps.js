@@ -109,6 +109,10 @@
                 $(this).blur();
                 self._geocode(self.options.cache.dummy.val());
             });
+            
+            this.options.cache.adress.on('change', function(){
+                self._updateMarkerAddress($(this).val());
+            });
         },
 
         destroy: function() {

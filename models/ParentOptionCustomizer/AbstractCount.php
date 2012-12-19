@@ -12,11 +12,6 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount implements
     protected $_mainRouterOriginalParams = null;
 
     /**
-     * @var KlearMatrix_Controller_Helper_CreateListWhere
-     */
-    protected $_createListWhere = null;
-
-    /**
      * @var KlearMatrix_Model_AbstractOption
      */
     protected $_option = null;
@@ -25,19 +20,11 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount implements
     protected $_cssClass = '';
     protected $_nullIfZero = false;
 
-    public function __construct($configuration)
+    public function __construct(Zend_Config $configuration)
     {
-        $this->_createListWhere = new KlearMatrix_Controller_Helper_CreateListWhere;
-
         $front = Zend_Controller_Front::getInstance();
         $this->_mainRouter = $front->getRequest()->getUserParam("mainRouter");
         $this->_mainRouterOriginalParams = $this->_mainRouter ->getParams();
-
-        if (!$configuration instanceof Zend_Config) {
-
-            $this->_init(new Zend_Config(array()));
-            return;
-        }
 
         if (isset($configuration->resultWrapper)) {
 
@@ -76,10 +63,13 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount implements
         //Al tratarse de un filtered screen necesita la pk del padre
         $this->_mainRouter->setParams(array("pk" => $parentModel->getPrimaryKey()));
 
-        $where = $this->_createListWhere->createListWhere(new KlearMatrix_Model_ColumnCollection(),
-                                                          $model,
-                                                          new KlearMatrix_Model_MatrixResponse(),
-                                                          $item);
+        $listWhereCreator = new KlearMatrix_Controller_Helper_CreateListWhere;
+        $where = $listWhereCreator->createListWhere(
+            new KlearMatrix_Model_ColumnCollection(),
+            $model,
+            new KlearMatrix_Model_MatrixResponse(),
+            $item
+        );
 
         $where = $this->_parseWhereCondition($where);
 

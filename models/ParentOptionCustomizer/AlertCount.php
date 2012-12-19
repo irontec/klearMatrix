@@ -6,17 +6,18 @@ class KlearMatrix_Model_ParentOptionCustomizer_AlertCount extends KlearMatrix_Mo
      */
     protected $_sqlCondition;
 
+    protected $_nullIfZero = true;
+
+    protected $_cssClass = "alertCount";
+
     /**
      * @param string $sqlCondition
      */
-    public function _init(Zend_Config $configuration)
+    protected function _init(Zend_Config $configuration)
     {
-        $this->_nullIfZero = true;
-        $this->_cssClass = "alertCount";
+        if (!isset($configuration->sqlCondition) || empty($configuration->sqlCondition)) {
 
-        if (! isset($configuration->sqlCondition) || empty($configuration->sqlCondition)) {
-
-            Throw new Exception("AlertCount requires a SQL condition");
+            throw new Exception("AlertCount requires a SQL condition");
         }
 
         $this->_sqlCondition = $configuration->sqlCondition;
@@ -25,7 +26,7 @@ class KlearMatrix_Model_ParentOptionCustomizer_AlertCount extends KlearMatrix_Mo
     /**
      * @return KlearMatrix_Model_ParentOptionCustomizer_Response
      */
-    public function _parseWhereCondition($where)
+    protected function _parseWhereCondition($where)
     {
         if (is_array($where)) {
 

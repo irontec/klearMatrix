@@ -14,7 +14,7 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_showOnlyOnNotNull = false;
     protected $_showOnlyOnNull = false;
 
-    protected $_alterParentOptionCustomizers = array();
+    protected $_parentOptionCustomizers = array();
 
     public function setConfig(Zend_Config $config)
     {
@@ -38,7 +38,7 @@ abstract class KlearMatrix_Model_AbstractOption
     }
 
     /**
-     * @param Zend_Config | string | null $alterClasses
+     * @param Zend_Config | string | null parentOptionCustomizerClasses
      */
     protected function _loadParentOptionCustomizers($parentOptionCustomizerClasses)
     {
@@ -47,52 +47,71 @@ abstract class KlearMatrix_Model_AbstractOption
             return null;
         }
 
-
-        $response = array();
-
-        if ( !$parentOptionCustomizerClasses instanceof Zend_Config && !is_array($parentOptionCustomizerClasses)) {
+        if (is_string($parentOptionCustomizerClasses)) {
 
             $parentOptionCustomizerClasses = array($parentOptionCustomizerClasses);
         }
 
         foreach ($parentOptionCustomizerClasses as $className) {
 
-            $parameters = null;
+            $optionCustomizerClass = $this->_getParentOptionCustomizerClass($className);
 
-            if ($className instanceof Zend_Config) {
-
-                $key = $className->key();
-                $parameters = $className->$key;
-                $className = $key;
+            if (!$optionCustomizerClass) {
+                continue;
             }
 
-            if (is_null($className) || empty($className)) {
+            $realClassName = get_class($optionCustomizerClass);
 
-                return null;
-            }
 
-            if (! class_exists($className)) {
-
-                if (! class_exists('KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className))) {
-
-                    Throw new Exception($className . " not found");
-                }
-
-                $className = 'KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className);
-            }
-            $classNameSegments = explode("_", $className);
+            $classNameSegments = explode("_", $realClassName);
             $lastClassNameSegment = end($classNameSegments);
 
-            $class = new $className($parameters);
-
-            if (! $class instanceof KlearMatrix_Model_Interfaces_ParentOptionCustomizer) {
-
-                Throw new Exception($className . " does not implement KlearMatrix_Model_Interfaces_ParentOptionCustomizer");
-            }
-
-            $class->setOption($this);
-            $this->_alterParentOptionCustomizers[$lastClassNameSegment] = $class;
+            $optionCustomizerClass->setOption($this);
+            $this->_parentOptionCustomizers[$lastClassNameSegment] = $optionCustomizerClass;
         }
+    }
+
+    protected function _getParentOptionsCustomizerClass($optionClassName)
+    {
+        $className = $optionClassName;
+
+        if (!$optionClassName) {
+            return null;
+        }
+
+        if ($optionClassName instanceof Zend_Config) {
+            $className = $className->key();
+        }
+
+        if (!$class_exists($className)) {
+
+            $className = 'KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className);
+
+            if (!class_exists($className)) {
+
+                throw new Exception($className . " not found");
+            }
+        }
+
+        $parameters = $this->_getParentOptionsCustomizerParameters($optionClassName);
+
+        $class = $className($parameters);
+
+        if (!$class instanceof KlearMatrix_Model_Interfaces_ParentOptionCustomizer) {
+
+            throw new Exception($realClassName . " does not implement KlearMatrix_Model_Interfaces_ParentOptionCustomizer");
+        }
+
+        return $class;
+    }
+
+    protected function _getParentOptionsCustomizerParameters($optionClassName)
+    {
+        if (!$optionClassName instanceof Zend_Config) {
+            return new Zend_Config(array());
+        }
+
+        return $className->current();
     }
 
     protected function _init()
@@ -101,7 +120,7 @@ abstract class KlearMatrix_Model_AbstractOption
 
     public function musBeAltered()
     {
-        return count($this->_alterParentOptionCustomizers) > 0 ? true : false;
+        return (count($this->_parentOptionCustomizers) > 0);
     }
 
     /**
@@ -109,7 +128,7 @@ abstract class KlearMatrix_Model_AbstractOption
      */
     public function customizeParentOption($model)
     {
-        foreach ($this->_alterParentOptionCustomizers as $name => $parser) {
+        foreach ($this->_parentOptionCustomizers as $name => $parser) {
 
             $values = $parser->customize($model);
 

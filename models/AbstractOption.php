@@ -53,25 +53,30 @@ abstract class KlearMatrix_Model_AbstractOption
         }
 
         foreach ($parentOptionCustomizerClasses as $className) {
-
-            $optionCustomizerClass = $this->_getParentOptionCustomizerClass($className);
-
-            if (!$optionCustomizerClass) {
-                continue;
-            }
+            $optionCustomizerClass = $this->_getParentOptionsCustomizerClass($className);
 
             $realClassName = get_class($optionCustomizerClass);
-
-
-            $classNameSegments = explode("_", $realClassName);
-            $lastClassNameSegment = end($classNameSegments);
-
-            $optionCustomizerClass->setOption($this);
-            $this->_parentOptionCustomizers[$lastClassNameSegment] = $optionCustomizerClass;
+            $this->_parentOptionCustomizers[md5($realClassName)] = $optionCustomizerClass;
         }
     }
 
-    protected function _getParentOptionsCustomizerClass($optionClassName)
+    protected function _getParentOptionsCustomizerClass($className)
+    {
+        $optionCustomizerClassName = $this->_getParentOptionsCustomizerClassName($className);
+        $optionCustomizerParameters = $this->_getParentOptionsCustomizerParameters($className);
+        $optionCustomizerClass = new $optionCustomizerClassName($optionCustomizerParameters);
+
+        if (!$optionCustomizerClass instanceof KlearMatrix_Model_Interfaces_ParentOptionCustomizer) {
+
+            throw new Exception($className . " does not implement KlearMatrix_Model_Interfaces_ParentOptionCustomizer");
+        }
+
+        $optionCustomizerClass->setOption($this);
+        return $optionCustomizerClass;
+
+    }
+
+    protected function _getParentOptionsCustomizerClassName($optionClassName)
     {
         $className = $optionClassName;
 
@@ -83,7 +88,7 @@ abstract class KlearMatrix_Model_AbstractOption
             $className = $className->key();
         }
 
-        if (!$class_exists($className)) {
+        if (!class_exists($className)) {
 
             $className = 'KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className);
 
@@ -93,16 +98,7 @@ abstract class KlearMatrix_Model_AbstractOption
             }
         }
 
-        $parameters = $this->_getParentOptionsCustomizerParameters($optionClassName);
-
-        $class = $className($parameters);
-
-        if (!$class instanceof KlearMatrix_Model_Interfaces_ParentOptionCustomizer) {
-
-            throw new Exception($realClassName . " does not implement KlearMatrix_Model_Interfaces_ParentOptionCustomizer");
-        }
-
-        return $class;
+        return $className;
     }
 
     protected function _getParentOptionsCustomizerParameters($optionClassName)
@@ -111,7 +107,7 @@ abstract class KlearMatrix_Model_AbstractOption
             return new Zend_Config(array());
         }
 
-        return $className->current();
+        return $optionClassName->current();
     }
 
     protected function _init()

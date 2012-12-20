@@ -82,7 +82,7 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount implements
         $this->_mainRouter->setParams($this->_mainRouterOriginalParams);
 
         $response = new KlearMatrix_Model_ParentOptionCustomizer_Response();
-        $response->setResult($mapper->countByQuery($resultCount))
+        $response->setResult($resultCount)
                  ->setWrapper($this->_resultWrapper)
                  ->setCssClass($this->_cssClass);
 

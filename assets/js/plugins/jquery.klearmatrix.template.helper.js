@@ -180,7 +180,7 @@
             }
 
             response = $("<" + customOptions[config[config.type]].wrapper  + "/>");
-            response.addClass(customOptions[config[config.type]].class);
+            response.addClass(customOptions[config[config.type]]['class']);
             response.html(customOptions[config[config.type]].result);
 
             return response.wrap("<div></div>").parent().html();

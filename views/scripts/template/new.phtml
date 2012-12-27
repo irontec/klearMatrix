@@ -12,7 +12,7 @@ title="${info.text}"
 </div>
 {{/if}}
 
-<form class="klearMatrix_form" action="${saveAction}" data-type='new'>
+<form class="klearMatrix_form" action="${saveAction}" data-type='new' {{if (disableAddAnother)}} data-disableaddanother='true'{{/if}}>
     <fieldset class="ui-widget-content ui-corner-all">
         <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,false)}</legend>
 

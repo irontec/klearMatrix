@@ -24,6 +24,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_parentItem = false;
 
     protected $_disableSave = false;
+    protected $_disableAddAnother = false;
 
     protected $_title;
 
@@ -139,6 +140,11 @@ class KlearMatrix_Model_MatrixResponse
     public function setDisableSave($disableSave)
     {
         $this->_disableSave = $disableSave;
+    }
+
+    public function setDisableAddAnother($disableAddAnother)
+    {
+        $this->_disableAddAnother = $disableAddAnother;
     }
 
     /**
@@ -294,7 +300,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['info'] = $this->_info;
         }
 
-        $simpleFields = array('total', 'parentIden','parentId','parentScreen','parentItem','parentPk','disableSave');
+        $simpleFields = array('total', 'parentIden','parentId','parentScreen','parentItem','parentPk','disableSave','disableAddAnother');
         foreach ($simpleFields as $_fld) {
             if (false !== $this->{'_' . $_fld}) {
                 $ret[$_fld] = $this->{'_'. $_fld};

@@ -45,6 +45,8 @@
             var $dialog = $self.klearModule("getModuleDialog")
             var postData = self.options.theForm.serializeArray();
 
+            var addAnotherOption = !self.options.theForm.data("disableaddanother");
+            
             if (typeof this.options.data.parentId != 'undefined') {
                 postData.push({ name:this.options.data.parentItem, value:this.options.data.parentId});
             }
@@ -82,24 +84,31 @@
                         }
                     }
 
-                    $dialog.moduleDialog("option","buttons",
-                             [
-                                  {
-                                    text: $.translate("Close", [__namespace__]),
-                                    click: function() {
-                                        $(this).moduleDialog("close");
-                                        $self.klearModule("close");
-                                    }
-                                },
-                                {
-                                    text: $.translate("Add another record", [__namespace__]),
-                                    click: function() {
-                                        $self.klearModule("reDispatch");
-                                    }
-                                }
-                            ]
-                    );
+                    var _buttons = [{
+                        text: $.translate("Close", [__namespace__]),
+                        click: function() {
+                            $(this).moduleDialog("close");
+                            $self.klearModule("close");
+                        }
+                    }];
+                    
+                    if (addAnotherOption) {
+                    	_buttons.push(
+	            			{
+	                            text: $.translate("Add another record", [__namespace__]),
+	                            click: function() {
+	                                $self.klearModule("reDispatch");
+	                            }
+	                        }
+                    	);
+                    } else {
+                    	// Al cerrar el dialogo, cerraremos también la pestaña
+                    	$dialog.moduleDialog("option","beforeClose",function() {
+                    		$self.klearModule("close");
+                    	});
+                    }
 
+                    $dialog.moduleDialog("option","buttons",_buttons);
                     $dialog.moduleDialog("updateContent",data.message);
 
                     var triggerData = {'data': data, 'postData': postData};

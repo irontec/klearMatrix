@@ -92,7 +92,8 @@ class KlearMatrix_Model_ResponseItem
         '_customTemplate' => array('template', false),
         '_customScripts' => array('scripts', false),
         '_actionMessages' => array('actionMessages', false),
-        '_disableSave' => array('disableSave', false),
+        '_disableSave' => array('disableSave', false), // en EditController evitamos "salvar"
+        '_disableAddAnother' => array('disableAddAnother', false), // en NewController evitamos el botón de añadir otro. close on success.
         '_useExplain' => array('useExplain', false)
     );
 
@@ -115,7 +116,6 @@ class KlearMatrix_Model_ResponseItem
 
         //Si hay modelFile, lo parseamos
         if ($this->_modelFile) {
-
             $this->_parseModelFile();
         }
 
@@ -304,6 +304,12 @@ class KlearMatrix_Model_ResponseItem
     {
         return $this->_disableSave;
     }
+
+    public function getDisableAddAnother()
+    {
+        return $this->_disableAddAnother;
+    }
+
 
     /**
      * @param unknown_type $name

@@ -44,7 +44,7 @@ class KlearMatrix_Model_FilterProcessor
 
     protected function _log($log)
     {
-        if (false === $this->_log) {
+        if ((false === $this->_log) || (!is_object($this->_log))) {
             return;
         }
         $this->_log->log($log);

@@ -46,7 +46,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         // Optional configuration
 
         if (!$this->_config->getRaw()->source->searchMethod) {
-            $this->_isSearchable = true;
+            $this->_isSearchable = false;
         } else {
             $this->_searchMethod = $this->_config->getRaw()->source->searchMethod;
         }

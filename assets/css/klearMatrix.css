@@ -40,10 +40,11 @@ table.kMatrix td.options span.recordCount {
   background-color: white;
   opacity:0.6;
   font-size: 0.6em;
+  display: inline-block;
+  width: 1.5em;
   left: -5px;
   position: relative;
   top: 5px;
-  width:4em;
 }
 
 table.kMatrix td.options span.alertCount {

@@ -17,12 +17,20 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
     // Para comprobar en opciones desde columna... no permitir siempre que sea diferente al de la pantalla contenedora... (sino, lío de IDs)
     protected $_filterField = false;
 
+    // Si se trata de una opción de pantalla "externa", en esta estructura se dejarán los atributos screen y file
+    protected $_externalConfig = null;
+
     protected function _init()
     {
         $this->_type = 'screen';
 
         $this->_filterField = $this->_config->getProperty("filterField");
         $this->_multiInstance = (bool)$this->_config->getProperty("multiInstance");
+
+        $this->_externalConfig = $this->_config->getProperty("external");
+        if ($this->_externalConfig) {
+            $this->setName($this->_externalConfig->screen);
+        }
     }
 
     public function getFilterField()
@@ -37,7 +45,7 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 
     public function toArray()
     {
-        return array(
+        $ret = array(
             'icon' => $this->_class,
             'type' => 'screen',
             'screen' => $this->_name,
@@ -48,5 +56,12 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
             'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
             'showOnlyOnNull' => $this->_showOnlyOnNull
         );
+
+        if (!is_null($this->_externalConfig)) {
+            $ret['externalOption'] = true;
+            $ret['file'] = $this->_externalConfig->file;
+        }
+
+        return $ret;
     }
 }

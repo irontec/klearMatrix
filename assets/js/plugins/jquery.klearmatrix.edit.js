@@ -35,11 +35,11 @@
             $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
-
+            
             var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixEdit";
 
             var $appliedTemplate = this._loadTemplate(tplName);
-
+            
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 
             this._applyDecorators()
@@ -625,7 +625,7 @@
                 })
                 .filter("[required]").before(_required.clone())
                 .end()
-                .find(":not(:disabled):eq(0)").trigger("focusin").select();
+                .filter(":not(:disabled)").filter(":not(:hidden)").eq(0).trigger("focusin").select().focus();
 
 
             $("div.expandable", this.options.theForm).each(function() {

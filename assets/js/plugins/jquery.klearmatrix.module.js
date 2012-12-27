@@ -62,6 +62,8 @@
                 values: this.options.data.values,
                 idx: 0
             });
+            
+            
 
         },
         getData : function(value) {
@@ -81,6 +83,11 @@
                             );
 
             this._parseDefaultItems();
+            
+            // Recarga el nombre de la pestaña con el título calculado. 
+            //if (this.options.data && this.options.data.title) {
+            //	this.element.klearModule("updateTitle",this.options.data.title);
+            //}
             return $tmplObj;
 
         },
@@ -157,21 +164,33 @@
                 });
 
             $('a.option.screen', this.element.klearModule("getPanel"))
-                .on('mouseup.screenOption')
+                .off('mouseup.screenOption')
                 .on('mouseup.screenOption', function(e) {
 
                 e.preventDefault();
                 e.stopPropagation();
-
+                
+                var _menuLink = $(this);
                 var _container = self.klearModule("getContainer");
 
-                var _iden = "#tabs-" + self.klearModule("option", "file")
-                            + '_' + $(this).data("screen");
-
+                var _file = self.klearModule("option", "file");
+                if (_menuLink.data("externalfile")) {
+                	_file= _menuLink.data("externalfile");
+                }
+                
+                var _screen = _menuLink.data("screen");
+                
+                var _iden = "#tabs-" + _file + '_' + _screen;
+                var _parentHolder = _self._resolveParentHolder(this);
+                
                 if ($(this).data("multiinstance")) {
                     _iden += '_' + Math.round(Math.random(1000, 9999)*100000);
                 } else {
-                    _iden += '_' + $(this).parents("tr:eq(0)").data("id");
+                	if (_menuLink.data("externalid")) {
+                		_iden += '_' + _menuLink.data("externalid");
+                    } else {
+                    	_iden += '_' + _parentHolder.data("id");
+                    }
                 }
 
                 if ($(_iden).length > 0) {
@@ -180,17 +199,14 @@
                 }
 
                 var _newIndex = self.klearModule("option", "tabIndex")+1;
-                var _menuLink = $(this);
-
-                var _parentHolder = _self._resolveParentHolder(this);
-
+                
+                
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
 
-                var tabTitle = ($(".default", _parentHolder).length>0) ?
-                        _self._getClearText($(".default", _parentHolder)) : $(this).tooltip("close").attr("title");
-
+                var tabTitle = _menuLink.tooltip("close").attr("title");
+                
                 _container.one( "tabspostadd", function(event, ui) {
 
                     var $tabLi = $(ui.tab).parent("li");
@@ -201,17 +217,22 @@
                     $tabLi.klearModule("option", "title", tabTitle);
 
                     // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
-                    $tabLi.klearModule("option", "file", self.klearModule("option", "file"));
-
+                    $tabLi.klearModule("option", "file", _file);
+                    
+                    var _curPk = _parentHolder.data("id");
+                    if (_menuLink.data("externalid")) {
+                    	_curPk = _menuLink.data("externalid");
+                    }
+                    
                     // Seteamos el valor para dispatchOptions
                     var _dispatchOptions = {
                         screen : _menuLink.data("screen"),
-                        pk : _parentHolder.data("id"),
+                        pk : _curPk,
                         post : {
                             callerScreen : _self.options.data.screen
                         }
                     };
-
+                    
                     // Si la pantalla llamante tiene condición (parentId -- en data --
                     // enviarlos a la nueva pantalla
                     if (_self.options.data.parentId) {
@@ -220,10 +241,11 @@
                     }
 
 
-                    // hioghlight on hover
+                    // highlight on hover
                     _menuLink.data("relatedtab", $tabLi);
 
-                    $tabLi.klearModule("option", "dispatchOptions", _dispatchOptions)
+                    $tabLi
+                    	.klearModule("option", "dispatchOptions", _dispatchOptions)
                         .klearModule("reload");
 
 
@@ -231,11 +253,9 @@
 
                 // Klear open in background
                 $.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(), $(this));
-
                 _container.tabs( "add", _iden, tabTitle, _newIndex);
 
-            })
-                .off('click.screenOption')
+            }).off('click.screenOption')
                 .on('click.screenOption', function(e) {
                 // Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
                 e.preventDefault();

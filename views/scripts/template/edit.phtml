@@ -48,10 +48,14 @@ title="${info.text}"
                         (showOnlyOnNull == true && !row[id])
                     )}}
                         <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
-
                         href=""
                         data-${type}="${$item.getIndex($value,type)}"
-                        title="${$item.getTitle(title,idx,true)}">
+                        title="${$item.getTitle(title,idx,true)}"
+                        {{if ($value.externaloption)}}
+                            data-externalfile='${file}'
+                            data-externalid='${row[id]}'
+                        {{/if}}
+                        >
                         <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
                      {{/if}}
                 {{/each}}
@@ -66,13 +70,17 @@ title="${info.text}"
             <a class="action" href="" title="<?php echo $this->translate('Save'); ?>"><span class="ui-silk inline ui-silk-bullet-disk"></span><?php echo $this->translate('Save'); ?></a>
             <span class="action autoClose "><span><input type="checkbox" name="autoclose" /><?php echo $this->translate('Close automatically after save'); ?></span></span>
         {{/if}}
+
 {{if (generalOptions.length>0) }}
     <br /><br />
 {{each generalOptions}}
 
-    <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+    <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
     <span class="ui-silk inline ${icon}"></span>
-    ${$item.getTitle(title,idx,true)}
+    {{if (label) }}
+        ${$item.getTitle(title,idx,true)}
+    {{/if}}
+
     </a>
 {{/each}}
 {{/if}}

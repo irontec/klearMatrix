@@ -112,6 +112,32 @@ Registros por página: <input value="${paginator.itemCountPerPage}" type="number
        {{if (type != '_option') }}
             <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">
                 {{html $item.getIndexFromColumn(row,$value)}}
+                {{if ($value.options)}}
+                    {{each $value.options}}
+
+                        {{if (
+                            ($value.externalOption) &&
+                            ( (showOnlyOnNotNull == false && showOnlyOnNull == false) ||
+                              (showOnlyOnNotNull == true && row[id]) ||
+                              (showOnlyOnNull == true && !row[id])
+                             )
+                        )}}
+                            <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
+                            href=""
+                            data-${type}="${$item.getIndex($value,type)}"
+                            title="${$item.getTitle(title,idx,true)}"
+                            {{if ($value.externalOption === true)}}
+                                data-externalfile='${file}'
+                                data-externalid='${row[id]}'
+                            {{/if}}
+                            >
+                            <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
+                         {{/if}}
+                    {{/each}}
+                {{/if}}
+
+
+
             </td>
         {{else}}
             <td class="ui-widget-content options">

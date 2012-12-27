@@ -46,6 +46,22 @@ table.kMatrix td.options span.recordCount {
   width:4em;
 }
 
+table.kMatrix td.options span.alertCount {
+    background-color: #f00;
+    border-radius: 1.5em;
+    color: #fff;
+    display: inline-block;
+    font-size: 0.6em;
+    height: 1.5em;
+    width: 1.5em;
+    line-height: 1.5em;
+    opacity: 0.9;
+    position: relative;
+    text-align: center;
+    top: 3px;
+    left: -5px;
+    
+}
 .odd {
     background:transparent none;
 }

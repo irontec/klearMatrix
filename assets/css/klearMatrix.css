@@ -189,7 +189,7 @@ table.kMatrix .mlTag {
 }
 
 .klearMatrixFilteringForm span.selectable {
-    display:inline-block; width:15px; height:15px; margin:0 3px; clear:none;
+    display:inline-block; width:15px; height:15px; margin:0 3px; clear:none; overflow:hidden; vertical-align:middle;
 }
 .paginator {
     clear: both;
@@ -249,6 +249,7 @@ a.ui-state-nojump {
 
 .klearMatrixFiltering input.term {
     width:205px;
+    padding: 0.3em;
 }
 
  .klearMatrixFiltering .filterItem {

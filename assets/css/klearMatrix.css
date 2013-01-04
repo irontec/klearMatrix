@@ -19,8 +19,8 @@ table.kMatrix caption span.extraCaptionInfo input {
     width: 4em;
 }
 
-table.kMatrix caption span.extraCaptionInfo input::-webkit-outer-spin-button,
-table.kMatrix caption span.extraCaptionInfo input::-webkit-inner-spin-button {
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }

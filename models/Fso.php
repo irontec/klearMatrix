@@ -95,7 +95,7 @@ class KlearMatrix_Model_Fso
      */
     public function getMd5Sum()
     {
-        return $this->_md5sum;
+        return $this->_md5Sum;
     }
 
     /**
@@ -169,7 +169,7 @@ class KlearMatrix_Model_Fso
      */
     public function _setMd5Sum($file)
     {
-        $this->_md5sum = md5_file($file);
+        $this->_md5Sum = md5_file($file);
         return $this;
     }
 
@@ -289,6 +289,9 @@ class KlearMatrix_Model_Fso
         $this->_setSrcFile($file);
         $this->_setMimeType($file);
         $this->_setMd5Sum($file);
+
+        $baseNameGetter = 'get' . ucfirst($this->_modelSpecs['baseNameName']);
+        $this->setBaseName($this->_model->$baseNameGetter());
 
         return $this;
     }

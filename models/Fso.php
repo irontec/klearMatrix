@@ -230,7 +230,14 @@ class KlearMatrix_Model_Fso
             );
         }
 
-        rename($this->_srcFile, $targetFile);
+        if (true === copy($this->_srcFile, $targetFile)) {
+
+            unlink($this->_srcFile);
+
+        } else {
+
+            throw new KlearMatrix_Exception_File("Could not rename file " . $this->_srcFile . " to " . $targetFile);
+        }
 
         $this->_mustFlush = false;
         return $this;

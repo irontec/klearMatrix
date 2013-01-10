@@ -26,6 +26,7 @@
             this
                 ._applyDecorators()
                 ._registerBaseEvents()
+                ._registerFieldsEvents()
                 ._registerEvents();
 
         },

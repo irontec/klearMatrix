@@ -141,6 +141,60 @@
             }
 
         },
+        /*
+         * Eventos comunes en todos los controladores para campos
+         */
+        _registerFieldsEvents : function() {
+        	
+            var self = this;
+            var _self = this.element;
+            
+        	 if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
+                 $(".filePreview",_self.klearModule("getPanel")).each(function() {
+
+                	 if ($(this).data("filename")) {
+                		 var _post = {filename:$(this).data("filename")};
+                	 } else {
+                		 var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
+                 	 }
+                     var _validData = ['width','height','crop'];
+                     var $self = $(this);
+                     var imageAttribs = '';
+                     $.each(_validData,function(i,value) {
+                         if ($self.data(value)) {
+                             _post[value] = $self.data(value);
+                         }
+
+                         if (value == 'width' || value == 'height') {
+                             imageAttribs += value + '="'+_post[value]+'px" ';
+                         }
+                     });
+                     var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
+                     
+                     var requestData = {
+                             file: _self.klearModule("option","file"),
+                             pk: $(this).parents(parentSelector).data("id"),
+                             type : 'command',
+                             post: _post,
+                             command : $(this).data('command')
+                     };
+
+
+                     var item = $("<img class=\"imgFilePreview\" "+imageAttribs+" />");
+
+
+                     var request = $.klear.buildRequest(requestData);
+                     var _url = request.action; //encodeURI()
+                     _url += '&' + $.param(request.data);
+                     item.attr("src", _url);
+
+                     $(this).replaceWith(item);
+
+                 });
+             }
+
+        	return this;
+        },
 
         _registerBaseEvents : function() {
 
@@ -220,6 +274,15 @@
                     $tabLi.klearModule("option", "file", _file);
                     
                     var _curPk = _parentHolder.data("id");
+                    
+                    if (_menuLink.data("externalname")) {
+                    	var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
+                    	if (_field.length >0) {
+                    		_curPk = _field.val();
+                    	}
+                     	
+                    }
+                    
                     if (_menuLink.data("externalid")) {
                     	_curPk = _menuLink.data("externalid");
                     }

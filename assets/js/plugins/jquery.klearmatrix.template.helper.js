@@ -284,47 +284,52 @@
                         break;
 
                     case 'file':
-                    	var extra = '';
-                    	if (column.config && column.config.options) {
-                    		for(var _optIdx in column.config.options) {
-                    			
-                    			if (column.config.options[_optIdx]['listController']) {
-                    				
-                    				var option = column.config.options[_optIdx];
-                    				extra += '<a data-filename="'+values[column.id]['name']+'" href="#" '; 
-                    				extra += ' class="option ';
-                    				if (option['class']) {
-                    					extra += option['class'] + ' ' ; 
-                    				}
-                    				if (option['type']) {
-                    					extra += option['type']; 
-                    				}
-                    				extra += '" ';
-                    				
-                    				if (option['type']) {
-                    					extra += ' data-'+option['type']+'="'+option['target']+'" ';
-                    				}
+                        var extra = '';
+                        if (column.config && column.config.options) {
+                            for(var _optIdx in column.config.options) {
+                    
+                                if (column.config.options[_optIdx]['listController']) {
+                    
+                                    var option = column.config.options[_optIdx];
+                                    extra += '<a data-filename="'+values[column.id]['name']+'" href="#" '; 
+                                    extra += ' class="option ';
+                                    if (option['class']) {
+                                        extra += option['class'] + ' ' ; 
+                                    }
+                                    if (option['type']) {
+                                        extra += option['type']; 
+                                    }
+                                    extra += '" ';
+                    
+                                    if (option['type']) {
+                                        extra += ' data-'+option['type']+'="'+option['target']+'" ';
+                                    }
 
-                    				if (option.props) {
-                    					for (var propName in option.props) {
-                    						var prop = option.props[propName];
-                    						extra += 'data-'+propName+'="'+prop+'" ';
-                    					}
-                    				}
-                    		        if (option.external) {
-                    		        	extra += 'data-external="true"';
-                    		        }
-                    		        extra += '>';
-                    		        if (option.icon) {
-                    		             extra += '<span class="ui-silk inline '+option.icon+'"></span>';
-                    		        }
-                    		        extra += '</a>';
-                    			}
-                    			
-                    		}
-                    		
-                    	}
-                        return extra + this.cleanValue(values[column.id]['name'])
+                                    if (option.props) {
+                                        for (var propName in option.props) {
+                                            var prop = option.props[propName];
+                                            extra += 'data-'+propName+'="'+prop+'" ';
+                                        }
+                                    }
+                                    if (option.external) {
+                                        extra += 'data-external="true"';
+                                    }
+                                    extra += '>';
+                                    if (option.icon) {
+                                        extra += '<span class="ui-silk inline '+option.icon+'"></span>';
+                                    }
+                                    extra += '</a>';
+                                }
+                    
+                            }
+                   
+                        }
+                        
+                        if (column.config.options.hiddenName) {
+                            return extra;
+                        }
+                        
+                        return extra + this.cleanValue(values[column.id]['name']);
                         break;
 
                     case 'checkbox':

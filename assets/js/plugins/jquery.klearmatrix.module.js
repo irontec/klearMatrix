@@ -180,7 +180,7 @@
                      };
 
 
-                     var item = $("<img class=\"imgFilePreview\" "+imageAttribs+" />");
+                     var item = $("<img class=\"imgFilePreviewList\" "+imageAttribs+" />");
 
 
                      var request = $.klear.buildRequest(requestData);

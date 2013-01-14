@@ -67,7 +67,7 @@ table.kMatrix td.options span.alertCount {
     text-align: center;
     top: 3px;
     left: -5px;
-    
+
 }
 .odd {
     background:transparent none;
@@ -115,6 +115,7 @@ table.kMatrix .mlTag {
 .klearMatrix_form fieldset {
     padding:1em;
     width:50%;
+    min-width:700px;
 }
 
 .klearMatrix_form legend {

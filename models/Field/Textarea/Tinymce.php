@@ -1,5 +1,4 @@
 <?php
-
 class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_Textarea_Abstract
 {
     /**

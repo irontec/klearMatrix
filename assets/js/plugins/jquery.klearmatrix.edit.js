@@ -35,11 +35,11 @@
             $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
-            
+
             var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixEdit";
 
             var $appliedTemplate = this._loadTemplate(tplName);
-            
+
             $(this.element.klearModule("getPanel")).append($appliedTemplate);
 
             this._applyDecorators()
@@ -119,7 +119,6 @@
                     var curMsg = 0;
 
                     (function showMessage() {
-
 
                         // Si se invoca showMessage y no hay más mensajes pendientes, ejecutamos acción
                         if (!self.options.data.actionMessages.before[curMsg]) {
@@ -338,7 +337,7 @@
                 $("input.auto, textarea.auto",this.options.theForm).each(function() {
                     if ($(this).data("plugin")) {
 
-                        var pluginSettings = null;
+                        var pluginSettings = {};
 
                         $.each($(this).data(),function(idx, value) {
                             if (idx.match(/setting-*/)) {
@@ -366,6 +365,7 @@
                             }
 
                             if (target[pluginName]) {
+                                settings._contentTab = _self;
                                 target[pluginName](settings);
                             }
 
@@ -421,7 +421,7 @@
                 });
             }
 
-           if ($(".password",this.options.theForm).length>0) {
+			if ($(".password",this.options.theForm).length>0) {
                 var isNew = this.options.theForm.data("type") == "new";
 
                 $(".password", this.options.theForm).each(function() {

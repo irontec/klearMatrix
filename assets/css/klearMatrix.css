@@ -45,12 +45,12 @@ table.kMatrix td.options {
 table.kMatrix td.options span.recordCount {
   background-color: white;
   opacity:0.6;
-  font-size: 0.6em;
+  font-size: 0.8em;
   display: inline-block;
-  width: 1.5em;
-  left: -5px;
+  width: auto;
+  left: -4px;
   position: relative;
-  top: 5px;
+  top: 3px;
 }
 
 table.kMatrix td.options span.alertCount {

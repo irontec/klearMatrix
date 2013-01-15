@@ -474,7 +474,7 @@
             });
 
 
-            $("[title]:not(.fieldInfo-box)", this.element.klearModule("getPanel")).tooltip();
+            $("[data-title]:not(.fieldInfo-box)", this.element.klearModule("getPanel")).tooltip();
 
             $(".fieldInfo-box", this.element.klearModule("getPanel")).toggle(function(){
 
@@ -484,7 +484,7 @@
                 if ($box.length<=0) {
                     $box = $('<div />', {
                         'class' : 'fieldInfo-boxinfo ui-state-highlight ui-corner-all',
-                        html: '<p>' + $self.attr('title') + '</p>'
+                        html: '<p>' + $self.data('title') + '</p>'
                     });
                     $box.hide();
                     $self.parent().prepend($box);

@@ -73,7 +73,7 @@ abstract class KlearMatrix_Model_Field_Abstract
         return $this;
     }
 
-    public function getColumn($column)
+    public function getColumn()
     {
         return $this->_column;
     }

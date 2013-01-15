@@ -1,9 +1,6 @@
 <?php
 class KlearMatrix_Model_Column
 {
-    
-    use Klear_Model_Trait_Gettext;
-    
     protected $_dbFieldName;
     protected $_publicName;
     protected $_isDefault = false;
@@ -283,7 +280,7 @@ class KlearMatrix_Model_Column
     public function getPublicName()
     {
         if (null !== $this->_publicName) {
-            return $this->_gettextCheck($this->_publicName);
+            return Klear_Model_Gettext::gettextCheck($this->_publicName);
         }
 
         return $this->_dbFieldName;

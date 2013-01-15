@@ -2,9 +2,6 @@
 
 class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Select_Abstract
 {
-
-    use Klear_Model_Trait_Gettext;
-    
     protected $_showOnSelect = array();
     protected $_hideOnSelect = array();
 
@@ -21,8 +18,9 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
 
                 $fieldValue = new Klear_Model_ConfigParser;
                 $fieldValue->setConfig($value);
-                $value = $this->_gettextCheck($fieldValue->getProperty("title"));
-                
+
+                $value = Klear_Model_Gettext::gettextCheck($fieldValue->getProperty("title"));
+
                 if ($filter = $fieldValue->getProperty("visualFilter")) {
 
                     if ($filter->show) {
@@ -37,8 +35,8 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
                 }
             }
 
-            $value = $this->_gettextCheck($value);
-            
+            $value = Klear_Model_Gettext::gettextCheck($value);
+
             $this->_items[] = $value;
             $this->_keys[] = $key;
         }

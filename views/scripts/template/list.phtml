@@ -78,9 +78,9 @@ data-title="${info.text}"
 <caption class="ui-state-active ui-priority-primary">
 ${$item.getTitle(title,false)}
 <span class="extraCaptionInfo">
-Total: <strong>${total} </strong> Registros.
+<?php echo $this->translate("Total: "); ?><strong>${total}</strong> <?php echo $this->translate('Registros'); ?>
 {{if (paginator)}}
-Registros por página: <input value="${paginator.itemCountPerPage}" type="number" min="0" max="1000" />
+<?php echo ' | ' . $this->translate('Registros por página:')?> <input value="${paginator.itemCountPerPage}" type="number" min="0" max="1000" />
 {{/if}}
 </span>
 </caption>

@@ -147,8 +147,8 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             if (!$this->_model) {
                 $this->_helper->log(
-                        'Model not found for '. $this->_item->getMapperName() . ' >> PK(' .$this->_pk .')',
-                        Zend_Log::ERR
+                    'Model not found for '. $this->_item->getMapperName() . ' >> PK(' .$this->_pk .')',
+                    Zend_Log::ERR
                 );
                 throw new Zend_Exception("No se encuentra la columna solicitada.");
             }

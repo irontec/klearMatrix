@@ -93,14 +93,14 @@ class KlearMatrix_Plugin_Init extends Zend_Controller_Plugin_Abstract
                 $mergedDefaultOptions = false;
                 if (isset($bootstrapConfig['frontend']['options']['default_options'])) {
                     $mergedDefaultOptions = array_merge(
-                            $frontend['options']['default_options'],
-                            $bootstrapConfig['frontend']['options']['default_options']
+                        $frontend['options']['default_options'],
+                        $bootstrapConfig['frontend']['options']['default_options']
                     );
                 }
 
                 $frontend['options'] = array_merge(
-                        $frontend['options'],
-                        $bootstrapConfig['frontend']['options']
+                    $frontend['options'],
+                    $bootstrapConfig['frontend']['options']
                 );
 
                 if ($mergedDefaultOptions) {
@@ -112,8 +112,8 @@ class KlearMatrix_Plugin_Init extends Zend_Controller_Plugin_Abstract
 
 
             $cacheManager->setTemplateOptions(
-                    'klearmatrixDashboard',
-                    array('frontend' => $frontend)
+                'klearmatrixDashboard',
+                array('frontend' => $frontend)
             );
         }
     }

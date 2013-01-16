@@ -9,6 +9,10 @@
         {{if (_properties.required)}}
             required=""
         {{/if}}
+        
+        {{if (_properties.maxlength)}}
+            maxlength="${_properties.maxlength}"
+        {{/if}}
 
         {{if (_dataConfig.plugin)}}
             data-plugin="${_dataConfig.plugin}"

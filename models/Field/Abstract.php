@@ -17,7 +17,8 @@ abstract class KlearMatrix_Model_Field_Abstract
             "nullIfEmpty",
             "maxLength",
             "expandable",
-            "defaultValue" // Valor por defecto en caso de new
+            "defaultValue",
+            "maxlength" // Valor por defecto en caso de new
             );
 
     protected $_properties = array();

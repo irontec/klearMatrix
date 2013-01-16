@@ -38,8 +38,8 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
         return $this->_filterField;
     }
 
-    public function getType() {
-
+    public function getType()
+    {
         return $this->_type;
     }
 

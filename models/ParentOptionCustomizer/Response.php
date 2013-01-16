@@ -5,8 +5,6 @@ class KlearMatrix_Model_ParentOptionCustomizer_Response {
     protected $_wrapper;
     protected $_cssClass;
 
-    public function __contruct() {}
-
     public function setResult($data)
     {
         $this->_result = $data;

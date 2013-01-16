@@ -11,8 +11,8 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
 		$this->_type = 'dialog';
     }
 
-    public function getType() {
-
+    public function getType()
+    {
         return $this->_type;
     }
 

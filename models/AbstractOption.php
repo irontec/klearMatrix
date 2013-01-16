@@ -30,8 +30,8 @@ abstract class KlearMatrix_Model_AbstractOption
         $this->_init();
     }
 
-    public function getConfig() {
-
+    public function getConfig()
+    {
         return $this->_config;
     }
 
@@ -146,8 +146,8 @@ abstract class KlearMatrix_Model_AbstractOption
         $this->_name = $name;
     }
 
-    public function getName() {
-
+    public function getName()
+    {
         return $this->_name;
     }
 

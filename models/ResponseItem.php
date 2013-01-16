@@ -484,8 +484,8 @@ class KlearMatrix_Model_ResponseItem
      * Allow /Deny field blacklisting based on ddbb tags
      * @param $ignore bool
      */
-    public function setIgnoreMetadataBlacklist($ignore) {
-
+    public function setIgnoreMetadataBlacklist($ignore)
+    {
         $this->_ignoreMetadataBlacklist = (bool) $ignore;
     }
 

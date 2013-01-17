@@ -3,9 +3,9 @@
 class KlearMatrix_Model_Field_Number_Spinner
 {
 
-    protected $_max = false;
-    protected $_min = false;
-    protected $_step = 1;
+    protected $_max = null;
+    protected $_min = null;
+    protected $_step = 5;
 
     protected $_config;
 
@@ -64,7 +64,7 @@ class KlearMatrix_Model_Field_Number_Spinner
     {
         $ret = array(
             "plugin" => 'spinner',
-            "attributes" => array(
+            "settings" => array(
               'min' => $this->_min,
               'max' => $this->_max,
               'step' => $this->_step

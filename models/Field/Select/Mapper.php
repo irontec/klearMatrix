@@ -5,6 +5,10 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     protected $_showOnSelect = array();
     protected $_hideOnSelect = array();
 
+    protected $_js = array(
+        "/js/plugins/jquery.klearmatrix.select.js"
+    );
+
     public function init()
     {
         $mapperName = $this->_config->getProperty("config")->mapperName;

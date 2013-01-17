@@ -52,7 +52,7 @@
                 return;
             }
 
-            
+
             this.options.data.title =  $.klearmatrix.template.helper._parseDefaultValues({
                 title: this.options.data.title,
                 replaceParentPerItem : false,
@@ -62,17 +62,17 @@
                 values: this.options.data.values,
                 idx: 0
             });
-            
-            
+
+
 
         },
         getData : function(value) {
-            
+
             if (this.options.data[value]) {
                 return this.options.data[value]
             }
-            
-            return this.options.data; 
+
+            return this.options.data;
         },
         _loadTemplate : function(tmplName) {
 
@@ -83,18 +83,18 @@
                             );
 
             this._parseDefaultItems();
-            
-            // Recarga el nombre de la pestaña con el título calculado. 
+
+            // Recarga el nombre de la pestaña con el título calculado.
             //if (this.options.data && this.options.data.title) {
-            //	this.element.klearModule("updateTitle",this.options.data.title);
+            //    this.element.klearModule("updateTitle",this.options.data.title);
             //}
             return $tmplObj;
 
         },
         _getClearText : function($items) {
-            var retValues = [];            
+            var retValues = [];
             $items.each(function() {
-                
+
                 if (!$(this).is(".multilang")) {
                     retValues.push($(this).contents().first().text());
                     return;
@@ -106,9 +106,9 @@
                     } else {
                         retValues.push($(".multilangValue:eq(0)", $(this)).contents().first().text());
                     }
-                } 
+                }
             });
-            
+
             return retValues.join(' ');
         },
 
@@ -145,18 +145,52 @@
          * Eventos comunes en todos los controladores para campos
          */
         _registerFieldsEvents : function() {
-        	
+
             var self = this;
             var _self = this.element;
-            
-        	 if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
+
+            if ($(".fieldDecorator",_self.klearModule("getPanel")).length > 0) {
+
+                $(".fieldDecorator",_self.klearModule("getPanel")).each(function() {
+
+                    var _post = $(this).data();
+                    $.extend(_post, {value : $("#" + $(this).attr("rel")).val()});
+
+                    var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
+
+                    var requestData = {
+                            file: _self.klearModule("option","file"),
+                            pk: $(this).parents(parentSelector).data("id"),
+                            type : 'command',
+                            post: _post,
+                            command : $(this).data('fielddecorator') + "_command"
+                    };
+
+                    var request = $.klear.buildRequest(requestData);
+
+                    var _url = request.action; //encodeURI()
+                     _url += '&' + $.param(request.data);
+
+                    $(this).attr("href", _url).html($(this).data("fielddecoratort"));
+
+                    if ($.fn["klearmatrix."+ $(this).data('field') + $(this).data('fielddecorator')]) {
+
+                        var methodName = $(this).data('field') + $(this).data('fielddecorator');
+                        $(this)[methodName]();
+                    }
+                });
+            }
+
+
+
+             if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
                  $(".filePreview",_self.klearModule("getPanel")).each(function() {
 
-                	 if ($(this).data("filename")) {
-                		 var _post = {filename:$(this).data("filename")};
-                	 } else {
-                		 var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
-                 	 }
+                     if ($(this).data("filename")) {
+                         var _post = {filename:$(this).data("filename")};
+                     } else {
+                         var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
+                     }
                      var _validData = ['width','height','crop'];
                      var $self = $(this);
                      var imageAttribs = '';
@@ -170,7 +204,7 @@
                          }
                      });
                      var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
-                     
+
                      var requestData = {
                              file: _self.klearModule("option","file"),
                              pk: $(this).parents(parentSelector).data("id"),
@@ -179,9 +213,7 @@
                              command : $(this).data('command')
                      };
 
-
                      var item = $("<img class=\"imgFilePreviewList\" "+imageAttribs+" />");
-
 
                      var request = $.klear.buildRequest(requestData);
                      var _url = request.action; //encodeURI()
@@ -193,7 +225,7 @@
                  });
              }
 
-        	return this;
+            return this;
         },
 
         _registerBaseEvents : function() {
@@ -223,27 +255,27 @@
 
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 var _menuLink = $(this);
                 var _container = self.klearModule("getContainer");
 
                 var _file = self.klearModule("option", "file");
                 if (_menuLink.data("externalfile")) {
-                	_file= _menuLink.data("externalfile");
+                    _file= _menuLink.data("externalfile");
                 }
-                
+
                 var _screen = _menuLink.data("screen");
-                
+
                 var _iden = "#tabs-" + _file + '_' + _screen;
                 var _parentHolder = _self._resolveParentHolder(this);
-                
+
                 if ($(this).data("multiinstance")) {
                     _iden += '_' + Math.round(Math.random(1000, 9999)*100000);
                 } else {
-                	if (_menuLink.data("externalid")) {
-                		_iden += '_' + _menuLink.data("externalid");
+                    if (_menuLink.data("externalid")) {
+                        _iden += '_' + _menuLink.data("externalid");
                     } else {
-                    	_iden += '_' + _parentHolder.data("id");
+                        _iden += '_' + _parentHolder.data("id");
                     }
                 }
 
@@ -253,14 +285,14 @@
                 }
 
                 var _newIndex = self.klearModule("option", "tabIndex")+1;
-                
-                
+
+
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
 
                 var tabTitle = _menuLink.tooltip("close").attr("title");
-                
+
                 _container.one( "tabspostadd", function(event, ui) {
 
                     var $tabLi = $(ui.tab).parent("li");
@@ -272,21 +304,21 @@
 
                     // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
                     $tabLi.klearModule("option", "file", _file);
-                    
+
                     var _curPk = _parentHolder.data("id");
-                    
+
                     if (_menuLink.data("externalname")) {
-                    	var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
-                    	if (_field.length >0) {
-                    		_curPk = _field.val();
-                    	}
-                     	
+                        var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
+                        if (_field.length >0) {
+                            _curPk = _field.val();
+                        }
+
                     }
-                    
+
                     if (_menuLink.data("externalid")) {
-                    	_curPk = _menuLink.data("externalid");
+                        _curPk = _menuLink.data("externalid");
                     }
-                    
+
                     // Seteamos el valor para dispatchOptions
                     var _dispatchOptions = {
                         screen : _menuLink.data("screen"),
@@ -295,7 +327,7 @@
                             callerScreen : _self.options.data.screen
                         }
                     };
-                    
+
                     // Si la pantalla llamante tiene condición (parentId -- en data --
                     // enviarlos a la nueva pantalla
                     if (_self.options.data.parentId) {
@@ -308,7 +340,7 @@
                     _menuLink.data("relatedtab", $tabLi);
 
                     $tabLi
-                    	.klearModule("option", "dispatchOptions", _dispatchOptions)
+                        .klearModule("option", "dispatchOptions", _dispatchOptions)
                         .klearModule("reload");
 
 
@@ -348,7 +380,7 @@
                         '<br />',
                         {
                             title: $(this).attr("title") || '',
-                            template : '<div class="ui-widget">{{html text}}</div>'                            
+                            template : '<div class="ui-widget">{{html text}}</div>'
                         });
 
                 var $_dialog = $(self).klearModule("getModuleDialog");
@@ -501,14 +533,14 @@
 
             return this;
         },
-        
+
         standardError : function(data) {
             var self = this;
             var $_dialog = $(self.element).klearModule("getModuleDialog");
             var $message = $('<div><div class="dialogMessage">' + data.message + '</div></div>');
 
             $_dialog.moduleDialog(
-                "option", 
+                "option",
                 "buttons",
                  [
                     {
@@ -520,11 +552,11 @@
                 ]
             );
             var _extraCode  = '';
-            
+
             if (typeof data.exceptionCode != 'undefined') {
                 var errorDesc = $.klear.fetchErrorByCode(data.exceptionCode);
                 if (errorDesc) {
-                	_extraCode = ' (' + data.exceptionCode + ')';
+                    _extraCode = ' (' + data.exceptionCode + ')';
                     $message.html(errorDesc.replace(/%message%/, data.message));
                 }
             }
@@ -533,18 +565,18 @@
                 var $showTrace = $('<p><a class="show-trace" href="#">Show trace string</a></p>');
                 var $trace = $('<div class="trace">' + data.traceString.replace(/\n/g, '<br />') + '</div>');
                 var $traceDiv = $('<div />').append($showTrace).append($trace);
-                
+
                 $message.append($showTrace).append($trace);
-                
+
                 $trace.hide();
                 $showTrace.on('click', function(e) {
                     e.preventDefault();
                     $trace.toggle();
                     $_dialog.moduleDialog('option', 'width', 800);
                 });
-                
+
             }
-                
+
 
             $_dialog.moduleDialog("option", "title", $.translate("Error", [__namespace__])  + _extraCode);
             $_dialog.moduleDialog("updateContent", $message);

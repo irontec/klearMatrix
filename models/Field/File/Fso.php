@@ -4,7 +4,6 @@
  */
 class KlearMatrix_Model_Field_File_Fso
 {
-
     protected $_config;
 
     protected $_fileName;
@@ -13,7 +12,8 @@ class KlearMatrix_Model_Field_File_Fso
 
     protected $_js = array(
         "/js/plugins/jquery.jplayer.min.js",
-        "/js/plugins/qq-fileuploader.js"
+        "/js/plugins/qq-fileuploader.js",
+        "/js/plugins/jquery.klearmatrix.file.js"
     );
 
     protected $_css = array(

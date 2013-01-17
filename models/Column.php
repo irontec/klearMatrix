@@ -612,6 +612,7 @@ class KlearMatrix_Model_Column
         $fieldConfig = $this->getFieldConfig();
         if ($fieldConfig) {
 
+            $ret['decorators'] = $fieldConfig->getDecorators();
             $ret['searchable'] = $fieldConfig->isSearchable();
             $ret['sortable'] = $fieldConfig->isSortable();
 

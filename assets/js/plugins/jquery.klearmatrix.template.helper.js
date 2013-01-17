@@ -33,6 +33,7 @@
         },
 
         getEditDataForField : function(value, column, isNew) {
+
             var extraConfig = column.config || false;
             var properties = column.properties || false;
             var customErrors = column.errors || false;
@@ -83,6 +84,7 @@
                     _elemName: column.id,
                     _readonly: column.readonly? true:false,
                     _dataConfig : extraConfig,
+                    _decorators: column.decorators,
                     _properties : properties,
                     _fieldValue : _value,
                     _errors : customErrors
@@ -287,20 +289,20 @@
                         var extra = '';
                         if (column.config && column.config.options) {
                             for(var _optIdx in column.config.options) {
-                    
+
                                 if (column.config.options[_optIdx]['listController']) {
-                    
+
                                     var option = column.config.options[_optIdx];
-                                    extra += '<a data-filename="'+values[column.id]['name']+'" href="#" '; 
+                                    extra += '<a data-filename="'+values[column.id]['name']+'" href="#" ';
                                     extra += ' class="option ';
                                     if (option['class']) {
-                                        extra += option['class'] + ' ' ; 
+                                        extra += option['class'] + ' ' ;
                                     }
                                     if (option['type']) {
-                                        extra += option['type']; 
+                                        extra += option['type'];
                                     }
                                     extra += '" ';
-                    
+
                                     if (option['type']) {
                                         extra += ' data-'+option['type']+'="'+option['target']+'" ';
                                     }
@@ -320,15 +322,15 @@
                                     }
                                     extra += '</a>';
                                 }
-                    
+
                             }
-                   
+
                         }
-                        
+
                         if (column.config.options.hiddenName) {
                             return extra;
                         }
-                        
+
                         return extra + this.cleanValue(values[column.id]['name']);
                         break;
 

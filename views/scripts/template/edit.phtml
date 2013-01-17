@@ -12,7 +12,6 @@ data-title="${info.text}"
 </div>
 {{/if}}
 
-
 {{each(idx,row) values}}
 <form class="klearMatrix_form" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
     <fieldset class="ui-widget-content ui-corner-all">
@@ -58,6 +57,22 @@ data-title="${info.text}"
                         >
                         <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
                      {{/if}}
+                {{/each}}
+            {{/if}}
+
+            {{if (column.decorators)}}
+
+                {{each(idx, decorator) column.decorators}}
+
+
+                    {{each(name, config) decorator}}
+
+                        <a class="option command fieldDecorator ${column.type}" data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
+                        {{each(key, val) config}}
+                            data-${key}="${val}"
+                        {{/each}}
+                        />
+                    {{/each}}
                 {{/each}}
             {{/if}}
         </div>

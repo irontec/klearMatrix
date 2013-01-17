@@ -10,6 +10,8 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_isSearchable = true;
     protected $_isSortable = true;
 
+    protected $_decorators = null;
+
     protected $_propertyMaster = array(
             "required",
             "pattern",
@@ -17,8 +19,7 @@ abstract class KlearMatrix_Model_Field_Abstract
             "nullIfEmpty",
             "maxLength",
             "expandable",
-            "defaultValue",
-            "maxlength" // Valor por defecto en caso de new
+            "defaultValue" // Valor por defecto en caso de new
             );
 
     protected $_properties = array();
@@ -56,7 +57,8 @@ abstract class KlearMatrix_Model_Field_Abstract
             $this->_parseErrorMessages();
         }
 
-        $this->_initSortable();
+        $this->_initSortable()
+             ->_loadDecorators();
 
         $this->_init();
     }
@@ -66,6 +68,8 @@ abstract class KlearMatrix_Model_Field_Abstract
         $this->_sortable = is_object($this->_config)
                            && $this->_config->exists("sortable")
                            && (bool)$this->_config->getProperty('sortable');
+
+        return $this;
     }
 
     public function setColumn($column)
@@ -123,6 +127,36 @@ abstract class KlearMatrix_Model_Field_Abstract
     public function getCustomOrderField()
     {
         return null;
+    }
+
+
+    protected function _loadDecorators()
+    {
+        if (!$this->_config) {
+
+            return $this;
+        }
+
+        $decorators = $this->_config->getRaw()->decorators;
+
+        if (is_null($decorators)) {
+
+            return $this;
+        }
+
+        $this->_decorators = array();
+        foreach ($decorators as $decorator => $configuration) {
+
+            $config = $configuration instanceof \Zend_Config ? $configuration->toArray() : $configuration;
+            $this->_decorators[$decorator] = $config;
+        }
+
+        return $this;
+    }
+
+    public function getDecorators()
+    {
+        return $this->_decorators;
     }
 
     /*

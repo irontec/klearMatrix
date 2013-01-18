@@ -16,29 +16,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $where = $this->_getFilterWhere();
         $order = $this->_config->getProperty('config')->order;
-
         $results = $dataMapper->fetchList($where, $order);
-
-        if ($results) {
-
-            $fields = $this->_getFields();
-            $fieldsTemplate = $this->_getFieldsTemplate();
-
-            foreach ($results as $dataModel) {
-
-                $replace = array();
-                foreach ($fields as $fieldName) {
-
-                    $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
-                    $replace['%' . $fieldName . '%'] = $dataModel->$getter();
-                }
-
-                $this->_keys[] = $dataModel->getPrimaryKey();
-                $this->_items[] = str_replace(array_keys($replace), $replace, $fieldsTemplate);
-
-                $this->_initVisualFilter($dataModel);
-            }
-        }
+        $this->_setOptions($results);
     }
 
     protected function _getFilterWhere()
@@ -54,6 +33,35 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             }
         }
         return null;
+    }
+
+    protected function _setOptions($results)
+    {
+        if ($results) {
+            foreach ($results as $dataModel) {
+                $this->_keys[] = $dataModel->getPrimaryKey();
+                $this->_items[] = $this->_getItemValue($dataModel);
+                $this->_initVisualFilter($dataModel);
+            }
+        }
+    }
+
+    protected function _getItemValue($dataModel)
+    {
+        $customValueMethod = $this->_config->getProperty('config')->customValueMethod;
+        if ($customValueMethod) {
+            return $dataModel->$customValueMethod();
+        }
+
+        $fields = $this->_getFields();
+        $fieldsTemplate = $this->_getFieldsTemplate();
+        $replace = array();
+        foreach ($fields as $fieldName) {
+            $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
+            $replace['%' . $fieldName . '%'] = $dataModel->$getter();
+        }
+
+        return str_replace(array_keys($replace), $replace, $fieldsTemplate);
     }
 
     protected function _getFields()

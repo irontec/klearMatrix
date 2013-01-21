@@ -9,6 +9,8 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
     protected $_items = array();
     protected $_keys = array();
 
+    protected $_js = array();
+
 
     public function __construct(Zend_Config $config, KlearMatrix_Model_Column $column)
     {
@@ -75,5 +77,10 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
             return new ArrayIterator(array());
         }
         return new ArrayIterator(array_combine($this->_keys, $this->_items));
+    }
+
+    public function getExtraJavascript()
+    {
+        return $this->_js;
     }
 }

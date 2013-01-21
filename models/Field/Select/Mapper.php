@@ -156,11 +156,6 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             }
         }
     }
-
-    public function getExtraJavascript()
-    {
-        return $this->_js;
-    }
 }
 
 //EOF

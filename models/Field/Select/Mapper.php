@@ -57,15 +57,16 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     {
         $filterClassName = $this->_config->getProperty('config')->filterClass;
         if ($filterClassName) {
-
             $filter = new $filterClassName;
-
-            if ($filter->setRouteDispatcher($this->_column->getRouteDispatcher())) {
-
-                return $filter->getCondition();
-            }
+            return $this->_getFilterCondition($filter);
         }
         return null;
+    }
+
+    protected function _getFilterCondition(KlearMatrix_Model_Field_Select_Filter_Interface $filter)
+    {
+        $filter->setRouteDispatcher($this->_column->getRouteDispatcher());
+        return $filter->getCondition();
     }
 
     protected function _setOptions($results)

@@ -50,7 +50,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     protected function _getFilterWhere()
     {
-        $filterClassName = $this->_config->getProperty('config')->filterClass;
+        $filterClassName = $this->_parsedValues->getProperty("filterClass");
         if ($filterClassName) {
             $filter = new $filterClassName;
             return $this->_getFilterCondition($filter);

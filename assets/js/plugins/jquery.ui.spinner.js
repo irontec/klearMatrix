@@ -539,8 +539,14 @@ $.widget('ui.spinner', {
         var self = this,
             value = self.curvalue;
 
-        if (value == null)
-            value = (step > 0 ? self.options.min : self.options.max) || 0;
+        if (value == null) {
+            if (self.options.min === -Infinity) {
+                value = 0;
+            } else {
+                value = (step > 0 ? self.options.min : self.options.max) || 0;
+            }
+        }
+
 
         self._setValue(value + step);
     },

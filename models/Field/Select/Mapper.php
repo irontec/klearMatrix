@@ -11,6 +11,12 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
     public function init()
     {
+        if ($this->_dynamicDataLoading() === true) {
+
+            //Nothing to do
+            return;
+        }
+
         $mapperName = $this->_config->getProperty("config")->mapperName;
         $dataMapper = new $mapperName;
 
@@ -18,6 +24,33 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $order = $this->_config->getProperty('config')->order;
         $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
+    }
+
+
+    /**
+     * return bool
+     */
+    protected function _dynamicDataLoading()
+    {
+        if (isset($this->_column->getKlearConfig()->getRaw()->decorators)) {
+
+            $selfClassName = get_class($this);
+            $classBasePath = substr($selfClassName, 0, strrpos($selfClassName, '_') + 1);
+            $decoratorClassBaseName = $classBasePath . 'Decorator_';
+
+            $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
+            foreach ($decorators as $decorator) {
+
+                $decoratorClassName = $decoratorClassBaseName . ucfirst($decorator->key());
+
+                if (class_exists($decoratorClassName) && $decoratorClassName::DYNAMIC_DATA_LOADING) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     protected function _getFilterWhere()
@@ -122,6 +155,11 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
                 }
             }
         }
+    }
+
+    public function getExtraJavascript()
+    {
+        return $this->_js;
     }
 }
 

@@ -8,7 +8,6 @@
 
 class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
 {
-
     protected $_adapter;
 
     protected function _init()
@@ -17,6 +16,7 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         $adapterClassName = "KlearMatrix_Model_Field_Select_" . ucfirst($sourceConfig->data);
 
         $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
+        $this->_js = $this->_adapter->getExtraJavascript();
     }
 
     protected function _filterValue($value)

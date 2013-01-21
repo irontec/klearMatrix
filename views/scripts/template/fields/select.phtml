@@ -25,8 +25,12 @@
     {{/each}}
 
 {{else}}
-<select name="${_elemName}" id="${_elemIden}" {{if (_dataConfig.visualFilter)}}class="visualFilter"{{/if}}
+
+<select data-preload="${_fieldValue}" name="${_elemName}" id="${_elemIden}"
+{{if (_dataConfig.visualFilter)}}class="visualFilter"{{/if}}
+{{if (_decorators)}} data-decorator="true" {{/if}}
 {{if (_properties.required)}} required="" {{/if}}>
+
 {{each(idx,dataValue) _dataConfig.values}}
     <option{{if (_fieldValue && dataValue.key == _fieldValue)}} selected="selected"{{/if}}
 

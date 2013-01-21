@@ -242,7 +242,7 @@
                 self.klearModule("close");
             });
 
-            $('select:not(.multiselect, .notcombo)', this.element.klearModule("getPanel"))
+            $('select:not(.multiselect, .notcombo, [data-decorator])', this.element.klearModule("getPanel"))
                 .combobox({
                     'selected' : function(event, ui) {
                         $(this).trigger("manualchange")

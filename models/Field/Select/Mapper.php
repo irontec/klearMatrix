@@ -46,7 +46,10 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
                 $decoratorClassName = $decoratorClassBaseName . ucfirst($decorator->key());
 
-                if (class_exists($decoratorClassName) && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')) {
+                if (class_exists($decoratorClassName)
+                    && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')
+                    && $decoratorClassName::DYNAMIC_DATA_LOADING
+                ) {
 
                     return true;
                 }

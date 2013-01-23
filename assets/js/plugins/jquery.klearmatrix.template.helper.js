@@ -24,7 +24,10 @@
                 ifNull = '';
             }
 
-            if(typeof _value == 'undefined' || !_value || _value == '') {
+            /**
+             * Exact comparisons so 0's are correctly displayed
+             */
+            if(typeof _value == 'undefined' || _value === false || _value === '') {
 
                 return ifNull;
             }

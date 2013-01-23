@@ -31,11 +31,16 @@ data-title="${info.text}"
             {{if (column.decorators)}}
                 {{each(idx, decorator) column.decorators}}
                     {{each(name, config) decorator}}
-                        <option value="${column.id}" class="option command fieldDecorator ${column.type}" data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
-                        {{each(key, val) config}}
-                            data-${key}="${val}"
-                        {{/each}}
-                        >${column.name}</option>
+                        {{if (decorator[name]._applyToListFiltering)}}
+                            <option value="${column.id}" class="option command fieldDecorator ${column.type}"
+                                    data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
+                                    {{each(key, val) config}}
+                                        data-${key}="${val}"
+                                    {{/each}}
+                            >${column.name}</option>
+                        {{else}}
+                            <option value="${column.id}" >${column.name}</option>
+                        {{/if}}
                     {{/each}}
                 {{/each}}
             {{else}}
@@ -46,12 +51,14 @@ data-title="${info.text}"
      {{/each}}
     </select>
     <span class="ui-silk inline ui-silk-add addTerm"></span>
-    <br /><span class="addToggle" title="<?php echo $this->translate('Returns records that satisfy any of filters'); ?>"><?php echo $this->translate('Add all filters'); ?>
-    <input type="checkbox" name="addFilters"
-    {{if (searchAddModifier) }}
-        checked="checked"
-    {{/if}}
-    />
+    <br />
+    <span class="addToggle" title="<?php echo $this->translate('Returns records that satisfy any of filters'); ?>">
+        <?php echo $this->translate('Add all filters'); ?>
+        <input type="checkbox" name="addFilters"
+        {{if (searchAddModifier) }}
+            checked="checked"
+        {{/if}}
+        />
     </span>
     <p class="filteredFields">
     {{each(field,searchValues) searchFields}}
@@ -126,6 +133,7 @@ ${$item.getTitle(title,false)}
             <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">
 
                 {{html $item.getIndexFromColumn(row,$value)}}
+
                 {{if ($value.options)}}
                     {{each $value.options}}
 

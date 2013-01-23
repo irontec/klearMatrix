@@ -613,6 +613,29 @@ class KlearMatrix_Model_Column
         if ($fieldConfig) {
 
             $ret['decorators'] = $fieldConfig->getDecorators();
+
+
+            if (! empty($ret['decorators'])) {
+	    		/***
+                 * Add decorator realm properties
+                 */
+                foreach ($ret['decorators'] as $key => $decorator) {
+
+                    $fieldDecoratorClassName = 'KlearMatrix_Model_Field_' .
+                                ucfirst($this->_type) . '_Decorator_' .
+                                ucfirst(key($decorator));
+
+                    if (class_exists($fieldDecoratorClassName)) {
+
+                        $ret['decorators'][$key][key($decorator)] += array(
+                            '_applyToForms' => $fieldDecoratorClassName::APPLY_TO_FORMS,
+                            '_applyToLists' => $fieldDecoratorClassName::APPLY_TO_LISTS,
+                            '_applyToListFiltering' => $fieldDecoratorClassName::APPLY_TO_LIST_FILTERING
+                        );
+                    }
+                }
+            }
+
             $ret['searchable'] = $fieldConfig->isSearchable();
             $ret['sortable'] = $fieldConfig->isSortable();
 

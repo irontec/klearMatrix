@@ -1,6 +1,9 @@
 <?php
 class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_Model_Field_DecoratorAbstract
 {
+    const APPLY_TO_LISTS = true;
+    const APPLY_TO_LIST_FILTERING = true;
+
     const DYNAMIC_DATA_LOADING = true;
 
     protected function _init()

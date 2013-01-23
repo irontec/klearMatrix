@@ -45,7 +45,7 @@ class KlearMatrix_Model_Field_File_Decorator_Preview extends KlearMatrix_Model_F
             $imageBlob = file_get_contents($this->_front->getModuleDirectory() .'/assets/bin/default.svg');
 
             $previewElement = new KlearMatrix_Model_Field_File_Preview_Default();
-            $previewElement->setRequest($this->getRequest());
+            $previewElement->setRequest($this->_request);
             $previewElement->setBinary($imageBlob);
         }
 

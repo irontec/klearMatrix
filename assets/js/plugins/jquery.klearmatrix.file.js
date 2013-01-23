@@ -40,7 +40,18 @@
             return this;
         },
     });
-
     $.widget.bridge("klearmatrix.filepreview");
+
+    $.widget("klearmatrix.filelistpreview", $.klearmatrix.filepreview, {
+
+        _initPreview: function () {
+
+            var image = $("<img class=\"imgFilePreviewList\" />");
+            image.attr("src", this.element.attr("href"));
+            this.element.replaceWith(image);
+
+        },
+    });
+    $.widget.bridge("klearmatrix.filelistpreview");
 
 })( jQuery );

@@ -30,6 +30,13 @@
 
             var context = this.element.klearModule("getPanel");
 
+            if (context.get(0).tagName.toLowerCase() == 'tr') {
+
+                //Estamos en un listado
+                //nothing to do here
+                return;
+            }
+
             this.options.cache.dummy = context;
 
             this.options.cache.context = context.parent();

@@ -68,6 +68,11 @@
                 );
 
                 var $moduleDialog = $(_self.options._contentTab).klearModule("option","moduleDialog");
+
+                $moduleDialog.parent().css({"width": "700px", "height" : "500px"});
+                $moduleDialog.css({"width": "650px", "height" : "400px"});
+                contentIframe.css({"width": "650px", "height" : "400px"});
+
                 $moduleDialog.html("").append($(this).clone().show().attr("name", $(this).data("name")));
 
                 var botonera = $moduleDialog.next();

@@ -134,6 +134,20 @@ ${$item.getTitle(title,false)}
 
                 {{html $item.getIndexFromColumn(row,$value)}}
 
+                {{if ($value.decorators)}}
+                    {{each(idx, decorator) $value.decorators}}
+                        {{each(name, config) decorator}}
+                            {{if (decorator[name]._applyToLists)}}
+                            <a class="option command fieldDecorator ${$value.type}" data-field="${$value.type}" data-fielddecorator="${name}" data-external="true"
+                            {{each(key, val) config}}
+                                data-${key}="${val}"
+                            {{/each}}
+                            />
+                            {{/if}}
+                        {{/each}}
+                    {{/each}}
+                {{/if}}
+
                 {{if ($value.options)}}
                     {{each $value.options}}
 

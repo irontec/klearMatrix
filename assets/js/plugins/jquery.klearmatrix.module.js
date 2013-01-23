@@ -181,9 +181,7 @@
                 });
             }
 
-
-
-             if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
+            if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
                  $(".filePreview",_self.klearModule("getPanel")).each(function() {
 
                      if ($(this).data("filename")) {
@@ -222,8 +220,8 @@
 
                      $(this).replaceWith(item);
 
-                 });
-             }
+                });
+            }
 
             return this;
         },

@@ -209,15 +209,43 @@
         getValuesFromSelectColumn : function(column, idx) {
             switch (column.type){
                 case 'select':
+
                     var ret = {};
                     for (var index in column.config.values) {
                         ret[column.config.values[index].key] = column.config.values[index].item;
                     }
-                    if ( (typeof idx != 'undefined') && typeof ret[idx] != 'undefined'){
+
+                    if ( (typeof idx != 'undefined') && typeof ret[idx] != 'undefined') {
+
                         return ret[idx];
+
+                    } else if ( (typeof idx != 'undefined') && column.decorators) {
+
+                        var resp = $('<span class="autocomplete" />').attr({
+                                        "data-value": idx,
+                                        "data-reverse" : "true",
+                                        "data-fielddecorator" : "autocomplete",
+                                        "data-field": "select"
+                                   });
+
+                        for (var idx in column.decorators) {
+
+                            for (var decoratorName in column.decorators[idx]) {
+
+                                for (var prop in column.decorators[idx][decoratorName]) {
+
+                                    resp.attr("data-" + prop, column.decorators[idx][decoratorName][prop]);
+                                }
+                            }
+                        }
+
+                        return $("<p>").append(resp).html();
+
                     } else {
+
                         return ret;
                     }
+
                 break;
                 case 'multiselect':
                     if (column.config.values['__className']) {
@@ -257,7 +285,11 @@
 
                         var _curVal = values[column.id];
 
-                        if (this.getValuesFromSelectColumn(column)[_curVal]) {
+                        if (_curVal && column.decorators) {
+
+                           return this.getValuesFromSelectColumn(column, _curVal);
+
+                        } else if (this.getValuesFromSelectColumn(column)[_curVal]) {
 
                             return this.getValuesFromSelectColumn(column)[_curVal];
                         }

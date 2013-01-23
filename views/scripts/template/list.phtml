@@ -25,9 +25,23 @@ data-title="${info.text}"
     </span>
     <input type="text" class="term">
     <select name="searchField">
+
      {{each(idx,column) columns}}
          {{if ( (type != '_option') && (column.searchable) ) }}
-             <option value="${column.id}">${column.name}</option>
+            {{if (column.decorators)}}
+                {{each(idx, decorator) column.decorators}}
+                    {{each(name, config) decorator}}
+                        <option value="${column.id}" class="option command fieldDecorator ${column.type}" data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
+                        {{each(key, val) config}}
+                            data-${key}="${val}"
+                        {{/each}}
+                        >${column.name}</option>
+                    {{/each}}
+                {{/each}}
+            {{else}}
+                <option value="${column.id}" >${column.name}</option>
+            {{/if}}
+
          {{/if}}
      {{/each}}
     </select>
@@ -56,8 +70,7 @@ data-title="${info.text}"
                         <strong>&gt;</strong>
                     {{/if}}
 
-
-                    ${$item.getValuesFromSelectColumn($item.getColumn(columns,field),_val)}
+                    {{html $item.getValuesFromSelectColumn($item.getColumn(columns,field),_val)}}
                 </span>
             {{/each}}
         </span>
@@ -111,6 +124,7 @@ ${$item.getTitle(title,false)}
    {{each columns}}
        {{if (type != '_option') }}
             <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">
+
                 {{html $item.getIndexFromColumn(row,$value)}}
                 {{if ($value.options)}}
                     {{each $value.options}}
@@ -135,8 +149,6 @@ ${$item.getTitle(title,false)}
                          {{/if}}
                     {{/each}}
                 {{/if}}
-
-
 
             </td>
         {{else}}

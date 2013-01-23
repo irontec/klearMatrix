@@ -14,8 +14,8 @@
                 });
             }
             $.klearmatrix[this.options.moduleName].instances.push(this.element);
-
         },
+
         _getOtherInstances: function(){
 
             var element = this.element;
@@ -176,7 +176,7 @@
                     if ($.fn["klearmatrix."+ $(this).data('field') + $(this).data('fielddecorator')]) {
 
                         var methodName = $(this).data('field') + $(this).data('fielddecorator');
-                        $(this)[methodName]();
+                        $(this)[methodName]({"parent": self});
                     }
                 });
             }

@@ -40,6 +40,18 @@ data-title="${info.text}"
                 <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,false)}{{/if}}</a>
                 {{/each}}
             {{/if}}
+
+            {{if (column.decorators)}}
+                {{each(idx, decorator) column.decorators}}
+                    {{each(name, config) decorator}}
+                        <a class="option command fieldDecorator ${column.type}" data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
+                        {{each(key, val) config}}
+                            data-${key}="${val}"
+                        {{/each}}
+                        />
+                    {{/each}}
+                {{/each}}
+            {{/if}}
         </div>
         {{/each}}
     </fieldset>

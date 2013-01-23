@@ -92,8 +92,16 @@ abstract class KlearMatrix_Model_Field_DecoratorAbstract
 
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
-        $this->_pk = $this->_mainRouter->getParam("pk");
-        $this->_model = $mapper->find($this->_pk);
+        $this->_pk = $this->_mainRouter->getParam("pk", false);
+
+        if (false === $this->_pk) {
+
+            $this->_model = $mapper->loadModel(null);
+
+        } else {
+
+            $this->_model = $mapper->find($this->_pk);
+        }
 
         $this->_init();
 

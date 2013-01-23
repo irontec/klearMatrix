@@ -22,7 +22,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         if ( $this->_request->getParam("reverse") ) {
 
-            $results = array($mapper->find($this->_request->getParam("value")));
+            $results = $mapper->findByField($pkField, $this->_request->getParam("value"));
 
         } else {
 

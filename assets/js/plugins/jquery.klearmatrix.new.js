@@ -33,6 +33,7 @@
                 ._registerBaseEvents()
                 ._initFormElements()
                 ._registerEvents()
+                ._registerFieldsEvents()
                 ._registerMainActionEvent();
 
         },
@@ -46,7 +47,7 @@
             var postData = self.options.theForm.serializeArray();
 
             var addAnotherOption = !self.options.theForm.data("disableaddanother");
-            
+
             if (typeof this.options.data.parentId != 'undefined') {
                 postData.push({ name:this.options.data.parentItem, value:this.options.data.parentId});
             }
@@ -91,21 +92,21 @@
                             $self.klearModule("close");
                         }
                     }];
-                    
+
                     if (addAnotherOption) {
-                    	_buttons.push(
-	            			{
-	                            text: $.translate("Add another record", [__namespace__]),
-	                            click: function() {
-	                                $self.klearModule("reDispatch");
-	                            }
-	                        }
-                    	);
+                        _buttons.push(
+                            {
+                                text: $.translate("Add another record", [__namespace__]),
+                                click: function() {
+                                    $self.klearModule("reDispatch");
+                                }
+                            }
+                        );
                     } else {
-                    	// Al cerrar el dialogo, cerraremos también la pestaña
-                    	$dialog.moduleDialog("option","beforeClose",function() {
-                    		$self.klearModule("close");
-                    	});
+                        // Al cerrar el dialogo, cerraremos también la pestaña
+                        $dialog.moduleDialog("option","beforeClose",function() {
+                            $self.klearModule("close");
+                        });
                     }
 
                     $dialog.moduleDialog("option","buttons",_buttons);

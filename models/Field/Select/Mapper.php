@@ -1,5 +1,4 @@
 <?php
-
 class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Select_Abstract
 {
     protected $_showOnSelect = array();
@@ -21,11 +20,15 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $dataMapper = new $mapperName;
 
         $where = $this->_getFilterWhere();
+
+        /*echo "<pre>";
+            print_r($where);
+        exit;*/
+
         $order = $this->_config->getProperty('config')->order;
         $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
     }
-
 
     /**
      * return bool

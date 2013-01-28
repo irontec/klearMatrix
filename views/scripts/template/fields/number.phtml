@@ -19,9 +19,7 @@
         {{/if}}
 
         {{each(attribute, value) _dataConfig.settings}}
-            {{if}}
-                data-setting-${$item.dataParser(attribute, value)}="${value}"
-            {{/if}}
+            data-setting-${$item.dataParser(attribute, value)}="${value}"
         {{/each}}
 
         {{each(idx,attrValue) _dataConfig.attributes}}

@@ -410,6 +410,14 @@ $.widget('ui.spinner', {
                                  {count: 100, mult: 10, delay: 20},
                                  {count: 0, mult: 100, delay: 20}];
 
+        if (max === '') {
+            max = null;
+        }
+
+        if (min === '') {
+            min = null;
+        }
+
         if ((min == null) && ((temp = input.attr('min')) != null))
             min = parseFloat(temp);
 

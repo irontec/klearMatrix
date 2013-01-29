@@ -180,7 +180,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $data->setResponseItem($this->_item)
              ->setTitle($this->_item->getTitle())
              ->setColumnCollection($columns);
-
+        $parentData = null;
         // La pantalla "nuevo" tiene filtro? cae de otro listado?
         if ($this->_item->isFilteredScreen()) {
 
@@ -212,9 +212,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $data->setParentId($parentId);
                 $data->setParentScreen($parentScreenName);
             }
-        } else {
-
-            $parentData = null;
         }
 
         /*

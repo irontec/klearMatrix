@@ -16,10 +16,6 @@ class KlearMatrix_Model_Field_Number extends KlearMatrix_Model_Field_Abstract
         $this->_css = $this->_adapter->getExtraCss();
     }
 
-    public function getConfig()
-    {
-        return $this->_adapter->getConfig();
-    }
 }
 
 //EOF

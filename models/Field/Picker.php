@@ -50,11 +50,6 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         );
     }
 
-    public function getConfig()
-    {
-        return $this->_adapter->getConfig();
-    }
-
     /*
      * Filtra (y adecua) el valor del campo antes del setter
      *

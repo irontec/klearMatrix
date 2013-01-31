@@ -8,7 +8,16 @@
 {{else}}
 
 <input type="hidden" name="${_elemName}[]" value="" />
-<select class="multiselect" multiple name="${_elemName}[]" id="${_elemIden}">
+<select
+    class="multiselect"
+    multiple
+    name="${_elemName}[]"
+    id="${_elemIden}"
+
+    {{each(idx,attrValue) _dataConfig.attributes}}
+        ${idx}="${attrValue}"
+    {{/each}}
+>
 {{each(idx,dataValue) _dataConfig.values}}
         <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
                  selected="selected"

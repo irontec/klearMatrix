@@ -120,19 +120,17 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         // Itero en value, que supuestamente es un array de modelos de relación
         foreach ($value as $model) {
 
-            if ( (!is_object($model))
-                || (!$model->getMapper() instanceof $this->_relationMapper) ) {
+            if ((!is_object($model))
+                || (!$model->getMapper() instanceof $this->_relationMapper)) {
 
-                    Throw New Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
+                    throw new Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
             }
 
             $fkName = false;
 
             $parents = $model->getParentList();
             foreach ($parents as $_fk => $parentData) {
-
                 if (strtolower($parentData['table_name']) == strtolower($tableRelatedName)) {
-
                     if ($this->_relationProperty == $parentData['property']) {
 
                         $fkName = $_fk;
@@ -142,8 +140,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
 
             if (false === $fkName) {
-
-                Throw New Zend_Exception('No se encuentra el valor de la FK.');
+                throw new Zend_Exception('No se encuentra el valor de la FK.');
             }
 
             // Recuperamos el atributo de bd de la tabla de relación, que coincide con la clave foránea de la tabla relacionada

@@ -191,6 +191,11 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             $this->_cache[$md5method][$md5cache] = $value;
         }
     }
+
+    protected function _getConfig()
+    {
+        return array();
+    }
 }
 
 //EOF

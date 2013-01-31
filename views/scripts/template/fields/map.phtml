@@ -39,6 +39,11 @@ data-${eIndex}="${error}"
 {{if (_multilang)}}
 data-multilang="${_locale}"
 {{/if}}
+
+{{each(idx,attrValue) _dataConfig.attributes}}
+    ${idx}="${attrValue}"
+{{/each}}
+
 />
 <input type="button" value="Ir" />
 

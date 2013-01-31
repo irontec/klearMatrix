@@ -39,6 +39,8 @@ abstract class KlearMatrix_Model_Field_Abstract
     protected $_js = array();
     protected $_css = array();
 
+    protected $_adapter;
+
     /**
      * Constructor must not be directly called from outside. Use the factory method instead
      */
@@ -112,7 +114,36 @@ abstract class KlearMatrix_Model_Field_Abstract
      */
     public function getConfig()
     {
-        return false;
+        $fieldConfig = $this->_getAdapterConfig();
+        $fieldConfig['attributes'] = $this->_getAttributes($fieldConfig);
+//         $fieldConfig['attributes'] = array('style' => 'width:5px');
+        return $fieldConfig;
+    }
+
+    protected function _getAdapterConfig()
+    {
+        if (isset($this->_adapter)) {
+            return $this->_adapter->getConfig();
+        }
+
+        return array();
+    }
+
+    protected function _getAttributes($fieldConfig)
+    {
+        $fieldAttributes = $this->_config->getRaw()->attributes;
+
+        if (!$fieldAttributes) {
+            $fieldAttributes = array();
+        } else {
+            $fieldAttributes = $fieldAttributes->toArray();
+        }
+
+        if (isset($fieldConfig['attributes'])) {
+            return $fieldConfig['attributes'] + $fieldAttributes;
+        }
+
+        return $fieldAttributes;
     }
 
     public function getProperties()

@@ -5,6 +5,11 @@
     {{if (_fieldValue)}}
         checked="checked"
     {{/if}}
+
+    {{each(idx,attrValue) _dataConfig.attributes}}
+        ${idx}="${attrValue}"
+    {{/each}}
+
 />
 <input
     type="hidden"

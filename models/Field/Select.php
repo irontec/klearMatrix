@@ -27,11 +27,6 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         return $value;
     }
 
-    public function getConfig()
-    {
-        return $this->_adapter->getConfig();
-    }
-
 }
 
 //EOF

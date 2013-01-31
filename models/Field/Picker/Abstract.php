@@ -145,7 +145,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         $this->_jqLocale = $currentKlearLanguage->getjQLocale();
 
         if (false === $this->_jqLocale) {
-            Throw new \Exception('Klear locale not available in current picker');
+            throw new \Exception('Klear locale not available in current picker');
         }
 
         $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$this->_jqLocale.".js";

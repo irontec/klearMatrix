@@ -23,11 +23,6 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
     }
 
-    public function getConfig()
-    {
-        return $this->_adapter->getConfig();
-    }
-
     /*
      * Multiselect, recibe un array con modelos de relación
      * Es necesario cruzarlos con los posibles modelos a relacionar

@@ -22,17 +22,21 @@
         {{if (_properties.maxlength)}}
             maxlength="${_properties.maxlength}"
         {{/if}}
-        
+
         {{if (_errors)}}
              {{each(eIndex,error) _errors}}
                  data-${eIndex}="${error}"
              {{/each}}
         {{/if}}
 
+        {{each(idx,attrValue) _dataConfig.attributes}}
+            ${idx}="${attrValue}"
+        {{/each}}
+
         {{if (_multilang)}}
             data-multilang="${_locale}"
         {{/if}}
-        
+
     />
 {{/if}}
 

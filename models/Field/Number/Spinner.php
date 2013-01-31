@@ -5,7 +5,7 @@ class KlearMatrix_Model_Field_Number_Spinner
 
     protected $_max = null;
     protected $_min = null;
-    protected $_step = 5;
+    protected $_step = 1;
 
     protected $_config;
 

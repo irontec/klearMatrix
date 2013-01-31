@@ -17,15 +17,6 @@ class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
             $this->_css = $this->_adapter->getExtraCss();
         }
     }
-
-    public function getConfig()
-    {
-        if ($this->_adapter) {
-            return $this->_adapter->getConfig();
-        }
-
-        return false;
-    }
 }
 
 //EOF

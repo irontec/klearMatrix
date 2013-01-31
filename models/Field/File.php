@@ -57,7 +57,7 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         return $model->varNameToColumn($fields['baseNameName']);
     }
 
-    public function getConfig()
+    protected function _getConfig()
     {
         return $this->_adapter->getConfig();
     }

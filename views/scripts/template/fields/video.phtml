@@ -37,6 +37,12 @@ data-${eIndex}="${error}"
 {{if (_multilang)}}
 data-multilang="${_locale}"
 {{/if}}
+
+{{each(idx,attrValue) _dataConfig.attributes}}
+    ${idx}="${attrValue}"
+{{/each}}
+
+
 />
 {{if (_properties.feed.youtube)}}
 {{each(idx,url) _properties.feed.youtube}}

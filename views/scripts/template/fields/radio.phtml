@@ -67,6 +67,11 @@
                         {{/if}}
                     {{/each}}"
                 {{/if}}
+
+                {{each(idx,attrValue) _dataConfig.attributes}}
+                    ${idx}="${attrValue}"
+                {{/each}}
+
             >
             <label for="${_elemIden}_${idx}">${dataValue.item}</label>
         </li>

@@ -131,11 +131,13 @@ abstract class KlearMatrix_Model_Field_Abstract
 
     protected function _getAttributes($fieldConfig)
     {
-        $fieldAttributes = $this->_config->getRaw()->attributes;
+        $fieldAttributes = array();
 
-        if (!$fieldAttributes) {
-            $fieldAttributes = array();
-        } else {
+        if (is_object($this->_config)) {
+            $fieldAttributes = $this->_config->getRaw()->attributes;
+        }
+
+        if ($fieldAttributes) {
             $fieldAttributes = $fieldAttributes->toArray();
         }
 

@@ -284,4 +284,88 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         return $_field;
     }
+    
+    /**
+     * Método para que multiselect funcione con filtrado nativamente
+     * @param unknown_type $values
+     * @param unknown_type $searchOps
+     */
+    public function getCustomSearchCondition($values, $searchOps)
+    {
+        
+        
+        $dataIds = array();
+        // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
+        foreach($values as $value) {
+            if (in_array($value, $this->_keys)) {
+                $dataIds[] = $value;
+            }
+        }
+        
+        if (sizeof($dataIds) == 0) {
+            return false;
+        }
+
+        
+        
+        $relationMapperName = $this->_relationMapper;
+        $relationMapper = new $relationMapperName;
+        $relationModel = $relationMapper->loadModel(null);
+        
+        $dataMapperName = $this->_relatedMapper;
+        $dataMapper = new $dataMapperName;
+        $tableRelatedName = $dataMapper->getDbTable()->getTableName();
+        
+        
+        // Campo relacionado con la tabla de data, el que tengo que filtrar por los valores que llegan en values        
+        $dataColumnName = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
+        
+        $originalModel = $this->_column->getModel();
+        $originalTableName = $originalModel->getTableName();
+        $originalColumnName = false;
+        
+        
+        
+        // Necesitamos el nombre del modelo (relación con la tbala principal) en la tabla de relación  
+        $parents = $relationModel->getParentList();
+        foreach ($parents as $_fk => $parentData) {
+            // El campo no tiene que ser el "otro" (para n-m de una misma tabla...
+            if ((strtolower($parentData['table_name']) == strtolower($originalTableName)) &&
+                    ($parentData['property'] != $dataColumnName)) 
+            {
+                
+                $originalColumnName =  $parentData['property'];
+                break;
+            }
+        }
+        
+        if (false === $originalColumnName) {
+            return false;
+        }
+        
+        // Campo relacionado con la tabla principal en la tabla de relación
+        $IdColumnName = $relationModel->getColumnForParentTable($originalTableName, $originalColumnName);
+        
+        
+        
+        // Instanciamos mapper de relacion, para conseguir todos los IDs de
+        $mapper = new $relationMapperName;
+        $relationModels = $mapper->fetchList($dataColumnName . ' in ('.implode(',', $dataIds).')');
+        
+        
+        $returnIds = array();
+        $getter = 'get' . ucfirst($IdColumnName);
+        foreach($relationModels as $relModel) {
+            $returnIds[] = $relModel->$getter();
+        }
+        if (sizeof($returnIds) == 0) {
+            return false;
+        }
+        
+        return $originalModel->getPrimaryKeyName() . ' in (' . implode(',', $returnIds). ')';
+        
+        
+    }
+    
+    
 }

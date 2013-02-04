@@ -329,6 +329,7 @@
                 switch(true) {
                     // un select!
                     case  (column.type == 'select'):
+                    case  (column.type == 'multiselect'):
                         var _availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column);
 
                         var sourcedata = [];

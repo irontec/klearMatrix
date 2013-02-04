@@ -248,12 +248,18 @@
 
                 break;
                 case 'multiselect':
+                	
                     if (column.config.values['__className']) {
                         delete column.config.values['__className'];
                     }
                     var ret = {};
                     for (var index in column.config.values) {
                         ret[column.config.values[index].key] = column.config.values[index].item;
+                        
+
+                        if ( (typeof idx != 'undefined') && column.config.values[index].key == idx) {
+                        	return column.config.values[index].item;
+                        }
                     }
                     // Multiselect bugs ahead!!
                     if ( (typeof idx != 'undefined') && column.config.values[idx] ){

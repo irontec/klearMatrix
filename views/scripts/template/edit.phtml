@@ -61,16 +61,16 @@ data-title="${info.text}"
             {{/if}}
 
             {{if (column.decorators)}}
-                {{each(idx, decorator) column.decorators}}
-                    {{each(name, config) decorator}}
-                        {{if (decorator[name]._applyToForms)}}
+                {{each(name, decorator) column.decorators}}
+
+                    {{if (decorator._applyToForms)}}
                         <a class="option command fieldDecorator ${column.type}" data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
-                        {{each(key, val) config}}
+                        {{each(key, val) decorator}}
                             data-${key}="${val}"
                         {{/each}}
                         />
-                        {{/if}}
-                    {{/each}}
+                    {{/if}}
+
                 {{/each}}
             {{/if}}
         </div>

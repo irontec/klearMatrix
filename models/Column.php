@@ -569,6 +569,42 @@ class KlearMatrix_Model_Column
 
     }
 
+    protected function _getDecoratorsConfig()
+    {
+        $fieldConfig = $this->getFieldConfig();
+
+        if ($fieldConfig) {
+
+            $ret = $fieldConfig->getDecorators();
+
+            if (! empty($ret)) {
+                /***
+                 * Add decorator realm properties
+                 */
+
+                foreach ($ret as $key => $decorator) {
+
+                    $fieldDecoratorClassName = 'KlearMatrix_Model_Field_' .
+                                ucfirst($this->_type) . '_Decorator_' .
+                                ucfirst($key);
+
+                    if (class_exists($fieldDecoratorClassName)) {
+
+                        $ret[$key] += array(
+                            '_applyToForms' => $fieldDecoratorClassName::APPLY_TO_FORMS,
+                            '_applyToLists' => $fieldDecoratorClassName::APPLY_TO_LISTS,
+                            '_applyToListFiltering' => $fieldDecoratorClassName::APPLY_TO_LIST_FILTERING
+                        );
+                    }
+                }
+
+                return $ret;
+            }
+        }
+
+        return array();
+    }
+
     public function toArray()
     {
         $ret = array();
@@ -612,28 +648,11 @@ class KlearMatrix_Model_Column
         $fieldConfig = $this->getFieldConfig();
         if ($fieldConfig) {
 
-            $ret['decorators'] = $fieldConfig->getDecorators();
+            $decoratorsConfig = $this->_getDecoratorsConfig();
 
+            if ($decoratorsConfig) {
 
-            if (! empty($ret['decorators'])) {
-	    		/***
-                 * Add decorator realm properties
-                 */
-                foreach ($ret['decorators'] as $key => $decorator) {
-
-                    $fieldDecoratorClassName = 'KlearMatrix_Model_Field_' .
-                                ucfirst($this->_type) . '_Decorator_' .
-                                ucfirst(key($decorator));
-
-                    if (class_exists($fieldDecoratorClassName)) {
-
-                        $ret['decorators'][$key][key($decorator)] += array(
-                            '_applyToForms' => $fieldDecoratorClassName::APPLY_TO_FORMS,
-                            '_applyToLists' => $fieldDecoratorClassName::APPLY_TO_LISTS,
-                            '_applyToListFiltering' => $fieldDecoratorClassName::APPLY_TO_LIST_FILTERING
-                        );
-                    }
-                }
+                $ret['decorators'] = $decoratorsConfig;
             }
 
             $ret['searchable'] = $fieldConfig->isSearchable();

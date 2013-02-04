@@ -3,7 +3,7 @@
  * @author mikel
  *
  */
-class KlearMatrix_FielddecoratorController extends Zend_Controller_Action
+class KlearMatrix_FieldDecoratorController extends Zend_Controller_Action
 {
     public function init()
     {

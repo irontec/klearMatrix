@@ -29,19 +29,19 @@ data-title="${info.text}"
      {{each(idx,column) columns}}
          {{if ( (type != '_option') && (column.searchable) ) }}
             {{if (column.decorators)}}
-                {{each(idx, decorator) column.decorators}}
-                    {{each(name, config) decorator}}
-                        {{if (decorator[name]._applyToListFiltering)}}
-                            <option value="${column.id}" class="option command fieldDecorator ${column.type}"
-                                    data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
-                                    {{each(key, val) config}}
-                                        data-${key}="${val}"
-                                    {{/each}}
-                            >${column.name}</option>
-                        {{else}}
-                            <option value="${column.id}" >${column.name}</option>
-                        {{/if}}
-                    {{/each}}
+                {{each(name, config) column.decorators}}
+
+                    {{if (config._applyToListFiltering)}}
+                        <option value="${column.id}" class="option command fieldDecorator ${column.type}"
+                                data-field="${column.type}" data-fielddecorator="${name}" data-external="true" rel="${id}${randIden}"
+                                {{each(key, val) config}}
+                                    data-${key}="${val}"
+                                {{/each}}
+                        >${column.name}</option>
+                    {{else}}
+                        <option value="${column.id}" >${column.name}</option>
+                    {{/if}}
+
                 {{/each}}
             {{else}}
                 <option value="${column.id}" >${column.name}</option>
@@ -67,6 +67,7 @@ data-title="${info.text}"
 
         <span data-field="${field}" class="field">
             <strong>${$item.getColumnName(columns,field)}</strong>:
+
             {{each(_valIdx,_val) searchValues}}
                 <span class="ui-widget-content ui-corner-all content">
                     <span data-idx="${_valIdx}" class="ui-silk inline ui-silk-cancel"></span>
@@ -135,16 +136,18 @@ ${$item.getTitle(title,false)}
                 {{html $item.getIndexFromColumn(row,$value)}}
 
                 {{if ($value.decorators)}}
+
                     {{each(idx, decorator) $value.decorators}}
-                        {{each(name, config) decorator}}
-                            {{if (decorator[name]._applyToLists)}}
+
+                        {{if (decorator._applyToLists)}}
+
                             <a class="option command fieldDecorator ${$value.type}" data-field="${$value.type}" data-fielddecorator="${name}" data-external="true"
-                            {{each(key, val) config}}
+                            {{each(key, val) decorator}}
                                 data-${key}="${val}"
                             {{/each}}
                             />
-                            {{/if}}
-                        {{/each}}
+                        {{/if}}
+
                     {{/each}}
                 {{/if}}
 

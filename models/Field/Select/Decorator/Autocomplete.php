@@ -29,9 +29,12 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         } else {
 
-            $results = $mapper->fetchList(array($labelField . ' like :term', array(
-                            ':term' => '%' . $searchTerm . '%'
-                       )));
+            $results = $mapper->fetchList(array(
+                $labelField . ' like ?',
+                array(
+                    '%' . $searchTerm . '%'
+                )
+            ));
         }
 
         $options = array();

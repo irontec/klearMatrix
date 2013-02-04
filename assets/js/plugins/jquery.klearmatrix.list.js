@@ -330,6 +330,7 @@
                     // un select!
                     case  (column.type == 'select'):
                     case  (column.type == 'multiselect'):
+
                         var _availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column);
 
                         var sourcedata = [];
@@ -420,6 +421,7 @@
             //Autocompletes
             var autocompleteNodes = {}
             var autocompleteEntities = {}
+
             $("span.autocomplete", panel).each(function () {
 
                 if (! autocompleteEntities[$(this).data("mappername")] ) {
@@ -430,9 +432,13 @@
                     var requestData = {
                             file: $(self).klearModule("option","file"),
                             type : 'command',
-                            post: _post,
-                            command : $(this).data('fielddecorator') + "_command"
+                            post: _post
                     };
+
+                    if (! $(this).data('command')) {
+
+                        requestData['command'] = $(this).data('fielddecorator') + "_command";
+                    }
 
                     autocompleteEntities[$(this).data("mappername")] = requestData;
                     autocompleteNodes[$(this).data("mappername")] = new Array;

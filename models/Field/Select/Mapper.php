@@ -10,6 +10,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
     public function init()
     {
+
         if ($this->_dynamicDataLoading() === true) {
 
             //Nothing to do
@@ -21,10 +22,6 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $where = $this->_getFilterWhere();
 
-        /*echo "<pre>";
-            print_r($where);
-        exit;*/
-
         $order = $this->_config->getProperty('config')->order;
         $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
@@ -35,16 +32,17 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
      */
     protected function _dynamicDataLoading()
     {
-        if (isset($this->_column->getKlearConfig()->getRaw()->decorators)) {
 
+        if (isset($this->_column->getKlearConfig()->getRaw()->decorators)) {
             $selfClassName = get_class($this);
             $classBasePath = substr($selfClassName, 0, strrpos($selfClassName, '_') + 1);
             $decoratorClassBaseName = $classBasePath . 'Decorator_';
 
             $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
-            foreach ($decorators as $decorator) {
 
-                $decoratorClassName = $decoratorClassBaseName . ucfirst($decorator->key());
+            foreach ($decorators as $key => $decorator) {
+
+                $decoratorClassName = $decoratorClassBaseName . ucfirst($key);
 
                 if (class_exists($decoratorClassName)
                     && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')

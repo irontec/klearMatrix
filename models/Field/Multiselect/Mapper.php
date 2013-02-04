@@ -321,7 +321,17 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $dataColumnName = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
         
         $originalModel = $this->_column->getModel();
-        $originalTableName = $originalModel->getTableName();
+        $originalMapper = $originalModel->getMapper();
+
+        // Si el mapper tiene el método getTableName, se consulta (EKT)
+        // Si no, se tira directamente de DbTable? - quizás es mejor que tenga ese método siempre ó excepción?
+        if (method_exists($originalMapper,'getTableName')) {
+            $originalTableName = $originalMapper->getTableName();
+        } else {
+            $originalTableName = $originalMapper->getDbTable()->getTableName();
+        }
+
+
         $originalColumnName = false;
         
         

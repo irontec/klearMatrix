@@ -188,9 +188,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             foreach ($original as $model) {
 
                 if ((!is_object($model))
-                    || (!$model->getMapper() instanceof $this->_relationMapper)) {
+                    || (!$model->getMapper() instanceof $this->_relationMapper)
+                ) {
 
-                        throw new Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
+                    throw new Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
                 }
 
                 if (false === $fkColumn) {
@@ -284,7 +285,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         return $_field;
     }
-    
+
     /**
      * Método para que multiselect funcione con filtrado nativamente
      * @param unknown_type $values
@@ -292,90 +293,78 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
      */
     public function getCustomSearchCondition($values, $searchOps)
     {
-        
-        
+        $searchCondition = '';
+
         $dataIds = array();
         // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
-        foreach($values as $value) {
+        foreach ($values as $value) {
             if (in_array($value, $this->_keys)) {
                 $dataIds[] = $value;
             }
         }
-        
+
         if (sizeof($dataIds) == 0) {
-            return false;
+            return '';
         }
 
-        
-        
         $relationMapperName = $this->_relationMapper;
         $relationMapper = new $relationMapperName;
         $relationModel = $relationMapper->loadModel(null);
-        
+
         $dataMapperName = $this->_relatedMapper;
         $dataMapper = new $dataMapperName;
         $tableRelatedName = $dataMapper->getDbTable()->getTableName();
-        
-        
-        // Campo relacionado con la tabla de data, el que tengo que filtrar por los valores que llegan en values        
+
+        // Campo relacionado con la tabla de data, el que tengo que filtrar por los valores que llegan en values
         $dataColumnName = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
-        
+
         $originalModel = $this->_column->getModel();
         $originalMapper = $originalModel->getMapper();
 
         // Si el mapper tiene el método getTableName, se consulta (EKT)
         // Si no, se tira directamente de DbTable? - quizás es mejor que tenga ese método siempre ó excepción?
-        if (method_exists($originalMapper,'getTableName')) {
+        if (method_exists($originalMapper, 'getTableName')) {
             $originalTableName = $originalMapper->getTableName();
         } else {
             $originalTableName = $originalMapper->getDbTable()->getTableName();
         }
 
+        $originalColumnName = null;
 
-        $originalColumnName = false;
-        
-        
-        
-        // Necesitamos el nombre del modelo (relación con la tbala principal) en la tabla de relación  
+        // Necesitamos el nombre del modelo (relación con la tbala principal) en la tabla de relación
         $parents = $relationModel->getParentList();
-        foreach ($parents as $_fk => $parentData) {
+        foreach ($parents as $parentData) {
             // El campo no tiene que ser el "otro" (para n-m de una misma tabla...
-            if ((strtolower($parentData['table_name']) == strtolower($originalTableName)) &&
-                    ($parentData['property'] != $dataColumnName)) 
-            {
-                
-                $originalColumnName =  $parentData['property'];
+            if (
+                (strtolower($parentData['table_name']) == strtolower($originalTableName))
+                && ($parentData['property'] != $dataColumnName)
+            ) {
+                $originalColumnName = $parentData['property'];
                 break;
             }
         }
-        
-        if (false === $originalColumnName) {
-            return false;
+
+        if (is_null($originalColumnName)) {
+            return '';
         }
-        
+
         // Campo relacionado con la tabla principal en la tabla de relación
-        $IdColumnName = $relationModel->getColumnForParentTable($originalTableName, $originalColumnName);
-        
-        
-        
+        $idColumnName = $relationModel->getColumnForParentTable($originalTableName, $originalColumnName);
+
         // Instanciamos mapper de relacion, para conseguir todos los IDs de
         $mapper = new $relationMapperName;
         $relationModels = $mapper->fetchList($dataColumnName . ' in ('.implode(',', $dataIds).')');
-        
-        
+
         $returnIds = array();
-        $getter = 'get' . ucfirst($IdColumnName);
-        foreach($relationModels as $relModel) {
+        $getter = 'get' . ucfirst($idColumnName);
+        foreach ($relationModels as $relModel) {
             $returnIds[] = $relModel->$getter();
         }
+
         if (sizeof($returnIds) == 0) {
-            return false;
+            return '';
         }
-        
+
         return $originalModel->getPrimaryKeyName() . ' in (' . implode(',', $returnIds). ')';
-        
-        
     }
-    
-    
 }

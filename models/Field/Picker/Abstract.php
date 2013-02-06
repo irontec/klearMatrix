@@ -132,6 +132,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         'zh-TW' => 'yy/mm/dd',
     );
 
+    //ZF style
     protected $_timeFormats = 'HH:mm:ss';
 
     protected $_settings = array();
@@ -182,7 +183,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
             $this->_settings[$key] = $value;
         }
         if (!$value) {
-            var_dump(debug_backtrace());
+            //var_dump(debug_backtrace());
         }
         return $this;
     }
@@ -237,6 +238,24 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         return str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $_dateFormat);
     }
 
+    /**
+     * Se trata de comprobar si en el yaml se ha especificado el formato de fecha, o si se utilizará el de por defecto
+     * Se envía al plugin el parámetro showSecond si se requiere dicho parámetro 
+     */
+    protected function _fixTimeFormats() 
+    {
+        if (isset($this->_settings['timeFormat'])) {
+            $this->_timeFormats = $this->_settings['timeFormat'];
+        } else {
+            $this->_settings['timeFormat'] = strtolower($this->_timeFormats);
+        }
+        if (!preg_match("/\:ss/", $this->_settings['timeFormat'])) {
+            $this->_settings['showSecond'] = false;
+        } else {
+            $this->_settings['showSecond'] = true;
+        }
+    }
+    
     public function getExtraJavascript()
     {
         return $this->_js;

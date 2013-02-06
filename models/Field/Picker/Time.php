@@ -2,9 +2,15 @@
 
 class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker_Abstract
 {
+    
+    protected $_settings = array(
+            );
+    
     protected function _setPlugin()
     {
         $this->_plugin = 'timepicker';
+        $this->_fixTimeFormats();
+        
     }
 
 

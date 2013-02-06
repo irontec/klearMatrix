@@ -5,6 +5,7 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
     protected function _setPlugin()
     {
         $this->_plugin = 'datetimepicker';
+        $this->_fixTimeFormats();
     }
 
     public function filterValue($value)

@@ -2,11 +2,13 @@
 /* Written by Ianaré Sévi */
 (function($) {
 
-    $.timepicker = $.timepicker || {};
-    $.datepicker = $.datepicker || {};
-
-    $.timepicker.regional = $.timepicker.regional || {};
-
+	
+	(function loadTimezone() {
+		if (!$.timepicker) {
+			setTimeout(loadTimezone,20);
+			return;
+		}
+		
     $.timepicker.regional['en-GB'] = { // Default regional settings
         currentText: 'Now',
         closeText: 'Done',
@@ -41,18 +43,6 @@
 		showMonthAfterYear : !1,
 		yearSuffix : ""
 	};
-
-    (function apply() {
-        if (!$.timepicker.setDefaults) {
-            setTimeout(apply,10);
-            return;
-        }
-        $.timepicker.setDefaults($.timepicker.regional['en-GB']);
-        
-        if(typeof $.datepicker.setDefaults == "function") {
-
-	        $.datepicker.setDefaults($.datepicker.regional["en-GB"])            
-        }
 
     })();
 

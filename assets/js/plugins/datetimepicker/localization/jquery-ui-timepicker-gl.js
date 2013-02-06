@@ -1,6 +1,14 @@
 /* Galician translation for the jQuery Timepicker Addon */
 /* Written by David Barral */
 (function($) {
+	
+	
+	(function loadTimezone() {
+		if (!$.timepicker) {
+			setTimeout(loadTimezone,20);
+			return;
+		}
+		
 	$.timepicker.regional['gl'] = {
 		timeOnlyTitle: 'Elixir unha hora',
 		timeText: 'Hora',
@@ -17,4 +25,7 @@
 		ampm: false
 	};
 	$.timepicker.setDefaults($.timepicker.regional['gl']);
+	
+    })();
+
 })(jQuery);

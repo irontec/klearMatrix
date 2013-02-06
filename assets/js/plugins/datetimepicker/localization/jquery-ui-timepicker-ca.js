@@ -1,6 +1,14 @@
 /* Catalan translation for the jQuery Timepicker Addon */
 /* Written by Sergi Faber */
 (function($) {
+
+	
+	(function loadTimezone() {
+		if (!$.timepicker) {
+			setTimeout(loadTimezone,20);
+			return;
+		}
+	
 	$.timepicker.regional['ca'] = {
 		timeOnlyTitle: 'Escollir una hora',
 		timeText: 'Hora',
@@ -17,4 +25,9 @@
 		ampm: false
 	};
 	$.timepicker.setDefaults($.timepicker.regional['ca']);
+	
+	
+	})();
+
+
 })(jQuery);

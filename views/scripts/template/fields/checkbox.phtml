@@ -2,7 +2,7 @@
     type="checkbox"
     rel="${_elemName}"
 
-    {{if (_fieldValue)}}
+    {{if (_fieldValue && _fieldValue!='0')}}
         checked="checked"
     {{/if}}
 

@@ -2,7 +2,7 @@
 
 	$.klear = $.klear || {};
 	$.klear.baseurl = $.klear.baseurl || $("base").attr("href");
-	
+	$.klear.loadedTemplates = $.klear.loadedTemplates || {};	
 	var _kmList = {
 		'jsFile_-1824558962' : '2.5.3-crypto-md5.js',
 		'jsFile_472193935' : 'jquery.autoresize.js',
@@ -39,6 +39,8 @@
       		}
       		for(var tmplIden in response.templates) {
       			 $.template(tmplIden, response.templates[tmplIden]);
+                 $.klear.loadedTemplates[tmplIden] = true;
+
       		}
       		
       	}

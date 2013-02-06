@@ -377,12 +377,13 @@
                 $(self).klearModule("showDialog",
                         '<br />',
                         {
+                			
                             title: $(this).attr("title") || '',
                             template : '<div class="ui-widget">{{html text}}</div>'
                         });
 
                 var $_dialog = $(self).klearModule("getModuleDialog");
-                $_dialog.moduleDialog("setAsLoading");
+                $(self).moduleDialog("setAsLoading");
                 $_dialog.data("dialogName", $(this).data("dialog"));
                 var _postData = {
                     callerScreen : _self.options.data.screen

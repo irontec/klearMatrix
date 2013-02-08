@@ -12,10 +12,10 @@ class KlearMatrix_Model_Info
 
         $this->_fieldInfo = array();
         $this->_fieldInfo['type'] = $this->_config->getProperty('type')? $this->_config->getProperty('type'):'tooltip';
-        $this->_fieldInfo['text'] = $this->_config->getProperty('text');
+        $this->_fieldInfo['text'] = Klear_Model_Gettext::gettextCheck($this->_config->getProperty('text'));
         $this->_fieldInfo['position'] = $this->_config->getProperty('position')? $this->_config->getProperty('position'):'left';
         $this->_fieldInfo['icon'] = $this->_config->getProperty('icon')? $this->_config->getProperty('icon'):'help';
-        $this->_fieldInfo['label'] = $this->_config->getProperty('label')? $this->_config->getProperty('label'):'';
+        $this->_fieldInfo['label'] = Klear_Model_Gettext::gettextCheck($this->_config->getProperty('label')? $this->_config->getProperty('label'):'');
 
     }
 

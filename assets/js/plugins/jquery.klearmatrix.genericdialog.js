@@ -42,6 +42,9 @@
                     var button = {
                         text: label,
                         click : function() {
+                        	
+                        	$(this).moduleDialog("close");
+                        	
                             if (self.options.data.buttons[label].recall) {
 
                                 var extraData = {
@@ -73,8 +76,9 @@
                             	$(self.options.parent).klearModule("reDispatch");
                             }
 
-                            $(this).moduleDialog("close");
+                            
                         }
+                    	
                     }
                     return button;
                 })(label,this));

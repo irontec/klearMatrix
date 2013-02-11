@@ -241,11 +241,9 @@
             });
 
             $('select:not(.multiselect, .notcombo, [data-decorator])', this.element.klearModule("getPanel"))
-                .combobox({
-                    'selected' : function(event, ui) {
-                        $(this).trigger("manualchange")
-                    }
-                });
+            	.selectBoxIt({theme: "jqueryui"}).on("change",function() {
+            		$(this).trigger("manualchange")
+            	});
 
             $('a.option.screen', this.element.klearModule("getPanel"))
                 .off('mouseup.screenOption')

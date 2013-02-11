@@ -374,7 +374,7 @@
 
                     break;
                 }
-
+                searchField.focus();
             }).trigger('manualchange').trigger('select');
 
 

@@ -574,7 +574,7 @@
 
             var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
 
-            $("input, select, textarea", this.options.theForm)
+            $("input, textarea", this.options.theForm)
                 .autoResize({
                     onStartCheck: function() {
                         // El plugin se "come" el evento :S
@@ -674,8 +674,8 @@
                 //y mostrar campos que no debería
                 //Ejemplo: A oculta B y C, pero B muestra C. Primero se comprueba A ocultando B y C.
                 //Después se comprueba B mostrando C, pero no debería, ya que B está oculto de antes.
-                if (manual && $(this).parents("div:eq(0)").is(':hidden')) {
 
+            	if (manual && $(this).parents("div:eq(0)").is(':hidden')) {
                     return;
                 }
 
@@ -688,6 +688,10 @@
                     var curOption = $("option[value="+$(this).val()+"]",$(this));
                 }
 
+				if (!curOption.data("show") || !curOption.data("hide")) {
+					return;
+				}
+				
                 $.each(curOption.data("show").split(","),function(i,val) {
 
                     var fName = $.trim(val);
@@ -733,14 +737,17 @@
             }).trigger("manualchange.visualFilter",true);
 
             $("select, input, textarea", this.options.theForm).on('manualchange', function() {
+            	
+            	var _target = $(this).is("select")? $(this).next("span").children("span:eq(0)"):$(this);
+            						
                 var _val = $(this).val()? $(this).val() : '';
+                
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
-
-                    $(this).addClass("changed ui-state-highlight");
-
+                    _target.addClass("changed ui-state-highlight");
+                    $(this).addClass("changed");
                 } else {
-
-                    $(this).removeClass("changed ui-state-highlight");
+                	_target.removeClass("changed ui-state-highlight");
+                	$(this).removeClass("changed");
                 }
 
                 self.options.theForm.trigger("updateChangedState");

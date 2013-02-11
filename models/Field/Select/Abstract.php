@@ -26,7 +26,7 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
         if ($this->_config->getProperty("null")) {
 
             $this->_keys[] = '__null__';
-            $this->_items[] = $this->_config->getProperty("null");
+            $this->_items[] = Klear_Model_Gettext::gettextCheck($this->_config->getProperty("null"));
         }
 
         return $this;

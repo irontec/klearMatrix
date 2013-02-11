@@ -140,6 +140,7 @@
         _initUIsAutocomplete: function (targetNode, context) {
 
             var _self = context;
+
             targetNode.autocomplete({
                 delay: 0,
                 minLength: 0,
@@ -185,6 +186,10 @@
                     if ( !ui.item )
                         return _self._removeIfInvalid( this );
                 }
+
+            }).on("focusin", function () {
+
+                $(this).select();
             });
 
             targetNode.data("autocomplete")._renderItem = function( ul, item ) {

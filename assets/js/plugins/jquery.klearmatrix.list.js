@@ -421,7 +421,6 @@
                 });
             });
 
-            console.log("lalalKK");
             //Autocompletes
             var autocompleteNodes = {}
             var autocompleteEntities = {}
@@ -476,7 +475,6 @@
                     });
                 });
             });
-            console.log("FINALXX3");
             return this;
         }
         

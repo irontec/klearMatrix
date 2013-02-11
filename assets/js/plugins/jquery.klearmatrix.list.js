@@ -99,7 +99,7 @@
 
                 $("a.option.default",$(this)).trigger("mouseup");
             });
-
+            
             $('a._fieldOption', panel).on('mouseenter',function(e) {
                 if ($(this).data("relatedtab")) {
                     $(this).data("relatedtab").klearModule("highlightOn");
@@ -131,7 +131,7 @@
                     .klearModule("reDispatch");
 
             });
-
+            
             // Orden de columnas
             $("th:not(.notSortable)",panel).on("click",function(e) {
                 e.preventDefault();
@@ -277,14 +277,15 @@
                     .klearModule("reDispatch");
 
             });
+            
 
             $(".klearMatrixFilteringForm",panel).form();
-
+            
             var currentPlugin = false;
             var originalSearchField = $(".klearMatrixFiltering input.term",panel).clone();
 
-            $(".klearMatrixFiltering select[name=searchField]",panel).on('manualchange',function(e) {
-
+            $(".klearMatrixFiltering select[name=searchField]",panel).on('manualchange.searchValues',function(e, manual) {
+            	
                 var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns, $(this).val());
 
                 var availableValues = {};
@@ -374,10 +375,12 @@
 
                     break;
                 }
-                searchField.focus();
-            }).trigger('manualchange').trigger('select');
-
-
+               
+                if (manual !== true) {
+                	searchField.focus();
+                }
+                
+            }).trigger('manualchange.searchValues', true);
 
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");
@@ -418,6 +421,7 @@
                 });
             });
 
+            console.log("lalalKK");
             //Autocompletes
             var autocompleteNodes = {}
             var autocompleteEntities = {}
@@ -472,9 +476,11 @@
                     });
                 });
             });
-
+            console.log("FINALXX3");
             return this;
         }
+        
+        
     });
 
     $.widget.bridge("klearMatrixList", $.klearmatrix.list);

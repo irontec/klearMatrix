@@ -13,15 +13,18 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
     public function run()
     {
+
+
         $mainRouter = $this->_request->getParam("mainRouter");
         $commandConfiguration = $mainRouter->getCurrentCommand()->getConfig()->getRaw()->autocomplete;
 
         $mapperName = $commandConfiguration->mapperName;
         $mapper = new $mapperName;
+        $model = $mapper->loadModel(null);
 
         $searchTerm = $this->_request->getParam("term");
         $labelField = $commandConfiguration->label;
-        $pkField = $commandConfiguration->id;
+        $pkField = $model->getPrimaryKeyName();
 
         if ( $this->_request->getParam("reverse") ) {
 

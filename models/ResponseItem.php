@@ -123,6 +123,11 @@ class KlearMatrix_Model_ResponseItem
         return $this;
     }
 
+    public function getConfig()
+    {
+        return $this->_config;
+    }
+
     /**
      * Este método permite añadir otras configuraciones al objeto
      */

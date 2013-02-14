@@ -262,32 +262,102 @@
 
                 var _screen = _menuLink.data("screen");
 
-                var _iden = "#tabs-" + _file + '_' + _screen;
+                var _iden = "#tabs-" + _file;
+                if (!_menuLink.data("externalremovescreen")) {
+                	_iden += '_' + _screen;                	
+                }
+                
                 var _parentHolder = _self._resolveParentHolder(this);
 
-                if ($(this).data("multiinstance")) {
-                    _iden += '_' + Math.round(Math.random(1000, 9999)*100000);
-                } else {
-                    if (_menuLink.data("externalid")) {
-                        _iden += '_' + _menuLink.data("externalid");
-                    } else {
-                        _iden += '_' + _parentHolder.data("id");
+                
+                if (!_menuLink.data("externalnoiden")) {
+                	
+                	if (_menuLink.data("multiinstance")) {
+                		_iden += '_' + Math.round(Math.random(1000, 9999)*100000);
+                	} else {
+                		if (_menuLink.data("externalid")) {
+                			_iden += '_' + _menuLink.data("externalid");
+                		} else {
+                			_iden += '_' + _parentHolder.data("id");
+                		}
+                	}
+                }
+
+                var _curPk = _parentHolder.data("id");
+                
+                
+                if (_menuLink.data("externalname")) {
+                	var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
+            		if (_field.length >0) {
+            			_curPk = _field.val();
+            		}
+            	}
+            	if (_menuLink.data("externalid")) {
+            		_curPk = _menuLink.data("externalid");
+            	}
+
+            	
+                // Seteamos el valor para dispatchOptions
+                var _dispatchOptions = {
+                    post : {
+                        callerScreen : _self.options.data.screen
                     }
+                };
+                
+                if (!_menuLink.data("externalremovescreen")) {
+                	_dispatchOptions['screen'] = _menuLink.data("screen");                	
                 }
-
-                if ($(_iden).length > 0) {
-                    _container.tabs('select', _iden);
-                    return;
+                
+                
+                if (!_menuLink.data("externalnoiden")) {
+                	_dispatchOptions ['pk'] = _curPk;
                 }
+                               
+                var _searchOps = false;
+                
+                // de momento "damos por hecho" que serán campos select, y llevan implícito un 'eq';
+            	if (_menuLink.data("externalsearchby")) {
+            		_searchOps = {searchFields : {}, searchOps : {}};
+					var _searchField = _menuLink.data("externalsearchby");
+            		_searchOps['searchFields'][_searchField] = [_curPk];
+            		_searchOps['searchOps'][_searchField] = ['eq'];
+                }
+            	
+            	$.extend(_dispatchOptions['post'], _searchOps);
 
-                var _newIndex = self.klearModule("option", "tabIndex")+1;
-
-
+            	
+            	
+            	if (_menuLink.data("externaltitle")) {
+            		var tabTitle = _menuLink.data("externaltitle");
+            	} else {
+            		var tabTitle = _menuLink.tooltip("close").attr("title");	
+            	}
+            	
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
 
-                var tabTitle = _menuLink.tooltip("close").attr("title");
+            	
+                // Si el tab ya está abierto
+                if ($(_iden).length > 0) {
+                    
+                	$selTabLi = _container
+                    				.tabs('select', _iden)
+                    				.find(".ui-tabs-selected:eq(0)");
+                    
+                    if (_searchOps !== false) {
+                    	$selTabLi
+                    		.klearModule("option", "dispatchOptions", _dispatchOptions)
+                    		.klearModule("reDispatch");
+                    }
+                    
+                    $selTabLi.klearModule("updateTitle", tabTitle);
+                    
+                    return;
+                }
+
+                var _newIndex = self.klearModule("option", "tabIndex")+1;
+                
 
                 _container.one( "tabspostadd", function(event, ui) {
 
@@ -296,34 +366,12 @@
                     // Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
                     $tabLi.klearModule("option", "menuLink", _menuLink);
                     $tabLi.klearModule("option", "parentScreen", self);
-                    $tabLi.klearModule("option", "title", tabTitle);
+                    $tabLi.klearModule("updateTitle", tabTitle);
 
                     // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
                     $tabLi.klearModule("option", "file", _file);
 
-                    var _curPk = _parentHolder.data("id");
-
-                    if (_menuLink.data("externalname")) {
-                        var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
-                        if (_field.length >0) {
-                            _curPk = _field.val();
-                        }
-
-                    }
-
-                    if (_menuLink.data("externalid")) {
-                        _curPk = _menuLink.data("externalid");
-                    }
-
-                    // Seteamos el valor para dispatchOptions
-                    var _dispatchOptions = {
-                        screen : _menuLink.data("screen"),
-                        pk : _curPk,
-                        post : {
-                            callerScreen : _self.options.data.screen
-                        }
-                    };
-
+                   
                     // Si la pantalla llamante tiene condición (parentId -- en data --
                     // enviarlos a la nueva pantalla
                     if (_self.options.data.parentId) {

@@ -537,6 +537,17 @@
                     idx: idx
             });
         },
+        getExternalData : function(externalData) {
+        	var _allowed = ['file','noiden','searchby','removescreen','title'];
+        	var _prefix = 'external';
+        	var _ret = '';
+        	for(var i=0;i<_allowed.length;i++) {
+        		if (externalData[_prefix+_allowed[i]]) {
+        			_ret += ' data-' + _prefix+_allowed[i]+ '=' +externalData[_prefix+_allowed[i]]+''; 
+        		}
+        	}
+        	return _ret;
+        },
 
         mustShowOptionColum : function(option, value) {
 

@@ -166,8 +166,8 @@ ${$item.getTitle(title,false)}
                             data-${type}="${$item.getIndex($value,type)}"
                             title="${$item.getTitle(title,idx,true)}"
                             {{if ($value.externalOption === true)}}
-                                data-externalfile='${file}'
                                 data-externalid='${row[id]}'
+								${$item.getExternalData($value)}
                             {{/if}}
                             >
                             <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
@@ -179,7 +179,12 @@ ${$item.getTitle(title,false)}
         {{else}}
             <td class="ui-widget-content options">
             {{each fieldOptions}}
-                <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}">
+                <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"
+                 {{if ($value.externalOption === true)}}
+						data-externalid='${$item.getIndex(row,pk)}'
+						${$item.getExternalData($value)}
+				 {{/if}}
+                >
                     <span class="ui-silk inline ${icon}"></span>
                     {{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}
                 </a>

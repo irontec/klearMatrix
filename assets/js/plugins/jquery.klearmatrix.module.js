@@ -503,7 +503,7 @@
             });
 
 
-            $("[data-title]:not(.fieldInfo-box)", this.element.klearModule("getPanel")).tooltip();
+            $("a[title]:not(.fieldInfo-box),span[title]", this.element.klearModule("getPanel")).tooltip();
 
             $(".fieldInfo-box", this.element.klearModule("getPanel")).toggle(function(){
 

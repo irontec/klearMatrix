@@ -765,25 +765,59 @@
                 }
             });
 
-//            $('input, textarea', this.options.theForm).on('focusout', function() {
-//                var _val = $(this).val()? $(this).val() : '';
-//                self._autocompleteMultilangFields(this, _val);
-//            });
+            
+            var _copied = $('<span title="' + $.translate("Campo auto-copiado",[__namespace__]) + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>'); 
+           
+            $("dl.multiLanguage dd")
+            	.on('isCopied',function() {
+            		if ($(this).hasClass("copied")) {
+            			return;
+            		}
+            		if ($("[data-multilang]",$(this)).val() == '') {
+            			return;
+            		}
+            		
+            		
+            		$(this)
+    					.addClass("copied")
+    					.append(_copied.clone());
+            	})
+            	.on('isNotCopied',function() {
+            		$(this)
+            			.removeClass("copied")
+            			.find("span.copied").remove();
+            	});
+            
+            $('dl.multiLanguage input, textarea', this.options.theForm).on('keyup', function() {
+            	
+            	var _dl = $(this).parents("dl.multiLanguage:eq(0)");
+            	
+            	if (!$(this).parent("dd").hasClass("selected")) {
+            		var _selValue = _dl.find("dd.selected [data-multilang]").val();
+            		
+            		if ($(this).val() != _selValue) {
+            			$(this).parent("dd").trigger("isNotCopied");
+            		} else {
+            			$(this).parent("dd").trigger("isCopied");
+            		}
+            		return;
+            	}
+            	
+            	
+            	var _val = $(this).val();
+            	
+            	_dl.find("dd:not(.selected) [data-multilang]").each(function() {
+            		if ($(this).val() == '' || ($(this).parent("dd").hasClass("copied"))) {
+            			$(this).val(_val).trigger("change").trigger("manualChange");
+            			$(this).parent("dd").trigger("isCopied");
+            		}
+            	});
+                
+            }).trigger("keyup");
 
             return this;
         }
 
-//        _autocompleteMultilangFields: function(field, value) {
-//            var multilangFields = $(field).siblings('[data-multilang]');
-//            if (multilangFields.length > 0) {
-//                $.each(multilangFields, function (idx, field) {
-//                    if ($(field).val() == '') {
-//                        $(field).val(value);
-//                        $(field).trigger('manualchange');
-//                    }
-//                });
-//            }
-//        }
     });
 
     $.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);

@@ -96,6 +96,42 @@ table.kMatrix .mlTag {
 }
 
 
+dl.multiLanguage {
+	order: 1px solid red;
+    clear: both;
+    display: inline-block;
+    width: 100%;
+}
+
+dl.multiLanguage dt {
+	margin:0.5em 0.25em;
+	width:12%;
+	clear: both;
+	float:left;
+	display:block;
+	text-align: right;
+}
+
+dl.multiLanguage dd {
+	margin:.25em;
+	width:80%;
+	float:left;
+	display:block;
+}
+
+dl.multiLanguage dt.selected label {
+	font-size:.9em;
+	opacity: 0.8;
+	
+}
+dl.multiLanguage dd.copied input, dl.multiLanguage dd.copied textarea {
+	color: #ccc;
+} 
+
+dl.multiLanguage dd.copied span.copied {
+	margin-left: .25em;
+}
+
 .generalOptionsToolbar {
     padding:1em;
     margin:1em 0 1em 0;
@@ -141,12 +177,7 @@ table.kMatrix .mlTag {
 .klearMatrix_form label.lang {
     display:block;
     font-size:0.7em;
-    float:left;
-    margin:4px 5px 0 0;
     opacity:0.4;
-    width:4em;
-    clear:both;
-    text-align:right;
 }
 
 .klearMatrix_form textarea {

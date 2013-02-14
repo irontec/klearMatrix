@@ -106,7 +106,10 @@
             };
 
             if (column.multilang) {
-                var mlData = [];
+                
+                var _mlList = $("<dl />");
+                _mlList.addClass("multiLanguage");
+ 
                 for (var i in this.data.langs) {
 
                     var lang = this.data.langs[i];
@@ -125,15 +128,26 @@
                     };
 
                     var _node = $("<div />");
+                    
                     $.tmpl(this.getTemplateNameForType(column.type), _curFieldData, _templateHelpers).appendTo(_node);
 
-                    mlData.push({
+                    var _data = {
                         _iden: _curFieldData._elemIden,
                         _lang : lang,
-                        _field : _node.html()
-                    });
+                        _field : _node.html(),
+                        _class : (lang == $.klear.language)? 'selected':''
+                    };
+
+                    
+                    if (lang == $.klear.language) {
+                    	$.tmpl('klearmatrixMultiLangField', _data).prependTo(_mlList);
+                    } else {
+                    	$.tmpl('klearmatrixMultiLangField', _data).appendTo(_mlList);
+                    }
                 }
-                $.tmpl('klearmatrixMultiLangField', mlData).appendTo(node);
+                
+                
+                _mlList.appendTo(node);
 
             } else {
 
@@ -419,7 +433,7 @@
 
                         if (column.multilang) {
 
-                            return this.getMultiLangValue(values[column.id],this.data.langs,this.data.defaultLang);
+                            return this.getMultiLangValue(values[column.id],this.data.langs,$.klear.language);
                         }
 
                         if (column.dirty) {

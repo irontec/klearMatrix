@@ -11,8 +11,8 @@
 {{if (subsection.file)}}
             <a class="subsection" href="?" id="target-${subsection.file}" >
 {{/if}}
-{{if (subsection.class)}}
-            <span class="ui-silk inline ${subsection.class}"></span>
+{{if (subsection['class'])}}
+            <span class="ui-silk inline ${subsection['class']}"></span>
 {{/if}}
             ${subsection.name}
 {{if (subsection.file)}}

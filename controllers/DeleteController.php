@@ -54,7 +54,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $obj = $mapper->find($pk);
         if (!$obj) {
-            throw new Klear_Exception_Default('Record not found. Could not delete.');
+            throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
         }
 
         $data->setResults($obj);
@@ -90,7 +90,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
                     'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
                     Zend_Log::ERR
                 );
-                throw new Klear_Exception_Default('Record not found. Could not delete.');
+                throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
             }
 
             if (!$obj->delete()) {
@@ -101,7 +101,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
                 'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
                 Zend_Log::ERR
             );
-            throw new Klear_Exception_Default('Could not delete record: ' . $e->getMessage());
+            throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
         }
 
         $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.$pk.')');
@@ -109,7 +109,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $data = array(
             'error' => false,
             'pk' => $pk,
-            'message' => 'Registro eliminado correctamente'
+            'message' => $this->view->translate('Registro eliminado correctamente')
         );
 
 

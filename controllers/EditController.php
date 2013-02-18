@@ -50,7 +50,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         if (!$model) {
             $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
-            Throw new Zend_Exception('El registro no se encuentra almacenado.');
+            Throw new Zend_Exception($this->view->translate('El registro no se encuentra almacenado.'));
         }
 
         $columns = $this->_item->getVisibleColumns();
@@ -148,7 +148,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $model->save(false, $hasDependant);
             }
         } catch (\Zend_Exception $exception) {
-            throw new \Zend_Exception('Error salvando el registro');
+            throw new \Zend_Exception($this->view->translate('Error salvando el registro'));
         }
     }
 
@@ -165,7 +165,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         if (!$model) {
 
             $this->_helper->log('PK NOT FOUND ' . $mapperName . ' > PK('.$pk.')', Zend_Log::ERR);
-            throw new Klear_Exception_Default('Element not found. Cannot edit.');
+            throw new Klear_Exception_Default($this->view->translate('Element not found. Cannot edit.'));
         }
 
         $this->_addConditionalBlackList($model);

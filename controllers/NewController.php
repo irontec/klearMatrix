@@ -128,7 +128,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
-                'message' => 'Registro salvado correctamente.'
+                'message' => $this->view->translate('Registro salvado correctamente.')
             );
         } catch (\Zend_Exception $exception) {
 

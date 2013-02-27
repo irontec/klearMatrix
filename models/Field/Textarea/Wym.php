@@ -25,10 +25,12 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
 
         $this->_js = array(
                 "/js/plugins/wym/" . $this->_scriptName,
-                "/js/plugins/jquery.klearmatrix.wym.js"
+                "/js/plugins/wym/plugins/hovertools/jquery.wymeditor.hovertools.js",
+                "/js/plugins/wym/plugins/resizable/jquery.wymeditor.resizable.js",
+                "/js/plugins/wym/plugins/fullscreen/jquery.wymeditor.fullscreen.js",
+                "/js/plugins/jquery.klearmatrix.wym.js",
+                "/js/plugins/wym/plugins/kleargallery/jquery.wymeditor.kleargallery.js",
         );
-
-        $this->_configureDefaults();
     }
 
     protected function _loadTemplateClass()
@@ -54,6 +56,11 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
 
             if (! in_array($key, array('control', 'template'))) {
 
+                if ($val instanceof Zend_Config) {
+
+                    $val = $val->toArray();
+                }
+
                 $this->_settings[$key] = $val;
             }
         }
@@ -61,12 +68,16 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
 
     protected function _configureDefaults()
     {
+        $view = new Zend_View;
+        $baseUrl = $view->serverUrl() . $view->baseUrl();
+
         $this->_settings = array(
             'lang' => 'es',
-            'basePath' => '../klearMatrix/js/plugins/wym/',
-            'skinPath' => '..//klearMatrix/js/plugins/wym/skins/default/',
-            'wymPath' => '../klearMatrix/js/plugins/wym/' . $this->_scriptName,
-            'logoHtml' => ''
+            'basePath' => $baseUrl . '/klearMatrix/js/plugins/wym/',
+            'jQueryPath' => $baseUrl . '/klear/js/libs/jquery.min.js',
+            'skinPath' => $baseUrl. '/klearMatrix/js/plugins/wym/skins/default/',
+            'wymPath' => $baseUrl . '/klearMatrix/js/plugins/wym/' . $this->_scriptName,
+            'logoHtml' => '',
         );
     }
 

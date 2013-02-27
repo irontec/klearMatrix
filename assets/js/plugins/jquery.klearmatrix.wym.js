@@ -1,6 +1,12 @@
 (function load($, undefined) {
 
-    if (!$.klear.checkDeps(['$.fn.wymeditor'], load)) {
+    if (!$.klear.checkDeps([
+                '$.fn.wymeditor',
+                'WYMeditor.editor.prototype.resizable',
+                'WYMeditor.editor.prototype.hovertools',
+                'WYMeditor.editor.prototype.fullscreen'],
+                load
+    )) {
 
         return;
     }
@@ -10,16 +16,66 @@
 
         _init:function() {
 
+            console.log("options", this.options);
+
             var availableSettings = {
                 "_contentTab": true,
                 "lang" : true,
                 "basePath" : true,
+                "jQueryPath" : true,
                 "skinPath" : true,
                 "wymPath" : true,
                 "logoHtml" : true,
+                "stylesheet": true,
+                "plugins" : true,
             };
 
-            var editorOptions = {};
+            var editorOptions = {
+
+                toolsItems: [
+                    {'name': 'Bold', 'title': 'Strong', 'css': 'wym_tools_strong'},
+                    {'name': 'Italic', 'title': 'Emphasis', 'css': 'wym_tools_emphasis'},
+                    {'name': 'Superscript', 'title': 'Superscript', 'css': 'wym_tools_superscript'},
+                    {'name': 'Subscript', 'title': 'Subscript', 'css': 'wym_tools_subscript'},
+                    {'name': 'InsertOrderedList', 'title': 'Ordered_List', 'css': 'wym_tools_ordered_list'},
+                    {'name': 'InsertUnorderedList', 'title': 'Unordered_List', 'css': 'wym_tools_unordered_list'},
+                    {'name': 'Indent', 'title': 'Indent', 'css': 'wym_tools_indent'},
+                    {'name': 'Outdent', 'title': 'Outdent', 'css': 'wym_tools_outdent'},
+                    {'name': 'Undo', 'title': 'Undo', 'css': 'wym_tools_undo'},
+                    {'name': 'Redo', 'title': 'Redo', 'css': 'wym_tools_redo'},
+                    {'name': 'CreateLink', 'title': 'Link', 'css': 'wym_tools_link'},
+                    {'name': 'Unlink', 'title': 'Unlink', 'css': 'wym_tools_unlink'},
+                    {'name': 'InsertTable', 'title': 'Table', 'css': 'wym_tools_table'},
+                    {'name': 'Paste', 'title': 'Paste_From_Word', 'css': 'wym_tools_paste'},
+                    {'name': 'ToggleHtml', 'title': 'HTML', 'css': 'wym_tools_html'},
+                    {'name': 'Preview', 'title': 'Preview', 'css': 'wym_tools_preview'}
+                ],
+                postInit: function(wym) {
+
+                    //postInit is executed after WYMeditor initialization
+                    //'wym' is the current WYMeditor instance
+
+                    //we generally activate plugins after WYMeditor initialization
+
+                    //activate 'hovertools' plugin
+                    //which gives advanced feedback to the user:
+
+                    var pluginList = _self.options.plugins.split(",");
+
+                    for (var idx in pluginList) {
+
+                        if ("kleargallery" == pluginList[idx]) {
+
+                            wym[pluginList[idx]]($(_self.options._contentTab));
+
+                        } else {
+
+                            wym[pluginList[idx]]();
+                        }
+
+                    }
+                }
+            };
 
             for (idx in this.options) {
 
@@ -32,9 +88,19 @@
             var $el = $(this.element);
             var _self = this;
 
+            //Reset label padding
+            var fldLabel = $el.parent().prev();
+            fldLabel.css("width", "auto");
+
+            //Set width as long as posible
+            var maxAvailableWidth = fldLabel.parent().width() - fldLabel.width() - 20;
+
+            $el.parent().css("width", maxAvailableWidth);
+
             $el.wymeditor(editorOptions);
 
             var contentTextarea = $el.prev();
+
             var contentIframe = $("<iframe id='iframeDialog"+ $el.attr("id") +"' data-name='dialog"+ $el.attr("id") +"'></iframe>");
 
             contentIframe.hide().on('showme', function(e, callback, callbackContext) {
@@ -45,6 +111,8 @@
                     '<br />',
                     {
                         title: 'Dialog',
+                        width: 450,
+                        height: 350,
                         template : "",
                         buttons : [
                             {
@@ -69,16 +137,26 @@
 
                 var $moduleDialog = $(_self.options._contentTab).klearModule("option","moduleDialog");
 
-                $moduleDialog.parent().css({"width": "700px", "height" : "500px"});
-                $moduleDialog.css({"width": "650px", "height" : "400px"});
-                contentIframe.css({"width": "650px", "height" : "400px"});
+                contentIframe.css(
+                    {
+                        "width": $moduleDialog.width(),
+                        "height" : $moduleDialog.height(),
+                        'overflow' : 'hidden'
+                    }
+                );
 
                 $moduleDialog.html("").append($(this).clone().show().attr("name", $(this).data("name")));
 
                 var botonera = $moduleDialog.next();
                 callback.call(callbackContext);
+            });
 
-            }).appendTo("body");
+            if($("#iframeDialog"+ $el.attr("id")).length == 0) {
+
+                //TODO no matchea, pendiente de solucionar
+                contentIframe.appendTo("body");
+                return;
+            }
         },
 
         _closeDialog : function (contentTab) {

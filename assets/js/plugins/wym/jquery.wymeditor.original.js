@@ -308,7 +308,6 @@ jQuery.extend(WYMeditor, {
 
     */
     editor : function (elem, options) {
-
         // Store the instance in the INSTANCES array and store the index
         this._index = WYMeditor.INSTANCES.push(this) - 1;
         // The element replaced by the editor
@@ -365,7 +364,7 @@ jQuery.fn.wymeditor = function (options) {
 
         html:       "",
         basePath:   false,
-        skinPath:   false,
+        skinPath:    false,
         wymPath:    false,
         iframeBasePath: false,
         jQueryPath: false,
@@ -378,7 +377,7 @@ jQuery.fn.wymeditor = function (options) {
         direction:  "ltr",
         customCommands: [],
         boxHtml: String() +
-            "<div class='wym_box ui-state-default'>" +
+            "<div class='wym_box'>" +
                 "<div class='wym_area_top'>" +
                     WYMeditor.TOOLS +
                 "</div>" +
@@ -452,8 +451,8 @@ jQuery.fn.wymeditor = function (options) {
         ],
 
         containersHtml: String() +
-            '<div class="wym_containers wym_section ui-corner-all">' +
-                '<h2 class="ui-widget-header">{Containers}</h2>' +
+            '<div class="wym_containers wym_section">' +
+                '<h2>{Containers}</h2>' +
                 '<ul>' +
                     WYMeditor.CONTAINERS_ITEMS +
                 '</ul>' +
@@ -481,7 +480,7 @@ jQuery.fn.wymeditor = function (options) {
         ],
 
         classesHtml: String() +
-            '<div class="wym_classes wym_section ui-corner-all">' +
+            '<div class="wym_classes wym_section">' +
                 '<h2>{Classes}</h2>' +
                 '<ul>' +
                     WYMeditor.CLASSES_ITEMS +
@@ -572,32 +571,32 @@ jQuery.fn.wymeditor = function (options) {
             '<body class="wym_dialog wym_dialog_link" ' +
                     ' onload="WYMeditor.INIT_DIALOG(' + WYMeditor.INDEX + ')">' +
                 '<form>' +
-
+                    '<fieldset>' +
                         '<input type="hidden" class="wym_dialog_type" ' +
                             'value="' + WYMeditor.DIALOG_LINK + '" />' +
                         '<legend>{Link}</legend>' +
                         '<div class="row">' +
                             '<label>{URL}</label>' +
                             '<input type="text" class="wym_href" value="" ' +
-                                'size="25" autofocus="autofocus" />' +
+                                'size="40" autofocus="autofocus" />' +
                         '</div>' +
                         '<div class="row">' +
                             '<label>{Title}</label>' +
                             '<input type="text" class="wym_title" value="" ' +
-                                'size="25" />' +
+                                'size="40" />' +
                         '</div>' +
                         '<div class="row">' +
                             '<label>{Relationship}</label>' +
                             '<input type="text" class="wym_rel" value="" ' +
-                                'size="25" />' +
+                                'size="40" />' +
                         '</div>' +
-                        '<div class="row row-indent" style="display:none;">' +
+                        '<div class="row row-indent">' +
                             '<input class="wym_submit" type="submit" ' +
                                 'value="{Submit}" />' +
                             '<input class="wym_cancel" type="button" ' +
                                 'value="{Cancel}" />' +
                         '</div>' +
-
+                    '</fieldset>' +
                 '</form>' +
             '</body>',
 
@@ -622,7 +621,7 @@ jQuery.fn.wymeditor = function (options) {
                             '<label>{Title}</label>' +
                             '<input type="text" class="wym_title" value="" size="40" />' +
                         '</div>' +
-                        '<div class="row row-indent" style="display:none;">' +
+                        '<div class="row row-indent">' +
                             '<input class="wym_submit" type="submit" ' +
                                 'value="{Submit}" />' +
                             '<input class="wym_cancel" type="button" ' +
@@ -658,7 +657,7 @@ jQuery.fn.wymeditor = function (options) {
                             '<label>{Number_Of_Cols}</label>' +
                             '<input type="text" class="wym_cols" value="2" size="3" />' +
                         '</div>' +
-                        '<div class="row row-indent" style="display:none;">' +
+                        '<div class="row row-indent">' +
                             '<input class="wym_submit" type="submit" ' +
                                 'value="{Submit}" />' +
                             '<input class="wym_cancel" type="button" ' +
@@ -680,7 +679,7 @@ jQuery.fn.wymeditor = function (options) {
                             '<textarea class="wym_text" rows="10" cols="50" ' +
                                 'autofocus="autofocus"></textarea>' +
                         '</div>' +
-                        '<div class="row" style="display:none;">' +
+                        '<div class="row">' +
                             '<input class="wym_submit" type="submit" ' +
                                 'value="{Submit}" />' +
                             '<input class="wym_cancel" type="button" ' +
@@ -712,7 +711,6 @@ jQuery.fn.wymeditor = function (options) {
         // Assigning to _editor because the return value from new isn't
         // actually used, but we need to use new to properly change the
         // prototype
-
         var _editor = new WYMeditor.editor(jQuery(this), options);
     });
 };
@@ -823,16 +821,8 @@ WYMeditor.computeJqueryPath = function () {
 
 WYMeditor.INIT_DIALOG = function (index) {
 
-   var wym = window.opener.WYMeditor.INSTANCES[index];
-
-    console.log("selected", wym.selected());
-    if (! wym.selected()) {
-
-        console.log("contentWindow", wym._iframe.contentWindow.focus());
-        wym._iframe.contentWindow.focus();
-    }
-
-    var doc = window.document,
+    var wym = window.opener.WYMeditor.INSTANCES[index],
+        doc = window.document,
         selected = wym.selected(),
         dialogType = jQuery(wym._options.dialogTypeSelector).val(),
         sStamp = wym.uniqueStamp(),
@@ -843,7 +833,7 @@ WYMeditor.INIT_DIALOG = function (index) {
     if (dialogType === WYMeditor.DIALOG_LINK) {
         // ensure that we select the link to populate the fields
         if (selected && selected.tagName &&
-            selected.tagName.toLowerCase !== WYMeditor.A) {
+                selected.tagName.toLowerCase !== WYMeditor.A) {
             selected = jQuery(selected).parentsOrSelf(WYMeditor.A);
         }
 
@@ -865,7 +855,6 @@ WYMeditor.INIT_DIALOG = function (index) {
     wym.addCssRules(doc, aCss);
 
     // auto populate fields if selected container (e.g. A)
-
     if (selected) {
         jQuery(wym._options.hrefSelector).val(jQuery(selected).attr(WYMeditor.HREF));
         jQuery(wym._options.srcSelector).val(jQuery(selected).attr(WYMeditor.SRC));
@@ -895,27 +884,18 @@ WYMeditor.INIT_DIALOG = function (index) {
                 link = jQuery("a[href=" + sStamp + "]", wym._doc.body);
             }
 
-            if (link.html() == sStamp) {
-
-                //Chrome bugfix -> link with no text selection
-                $(link).remove();
-
-            } else {
-
-                link.attr(WYMeditor.HREF, sUrl);
-                link.attr(WYMeditor.TITLE, jQuery(wym._options.titleSelector).val());
-                link.attr(WYMeditor.REL, jQuery(wym._options.relSelector).val());
-            }
+            link.attr(WYMeditor.HREF, sUrl);
+            link.attr(WYMeditor.TITLE, jQuery(wym._options.titleSelector).val());
+            link.attr(WYMeditor.REL, jQuery(wym._options.relSelector).val());
         }
-        return false;
-        //window.close();
+        window.close();
     });
 
     jQuery(wym._options.dialogImageSelector + " " +
             wym._options.submitSelector).submit(function () {
+
         var sUrl = jQuery(wym._options.srcSelector).val(),
             $img;
-
         if (sUrl.length > 0) {
 
             wym._exec(WYMeditor.INSERT_IMAGE, sStamp);
@@ -925,7 +905,6 @@ WYMeditor.INIT_DIALOG = function (index) {
             $img.attr(WYMeditor.TITLE, jQuery(wym._options.titleSelector).val());
             $img.attr(WYMeditor.ALT, jQuery(wym._options.altSelector).val());
         }
-
         window.close();
     });
 
@@ -1872,7 +1851,7 @@ rangy.createModule("DomUtil", function(api, module) {
     var dom = api.dom;
     var DomPosition = dom.DomPosition;
     var DOMException = api.DOMException;
-
+    
     /*----------------------------------------------------------------------------------------------------------------*/
 
     // Utility functions
@@ -4647,7 +4626,7 @@ WYMeditor.editor.prototype.init = function () {
         WymClass = new WYMeditor.WymClassMozilla(this);
     } else if (jQuery.browser.opera) {
         WymClass = new WYMeditor.WymClassOpera(this);
-    } else if (jQuery.browser.safari || jQuery.browser.webkit) {
+    } else if (jQuery.browser.safari) {
         WymClass = new WYMeditor.WymClassSafari(this);
     }
 
@@ -4730,7 +4709,6 @@ WYMeditor.editor.prototype.init = function () {
             this._options.stringDelimiterLeft + oTool.title + this._options.stringDelimiterRight
         );
         sTool = h.replaceAll(sTool, WYMeditor.TOOL_CLASS, oTool.css);
-
         sTools += sTool;
     }
 
@@ -4752,8 +4730,6 @@ WYMeditor.editor.prototype.init = function () {
     }
 
     boxHtml = h.replaceAll(boxHtml, WYMeditor.CLASSES_ITEMS, sClasses);
-
-
 
     // Construct the containers list
     aContainers = eval(this._options.containersItems);
@@ -4809,7 +4785,6 @@ WYMeditor.editor.prototype.bindEvents = function () {
 
     // Handle click events on tools buttons
     jQuery(this._box).find(this._options.toolSelector).click(function () {
-
         wym._iframe.contentWindow.focus(); //See #154
         wym.exec(jQuery(this).attr(WYMeditor.NAME));
         return false;
@@ -4915,20 +4890,17 @@ WYMeditor.editor.prototype.xhtml = function () {
     execCommand in some cases).
 */
 WYMeditor.editor.prototype.exec = function (cmd) {
-
     var container, custom_run, _this = this;
     switch (cmd) {
 
     case WYMeditor.CREATE_LINK:
         container = this.container();
-
         if (container || this._selected_image) {
             this.dialog(WYMeditor.DIALOG_LINK);
         }
         break;
 
     case WYMeditor.INSERT_IMAGE:
-
         this.dialog(WYMeditor.DIALOG_IMAGE);
         break;
 
@@ -5466,24 +5438,13 @@ WYMeditor.editor.prototype.fixDoubleBr = function () {
 
     Open a dialog box
 */
-
 WYMeditor.editor.prototype.dialog = function (dialogType, dialogFeatures, bodyHtml) {
-
-    $("#iframeDialog" + this._element.attr("id")).trigger("showme", [function () {
-
-        WYMeditor.editor.prototype.dialogReal.call(this, dialogType, dialogFeatures, bodyHtml);
-    }, this]);
-}
-
-WYMeditor.editor.prototype.dialogReal = function (dialogType, dialogFeatures, bodyHtml) {
-
     var features = dialogFeatures || this._wym._options.dialogFeatures,
-
-    wDialog = window.open('', 'dialog' + this._element.attr("id"), features),
-    sBodyHtml,
-    h = WYMeditor.Helper,
-    dialogHtml,
-    doc;
+        wDialog = window.open('', 'dialog', features),
+        sBodyHtml,
+        h = WYMeditor.Helper,
+        dialogHtml,
+        doc;
 
     if (wDialog) {
         sBodyHtml = "";
@@ -7409,7 +7370,6 @@ WYMeditor.WymClassMozilla.NEEDS_CELL_FIX = jQuery.browser.version >= '1.9.1' &&
     jQuery.browser.version < '2.0';
 
 WYMeditor.WymClassMozilla.prototype.initIframe = function (iframe) {
-
     var wym = this,
         styles,
         aCss;
@@ -7471,7 +7431,6 @@ WYMeditor.WymClassMozilla.prototype.initIframe = function (iframe) {
  * @description Get/Set the html value
  */
 WYMeditor.WymClassMozilla.prototype.html = function (html) {
-
     if (typeof html === 'string') {
         //disable designMode
         try {
@@ -7500,9 +7459,7 @@ WYMeditor.WymClassMozilla.prototype.html = function (html) {
 };
 
 WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
-
     if (!this.selected()) {
-
         return false;
     }
 
@@ -7645,7 +7602,7 @@ WYMeditor.WymClassMozilla.prototype.enableDesignMode = function () {
         try {
             this._doc.designMode = "on";
             this._doc.execCommand("styleWithCSS", '', false);
-            this._doc.execCommand("enableObjectResizing", false, false);
+            this._doc.execCommand("enableObjectResizing", false, true);
         } catch (e) {}
     }
 };
@@ -7891,9 +7848,7 @@ WYMeditor.WymClassSafari.prototype.initIframe = function (iframe) {
 };
 
 WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
-
     if (!this.selected()) {
-
         return false;
     }
 
@@ -7905,7 +7860,6 @@ WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
         _param = jQuery(param);
 
         if (_param.is('div')) {
-
             attr = _param.get(0).attributes;
             // replace default block with DIV
             this._doc.execCommand(WYMeditor.FORMAT_BLOCK, '', WYMeditor.DIV);
@@ -7928,7 +7882,6 @@ WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
     // Wrap this content in a paragraph tag if we're in the body
     container = this.selected();
     if (container && container.tagName.toLowerCase() === WYMeditor.BODY) {
-
         this._exec(WYMeditor.FORMAT_BLOCK, WYMeditor.P);
     }
 

@@ -32,12 +32,14 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         } else {
 
-            $results = $mapper->fetchList(array(
-                $labelField . ' like ?',
+            $results = $mapper->fetchList(
                 array(
-                    '%' . $searchTerm . '%'
+                    $labelField . ' like ?',
+                    array(
+                        '%' . $searchTerm . '%'
+                    )
                 )
-            ));
+            );
         }
 
         $options = array();

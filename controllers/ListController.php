@@ -250,8 +250,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected function _getOffset($itemsPerPage, $page)
     {
-
-        if ($itemsPerPage)  {
+        if ($itemsPerPage) {
             return $itemsPerPage * ($page - 1);
         }
         return null;

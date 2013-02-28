@@ -65,26 +65,23 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
     abstract public function filterValue($value, $original);
     abstract public function prepareValue($value);
 
-    
+
     /**
      * Un multiselect deberá implementar su método de Filtrado propio (ya que es un campo fantasma, no presente en al tabla).
      * @param unknown_type $values
      * @param unknown_type $searchOps
      */
     abstract public function getCustomSearchCondition($values, $searchOps);
-    
+
     public function getIterator()
     {
-
         $parentArray = array();
-        if (is_array($this->_keys) && is_array($this->_items))
-        {
+        if (is_array($this->_keys) && is_array($this->_items)) {
             $parentArray = array_combine($this->_keys, $this->_items);
         }
 
         return new ArrayIterator($parentArray);
     }
-
 }
 
 //EOF

@@ -27,9 +27,9 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
      * removescreen: elimina el screen de la petición (para "coincidir" con peticiones de pantallas del menu sidebar (y no duplicar pestañas)
      * title: el título para la pestaña; de manera que el tolltip pueda ser dinámico con %item%, pero el título sea "respetado"
      */
-	protected $_allowedExternalAttrs = array("file","searchby","noiden","removescreen","title");
-    
-    
+    protected $_allowedExternalAttrs = array("file","searchby","noiden","removescreen","title");
+
+
     protected function _init()
     {
         $this->_type = 'screen';
@@ -69,10 +69,10 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 
         if (!is_null($this->_externalConfig)) {
             $ret['externalOption'] = true;
-            foreach($this->_allowedExternalAttrs as $attr) {
-            	if (isset($this->_externalConfig->{$attr})) {
-            		$ret['external' . $attr] = Klear_Model_Gettext::gettextCheck($this->_externalConfig->{$attr});
-            	}
+            foreach ($this->_allowedExternalAttrs as $attr) {
+                if (isset($this->_externalConfig->{$attr})) {
+                    $ret['external' . $attr] = Klear_Model_Gettext::gettextCheck($this->_externalConfig->{$attr});
+                }
             }
         }
 

@@ -1,6 +1,6 @@
 <?php
-class KlearMatrix_Model_ParentOptionCustomizer_Response {
-
+class KlearMatrix_Model_ParentOptionCustomizer_Response
+{
     protected $_result;
     protected $_wrapper;
     protected $_cssClass;

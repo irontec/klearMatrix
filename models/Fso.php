@@ -186,7 +186,7 @@ class KlearMatrix_Model_Fso
         if (isset($this->_modelSpecs['md5SumName'])) {
 
             $md5Setter = 'set' . $this->_modelSpecs['md5SumName'];
-            if (method_exists($this->_model,$md5Setter)) {
+            if (method_exists($this->_model, $md5Setter)) {
 
                 $this->_model->{$md5Setter}($this->getMd5Sum());
             }

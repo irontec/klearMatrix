@@ -44,7 +44,8 @@ abstract class KlearMatrix_Model_Field_Ghost_Abstract
         http://dev.mysql.com/doc/refman/5.0/en/string-functions.html#function_field
 
 
-    TODO: Diseñar una nueva clase abstracta GHOST en la que se puedan implementar métodos concretos, de manera que la configuración sea más simple, y caiga toda la responsabilidad en la clase GHOST.
+    TODO: Diseñar una nueva clase abstracta GHOST en la que se puedan implementar métodos concretos, de manera que
+          la configuración sea más simple, y caiga toda la responsabilidad en la clase GHOST.
 
 
 

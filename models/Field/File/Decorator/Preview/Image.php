@@ -10,7 +10,7 @@ class KlearMatrix_Model_Field_File_Decorator_Preview_Image implements KlearMatri
     {
         $this->_width = $request->getParam('width', '200');
         $this->_height = $request->getParam('height', '200');
-        if ($request->getParam('crop','true') == 'false') {
+        if ($request->getParam('crop', 'true') == 'false') {
             $this->_crop = false;
         }
         return;

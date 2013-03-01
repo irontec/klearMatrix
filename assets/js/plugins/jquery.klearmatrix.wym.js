@@ -16,8 +16,6 @@
 
         _init:function() {
 
-            console.log("options", this.options);
-
             var availableSettings = {
                 "_contentTab": true,
                 "lang" : true,
@@ -88,14 +86,17 @@
             var $el = $(this.element);
             var _self = this;
 
-            //Reset label padding
-            var fldLabel = $el.parent().prev();
-            fldLabel.css("width", "auto");
+            if (this._isMultilang($el)) {
 
-            //Set width as long as posible
-            var maxAvailableWidth = fldLabel.parent().width() - fldLabel.width() - 20;
+                //Reset label padding
+                var fldLabel = $el.parent().prev();
+                fldLabel.css("width", "auto");
 
-            $el.parent().css("width", maxAvailableWidth);
+                //Set width as long as posible
+                var maxAvailableWidth = fldLabel.parent().width() - fldLabel.width() - 20;
+                $el.parent().css("width", maxAvailableWidth);
+            }
+
 
             $el.wymeditor(editorOptions);
 
@@ -159,6 +160,11 @@
             }
         },
 
+        _isMultilang: function ($el) {
+
+            return $el.parent().prop("tagName").toLowerCase() == "dd";
+
+        },
         _closeDialog : function (contentTab) {
 
             $_dialog = $(contentTab).klearModule("getModuleDialog");

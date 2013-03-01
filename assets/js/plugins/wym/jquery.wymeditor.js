@@ -825,10 +825,8 @@ WYMeditor.INIT_DIALOG = function (index) {
 
    var wym = window.opener.WYMeditor.INSTANCES[index];
 
-    console.log("selected", wym.selected());
     if (! wym.selected()) {
 
-        console.log("contentWindow", wym._iframe.contentWindow.focus());
         wym._iframe.contentWindow.focus();
     }
 

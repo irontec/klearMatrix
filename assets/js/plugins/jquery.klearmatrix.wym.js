@@ -141,7 +141,7 @@
                 contentIframe.css(
                     {
                         "width": $moduleDialog.width(),
-                        "height" : $moduleDialog.height(),
+                        //"height" : $moduleDialog.height(),
                         'overflow' : 'hidden'
                     }
                 );

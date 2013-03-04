@@ -347,7 +347,7 @@ class KlearMatrix_Model_Column
 
     public function setSearchSpec($name, $value)
     {
-        $this->_searchSpecs[$name] = $value;
+        $this->_searchSpecs[$name] = Klear_Model_Gettext::gettextCheck($value);
 
     }
 

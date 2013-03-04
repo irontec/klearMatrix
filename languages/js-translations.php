@@ -41,4 +41,5 @@ return array (
   37 => 'range overflow',
   38 => 'undefined error',
   39 => 'step mismatch',
+  40 => 'Campo auto-copiado',
 );

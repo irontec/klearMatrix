@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-18 14:38+0100\n"
-"PO-Revision-Date: 2013-02-18 14:39+0100\n"
+"POT-Creation-Date: 2013-02-25 10:32+0100\n"
+"PO-Revision-Date: 2013-02-25 10:33+0100\n"
 "Last-Translator: Javier Infante <jabi@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: \n"
@@ -52,16 +52,17 @@ msgstr "(Valores aproximados)"
 msgid "El registro no se encuentra almacenado."
 msgstr ""
 
+#: controllers/EditController.php:114
+#: controllers/NewController.php:131
+msgid "Registro salvado correctamente."
+msgstr ""
+
 #: controllers/EditController.php:151
 msgid "Error salvando el registro"
 msgstr ""
 
 #: controllers/EditController.php:168
 msgid "Element not found. Cannot edit."
-msgstr ""
-
-#: controllers/NewController.php:131
-msgid "Registro salvado correctamente."
 msgstr ""
 
 #: views/scripts/template/delete.phtml:4

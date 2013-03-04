@@ -421,7 +421,7 @@
                 });
             }
 
-			if ($(".password",this.options.theForm).length>0) {
+            if ($(".password",this.options.theForm).length>0) {
                 var isNew = this.options.theForm.data("type") == "new";
 
                 $(".password", this.options.theForm).each(function() {
@@ -527,14 +527,14 @@
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
-                                var $list = $(".qq-upload-list",$(this.element));
+
+                                var $list = $(".qq-upload-list",$(this._element));
 
                                 if (result.error) {
                                     $list.empty();
                                     $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR",[__namespace__])});
                                     return;
                                 }
-
 
                                 var fName = $(".qq-upload-file",$list).html();
                                 var fSize = $(".qq-upload-size",$list).html();
@@ -547,6 +547,7 @@
                             },
 
                             showMessage : function(message) {
+
                                 if (typeof(message) == 'string') {
                                     $(".qq-upload-list",$(this.element)).html('');
                                     $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR",[__namespace__])});
@@ -675,7 +676,7 @@
                 //Ejemplo: A oculta B y C, pero B muestra C. Primero se comprueba A ocultando B y C.
                 //Después se comprueba B mostrando C, pero no debería, ya que B está oculto de antes.
 
-            	if (manual && $(this).parents("div:eq(0)").is(':hidden')) {
+                if (manual && $(this).parents("div:eq(0)").is(':hidden')) {
                     return;
                 }
 
@@ -688,10 +689,10 @@
                     var curOption = $("option[value="+$(this).val()+"]",$(this));
                 }
 
-				if (!curOption.data("show") || !curOption.data("hide")) {
-					return;
-				}
-				
+                if (!curOption.data("show") || !curOption.data("hide")) {
+                    return;
+                }
+
                 $.each(curOption.data("show").split(","),function(i,val) {
 
                     var fName = $.trim(val);
@@ -737,17 +738,17 @@
             }).trigger("manualchange.visualFilter",true);
 
             $("select, input, textarea", this.options.theForm).on('manualchange', function() {
-            	
-            	var _target = $(this).is("select")? $(this).next("span").children("span:eq(0)"):$(this);
-            						
+
+                var _target = $(this).is("select")? $(this).next("span").children("span:eq(0)"):$(this);
+
                 var _val = $(this).val()? $(this).val() : '';
-                
+
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
                     _target.addClass("changed ui-state-highlight");
                     $(this).addClass("changed");
                 } else {
-                	_target.removeClass("changed ui-state-highlight");
-                	$(this).removeClass("changed");
+                    _target.removeClass("changed ui-state-highlight");
+                    $(this).removeClass("changed");
                 }
 
                 self.options.theForm.trigger("updateChangedState");
@@ -765,54 +766,54 @@
                 }
             });
 
-            
-            var _copied = $('<span title="' + $.translate("Campo auto-copiado",[__namespace__]) + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>'); 
-           
+
+            var _copied = $('<span title="' + $.translate("Campo auto-copiado",[__namespace__]) + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
+
             $("dl.multiLanguage dd")
-            	.on('isCopied',function() {
-            		if ($(this).hasClass("copied")) {
-            			return;
-            		}
-            		if ($("[data-multilang]",$(this)).val() == '') {
-            			return;
-            		}
-            		
-            		
-            		$(this)
-    					.addClass("copied")
-    					.append(_copied.clone());
-            	})
-            	.on('isNotCopied',function() {
-            		$(this)
-            			.removeClass("copied")
-            			.find("span.copied").remove();
-            	});
-            
+                .on('isCopied',function() {
+                    if ($(this).hasClass("copied")) {
+                        return;
+                    }
+                    if ($("[data-multilang]",$(this)).val() == '') {
+                        return;
+                    }
+
+
+                    $(this)
+                        .addClass("copied")
+                        .append(_copied.clone());
+                })
+                .on('isNotCopied',function() {
+                    $(this)
+                        .removeClass("copied")
+                        .find("span.copied").remove();
+                });
+
             $('dl.multiLanguage input, textarea', this.options.theForm).on('keyup', function() {
-            	
-            	var _dl = $(this).parents("dl.multiLanguage:eq(0)");
-            	
-            	if (!$(this).parent("dd").hasClass("selected")) {
-            		var _selValue = _dl.find("dd.selected [data-multilang]").val();
-            		
-            		if ($(this).val() != _selValue) {
-            			$(this).parent("dd").trigger("isNotCopied");
-            		} else {
-            			$(this).parent("dd").trigger("isCopied");
-            		}
-            		return;
-            	}
-            	
-            	
-            	var _val = $(this).val();
-            	
-            	_dl.find("dd:not(.selected) [data-multilang]").each(function() {
-            		if ($(this).val() == '' || ($(this).parent("dd").hasClass("copied"))) {
-            			$(this).val(_val).trigger("change").trigger("manualChange");
-            			$(this).parent("dd").trigger("isCopied");
-            		}
-            	});
-                
+
+                var _dl = $(this).parents("dl.multiLanguage:eq(0)");
+
+                if (!$(this).parent("dd").hasClass("selected")) {
+                    var _selValue = _dl.find("dd.selected [data-multilang]").val();
+
+                    if ($(this).val() != _selValue) {
+                        $(this).parent("dd").trigger("isNotCopied");
+                    } else {
+                        $(this).parent("dd").trigger("isCopied");
+                    }
+                    return;
+                }
+
+
+                var _val = $(this).val();
+
+                _dl.find("dd:not(.selected) [data-multilang]").each(function() {
+                    if ($(this).val() == '' || ($(this).parent("dd").hasClass("copied"))) {
+                        $(this).val(_val).trigger("change").trigger("manualChange");
+                        $(this).parent("dd").trigger("isCopied");
+                    }
+                });
+
             }).trigger("keyup");
 
             return this;

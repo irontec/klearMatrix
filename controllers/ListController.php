@@ -455,12 +455,19 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         // Excel SYLK-Bug
         // http://support.microsoft.com/kb/323626/de
         $strContent = preg_replace('/^ID/', 'id', $strContent);
-
+        
+        
+        if (strtoupper($csvParams['encoding']) != 'UTF-8') {
+            $strContent = iconv("UTF-8", $csvParams['encoding'], $strContent);
+            $intLength = mb_strlen($strContent, $csvParams['encoding']);   
+        } else {
         //$strContent = utf8_decode($strContent);
-        $intLength = mb_strlen($strContent, 'utf-8');
+            $intLength = mb_strlen($strContent, 'utf-8');
+        }
 
-        // length
         $this->getResponse()->setHeader('Content-Length', $intLength);
+        $this->getResponse()->setHeader('Content-Type', 'text/csv; charset=' . $csvParams['encoding']);
+        
         // Set a header
 
         // kein fclose($fp);

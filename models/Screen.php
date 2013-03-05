@@ -62,7 +62,9 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
                 "filename" => "export",
                 "newLine" => "\n",
                 "enclosure" => '"',
-                "separator" => ";");
+                "separator" => ";",
+                "encoding" => "utf-8"
+                            );
 
         if (is_object($this->_csv)
                         && get_class($this->_csv) == 'Zend_Config') {

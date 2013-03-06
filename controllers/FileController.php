@@ -160,10 +160,21 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $nameGetter = 'get' . $this->_fileFields['baseNameName'];
 
                 $this->_helper->log('Sending file to Client: ('.$this->_model->{$nameGetter}().')');
+
+                $file = $this->_getFilePath();
+                $isRaw = false;
+
+                if (!file_exists($file)) {
+
+                    //SOAP compatibility mode
+                    $file = $this->_getBinary();
+                    $isRaw = true;
+                }
+
                 $this->_helper->sendFileToClient(
-                    $this->_getFilePath(),
+                    $file,
                     array('filename' => $this->_model->{$nameGetter}()),
-                    false
+                    $isRaw
                 );
 
                 $response = Zend_Controller_Front::getInstance()->getResponse();

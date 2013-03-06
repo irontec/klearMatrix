@@ -112,7 +112,7 @@ abstract class KlearMatrix_Model_AbstractOption
     {
     }
 
-    public function musBeAltered()
+    public function mustCustomize()
     {
         return (count($this->_parentOptionCustomizers) > 0);
     }

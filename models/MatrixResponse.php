@@ -232,8 +232,7 @@ class KlearMatrix_Model_MatrixResponse
                 if (! empty($this->_fieldOptions)) {
 
                     foreach ($this->_fieldOptions as $option) {
-
-                        if ($option->musBeAltered() === true) {
+                        if ($option->mustCustomize() === true) {
 
                             if (! isset($_newResult['_optionCustomization'])) {
 
@@ -242,7 +241,9 @@ class KlearMatrix_Model_MatrixResponse
 
                             $customization = $option->customizeParentOption($result);
 
-                            if (! is_null($customization)) {
+                            if (! is_null($customization)
+                                && !isset($_newResult['_optionCustomization'][key($customization)])
+                            ) {
 
                                 $_newResult['_optionCustomization'] += $customization;
                             }

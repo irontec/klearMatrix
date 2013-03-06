@@ -1563,7 +1563,7 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         params[this._options.inputName] = name;
         var queryString = qq.obj2url(params, this._options.action);
 
-        var protocol = this._options.demoMode ? "GET" : "POST";
+        var protocol = this._options.demoMode ? "GET" : "PUT";
         xhr.open(protocol, queryString, true);
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.setRequestHeader("X-File-Name", encodeURIComponent(name));

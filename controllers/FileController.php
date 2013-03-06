@@ -161,9 +161,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
                 $this->_helper->log('Sending file to Client: ('.$this->_model->{$nameGetter}().')');
                 $this->_helper->sendFileToClient(
-                    $this->_getBinary(),
+                    $this->_getFilePath(),
                     array('filename' => $this->_model->{$nameGetter}()),
-                    true
+                    false
                 );
 
                 $response = Zend_Controller_Front::getInstance()->getResponse();
@@ -319,6 +319,16 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $column = $this->_getFileColumn();
         $fetchGetter = $column->getFieldConfig()->getFetchMethod($this->_item->getConfigAttribute("mainColumn"));
         return $this->_model->{$fetchGetter}()->getBinary();
+    }
+
+    /**
+     * Recuperar la ruta del fichero
+     */
+    protected function _getFilePath()
+    {
+        $column = $this->_getFileColumn();
+        $fetchGetter = $column->getFieldConfig()->getFetchMethod($this->_item->getConfigAttribute("mainColumn"));
+        return $this->_model->{$fetchGetter}()->getFilePath();
     }
 
     protected function _setFileFields()

@@ -378,8 +378,8 @@ jQuery.fn.wymeditor = function (options) {
         direction:  "ltr",
         customCommands: [],
         boxHtml: String() +
-            "<div class='wym_box ui-state-default'>" +
-                "<div class='wym_area_top'>" +
+            "<div class='wym_box ui-state-default' style='background-repeat:repeat;'>" +
+                "<div class='wym_area_top' style='background:white;'>" +
                     WYMeditor.TOOLS +
                 "</div>" +
                 "<div class='wym_area_left'></div>" +
@@ -823,7 +823,7 @@ WYMeditor.computeJqueryPath = function () {
 
 WYMeditor.INIT_DIALOG = function (index) {
 
-   var wym = window.opener.WYMeditor.INSTANCES[index];
+    var wym = parent.WYMeditor.INSTANCES[index];
 
     if (! wym.selected()) {
 
@@ -4728,7 +4728,6 @@ WYMeditor.editor.prototype.init = function () {
             this._options.stringDelimiterLeft + oTool.title + this._options.stringDelimiterRight
         );
         sTool = h.replaceAll(sTool, WYMeditor.TOOL_CLASS, oTool.css);
-
         sTools += sTool;
     }
 
@@ -4750,8 +4749,6 @@ WYMeditor.editor.prototype.init = function () {
     }
 
     boxHtml = h.replaceAll(boxHtml, WYMeditor.CLASSES_ITEMS, sClasses);
-
-
 
     // Construct the containers list
     aContainers = eval(this._options.containersItems);
@@ -4807,7 +4804,6 @@ WYMeditor.editor.prototype.bindEvents = function () {
 
     // Handle click events on tools buttons
     jQuery(this._box).find(this._options.toolSelector).click(function () {
-
         wym._iframe.contentWindow.focus(); //See #154
         wym.exec(jQuery(this).attr(WYMeditor.NAME));
         return false;
@@ -4913,20 +4909,17 @@ WYMeditor.editor.prototype.xhtml = function () {
     execCommand in some cases).
 */
 WYMeditor.editor.prototype.exec = function (cmd) {
-
     var container, custom_run, _this = this;
     switch (cmd) {
 
     case WYMeditor.CREATE_LINK:
         container = this.container();
-
         if (container || this._selected_image) {
             this.dialog(WYMeditor.DIALOG_LINK);
         }
         break;
 
     case WYMeditor.INSERT_IMAGE:
-
         this.dialog(WYMeditor.DIALOG_IMAGE);
         break;
 
@@ -7085,6 +7078,7 @@ WYMeditor.WymClassExplorer = function (wym) {
 WYMeditor.WymClassExplorer.PLACEHOLDER_NODE = '<br>';
 
 WYMeditor.WymClassExplorer.prototype.initIframe = function (iframe) {
+
     //This function is executed twice, though it is called once!
     //But MSIE needs that, otherwise designMode won't work.
     //Weird.
@@ -7207,8 +7201,8 @@ WYMeditor.WymClassExplorer.prototype.fixBluescreenOfDeath = function () {
     }
 };
 
-
 WYMeditor.WymClassExplorer.prototype._exec = function (cmd, param) {
+
     if (param) {
         this._doc.execCommand(cmd, false, param);
     } else {
@@ -7469,7 +7463,6 @@ WYMeditor.WymClassMozilla.prototype.initIframe = function (iframe) {
  * @description Get/Set the html value
  */
 WYMeditor.WymClassMozilla.prototype.html = function (html) {
-
     if (typeof html === 'string') {
         //disable designMode
         try {
@@ -7498,9 +7491,7 @@ WYMeditor.WymClassMozilla.prototype.html = function (html) {
 };
 
 WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
-
     if (!this.selected()) {
-
         return false;
     }
 
@@ -7889,9 +7880,7 @@ WYMeditor.WymClassSafari.prototype.initIframe = function (iframe) {
 };
 
 WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
-
     if (!this.selected()) {
-
         return false;
     }
 
@@ -7903,7 +7892,6 @@ WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
         _param = jQuery(param);
 
         if (_param.is('div')) {
-
             attr = _param.get(0).attributes;
             // replace default block with DIV
             this._doc.execCommand(WYMeditor.FORMAT_BLOCK, '', WYMeditor.DIV);
@@ -7926,7 +7914,6 @@ WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
     // Wrap this content in a paragraph tag if we're in the body
     container = this.selected();
     if (container && container.tagName.toLowerCase() === WYMeditor.BODY) {
-
         this._exec(WYMeditor.FORMAT_BLOCK, WYMeditor.P);
     }
 

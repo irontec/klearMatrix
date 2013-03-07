@@ -21,7 +21,7 @@
         //construct the button's html
         var html = '' +
             "<li class='wym_tools_image'>" +
-                "<a name='Gallery' href='#'>" +
+                "<a name='Gallery' href='#' unselectable='on'>" +
                     "Gallery" +
                 "</a>" +
             "</li>";
@@ -30,6 +30,11 @@
 
         //handle click event
         $box.find('li.wym_tools_image a').click(function(e) {
+
+            if (! wym.selected()) {
+
+                wym._iframe.contentWindow.focus();
+            }
 
             var $dialog = $(contentTab).klearModule("showDialog",
                 '<br />',

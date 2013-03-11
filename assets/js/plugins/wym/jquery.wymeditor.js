@@ -378,8 +378,8 @@ jQuery.fn.wymeditor = function (options) {
         direction:  "ltr",
         customCommands: [],
         boxHtml: String() +
-            "<div class='wym_box ui-state-default' style='background-repeat:repeat;'>" +
-                "<div class='wym_area_top' style='background:white;'>" +
+            "<div class='wym_box ui-state-default'>" +
+                "<div class='wym_area_top'>" +
                     WYMeditor.TOOLS +
                 "</div>" +
                 "<div class='wym_area_left'></div>" +
@@ -544,8 +544,8 @@ jQuery.fn.wymeditor = function (options) {
         dialogPasteSelector:   ".wym_dialog_paste",
         dialogPreviewSelector: ".wym_dialog_preview",
 
-        updateSelector:    ".wymupdate",
-        updateEvent:       "click",
+        updateSelector:    this._doc,
+        updateEvent:       "keyup",
 
         dialogFeatures:    "menubar=no,titlebar=no,toolbar=no,resizable=no" +
             ",width=560,height=300,top=0,left=0",
@@ -823,7 +823,7 @@ WYMeditor.computeJqueryPath = function () {
 
 WYMeditor.INIT_DIALOG = function (index) {
 
-    var wym = parent.WYMeditor.INSTANCES[index];
+   var wym = window.opener.WYMeditor.INSTANCES[index];
 
     if (! wym.selected()) {
 
@@ -4728,6 +4728,7 @@ WYMeditor.editor.prototype.init = function () {
             this._options.stringDelimiterLeft + oTool.title + this._options.stringDelimiterRight
         );
         sTool = h.replaceAll(sTool, WYMeditor.TOOL_CLASS, oTool.css);
+
         sTools += sTool;
     }
 
@@ -4749,6 +4750,8 @@ WYMeditor.editor.prototype.init = function () {
     }
 
     boxHtml = h.replaceAll(boxHtml, WYMeditor.CLASSES_ITEMS, sClasses);
+
+
 
     // Construct the containers list
     aContainers = eval(this._options.containersItems);
@@ -4787,8 +4790,9 @@ WYMeditor.editor.prototype.init = function () {
 
     // Hide the html value
     jQuery(this._box).find(this._options.htmlSelector).hide();
-
     this.loadSkin();
+
+    $(this._box.context).data("savedValue", Crypto.MD5($(this._box.context).val()));
 };
 
 /**
@@ -4804,6 +4808,7 @@ WYMeditor.editor.prototype.bindEvents = function () {
 
     // Handle click events on tools buttons
     jQuery(this._box).find(this._options.toolSelector).click(function () {
+
         wym._iframe.contentWindow.focus(); //See #154
         wym.exec(jQuery(this).attr(WYMeditor.NAME));
         return false;
@@ -4845,7 +4850,8 @@ WYMeditor.editor.prototype.bindEvents = function () {
     });
 
     // Handle update event on update element
-    jQuery(this._options.updateSelector).bind(this._options.updateEvent, function () {
+    jQuery(this._doc).bind(this._options.updateEvent, function () {
+
         wym.update();
     });
 };
@@ -4909,17 +4915,20 @@ WYMeditor.editor.prototype.xhtml = function () {
     execCommand in some cases).
 */
 WYMeditor.editor.prototype.exec = function (cmd) {
+
     var container, custom_run, _this = this;
     switch (cmd) {
 
     case WYMeditor.CREATE_LINK:
         container = this.container();
+
         if (container || this._selected_image) {
             this.dialog(WYMeditor.DIALOG_LINK);
         }
         break;
 
     case WYMeditor.INSERT_IMAGE:
+
         this.dialog(WYMeditor.DIALOG_IMAGE);
         break;
 
@@ -4971,6 +4980,9 @@ WYMeditor.editor.prototype.exec = function (cmd) {
         }
         break;
     }
+
+console.log("exec", this);
+    $(this._doc).trigger(this._options.updateEvent);
 };
 
 /**
@@ -5329,6 +5341,7 @@ WYMeditor.editor.prototype.status = function (sMessage) {
     Update the element and textarea values.
 */
 WYMeditor.editor.prototype.update = function () {
+
     var html;
 
     // Dirty fix to remove stray line breaks (#189)
@@ -5336,9 +5349,51 @@ WYMeditor.editor.prototype.update = function () {
 
     html = this.xhtml();
     jQuery(this._element).val(html);
+
+    if ($(this._box.context).data("savedValue") != Crypto.MD5(html)) {
+
+        this.highlight();
+
+    } else {
+
+        this.unhighlight();
+    }
+
     jQuery(this._box).find(this._options.htmlValSelector).not('.hasfocus').val(html); //#147
     this.fixBodyHtml();
 };
+
+WYMeditor.editor.prototype.highlight = function () {
+
+    if ($(this._box.context).prev().get(0) != undefined
+        && $(this._box.context).prev().get(0).tagName.toLowerCase() == "label"
+    ) {
+
+        (this._box.context).prev().addClass("ui-state-highlight");
+
+    } else {
+
+        $(this._box.context).parent().prev().children("label").addClass("ui-state-highlight");
+    }
+}
+
+
+WYMeditor.editor.prototype.unhighlight = function () {
+
+console.log($(this._box.context).prev().get(0));
+    if ($(this._box.context).prev().get(0) != undefined
+        && $(this._box.context).prev().get(0).tagName.toLowerCase() == "label"
+    ) {
+
+        (this._box.context).prev().removeClass("ui-state-highlight");
+
+    } else {
+
+        $(this._box.context).parent().prev().children("label").removeClass("ui-state-highlight");
+    }
+}
+
+
 
 /**
     editor.fixBodyHtml
@@ -7078,7 +7133,6 @@ WYMeditor.WymClassExplorer = function (wym) {
 WYMeditor.WymClassExplorer.PLACEHOLDER_NODE = '<br>';
 
 WYMeditor.WymClassExplorer.prototype.initIframe = function (iframe) {
-
     //This function is executed twice, though it is called once!
     //But MSIE needs that, otherwise designMode won't work.
     //Weird.
@@ -7201,13 +7255,15 @@ WYMeditor.WymClassExplorer.prototype.fixBluescreenOfDeath = function () {
     }
 };
 
-WYMeditor.WymClassExplorer.prototype._exec = function (cmd, param) {
 
+WYMeditor.WymClassExplorer.prototype._exec = function (cmd, param) {
     if (param) {
         this._doc.execCommand(cmd, false, param);
     } else {
         this._doc.execCommand(cmd);
     }
+
+    $(this._doc).trigger(this._options.updateEvent);
 };
 
 WYMeditor.WymClassExplorer.prototype.saveCaret = function () {
@@ -7463,6 +7519,7 @@ WYMeditor.WymClassMozilla.prototype.initIframe = function (iframe) {
  * @description Get/Set the html value
  */
 WYMeditor.WymClassMozilla.prototype.html = function (html) {
+
     if (typeof html === 'string') {
         //disable designMode
         try {
@@ -7491,7 +7548,9 @@ WYMeditor.WymClassMozilla.prototype.html = function (html) {
 };
 
 WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
+
     if (!this.selected()) {
+
         return false;
     }
 
@@ -7507,6 +7566,7 @@ WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
         this._exec(WYMeditor.FORMAT_BLOCK, WYMeditor.P);
     }
 
+    $(this._doc).trigger(this._options.updateEvent);
     return true;
 };
 
@@ -7753,12 +7813,15 @@ WYMeditor.WymClassOpera.prototype.initIframe = function(iframe) {
 };
 
 WYMeditor.WymClassOpera.prototype._exec = function(cmd, param) {
+
     if (param) {
         this._doc.execCommand(cmd, false, param);
     }
     else {
         this._doc.execCommand(cmd);
     }
+
+    $(this._doc).trigger(this._options.updateEvent);
 };
 
 WYMeditor.WymClassOpera.prototype.selected = function() {
@@ -7880,7 +7943,9 @@ WYMeditor.WymClassSafari.prototype.initIframe = function (iframe) {
 };
 
 WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
+
     if (!this.selected()) {
+
         return false;
     }
 
@@ -7892,6 +7957,7 @@ WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
         _param = jQuery(param);
 
         if (_param.is('div')) {
+
             attr = _param.get(0).attributes;
             // replace default block with DIV
             this._doc.execCommand(WYMeditor.FORMAT_BLOCK, '', WYMeditor.DIV);
@@ -7914,9 +7980,11 @@ WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
     // Wrap this content in a paragraph tag if we're in the body
     container = this.selected();
     if (container && container.tagName.toLowerCase() === WYMeditor.BODY) {
+
         this._exec(WYMeditor.FORMAT_BLOCK, WYMeditor.P);
     }
 
+    $(this._doc).trigger(this._options.updateEvent);
     return true;
 };
 

@@ -97,7 +97,9 @@
                 $el.parent().css("width", maxAvailableWidth);
             }
 
+            var parentForm = $(this.element.context).parents("form");
 
+            $(parentForm).find("div.generalOptionsToolbar a:gt(0)").addClass("wymupdate");
             $el.wymeditor(editorOptions);
 
             var contentTextarea = $el.prev();

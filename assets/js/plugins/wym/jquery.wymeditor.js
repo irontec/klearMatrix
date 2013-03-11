@@ -5364,11 +5364,9 @@ WYMeditor.editor.prototype.update = function () {
 
 WYMeditor.editor.prototype.highlight = function () {
 
-    if ($(this._box.context).prev().get(0) != undefined
-        && $(this._box.context).prev().get(0).tagName.toLowerCase() == "label"
-    ) {
+    if ($(this._box.context).parent().children("label").length > 0) {
 
-        (this._box.context).prev().addClass("ui-state-highlight");
+        $(this._box.context).parent().children("label").addClass("ui-state-highlight");
 
     } else {
 
@@ -5379,11 +5377,9 @@ WYMeditor.editor.prototype.highlight = function () {
 
 WYMeditor.editor.prototype.unhighlight = function () {
 
-    if ($(this._box.context).prev().get(0) != undefined
-        && $(this._box.context).prev().get(0).tagName.toLowerCase() == "label"
-    ) {
+    if ($(this._box.context).parent().children("label").length > 0) {
 
-        (this._box.context).prev().removeClass("ui-state-highlight");
+        $(this._box.context).parent().children("label").removeClass("ui-state-highlight");
 
     } else {
 

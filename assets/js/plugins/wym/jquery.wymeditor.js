@@ -4981,7 +4981,6 @@ WYMeditor.editor.prototype.exec = function (cmd) {
         break;
     }
 
-console.log("exec", this);
     $(this._doc).trigger(this._options.updateEvent);
 };
 
@@ -5380,7 +5379,6 @@ WYMeditor.editor.prototype.highlight = function () {
 
 WYMeditor.editor.prototype.unhighlight = function () {
 
-console.log($(this._box.context).prev().get(0));
     if ($(this._box.context).prev().get(0) != undefined
         && $(this._box.context).prev().get(0).tagName.toLowerCase() == "label"
     ) {

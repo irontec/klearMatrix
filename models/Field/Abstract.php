@@ -60,6 +60,7 @@ abstract class KlearMatrix_Model_Field_Abstract
         }
 
         $this->_initSortable()
+             ->_initSearchable()
              ->_loadDecorators();
 
         $this->_init();
@@ -67,13 +68,26 @@ abstract class KlearMatrix_Model_Field_Abstract
 
     protected function _initSortable()
     {
-        $this->_sortable = is_object($this->_config)
-                           && $this->_config->exists("sortable")
-                           && (bool)$this->_config->getProperty('sortable');
-
+        if (is_object($this->_config)
+                           && $this->_config->exists("sortable")) {
+         
+            $this->_isSortable =(bool)$this->_config->getProperty('sortable');
+        }
+        
         return $this;
     }
 
+    protected function _initSearchable()
+    {
+        if (is_object($this->_config)
+                && $this->_config->exists("searchable")) {
+             
+            $this->_isSearchable =(bool)$this->_config->getProperty('searchable');
+        }
+        
+        return $this;
+    }
+    
     public function setColumn($column)
     {
         $this->_column = $column;

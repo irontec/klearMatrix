@@ -5370,7 +5370,8 @@ WYMeditor.editor.prototype.highlight = function () {
 
     } else {
 
-        $(this._box.context).parent().prev().children("label").addClass("ui-state-highlight");
+        //Multilang
+        $(this._box.context).parent().prev().children("label").addClass("ui-state-highlight").css("opacity", "1");
     }
 }
 

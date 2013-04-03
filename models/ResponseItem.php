@@ -849,6 +849,10 @@ class KlearMatrix_Model_ResponseItem
     {
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
 
+        if (is_null($value) || $value == 'NULL') {
+            return $field . ' is NULL';
+        }
+        
         /*
          * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
          * y usamos un namedParameter porque MasterLogic lo espera así

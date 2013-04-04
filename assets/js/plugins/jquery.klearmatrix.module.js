@@ -400,16 +400,14 @@
                 e.preventDefault();
                 e.stopPropagation();
             });
-
-
-
+            
             /*
              * Capturar opciones de diálogo.
              */
             $('a.option.dialog', this.element.klearModule("getPanel"))
                 .off('click.dialogOptions')
                 .on('click.dialogOptions', function(e, data) {
-
+                
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -420,12 +418,13 @@
                 var _parentHolder = _self._resolveParentHolder(this);
 
                 var $caller = $(this);
+                
                 $(self).klearModule("showDialog",
                         '<br />',
                         {
-                			
                             title: $(this).attr("title") || '',
-                            template : '<div class="ui-widget">{{html text}}</div>'
+                            template : '<div class="ui-widget">{{html text}}</div>',
+                            width: 'auto'
                         });
 
                 var $_dialog = $(self).klearModule("getModuleDialog");

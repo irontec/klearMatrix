@@ -93,7 +93,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                     break;
 
                 case ($column->isFile()):
-                    if ($value !== false) {
+                    if ($value !== false && file_exists($value['path'])) {
+
                         $model->$setter($value['path'], $value['basename']);
                     }
                     break;
@@ -148,6 +149,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 $model->save(false, $hasDependant);
             }
         } catch (\Zend_Exception $exception) {
+            $this->_helper->log(
+                'Error salvando el registro: ' . $exception->getMessage()
+            );
             throw new \Zend_Exception($this->view->translate('Error salvando el registro'));
         }
     }

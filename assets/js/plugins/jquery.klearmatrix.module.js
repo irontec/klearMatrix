@@ -498,21 +498,7 @@
 
                 var _container = self.klearModule("getContainer");
 
-                switch (_self.options.moduleName) {
-                    case 'list':
-                        var _parentHolder = $(this).parents("tr:eq(0)");
-                        $(this).on('mouseup', function(e) {
-                            // Paramos el evento mouseup, para no llegar al tr
-                            e.preventDefault();
-                            e.stopPropagation();
-                        });
-
-                    break;
-                    case 'new':
-                    case 'edit':
-                        var _parentHolder = $(this).parents("form:eq(0)");
-                    break;
-                }
+                var _parentHolder = _self._resolveParentHolder(this);
 
                 var _postData = {
                     callerScreen : _self.options.data.screen

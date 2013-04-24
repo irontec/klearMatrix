@@ -262,7 +262,9 @@
                     focusout: false,
                     focusin: false,
                     change: false,
-                    keyup: false
+                    keyup: false,
+                    allValidSelectors: ':input:visible:not(:button):not(:disabled):not(.novalidate), \
+                                        select[required]:not(:disabled):not(.novalidate)'
                 })
                 .on('validated',function(formElement,validation) {
 
@@ -573,8 +575,6 @@
                 });
             }
 
-            var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
-
             $("input, textarea", this.options.theForm)
                 .autoResize({
                     onStartCheck: function() {
@@ -582,10 +582,16 @@
                         $(this).trigger("manualchange");
                     }
                 })
-                .filter("[required]").before(_required.clone())
                 .end()
                 .filter(":not(:disabled)").filter(":not(:hidden)").eq(0).trigger("focusin").select().focus();
 
+
+            //Mark required fields
+            var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
+            $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
+
+            //Validate required select fields by regExp
+            $("select[required]",this.options.theForm).not("[pattern]").attr("pattern", "[^__NULL__]");
 
             $("div.expandable", this.options.theForm).each(function() {
                 $(this).hide();

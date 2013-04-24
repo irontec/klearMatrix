@@ -591,7 +591,7 @@
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
             //Validate required select fields by regExp
-            $("select[required]",this.options.theForm).not("[pattern]").attr("pattern", "[^__NULL__]");
+            $("select[required]",this.options.theForm).not("[pattern]").attr("pattern", "[^__NULL__].+");
 
             $("div.expandable", this.options.theForm).each(function() {
                 $(this).hide();

@@ -80,24 +80,25 @@
             var self = this.element;
             var _self = this;
             var panel = this.element.klearModule("getPanel");
-
-            // highlight effect on tr
-            $('table.kMatrix tr',panel).on('mouseenter mouseleave',function() {
-                $("td",$(this)).toggleClass("ui-state-highlight");
-
-                if ($("a.option.default",$(this)).length>0) {
-                    $(this).toggleClass("pointer");
-                    $("a.option.default",$(this)).toggleClass("ui-state-active");
+            
+            var tr = $('table.kMatrix tr', panel);
+            
+            $("td:not(:last-child)", tr).on('mouseenter mouseleave',function() {
+            
+                $("td:not(:last-child)", $(this).parent('tr')).toggleClass("ui-state-highlight");
+                
+                if ($("a.option.default", $(this).parent('tr')).length>0) {
+                    $(this).parent('tr').toggleClass("pointer");
+                    $("a.option.default", $(this).parent('tr')).toggleClass("ui-state-active");
                 }
-
-            })
-            .on('mouseup',function(e) {
+            
+            }).on('mouseup',function(e) {
                 // Haciendo toda la tupla clickable para la default option
                 e.stopPropagation();
                 e.preventDefault();
-                $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default",$(this)));
-
-                $("a.option.default",$(this)).trigger("mouseup");
+                $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default", $(this).parent('tr')));
+                
+                $("a.option.default", $(this).parent('tr')).trigger("mouseup");
             });
             
             $('a._fieldOption', panel).on('mouseenter',function(e) {
@@ -109,8 +110,6 @@
                     $(this).data("relatedtab").klearModule("highlightOff");
                 }
             });
-
-
 
             $(".paginator a",panel).on('click',function(e) {
                 e.preventDefault();

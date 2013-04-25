@@ -530,6 +530,7 @@
                              '</div>',
                             onComplete : function(id, fileName, result) {
 
+                                $(_self).klearModule("unsetUploadInProgress", id);
                                 var $list = $(".qq-upload-list",$(this._element));
 
                                 if (result.error) {
@@ -547,7 +548,20 @@
                                     .trigger("manualchange");
                                 $list.html('');
                             },
+                            onSubmit: function (id, fileName) {
 
+                                $(_self).klearModule("setUploadInProgress", id);
+                                return true;
+                            },
+
+                            onCancel: function(id, fileName){
+
+                                $(_self).klearModule("unsetUploadInProgress", id);
+                            },
+                            onError: function(id, fileName, reason) {
+
+                                $(_self).klearModule("unsetUploadInProgress", id);
+                            },
                             showMessage : function(message) {
 
                                 if (typeof(message) == 'string') {

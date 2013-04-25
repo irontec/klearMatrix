@@ -4,10 +4,60 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     protected $_showOnSelect = array();
     protected $_hideOnSelect = array();
 
+    /**
+     * Estructura inventada para exponer en cada <option> un atributo data con el valor de un campo.
+     * Útil para javascripts que extiendan funcionalidades (por ejemplo Timezones por país seleccionado).
+     * modo de empleo:
+     *
+     * config:
+     *   dynamicDataAttributes:
+     *     etiqueta: campoEnBBDD
+     *
+     * esto generará en cada <option /> un data-etiqueta="Valor de campoEnBBDD para cada registro"
+     * @var Array
+     */
+    protected $_extraDataAttributes = array();
+    protected $_extraDataAttributesValues = array();
+    
     protected $_js = array(
         "/js/plugins/jquery.klearmatrix.select.js"
     );
+    
+    
+    protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
+    {
+        
+        $model = $dataMapper->loadModel(false);
+        $retAttrs = array();
+        foreach($extraConfig as $label => $field)
+        {
+            if (!$varName = $model->columnNameToVar($field)) {
+                continue;
+            }
+            
+            $retAttrs[$label] = 'get' . ucfirst($varName); 
+            
+        }
+        return $retAttrs;
+    }
 
+    protected function _setValuesForExtraAttributes($model, $key)
+    {
+        if (sizeof($this->_extraDataAttributes) == 0) {
+            return;
+        }
+        
+        $ret = array();
+        foreach($this->_extraDataAttributes as $label => $getter)
+        {
+            $ret[$label] = $model->$getter();
+        }
+        
+        $this->_extraDataAttributesValues[$key] = $ret;
+
+        
+    }
+    
     public function init()
     {
 
@@ -16,9 +66,14 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             //Nothing to do
             return;
         }
-
+        
+        
         $mapperName = $this->_config->getProperty("config")->mapperName;
         $dataMapper = new $mapperName;
+        
+        if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
+            $this->_extraDataAttributes = $this->_parseExtraAttrs($this->_config->getProperty('config')->extraDataAttributes, $dataMapper);
+        }
 
         $where = $this->_getFilterWhere();
 
@@ -79,6 +134,9 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             foreach ($results as $dataModel) {
                 $this->_keys[] = $dataModel->getPrimaryKey();
                 $this->_items[] = $this->_getItemValue($dataModel);
+                
+                $this->_setValuesForExtraAttributes($dataModel,$dataModel->getPrimaryKey());
+                
                 $this->_initVisualFilter($dataModel);
             }
         }
@@ -161,6 +219,32 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             }
         }
     }
+    
+    
+    /* (non-PHPdoc)
+     * Sobreescrito para "llevar" extraDataAttributtes (si los hubiere)
+     * @see KlearMatrix_Model_Field_Select_Abstract::_toArray()
+     */
+    protected function _toArray()
+    {
+        $ret = array();
+    
+        foreach ($this as $key => $value) {
+            $_val = array('key' => $key, 'item' => $value);
+            if (isset($this->_extraDataAttributesValues[$key])) {
+                $_val['data'] = array();
+                foreach($this->_extraDataAttributesValues[$key] as $label=>$dataVal) {
+                    $_val['data'][$label] = $dataVal;
+                }
+            }
+            $ret[] = $_val;
+        }
+    
+        return $ret;
+    }
+    
+    
+    
 }
 
 //EOF

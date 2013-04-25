@@ -130,7 +130,8 @@ abstract class KlearMatrix_Model_Field_Abstract
     {
         $fieldConfig = $this->_getAdapterConfig();
         $fieldConfig['attributes'] = $this->_getAttributes($fieldConfig);
-//         $fieldConfig['attributes'] = array('style' => 'width:5px');
+
+        
         return $fieldConfig;
     }
 

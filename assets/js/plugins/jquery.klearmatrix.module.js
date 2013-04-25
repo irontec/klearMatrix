@@ -240,11 +240,40 @@
                 self.klearModule("close");
             });
 
-            $('select:not(.multiselect, .notcombo, [data-decorator])', this.element.klearModule("getPanel"))
-            	.selectBoxIt({theme: "jqueryui"}).on("change",function() {
-            		$(this).trigger("manualchange")
-            	});
-
+            var $viewPort = $(this.element.klearModule("getPanel"));
+            
+            $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
+            	.selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
+            	.on("change",function() {
+            		
+            		// Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
+            		if (!$(this).data("resizeTrick")) {
+	            		$(this).selectBoxIt({autoWidth: true})
+	            				.data("resizeTrick",true)
+	            					.data("selectBoxIt").refresh();
+            		}
+            		
+        			if ($(this).data('autofilter-select-by-data')) {
+        				var _configData = $(this).data('autofilter-select-by-data');
+        				var _filterField = _configData.split(":")[0];
+        				var _filterData = _configData.split(":")[1];
+        				var _targetValue = $(this).val();
+        				var $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
+        				var $parent = $field.parents(".container:eq(0)");
+        				$parent.css("opacity",'0.5');
+        				var selectBox = $field.data("selectBoxIt");
+        				var $holder = $("<div />");
+        				$("option",$field).not("[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
+        				selectBox.refresh();
+        				$holder.children().appendTo($field);
+        				$parent.css({'opacity':1});
+        				selectBox.dropdown.trigger("click");
+        				selectBox.close();
+        			}
+            		$(this).trigger("manualchange");
+    			});
+        	
+            
             $('a.option.screen', this.element.klearModule("getPanel"))
                 .off('mouseup.screenOption')
                 .on('mouseup.screenOption', function(e) {

@@ -50,6 +50,13 @@
 {{each(idx,dataValue) _dataConfig.values}}
     <option{{if (_fieldValue && dataValue.key == _fieldValue)}} selected="selected"{{/if}}
 
+    {{if (dataValue.data)}}
+        {{each(extraDataLabel, extraDataVal) dataValue.data}}
+            data-${extraDataLabel}="${extraDataVal}"
+        {{/each}}
+    {{/if}}
+    
+    
     {{if (dataValue.key != '__null__')}}
         value="${dataValue.key}"
     {{else}}

@@ -204,6 +204,39 @@
 
             return response.wrap("<div></div>").parent().html();
         },
+        
+        parseParentOptionCustomizationOpen : function(customOptions,config) {
+            var response =  '';
+            if (!customOptions) {
+
+                return response;
+            }
+
+            if (typeof(customOptions[config[config.type]]) == "undefined") {
+
+                return response;
+            }
+
+            response = ("<" + customOptions[config[config.type]].parentWrapper  + " class='" + customOptions[config[config.type]]['parentClass'] +"'>");
+            return response;
+        },
+        
+        parseParentOptionCustomizationClose : function(customOptions,config) {
+
+            var response =  '';
+            if (!customOptions) {
+
+                return response;
+            }
+
+            if (typeof(customOptions[config[config.type]]) == "undefined") {
+
+                return response;
+            }
+
+            response = ("</" + customOptions[config[config.type]].parentWrapper  + " >");
+            return response;
+        },
 
         getMultiLangValue : function(value,langs,defaultLang) {
             var retItem = $("<div />");

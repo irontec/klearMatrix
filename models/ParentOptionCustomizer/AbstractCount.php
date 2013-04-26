@@ -24,7 +24,7 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount implements
     {
         $front = Zend_Controller_Front::getInstance();
         $this->_mainRouter = $front->getRequest()->getUserParam("mainRouter");
-        $this->_mainRouterOriginalParams = $this->_mainRouter ->getParams();
+        $this->_mainRouterOriginalParams = $this->_mainRouter->getParams();
 
         if (isset($configuration->resultWrapper)) {
 

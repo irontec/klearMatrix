@@ -179,6 +179,7 @@ ${$item.getTitle(title,false)}
         {{else}}
             <td class="ui-widget-content options">
             {{each fieldOptions}}
+                {{html $item.parseParentOptionCustomizationOpen(row._optionCustomization, $value) }}
                 <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"
                  {{if ($value.externalOption === true)}}
 						data-externalid='${$item.getIndex(row,pk)}'
@@ -189,6 +190,7 @@ ${$item.getTitle(title,false)}
                     {{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}
                 </a>
                 {{html $item.parseOptionCustomization(row._optionCustomization, $value) }}
+                {{html $item.parseParentOptionCustomizationClose(row._optionCustomization, $value) }}
             {{/each}}
             </td>
         {{/if}}

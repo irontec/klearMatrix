@@ -29,7 +29,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $model = $dataMapper->loadModel(false);
         $retAttrs = array();
-        foreach($extraConfig as $label => $field)
+        foreach ($extraConfig as $label => $field)
         {
             if (!$varName = $model->columnNameToVar($field)) {
                 continue;

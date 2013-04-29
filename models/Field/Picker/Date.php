@@ -17,6 +17,8 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
 
     public function filterValue($value)
     {
+        if (empty($value)) return NULL;
+        
         $date = new Zend_Date();
         $date->setTimeZone('UTC');
         $date->setDate($value, null, $this->getLocale());

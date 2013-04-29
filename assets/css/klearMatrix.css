@@ -160,6 +160,8 @@ dl.multiLanguage dd.copied span.copied {
 
 .klearMatrix_form p,
 .klearMatrix_form div.container {
+	overflow: hidden;
+	height: auto;
     padding:.8em;
     margin:.3em 0;
 }
@@ -204,6 +206,8 @@ dl.multiLanguage dd.copied span.copied {
 }
 
 .klearMatrix_form .qq-uploader {
+	float: left;
+    width: auto;
     margin:0.5em 0;
 }
 

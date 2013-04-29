@@ -97,39 +97,39 @@ table.kMatrix .mlTag {
 
 
 dl.multiLanguage {
-	order: 1px solid red;
+    order: 1px solid red;
     clear: both;
     display: inline-block;
     width: 100%;
 }
 
 dl.multiLanguage dt {
-	margin:0.5em 0.25em;
-	width:12%;
-	clear: both;
-	float:left;
-	display:block;
-	text-align: right;
+    margin:0.5em 0.25em;
+    width:12%;
+    clear: both;
+    float:left;
+    display:block;
+    text-align: right;
 }
 
 dl.multiLanguage dd {
-	margin:.25em;
-	width:80%;
-	float:left;
-	display:block;
+    margin:.25em;
+    width:80%;
+    float:left;
+    display:block;
 }
 
 dl.multiLanguage dt.selected label {
-	font-size:.9em;
-	opacity: 0.8;
-	
+    font-size:.9em;
+    opacity: 0.8;
+
 }
 dl.multiLanguage dd.copied input, dl.multiLanguage dd.copied textarea {
-	color: #ccc;
-} 
+    color: #ccc;
+}
 
 dl.multiLanguage dd.copied span.copied {
-	margin-left: .25em;
+    margin-left: .25em;
 }
 
 .generalOptionsToolbar {
@@ -160,8 +160,6 @@ dl.multiLanguage dd.copied span.copied {
 
 .klearMatrix_form p,
 .klearMatrix_form div.container {
-	overflow: hidden;
-	height: auto;
     padding:.8em;
     margin:.3em 0;
 }
@@ -206,8 +204,6 @@ dl.multiLanguage dd.copied span.copied {
 }
 
 .klearMatrix_form .qq-uploader {
-	float: left;
-    width: auto;
     margin:0.5em 0;
 }
 
@@ -291,7 +287,7 @@ a.ui-state-nojump {
 }
 
 .klearMatrixFiltering input.term {
-	margin: 0em 1em 0 0;
+    margin: 0em 1em 0 0;
     padding: 0.3em;
     vertical-align: text-top;
     width: 205px;

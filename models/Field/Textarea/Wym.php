@@ -72,7 +72,7 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
         $baseUrl = $view->serverUrl() . $view->baseUrl();
 
         $this->_settings = array(
-            'lang' => 'es',
+            'lang' => $this->_getLanguage(),
             'basePath' => $baseUrl . '/klearMatrix/js/plugins/wym/',
             'jQueryPath' => $baseUrl . '/klear/js/libs/jquery.min.js',
             'skinPath' => $baseUrl. '/klearMatrix/js/plugins/wym/skins/default/',
@@ -81,6 +81,17 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
         );
     }
 
+    protected function _getLanguage()
+    {
+        $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
+        $language = $currentKlearLanguage->getLanguage();
+        return $currentKlearLanguage->getLanguage();
+
+//         if (LANGUAGE EXISTS) {
+//             return $language;
+//         }
+//         return 'es';
+    }
     protected function _setPlugin()
     {
         $this->_plugin = 'wym';

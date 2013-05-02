@@ -13,9 +13,9 @@
 
     $.widget('klearmatrix.wym', {
         options: {},
-        
+
         _init:function() {
-            
+
             var availableSettings = {
                 "_contentTab": true,
                 "lang" : true,
@@ -27,11 +27,12 @@
                 "stylesheet": true,
                 "plugins" : true,
             };
-            
+
             var editorOptions = {
                 toolsItems: this._getButtons(),
+                containersItems: this._getContainersItems(),
                 postInit: function(wym) {
-                    
+
                     //postInit is executed after WYMeditor initialization
                     //'wym' is the current WYMeditor instance
 
@@ -56,7 +57,7 @@
                     }
                 }
             };
-            
+
             for (idx in this.options) {
 
                 if(availableSettings[idx]) {
@@ -143,58 +144,84 @@
                 return;
             }
         },
-        
+
         _getButtons: function () {
-            
+            var configButtons = undefined;
             if (this.options.buttons) {
-                var buttons = this.options.buttons.split(',');
-            } 
-            
-            var baseArray = [
-             {'name': 'Bold', 'title': 'Strong', 'css': 'wym_tools_strong'},
-             {'name': 'Italic', 'title': 'Emphasis', 'css': 'wym_tools_emphasis'},
-             {'name': 'Superscript', 'title': 'Superscript', 'css': 'wym_tools_superscript'},
-             {'name': 'Subscript', 'title': 'Subscript', 'css': 'wym_tools_subscript'},
-             {'name': 'InsertOrderedList', 'title': 'Ordered_List', 'css': 'wym_tools_ordered_list'},
-             {'name': 'InsertUnorderedList', 'title': 'Unordered_List', 'css': 'wym_tools_unordered_list'},
-             {'name': 'Indent', 'title': 'Indent', 'css': 'wym_tools_indent'},
-             {'name': 'Outdent', 'title': 'Outdent', 'css': 'wym_tools_outdent'},
-             {'name': 'Undo', 'title': 'Undo', 'css': 'wym_tools_undo'},
-             {'name': 'Redo', 'title': 'Redo', 'css': 'wym_tools_redo'},
-             {'name': 'CreateLink', 'title': 'Link', 'css': 'wym_tools_link'},
-             {'name': 'Unlink', 'title': 'Unlink', 'css': 'wym_tools_unlink'},
-             {'name': 'InsertTable', 'title': 'Table', 'css': 'wym_tools_table'},
-             {'name': 'Paste', 'title': 'Paste_From_Word', 'css': 'wym_tools_paste'},
-             {'name': 'ToggleHtml', 'title': 'HTML', 'css': 'wym_tools_html'},
-             {'name': 'Preview', 'title': 'Preview', 'css': 'wym_tools_preview'},
-             ];
-            
-            if (buttons) {
-                
-                var buttonIndex = {};
-                
-                for (var i in baseArray) {
-                    
-                    buttonIndex[baseArray[i]['name']] = i;
+                configButtons = this.options.buttons.split(',');
+            }
+
+            var availableButtons = [
+                {'name': 'Bold', 'title': 'Strong', 'css': 'wym_tools_strong'},
+                {'name': 'Italic', 'title': 'Emphasis', 'css': 'wym_tools_emphasis'},
+                {'name': 'Superscript', 'title': 'Superscript', 'css': 'wym_tools_superscript'},
+                {'name': 'Subscript', 'title': 'Subscript', 'css': 'wym_tools_subscript'},
+                {'name': 'InsertOrderedList', 'title': 'Ordered_List', 'css': 'wym_tools_ordered_list'},
+                {'name': 'InsertUnorderedList', 'title': 'Unordered_List', 'css': 'wym_tools_unordered_list'},
+                {'name': 'Indent', 'title': 'Indent', 'css': 'wym_tools_indent'},
+                {'name': 'Outdent', 'title': 'Outdent', 'css': 'wym_tools_outdent'},
+                {'name': 'Undo', 'title': 'Undo', 'css': 'wym_tools_undo'},
+                {'name': 'Redo', 'title': 'Redo', 'css': 'wym_tools_redo'},
+                {'name': 'CreateLink', 'title': 'Link', 'css': 'wym_tools_link'},
+                {'name': 'Unlink', 'title': 'Unlink', 'css': 'wym_tools_unlink'},
+                {'name': 'InsertTable', 'title': 'Table', 'css': 'wym_tools_table'},
+                {'name': 'Paste', 'title': 'Paste_From_Word', 'css': 'wym_tools_paste'},
+                {'name': 'ToggleHtml', 'title': 'HTML', 'css': 'wym_tools_html'},
+                {'name': 'Preview', 'title': 'Preview', 'css': 'wym_tools_preview'},
+            ];
+
+            return this._getConfigElements(availableButtons, configButtons);
+        },
+
+        _getContainersItems: function () {
+            var configContainerItems = undefined;
+            if (this.options.containersItems) {
+                configContainerItems = this.options.containersItems.split(',');
+            }
+
+            var availableContainerItems = [
+                {'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'},
+                {'name': 'H1', 'title': 'Heading_1', 'css': 'wym_containers_h1'},
+                {'name': 'H2', 'title': 'Heading_2', 'css': 'wym_containers_h2'},
+                {'name': 'H3', 'title': 'Heading_3', 'css': 'wym_containers_h3'},
+                {'name': 'H4', 'title': 'Heading_4', 'css': 'wym_containers_h4'},
+                {'name': 'H5', 'title': 'Heading_5', 'css': 'wym_containers_h5'},
+                {'name': 'H6', 'title': 'Heading_6', 'css': 'wym_containers_h6'},
+                {'name': 'PRE', 'title': 'Preformatted', 'css': 'wym_containers_pre'},
+                {'name': 'BLOCKQUOTE', 'title': 'Blockquote', 'css': 'wym_containers_blockquote'},
+                {'name': 'TH', 'title': 'Table_Header', 'css': 'wym_containers_th'}
+            ];
+
+            return this._getConfigElements(availableContainerItems, configContainerItems);
+        },
+
+        _getConfigElements: function (availableElements, configElements) {
+            if (configElements) {
+
+                var configElementIndex = {};
+
+                for (var i in availableElements) {
+
+                    configElementIndex[availableElements[i]['name']] = i;
                 }
-                
+
                 var retArray = [];
-                
-                for (var i=0;i<buttons.length;i++) {
-                    var curButton = $.trim(buttons[i]);
-                    if (buttonIndex[curButton]) {
-                        
-                        retArray.push(baseArray[buttonIndex[curButton]]);
+
+                for (var i=0; i < configElements.length;i++) {
+                    var curContainerItem = $.trim(configElements[i]);
+                    if (configElementIndex[curContainerItem]) {
+
+                        retArray.push(availableElements[configElementIndex[curContainerItem]]);
                     }
-                    
+
                 }
                 return retArray;
-                
+
             } else {
-                return baseArray;
+                return availableElements;
             }
         },
-        
+
         _isMultilang: function ($el) {
 
             return $el.parent().prop("tagName").toLowerCase() == "dd";

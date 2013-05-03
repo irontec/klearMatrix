@@ -231,10 +231,9 @@ dl.multiLanguage dd.copied span.copied {
 }
 .paginator {
     clear: both;
-    margin: 0.2em;
     overflow: hidden;
-    padding: 0.5em;
-
+    padding: 0.8em;
+    margin: 0.2em 0;
 }
 
 .paginator a {
@@ -261,7 +260,7 @@ a.ui-state-nojump {
 
 .klearMatrixFiltering,
 .klearMatrixCsv {
-    padding:.8em;
+    padding:.9em;
     display: inline-block;
     width: 98%;
 }

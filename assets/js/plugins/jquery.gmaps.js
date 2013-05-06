@@ -87,6 +87,7 @@
 
             // Add dragging event listeners.
             google.maps.event.addListener(this.marker, 'dragstart', function() {
+
                 self._updateMarkerAddress('Calculando...');
             });
 
@@ -97,6 +98,7 @@
             google.maps.event.addListener(this.marker, 'dragend', function() {
 
                 self._geocodePosition(self.marker.getPosition());
+                self.options.cache.adress.trigger('change');
             });
         },
 
@@ -109,7 +111,7 @@
                 $(this).blur();
                 self._geocode(self.options.cache.dummy.val());
             });
-            
+
             this.options.cache.adress.on('change', function(){
                 self._updateMarkerAddress($(this).val());
             });
@@ -180,7 +182,7 @@
 
             this.options.cache.dummy.val(str);
             this.options.cache.adress.val(str);
-            this.options.cache.adress.trigger('change');
+            //this.options.cache.adress.trigger('change');
         }
     });
 

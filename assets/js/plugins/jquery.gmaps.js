@@ -24,19 +24,28 @@
         _create: function() {
 
             var self = this;
-            yepnope([{
-                load: 'http://www.google.com/jsapi',
-                callback: function(){
-                    google.load("maps", "3", {
-                        callback: function(){
+            if ( !window.google ) {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "http://www.google.com/jsapi?sensor=false&language=es";
+                document.head.appendChild(script);
+            }
 
-                            self._initMap();
-                            self._bindEvents();
-                        },
-                        other_params: "sensor=false&language=es"
-                    });
+            (function lazyGoogle() {
+
+                if (!window.google) {
+                    setTimeout(lazyGoogle,450);
+                    return;
                 }
-            }]);
+
+                google.load("maps", "3", {
+                    callback: function(){
+                        self._initMap();
+                        self._bindEvents();
+                    },
+                    other_params: "sensor=false&language=es"
+                });
+            })();
         },
 
         _init: function () {

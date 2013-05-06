@@ -18,6 +18,15 @@ data-setting-height="${_properties.height}"
 data-setting-width="${_properties.width}"
 {{/if}}
 
+
+{{if (_properties.defaultLat)}}
+data-setting-default-lat="${_properties.defaultLat}"
+{{/if}}
+
+{{if (_properties.defaultLng)}}
+data-setting-default-lng="${_properties.defaultLng}"
+{{/if}}
+
 {{if (_properties.required)}}
 required=""
 {{/if}}

@@ -1,20 +1,31 @@
-<input
-    type="checkbox"
-    rel="${_elemName}"
-
+{{if (_readonly)}}
     {{if (_fieldValue && _fieldValue!='0')}}
-        checked="checked"
+        &#9745;
+    {{else}}
+        &#9744;
     {{/if}}
+{{else}}
+    <input
+        type="checkbox"
+        rel="${_elemName}"
 
-    {{each(idx,attrValue) _dataConfig.attributes}}
-        ${idx}="${attrValue}"
-    {{/each}}
+        {{if (_fieldValue && _fieldValue!='0')}}
+            checked="checked"
+        {{/if}}
 
-/>
-<input
-    type="hidden"
-    id="${_elemIden}"
-    name="${_elemName}"
-    value="${_fieldValue}"
-    class="checkbox"
-/>
+        {{each(idx,attrValue) _dataConfig.attributes}}
+            ${idx}="${attrValue}"
+        {{/each}}
+        {{if (_readonly)}}
+            disabled
+        {{/if}}
+    />
+
+    <input
+        type="hidden"
+        id="${_elemIden}"
+        name="${_elemName}"
+        value="${_fieldValue}"
+        class="checkbox"
+    />
+{{/if}}

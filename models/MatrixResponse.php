@@ -139,6 +139,14 @@ class KlearMatrix_Model_MatrixResponse
 
     public function setDisableSave($disableSave)
     {
+        if ($disableSave === true) {
+
+            foreach ($this->_columns->getIterator() as $column) {
+
+                $column->markAsReadOnly();
+            }
+        }
+
         $this->_disableSave = $disableSave;
     }
 

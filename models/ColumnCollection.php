@@ -168,10 +168,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $retCss = array();
 
         foreach ($this->_columns as $column) {
-            if ($aCss = $column->getCssPaths()) {
-                foreach ($aCss as $css) {
-                    $retCss['cssFile_' . crc32($css)] = $css;
-                }
+            $aCss = $column->getCssPaths();
+            foreach ($aCss as $css) {
+                $retCss['cssFile_' . crc32($css)] = $css;
             }
         }
         return $retCss;

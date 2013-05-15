@@ -223,6 +223,10 @@ class KlearMatrix_Model_Column
 
     public function getCssPaths()
     {
+        if ($this->isOption()) {
+            return array();
+        }
+
         return $this->getFieldConfig()->getExtraCss();
     }
 

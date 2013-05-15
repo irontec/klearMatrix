@@ -405,7 +405,6 @@ class KlearMatrix_Model_ResponseItem
         $this->_visibleColumns->addCols($dependantColumns);
 
         if ($this->hasFieldOptions()) {
-
             $column = $this->_createColumn("_fieldOptions", $this->_config->getRaw()->fields->options);
             $column->markAsOption();
             $this->_visibleColumns->addCol($column);
@@ -852,7 +851,7 @@ class KlearMatrix_Model_ResponseItem
         if (is_null($value) || $value == 'NULL') {
             return $field . ' is NULL';
         }
-        
+
         /*
          * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
          * y usamos un namedParameter porque MasterLogic lo espera así

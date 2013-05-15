@@ -85,6 +85,15 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $this->_columns = array_merge($cols, $this->_columns);
     }
 
+    public function setReadOnly($readOnlyFields = array())
+    {
+        foreach ($readOnlyFields as $key => $readOnlyField) {
+            if (isset($this->_columns[$readOnlyField])) {
+                $this->_columns[$readOnlyField]->markAsReadOnly();
+            }
+        }
+    }
+
     protected function _getOrderFieldsArray(Zend_Config $orderFields)
     {
         $newOrderFields = array();

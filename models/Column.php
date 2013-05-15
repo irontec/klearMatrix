@@ -237,11 +237,11 @@ class KlearMatrix_Model_Column
 
     public function isReadonly()
     {
-
-        if ($this->isOption()) return false;
+        if ($this->isOption()) {
+            return false;
+        }
 
         return $this->_isReadonly;
-
     }
 
     public function hasInfo()

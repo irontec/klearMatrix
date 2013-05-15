@@ -412,9 +412,13 @@ class KlearMatrix_Model_ResponseItem
 
         //Ordenamos los campos si existe la configuración
         if ($this->_config->exists("fields->order")) {
-
             $this->_visibleColumns->sortCols($this->_config->getRaw()->fields->order);
         }
+
+        if ($this->_config->exists("fields->readOnly")) {
+            $this->_visibleColumns->setReadOnly($this->_config->getRaw()->fields->readOnly);
+        }
+
 
         return $this->_visibleColumns;
     }

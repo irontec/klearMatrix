@@ -21,6 +21,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         $adapterClassName = "KlearMatrix_Model_Field_Multiselect_" . ucfirst($sourceConfig->data);
 
         $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
+        $this->_isSortable = false;
     }
 
     /*
@@ -40,7 +41,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         $getter = $this->_column->getGetterName();
 
 /*
- * TODO: No elimino estas líneas para recordar que hay que comprobar que el multilang funciona en los multiselect...
+ * FIXME: No elimino estas líneas para recordar que hay que comprobar que el multilang funciona en los multiselect...
  *
  */
 //         if ($this->_column->isMultilang()) {
@@ -49,13 +50,13 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
         return $this->_adapter->filterValue($value, $model->$getter());
     }
-    
-    
+
+
     public function getCustomSearchCondition($values, $searchOps)
     {
         return $this->_adapter->getCustomSearchCondition($values, $searchOps);
     }
-    
+
 }
 
 //EOF

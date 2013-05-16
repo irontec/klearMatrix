@@ -143,7 +143,7 @@ class KlearMatrix_Model_MatrixResponse
 
             foreach ($this->_columns->getIterator() as $column) {
 
-                $column->markAsReadOnly();
+                $column->setReadOnly(true);
             }
         }
 

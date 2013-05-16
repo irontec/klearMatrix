@@ -57,7 +57,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             $this->_orderMethod = $this->_config->getRaw()->source->orderMethod;
         }
 
-        $this->_column->markAsReadOnly();
+        $this->_column->setReadOnly(true);
     }
 
     public function getCustomSearchCondition($values, $searchOps)

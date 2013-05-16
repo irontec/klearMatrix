@@ -87,9 +87,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
     public function setReadOnly($readOnlyFields = array())
     {
-        foreach ($readOnlyFields as $key => $readOnlyField) {
-            if (isset($this->_columns[$readOnlyField])) {
-                $this->_columns[$readOnlyField]->markAsReadOnly();
+        foreach ($readOnlyFields as $fieldName => $value) {
+            if (isset($this->_columns[$fieldName])) {
+                $this->_columns[$fieldName]->setReadOnly((bool)$value);
             }
         }
     }

@@ -89,9 +89,9 @@ class KlearMatrix_Model_Column
         $this->_isFile = true;
     }
 
-    public function markAsReadOnly()
+    public function setReadOnly($readOnly = true)
     {
-        $this->_isReadonly = true;
+        $this->_isReadonly = (bool)$readOnly;
     }
 
     public function isOption()

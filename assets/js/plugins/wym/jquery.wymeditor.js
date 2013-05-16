@@ -586,11 +586,11 @@ jQuery.fn.wymeditor = function (options) {
                             '<input type="text" class="wym_title" value="" ' +
                                 'size="25" />' +
                         '</div>' +
-                        '<div class="row">' +
-                            '<label>{Relationship}</label>' +
-                            '<input type="text" class="wym_rel" value="" ' +
-                                'size="25" />' +
-                        '</div>' +
+                        //'<div class="row">' +
+                        //    '<label>{Relationship}</label>' +
+                        //    '<input type="text" class="wym_rel" value="" ' +
+                        //        'size="25" />' +
+                        //'</div>' +
                         '<div class="row row-indent" style="display:none;">' +
                             '<input class="wym_submit" type="submit" ' +
                                 'value="{Submit}" />' +

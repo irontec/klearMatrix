@@ -46,7 +46,7 @@ data-multilang="${_locale}"
 />
 {{if (_properties.feed.youtube)}}
 {{each(idx,url) _properties.feed.youtube}}
-<div class="feed container ui-widget-content ui-corner-all" data-channel="{{html url }}" data-source="youtube">
+<div class="feed container ui-widget-content ui-corner-all" data-channel="{{html url.toLowerCase() }}" data-source="youtube">
     <ol>
         <li style="display:none;" title="Previous" class="ui-state-default prev">
             <a href="#"><span class="ui-icon ui-icon-carat-1-w"><<</span></a>
@@ -65,7 +65,7 @@ data-multilang="${_locale}"
 
 {{if (_properties.feed.vimeo)}}
 {{each(idx,url) _properties.feed.vimeo}}
-<div class="feed container ui-widget-content ui-corner-all" data-channel="{{html url }}" data-source="vimeo">
+<div class="feed container ui-widget-content ui-corner-all" data-channel="{{html url.toLowerCase() }}" data-source="vimeo">
     <ol>
         <li style="display:none;" title="Previous" class="ui-state-default prev">
             <a href="#"><span class="ui-icon ui-icon-carat-1-w"><<</span></a>

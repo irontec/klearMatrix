@@ -115,75 +115,91 @@
 
                 case 'youtube':
 
-                    author = results.videos[0].entry.author[0].name.$t;
+                    author = results.videos[0].entry.author[0].name.$t.toLowerCase();
                     break;
 
                 case 'vimeo':
 
                     var userUrl = results.videos[0].user_url.split("/");
-                    author = userUrl[userUrl.length -1];
+                    author = userUrl[userUrl.length -1].toLowerCase();
                     break;
 
                 default:
 
                     throw ("Unknown source " + source);
             }
-
+            
             for (idx in results.videos) {
-
+                
                 switch(source) {
-
+                
                     case 'youtube':
-
+                        
                         vid = results.videos[idx].videoId;
-
+                        
                         var linkNum = results.videos[idx].entry.link.length;
                         url = results.videos[idx].entry.link[linkNum-2].href;
                         title = results.videos[idx].title;
                         src = 'http://i.ytimg.com/vi/'+ vid +'/2.jpg';
                         break;
-
+                        
                     case 'vimeo':
-
+                        
                         id = results.videos[idx].id;
                         url = results.videos[idx].url;
                         title = results.videos[idx].title;
                         src = results.videos[idx].thumbnail_small;
                         break;
                 }
-
+                
                 var $img = $("<img />").attr("src", src);
+                
                 $img.css("cursor", "pointer").attr("data-url", url);
                 $img.attr("alt",  title);
                 $img.attr("title",  title);
                 $(containner).find("div.content").append($img);
-
+                
                 $img.bind("click", function () {
-
                     self._selectVideo($(this));
                 });
             }
-
+            
             if (!this.options.cache.feedContainner) {
-
                 this.options.cache.feedContainner = {};
             }
-
+            
             this.options.cache.feedContainner[author] = this.options.cache.wrapper.find("div.feed[data-channel="+author+"] div.content");
-
+            
             var itemNum = this.options.cache.feedContainner[author].children("img").length;
+            
             this.options.cache.feedContainner[author].data("itemNum", itemNum);
-
+            
             this.options.cache.feedContainner[author].data("offset", 0);
-
+            
+            this._initChannelScroll(itemNum, $img, author);
+            
+        },
+        
+        _initChannelScroll: function (_itemNum, _$img, _author) {
+            
+            var _self =this;
+            var itemNum = _itemNum; 
+            var $img = _$img; 
+            var author = _author;
+            
+            if (! $img.get(0).complete) {
+                
+                setTimeout(function () {_self._initChannelScroll(itemNum, $img, author)}, 300);
+            }
+            
             if (itemNum * $img.width() > this.options.cache.feedContainner[author].width()) {
-
+                
                 this.options.cache.feedContainner[author].parent().css("width", this.options.cache.feedContainner[author].width());
                 this.options.cache.feedContainner[author].css("width", itemNum * $img.width());
                 this.options.cache.feedContainner[author].parents("div.feed").find("li.prev, li.next").show();
             }
         },
-
+        
         _selectVideo: function (video) {
 
             this.options.cache.dummy.val(video.data("url"));
@@ -214,7 +230,7 @@
 
         _showPrev: function (element) {
             var channel = element.parents("div").data("channel");
-
+            
             var currentOffset = this.options.cache.feedContainner[channel].data("offset");
             if (currentOffset == 0) {
 
@@ -282,21 +298,19 @@
 
                  return;
              }
-
+             
              var title = $("<p />");
-             title.html(this.options.cache.title.val());
+             title.html(this.options.cache.title.val()).css('float', 'left');
              this.options.cache.wrapper.children("p").remove();
              this.options.cache.wrapper.append(title);
-
+             
              var thumb = $("<img />").attr("src", this.options.cache.thumb.val());
              thumb.attr("id", this.options.cache.id.val());
-
-             thumb.css("cursor", "pointer");
+             thumb.css("cursor", "pointer").addClass('span11');
              thumb.bind("click", function () {
-
                 self._showPlayer();
              });
-
+             
              this.options.cache.wrapper.children("img").remove();
              this.options.cache.wrapper.children("iframe").remove();
              this.options.cache.wrapper.append(thumb);

@@ -342,6 +342,10 @@
 
                             return this.getValuesFromSelectColumn(column)[_curVal];
                         }
+                        
+                        if (_curVal == null &&  this.getValuesFromSelectColumn(column)['__null__']) {
+                        	return this.getValuesFromSelectColumn(column)['__null__'];                        	
+                        }
 
                         return '';
                         break;

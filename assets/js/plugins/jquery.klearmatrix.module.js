@@ -114,6 +114,16 @@
 
         _resolveParentHolder : function(element) {
 
+    		        	
+        	if ($(element).data("parentholderselector")) {
+
+        		var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
+        		if (_candidateParent.length > 0) {
+        			return _candidateParent;
+    			} 
+        	}
+            
+        	
             // Si es un módulo con parent
             if (this.options.moduleParent) {
                 var modulecheck = this.options.moduleParent;
@@ -132,11 +142,8 @@
                 break;
                 default:
 
-                    if ($(element).data("parentHolderSelector")) {
-                        return $(element).parents($(element).data("parentHolderSelector"));
-                    } else {
-                        throw 'no parentHolder found for option';
-                    }
+                    throw 'no parentHolder found for option';
+                    
                 break;
             }
 

@@ -1,7 +1,3 @@
-{{if (_readonly)}}
-{{html _fieldValue}}
-{{else}}
-
 <input
 type="text" class="auto gmaps"
 {{if (_fieldValue.address)}} value="${_fieldValue.address}" {{/if}} data-plugin="gmaps"
@@ -56,7 +52,13 @@ data-multilang="${_locale}"
 />
 <input type="button" value="Ir" />
 
+
+{{if (_readonly)}}
+<div class="mapCanvas" data-type="readOnly"></div>
+{{else}}
 <div class="mapCanvas"></div>
+{{/if}}
+
 
 <input
 type="hidden"
@@ -79,6 +81,3 @@ class="map_lng"
 name="${_elemName}Lng"
 value="${_fieldValue.lng}"
 />
-
-{{/if}}
-

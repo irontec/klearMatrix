@@ -59,6 +59,10 @@
             this.options.cache.lng = this.options.cache.context.find("input.map_lng");
             this.options.cache.canvas = this.options.cache.dummy.parents().find('div.mapCanvas');
 
+            if ( this.options.cache.canvas.data('type') == 'readOnly' ) {
+                this.options.draggable = false;
+            }
+            
             this.options.cache.canvas.css({width: this.options.width, height: this.options.height});
         },
 

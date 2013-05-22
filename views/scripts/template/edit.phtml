@@ -51,8 +51,9 @@ data-title="${info.text}"
                         data-${type}="${$item.getIndex($value,type)}"
                         title="${$item.getTitle(title,idx,true)}"
                         {{if ($value.externalOption)}}
-                            data-externalfile='${file}'
+                            data-externalid='${row[id]}'
                             data-externalname='${id}'
+                            ${$item.getExternalData($value)}
                         {{/if}}
                         >
                         <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>

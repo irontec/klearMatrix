@@ -438,9 +438,18 @@
                         break;
 
                     case 'map':
-
-
-                        return this.cleanValue(values[column.id]['address']);
+                        
+                        var imgUrl = 'http://maps.googleapis.com/maps/api/staticmap?'
+                            + 'center=%lat%,%lng%&zoom=%zoom%'
+                            + '&size=%width%x%height%&markers=color:red%7C%lat%,%lng%&sensor=false';
+                        
+                        imgUrl = imgUrl.replace(/%lat%/g, values[column.id]['lat']);
+                        imgUrl = imgUrl.replace(/%lng%/g, values[column.id]['lng']);
+                        imgUrl = imgUrl.replace(/%zoom%/g, values[column.id]['previewZoom']);
+                        imgUrl = imgUrl.replace(/%width%/g, values[column.id]['previewWidth']);
+                        imgUrl = imgUrl.replace(/%height%/g, values[column.id]['previewHeight']);
+                        
+                        return '<img src="'+imgUrl+'" class="makeItBigger" />';
                         break;
 
                     default:

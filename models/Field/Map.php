@@ -6,8 +6,17 @@ class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
         'zoom',
         'width',
         'height',
+        'previewZoom',
+        'previewWidth',
+        'previewHeight',
         'defaultLat',
         'defaultLng',
+    );
+    
+    protected $_defaults = array(
+        'previewZoom' => 10,
+        'previewWidth' => 80,
+        'previewHeight' => 80
     );
 
     public function _init()
@@ -63,6 +72,9 @@ class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
             'address' => $value,
             'lat' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Lat'}(),
             'lng' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Lng'}(),
+            'previewZoom' => (isset($this->_properties['previewZoom'])) ? $this->_properties['previewZoom'] : $this->_defaults['previewZoom'],
+            'previewWidth' => (isset($this->_properties['previewWidth'])) ? $this->_properties['previewWidth'] : $this->_defaults['previewWidth'],
+            'previewHeight' => (isset($this->_properties['previewHeight'])) ? $this->_properties['previewHeight'] : $this->_defaults['previewHeight'],
         );
 
         return $ret;

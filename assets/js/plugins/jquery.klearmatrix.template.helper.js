@@ -441,13 +441,34 @@
                         
                         var imgUrl = 'http://maps.googleapis.com/maps/api/staticmap?'
                             + 'center=%lat%,%lng%&zoom=%zoom%'
-                            + '&size=%width%x%height%&markers=color:red%7C%lat%,%lng%&sensor=false';
+                            + '&size=%width%x%height%&sensor=false';
                         
-                        imgUrl = imgUrl.replace(/%lat%/g, values[column.id]['lat']);
-                        imgUrl = imgUrl.replace(/%lng%/g, values[column.id]['lng']);
-                        imgUrl = imgUrl.replace(/%zoom%/g, values[column.id]['previewZoom']);
+                        var markerUrl = '&markers=color:red%7C%lat%,%lng%';
+                        
+                        var printMarker = true; 
+                        
+                        var lat = values[column.id]['lat'];
+                        var lng = values[column.id]['lng']
+                        
+                        if ( lat == null || lng == null ) {
+                            lat = '0.0';
+                            lng = '0.0';
+                            imgUrl = imgUrl.replace(/%zoom%/g, '1');
+                            printMarker = false;
+                        } else {
+                            imgUrl = imgUrl.replace(/%zoom%/g, values[column.id]['previewZoom']);
+                        }
+                        
+                        imgUrl = imgUrl.replace(/%lat%/g, lat);
+                        imgUrl = imgUrl.replace(/%lng%/g, lng);
                         imgUrl = imgUrl.replace(/%width%/g, values[column.id]['previewWidth']);
                         imgUrl = imgUrl.replace(/%height%/g, values[column.id]['previewHeight']);
+                        
+                        if ( printMarker ) {
+                            markerUrl = markerUrl.replace(/%lat%/g, lat);
+                            markerUrl = markerUrl.replace(/%lng%/g, lng);
+                            imgUrl = imgUrl + markerUrl;
+                        }
                         
                         return '<img src="'+imgUrl+'" class="makeItBigger" />';
                         break;

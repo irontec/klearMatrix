@@ -13,7 +13,8 @@
             defaultLng : -2.9352541503906195,
         },
 
-        imgUrl: 'http://maps.googleapis.com/maps/api/staticmap?center=%lat%,%lng%&zoom=%zoom%&size=%width%x%height%&markers=color:red%7C%lat%,%lng%&sensor=false',
+        imgUrl: 'http://maps.googleapis.com/maps/api/staticmap?center=%lat%,%lng%&zoom=%zoom%&size=%width%x%height%&sensor=false',
+        markerUrl: '&markers=color:red%7C%lat%,%lng%',
         readOnly: false,
         geocoder: null,
         map: null,
@@ -76,14 +77,33 @@
 
         _initMap: function () {
             if (this.readOnly ==  true) {
-                
+                var printMarker = true;
                 var img = this.options.cache.context.find('img.mapImg');
                 
-                this.imgUrl = this.imgUrl.replace(/%lat%/g, this.options.cache.lat.val());
-                this.imgUrl = this.imgUrl.replace(/%lng%/g, this.options.cache.lng.val());
-                this.imgUrl = this.imgUrl.replace(/%zoom%/g, this.options.zoom);
+                var lat = this.options.cache.lat.val();
+                var lng = this.options.cache.lng.val();
+    
+                if (lat == '' || lng == '') {
+                    console.log("No hay");
+                    printMarker = false;
+                    lat = '0.0';
+                    lng = '0.0';
+                    this.imgUrl = this.imgUrl.replace(/%zoom%/g, '1');
+                } else {
+                    console.log("Hay");
+                    this.imgUrl = this.imgUrl.replace(/%zoom%/g, this.options.zoom);
+                }
+                
+                this.imgUrl = this.imgUrl.replace(/%lat%/g, lat);
+                this.imgUrl = this.imgUrl.replace(/%lng%/g, lng);
                 this.imgUrl = this.imgUrl.replace(/%width%/g, this.options.width);
                 this.imgUrl = this.imgUrl.replace(/%height%/g, this.options.height);
+                
+                if ( printMarker ) {
+                    this.markerUrl = this.markerUrl.replace(/%lat%/, lat);
+                    this.markerUrl = this.markerUrl.replace(/%lng%/, lng);
+                    this.imgUrl = this.imgUrl + this.markerUrl;
+                }
                 
                 img.attr('src', this.imgUrl);
                 

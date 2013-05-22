@@ -84,13 +84,11 @@
                 var lng = this.options.cache.lng.val();
     
                 if (lat == '' || lng == '') {
-                    console.log("No hay");
                     printMarker = false;
-                    lat = '0.0';
-                    lng = '0.0';
+                    lat = this.options.defaultLat;
+                    lng = this.options.defaultLng;
                     this.imgUrl = this.imgUrl.replace(/%zoom%/g, '1');
                 } else {
-                    console.log("Hay");
                     this.imgUrl = this.imgUrl.replace(/%zoom%/g, this.options.zoom);
                 }
                 

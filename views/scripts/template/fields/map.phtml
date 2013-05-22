@@ -46,11 +46,11 @@
     {{/if}}
     
     
-    {{if (_properties.defaultLat)}}
+    {{if (_properties.defaultLat !== false)}}
     data-setting-default-lat="${_properties.defaultLat}"
     {{/if}}
     
-    {{if (_properties.defaultLng)}}
+    {{if (_properties.defaultLng !== false)}}
     data-setting-default-lng="${_properties.defaultLng}"
     {{/if}}
     

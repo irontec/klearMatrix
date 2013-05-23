@@ -441,4 +441,30 @@ img.imgFilePreview {
     border:1px solid #333;
     padding:.5em;
 }
+
+.filterItem span.infoShow {
+	cursor: pointer;
+}
+
+.filterItem .infoDiv {
+	background-color: ghostwhite;
+	padding: 10px 20px;
+	margin-bottom: 10px;
+	border: 1px solid #aaa;
+	border-radius: 5px;
+	font-size: 0.9em;
+	max-width: 70%;
+}
+
+.filterItem .infoDiv ul {
+	padding: 5px 25px;
+	list-style-type: square;
+}
+
+.filterItem .infoDiv ul li:not(:last-child) {
+	margin-bottom: 3px;
+}
+
+.filterItem .infoDiv p {
+	margin: 5px 0;
 }

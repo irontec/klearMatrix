@@ -315,14 +315,24 @@
                     searchOption.hide();
                 }
 
-                $container.find("span.info").remove();
+                $container.find("span.infoShow").remove();
+                $container.find("div.infoDiv").remove();
 
                 if (column.search.info) {
                     $("<span />")
-                        .attr("class","info ui-silk ui-silk-help inline")
-                        .attr("title",column.search.info)
+                        .attr("class","infoShow ui-silk ui-silk-help inline")
                         .prependTo($(".filterItem",$container))
-                        .tooltip();
+                        .on('click', function(e){
+                            if ($('div.infoDiv').is(':visible')) {
+                                $('div.infoDiv').slideUp('fast');
+                            } else {
+                                $('div.infoDiv').slideDown('fast');
+                            }
+                        });
+                    
+                    $("<div>"+column.search.info+"</div>")
+                        .attr("class","infoDiv hidden")
+                        .prependTo($(".filterItem",$container));
                 }
 
 

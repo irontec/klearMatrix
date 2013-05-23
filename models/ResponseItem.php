@@ -509,11 +509,6 @@ class KlearMatrix_Model_ResponseItem
             $fieldsMetadata = $model->getColumnsMeta();
             foreach ($fieldsMetadata as $field => $metatags) {
 
-                if (in_array($field, $this->_getBlacklistedFields())) {
-
-                    continue;
-                }
-
                 foreach ($metatags as $tag) {
 
                     if (! $this->_blacklistFieldMetaMatch($tag)) {

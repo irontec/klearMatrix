@@ -27,7 +27,7 @@
             this.options.cache.dummy = context;
 
             this.options.cache.id = context.parent().find("input:eq(1)");
-            this.options.cache.source = this.options.cache.id.next("");
+            this.options.cache.source = this.options.cache.id.next();
             this.options.cache.title = this.options.cache.source.next();
             this.options.cache.thumb = this.options.cache.title.next();
 
@@ -246,12 +246,15 @@
 
         _cleanUrl: function (element) {
 
+            console.log("_cleanUrl", element);
             var youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?.*\&?v=)([^#\&\?]*).*/;
             var vimeoRegExp = /^http:\/\/(www\.)?vimeo\.com\/(clip\:)?(\d+).*$/;
 
             var match = element.val().match(youtubeRegExp);
             var vimeoMatch = element.val().match(vimeoRegExp);
 
+            var self = this;
+            
             if (match != null && match.length > 0) {
 
                  match = match[match.length -1];
@@ -260,7 +263,7 @@
                  element.val("http://youtu.be/" + match);
                  element.trigger("change");
 
-                 var self = this;
+                 
                  jQTubeUtil.video(match, function(response){
 
                     self.options.cache.id.val(response.videos[0].videoId);
@@ -276,7 +279,6 @@
 
                  element.trigger("change");
 
-                 var self = this;
                  jQVimeoUtil.video(vimeoMatch, function(response) {
 
                     self.options.cache.id.val(response.videos[0].id);
@@ -285,7 +287,17 @@
                     self.options.cache.thumb.val(response.videos[0].thumbnail_large);
                     self._render.call(self);
                 });
-            }
+            } else if (element.val().length === 0) {
+
+                element.trigger("change");
+                self.options.cache.id.val("");
+                self.options.cache.title.val("");
+                self.options.cache.thumb.val("");
+                self.options.cache.source.val("");
+                self.options.cache.wrapper.children("img").remove();
+                self.options.cache.wrapper.children("p").remove();
+                
+            } 
         },
 
         _render: function () {

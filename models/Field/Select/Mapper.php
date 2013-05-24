@@ -29,14 +29,12 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $model = $dataMapper->loadModel(false);
         $retAttrs = array();
-        foreach ($extraConfig as $label => $field)
-        {
+        foreach ($extraConfig as $label => $field) {
             if (!$varName = $model->columnNameToVar($field)) {
                 continue;
             }
 
             $retAttrs[$label] = 'get' . ucfirst($varName);
-
         }
         return $retAttrs;
     }
@@ -53,19 +51,15 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         $this->_extraDataAttributesValues[$key] = $ret;
-
-
     }
 
     public function init()
     {
-
         if ($this->_dynamicDataLoading() === true) {
 
             //Nothing to do
             return;
         }
-
 
         $mapperName = $this->_config->getProperty("config")->mapperName;
         $dataMapper = new $mapperName;
@@ -86,7 +80,6 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
      */
     protected function _dynamicDataLoading()
     {
-
         if (isset($this->_column->getKlearConfig()->getRaw()->decorators)) {
             $selfClassName = get_class($this);
             $classBasePath = substr($selfClassName, 0, strrpos($selfClassName, '_') + 1);
@@ -238,12 +231,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             }
             $ret[] = $_val;
         }
-
         return $ret;
     }
-
-
-
 }
 
 //EOF

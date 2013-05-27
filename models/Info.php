@@ -19,8 +19,8 @@ class KlearMatrix_Model_Info
         $this->_fieldInfo['type'] = $this->_getProperty('type');
         $this->_fieldInfo['position'] = $this->_getProperty('position');
         $this->_fieldInfo['icon'] = $this->_getProperty('icon');
-        $this->_fieldInfo['text'] = $this->_getTranslatedProperty['text'];
-        $this->_fieldInfo['label'] = $this->_getTranslatedProperty['label'];
+        $this->_fieldInfo['text'] = $this->_getTranslatedProperty('text');
+        $this->_fieldInfo['label'] = $this->_getTranslatedProperty('label');
     }
 
     protected function _getTranslatedProperty($key)

@@ -185,7 +185,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             $nameGetter = 'get' . $fileFields['baseNameName'];
             $sizeGetter = 'get' . $fileFields['sizeName'];
-            $mimeGetter = 'get' . $fileFields['mimeName'];
+//             $mimeGetter = 'get' . $fileFields['mimeName'];
 
             $data = array(
                     'pk'=>$this->_pk,

@@ -59,7 +59,7 @@ class KlearMatrix_Model_FilterProcessor
         $this->_data->addSearchField($field, $values, $valuesOp);
     }
 
-    protected function _addSearchAddModifierToData($value)
+    protected function _addSearchAddModifierToData()
     {
 
         if (false === $this->_data) {
@@ -98,12 +98,9 @@ class KlearMatrix_Model_FilterProcessor
         }
 
         if ($this->_request->getPost("searchAddModifier") == '1') {
-            $this->_addSearchAddModifierToData(true);
-
+            $this->_addSearchAddModifierToData();
             $this->_where = array('(' . implode(" or ", $expressions) . ')', $values);
-
         } else {
-
             $this->_where = array('(' . implode(" and ", $expressions) . ')', $values);
         }
 

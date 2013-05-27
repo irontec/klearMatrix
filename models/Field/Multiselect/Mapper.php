@@ -293,8 +293,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
      */
     public function getCustomSearchCondition($values, $searchOps)
     {
-        $searchCondition = '';
-
         $dataIds = array();
         // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
         foreach ($values as $value) {

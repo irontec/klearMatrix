@@ -51,7 +51,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             }
 
             $setter = $column->getSetterName();
-            $getter = $column->getGetterName();
 
             if ($column->isMultilang()) {
                 $value = array();

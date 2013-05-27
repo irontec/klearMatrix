@@ -168,7 +168,7 @@ class KlearMatrix_Model_MatrixResponse
         $this->_info = $info;
     }
 
-    public function addSearchField($field,$values, $ops)
+    public function addSearchField($field, $values, $ops)
     {
         $this->_searchFields[$field] = $values;
         $this->_searchOps[$field] = $ops;

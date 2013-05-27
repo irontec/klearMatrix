@@ -12,7 +12,7 @@ class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
         'defaultLat',
         'defaultLng',
     );
-    
+
     protected $_defaults = array(
         'previewZoom' => 10,
         'previewWidth' => 80,
@@ -55,7 +55,7 @@ class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
             $this->_properties[$key] = $value;
         }
 
-        if (! isset($value)) {
+        if (!isset($value)) {
             var_dump(debug_backtrace());
         }
         return $this;
@@ -72,11 +72,19 @@ class KlearMatrix_Model_Field_Map extends KlearMatrix_Model_Field_Abstract
             'address' => $value,
             'lat' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Lat'}(),
             'lng' => $this->_column->getModel()->{'get' . ucfirst($columnName) . 'Lng'}(),
-            'previewZoom' => (isset($this->_properties['previewZoom'])) ? $this->_properties['previewZoom'] : $this->_defaults['previewZoom'],
-            'previewWidth' => (isset($this->_properties['previewWidth'])) ? $this->_properties['previewWidth'] : $this->_defaults['previewWidth'],
-            'previewHeight' => (isset($this->_properties['previewHeight'])) ? $this->_properties['previewHeight'] : $this->_defaults['previewHeight'],
+            'previewZoom' => $this->_getProperty('previewZoom'),
+            'previewWidth' => $this->_getProperty('previewWidth'),
+            'previewHeight' => $this->_getProperty('previewHeight')
         );
 
         return $ret;
+    }
+
+    protected function _getProperty($key)
+    {
+        if (!isset($this->_properties[$key])) {
+            return $this->_defaults[$key];
+        }
+        return $this->_properties[$key];
     }
 }

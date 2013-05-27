@@ -110,7 +110,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setCsv((bool)$this->_item->getCsv());
 
         $where = $this->_helper->createListWhere($cols, $model, $data, $this->_item, $this->_helper->log);
-        $order = $this->_getListOrder($cols, $model);
+        $order = $this->_getListOrder($cols);
         $count = $this->_getItemsPerPage();
         $page = $this->_getCurrentPage();
         $offset = $this->_getOffset($count, $page);
@@ -169,11 +169,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $hook = $this->_item->getHook('setData');
         if ($hook) {
-
             $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
-
         } else {
-
             $data = $data->toArray();
         }
 
@@ -274,7 +271,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
      * @param Object $model
      * @return string
      */
-    protected function _getListOrder(KlearMatrix_Model_ColumnCollection $cols, $model)
+    protected function _getListOrder(KlearMatrix_Model_ColumnCollection $cols)
     {
         //Calculamos el orden del listado
         $orderField = $this->getRequest()->getPost("order");
@@ -455,11 +452,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         // Excel SYLK-Bug
         // http://support.microsoft.com/kb/323626/de
         $strContent = preg_replace('/^ID/', 'id', $strContent);
-        
-        
+
+
         if (strtoupper($csvParams['encoding']) != 'UTF-8') {
             $strContent = iconv("UTF-8", $csvParams['encoding'], $strContent);
-            $intLength = mb_strlen($strContent, $csvParams['encoding']);   
+            $intLength = mb_strlen($strContent, $csvParams['encoding']);
         } else {
         //$strContent = utf8_decode($strContent);
             $intLength = mb_strlen($strContent, 'utf-8');
@@ -467,7 +464,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $this->getResponse()->setHeader('Content-Length', $intLength);
         $this->getResponse()->setHeader('Content-Type', 'text/csv; charset=' . $csvParams['encoding']);
-        
+
         // Set a header
 
         // kein fclose($fp);

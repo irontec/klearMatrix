@@ -281,16 +281,21 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $this->_helper->log('Order column especified for:' . $this->_mapperName);
             $order = $orderColumn->getOrderField();
 
+            if (! is_array($order)) {
+                $order = array($order);
+            }
+
             $orderColumn->setAsOrdered();
 
+            $orderType = 'asc';
             if (in_array($this->getRequest()->getPost("orderType"), array("asc", "desc"))) {
 
                 $orderColumn->setOrderedType($this->getRequest()->getPost("orderType"));
-                $order .= ' ' . $this->getRequest()->getPost("orderType");
+                $orderType = $this->getRequest()->getPost("orderType");
+            }
 
-            } else {
-
-                $order .= ' asc';
+            foreach ($order as $key => $val) {
+                $order[$key] .= ' '. $orderType;
             }
 
         } else {

@@ -246,7 +246,8 @@ dl.multiLanguage dd.copied span.copied {
     float: left;
     height: 1.2em;
     text-align: center;
-    width: 1.2em;
+    min-width: 1.2em;
+    width: auto;
     margin:0.3em;
     text-decoration:none;
 }

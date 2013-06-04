@@ -63,18 +63,10 @@
         value="__NULL__"
     {{/if}}
     {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[dataValue.key]) }}
-        data-show="{{each(idxField,showField) _dataConfig.visualFilter.show[dataValue.key]}}
-        {{if (idxField != '__className')}}
-            ${showField},
-        {{/if}}
-        {{/each}}"
+        data-show="{{each(idxField,showField) _dataConfig.visualFilter.show[dataValue.key]}} ${showField},{{/each}}"
     {{/if}}
     {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.hide[dataValue.key]) }}
-        data-hide="{{each(idxField,hideField) _dataConfig.visualFilter.hide[dataValue.key]}}
-            {{if (idxField != '__className')}}
-                ${hideField},
-            {{/if}}
-        {{/each}}"
+        data-hide="{{each(idxField,hideField) _dataConfig.visualFilter.hide[dataValue.key]}} ${hideField},{{/each}}"
     {{/if}}
     >${dataValue.item}</option>
 {{/each}}

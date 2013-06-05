@@ -39,6 +39,10 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                 $limit = intval($commandConfiguration->limit);
             }
             
+            if (isset($commandConfiguration->order)) {
+                $order = $commandConfiguration->order;
+            }
+            
             $condition = '';
 
             if (isset($commandConfiguration->condition)) {
@@ -52,7 +56,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                     )
                 );
             
-            $results = $mapper->fetchList($where, NULL, $limit);
+            $results = $mapper->fetchList($where, $order, $limit);
             $totalItems = $mapper->countByQuery($where);
             
         }

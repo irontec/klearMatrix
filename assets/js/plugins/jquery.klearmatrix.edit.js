@@ -411,7 +411,10 @@
                                         }).jPlayer("pause");
                                     },
                                     play: function() {
-                                         item.jPlayer("pauseOthers");
+                                    	item.jPlayer("pauseOthers");
+                                    },
+                                    ended : function() {
+                                    	item.jPlayer("ready");
                                     },
                                     cssSelectorAncestor : '#' + controlId,
                                     swfPath : '../klearMatrix/bin/',

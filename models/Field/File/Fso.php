@@ -84,13 +84,18 @@ class KlearMatrix_Model_Field_File_Fso
 
                     foreach ($opObject as $k => $v) {
 
-                        $ret['options'][$option][$k] = $parser->getProperty($k); //$v;
+                        $data = $parser->getProperty($k);
+                        if (is_object($data) && method_exists($data,'toArray')) {
+                            $data = $data->toArray();
+                        }
+                        $ret['options'][$option][$k] = $data;
                     }
                 } else {
 
                     $ret['options'][$option] = $opObject;
                 }
 
+                
                 foreach ($defaultOptions as $key => $value) {
 
                     if (is_array($ret['options'][$option]) &&

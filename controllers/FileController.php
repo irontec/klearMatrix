@@ -165,17 +165,27 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $isRaw = false;
 
                 if (!file_exists($file)) {
-
                     //SOAP compatibility mode
                     $file = $this->_getBinary();
                     $isRaw = true;
                 }
 
-                $this->_helper->sendFileToClient(
-                    $file,
-                    array('filename' => $this->_model->{$nameGetter}()),
-                    $isRaw
-                );
+                $partialDownload = $this->_item->getConfigAttribute("partialDownload") === true;
+                
+                if ($partialDownload) {
+                    $this->_helper->sendFileToClientRanges(
+                            $file,
+                            array('filename' => $this->_model->{$nameGetter}()),
+                            $isRaw
+                    );
+                    
+                } else {
+                    $this->_helper->sendFileToClient(
+                        $file,
+                        array('filename' => $this->_model->{$nameGetter}()),
+                        $isRaw
+                    );
+                }
 
                 $response = Zend_Controller_Front::getInstance()->getResponse();
                 $response->clearHeaders();

@@ -142,7 +142,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         $fields = $this->_getFields();
-        $fieldsTemplate = $this->_getFieldsTemplate();
+        $fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
         $replace = array();
         foreach ($fields as $fieldName) {
             $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));

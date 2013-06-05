@@ -438,7 +438,9 @@ class KlearMatrix_Model_Column
         }
 
         if ($disabledConfig->getProperty('label')) {
-            $disabledOptions['label'] = $disabledConfig->getProperty('label');
+            $disabledOptions['label'] = Klear_Model_Gettext::gettextCheck($disabledConfig->getProperty('label'));
+            
+            ;
         }
 
         $this->_disabledOptions = $disabledOptions;

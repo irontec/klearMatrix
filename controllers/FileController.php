@@ -171,14 +171,14 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 }
 
                 $partialDownload = $this->_item->getConfigAttribute("partialDownload") === true;
-                
+
                 if ($partialDownload) {
-                    $this->_helper->sendFileToClientRanges(
+                    $this->_helper->sendPartialFileToClient(
                             $file,
                             array('filename' => $this->_model->{$nameGetter}()),
                             $isRaw
                     );
-                    
+
                 } else {
                     $this->_helper->sendFileToClient(
                         $file,

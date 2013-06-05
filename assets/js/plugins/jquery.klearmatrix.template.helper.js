@@ -27,7 +27,7 @@
             /**
              * Exact comparisons so 0's are correctly displayed
              */
-            if(typeof _value == 'undefined' || _value === false || _value === '') {
+            if(_value === null || typeof _value == 'undefined' || _value === false || _value === '') {
 
                 return ifNull;
             }

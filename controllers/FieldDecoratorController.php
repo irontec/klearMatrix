@@ -9,6 +9,11 @@ class KlearMatrix_FieldDecoratorController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
+        
+        $this->_helper->ContextSwitch()
+            ->addActionContext('index', 'json')
+            ->initContext('json');
+        
     }
 
     /**

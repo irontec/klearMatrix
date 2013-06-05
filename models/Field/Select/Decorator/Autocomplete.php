@@ -29,17 +29,32 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         if ( $this->_request->getParam("reverse") ) {
 
             $results = $mapper->findByField($pkField, $this->_request->getParam("value"));
-
+            $totalItems = sizeof($results);
+            
         } else {
+            $limit = NULL;
+            $order = NULL;
+            
+            if (isset($commandConfiguration->limit)) {
+                $limit = intval($commandConfiguration->limit);
+            }
+            
+            $condition = '';
 
-            $results = $mapper->fetchList(
-                array(
-                    $labelField . ' like ?',
+            if (isset($commandConfiguration->condition)) {
+                $condition = '(' . $commandConfiguration->condition .') and ';
+            }
+
+            $where =  array(
+                    $condition . $labelField . ' like ?',
                     array(
                         '%' . $searchTerm . '%'
                     )
-                )
-            );
+                );
+            
+            $results = $mapper->fetchList($where, NULL, $limit);
+            $totalItems = $mapper->countByQuery($where);
+            
         }
 
         $options = array();
@@ -53,7 +68,14 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                 'value' => $tienda->$labelGetter(),
             );
         }
-
-        echo json_encode($options);
+        
+        $this->_view->totalItems = $this->_view->translate("%d items encontrados",$totalItems);
+        
+        if (!is_null($limit)) {
+            $show = ($limit < $totalItems)? $limit : $totalItems;
+            $this->_view->totalItems .= ' ' . $this->_view->translate("(mostrando %d)",$show);
+        }
+        
+        $this->_view->results = $options;
     }
 }

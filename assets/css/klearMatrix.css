@@ -469,3 +469,11 @@ img.imgFilePreview {
 .filterItem .infoDiv p {
 	margin: 5px 0;
 }
+
+span.autocompleteCounter {
+	font-size: 0.8em;
+	border: 1px solid #aaa;
+	color: #aaa;
+	padding: .2em;
+	margin-left: .5em;
+}

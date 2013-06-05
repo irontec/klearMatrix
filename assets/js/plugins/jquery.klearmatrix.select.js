@@ -2,9 +2,7 @@
 
     $.widget("klearmatrix.selectautocomplete", {
         widgetEventPrefix:"file",
-
-        cache : {}, //cache para autocomplete
-
+        lastCounter : 0,
         options: {
             cache: {}, // cache de nodos dom
         },
@@ -104,9 +102,9 @@
                       type: 'GET',
                       async: false,
                       success: function(data) {
-
-                        var option = $("<option>").attr("value", data[0].id )
-                                                  .html(data[0].value);
+                    	var element = data.results[0];
+                        var option = $("<option>").attr("value", element.id )
+                                                  .html(element.value);
 
                         option.appendTo(_self.options.cache.element);
                         option.attr("selected",true);
@@ -148,15 +146,12 @@
 
                     var term = request.term;
 
-                    if ( term in _self.cache ) {
-                        response( _self.cache[ term ] );
-                        return;
-                    }
+                    
 
                     $.getJSON( _self.options.cache.dummy.attr("href") , request, function( data, status, xhr ) {
 
-                        _self.cache[ term ] = data;
-                        response( data );
+                        _self.lastCounter = data.totalItems;
+                        response( data.results );
                     });
                 },
 
@@ -175,12 +170,22 @@
                     }
 
                     option.get(0).selected = true;
-
+                	
                     _self._trigger( "selected", event, {
                         item: option
                     });
                 },
+                open : function() {
+                	if ($(".autocompleteCounter",$(this).parents("span:eq(0)")).length == 0) {
+                		$(this).parents("span:eq(0)").append('<span class="autocompleteCounter"></span>');
+                	}
+                	var $counter = $(".autocompleteCounter",$(this).parents("span:eq(0)"));
+                	$counter.html(_self.lastCounter).show();
 
+                },
+                close : function() {
+                    $(".autocompleteCounter",$(this).parents("span:eq(0)")).fadeOut('fast');
+                },
                 change: function( event, ui ) {
 
                     if ( !ui.item )

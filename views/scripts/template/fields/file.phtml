@@ -39,11 +39,7 @@
             {{if (option.external)}}
                  data-external="true"
             {{/if}}
-            >
-            {{if (option.icon)}}
-                <span class="ui-silk inline ${option.icon}"></span>
-            {{/if}}
-            </a>
+            >{{if (option.icon)}}<span class="ui-silk inline ${option.icon}"></span>{{/if}}</a>
         {{/if}}
     {{/each}}
 </span>

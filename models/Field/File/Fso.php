@@ -88,6 +88,9 @@ class KlearMatrix_Model_Field_File_Fso
                         if (is_object($data) && method_exists($data,'toArray')) {
                             $data = $data->toArray();
                         }
+                        if ($k == 'title') {
+                            $data = Klear_Model_Gettext::gettextCheck($data);
+                        }
                         $ret['options'][$option][$k] = $data;
                     }
                 } else {

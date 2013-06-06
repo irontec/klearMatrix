@@ -50,6 +50,11 @@ class KlearMatrix_Model_ResponseItem
     protected $_blacklist = array();
 
     /*
+     * Filtros preconfigurados para pantallas ListController
+     */
+    protected $_preconfiguredFilters = array();
+    
+    /*
      * Definir subarrays si el tag depende de subfijos en los nombres de campo,
      * en caso contrario indicar el tag como string
      */
@@ -91,7 +96,8 @@ class KlearMatrix_Model_ResponseItem
         '_actionMessages' => array('actionMessages', false),
         '_disableSave' => array('disableSave', false), // en EditController evitamos "salvar"
         '_disableAddAnother' => array('disableAddAnother', false), // en NewController evitamos el botón de añadir otro. close on success.
-        '_useExplain' => array('useExplain', false)
+        '_useExplain' => array('useExplain', false),
+        '_preconfiguredFilters' => array('preconfiguredFilters', false)
     );
 
     //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
@@ -271,8 +277,11 @@ class KlearMatrix_Model_ResponseItem
         return $this->_customScripts;
     }
 
-
-
+    public function getPreconfiguredFilters()
+    {
+        return $this->_preconfiguredFilters;
+    }
+    
     public function getConfigAttribute($attribute)
     {
         return $this->_config->getProperty($attribute);
@@ -909,6 +918,16 @@ class KlearMatrix_Model_ResponseItem
         return $this->_forcedPk;
     }
 
+    /**
+     * Se deshabilita la configuración de calculatedPk, para evitar que se recalcule el ID en el método de save (que ya viene resuelto) 
+     */
+    public function unsetCalculatedPk()
+    {
+        $this->_calculatedPkConfig = NULL;
+        $this->_calculatedPk = false;
+        
+    } 
+    
     public function getCalculatedPk()
     {
         if (is_null($this->_calculatedPkConfig)) {

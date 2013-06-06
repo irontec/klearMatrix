@@ -34,6 +34,8 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_searchAddModifier = false;
 
+    protected $_preconfiguredFilters = array();
+    
     protected $_info = false;
 
     //@var KlearMatrix_Model_ResponseItem;
@@ -91,7 +93,12 @@ class KlearMatrix_Model_MatrixResponse
         $this->_fieldOptions = $fieldOptsWrapper;
         return $this;
     }
-
+    public function setPreconfiguredFilters($preConfFilters)
+    {
+        $this->_preconfiguredFilters = $preConfFilters;
+        return $this;
+    }
+    
 
     public function setResponseItem(KlearMatrix_Model_ResponseItem $item)
     {
@@ -318,6 +325,10 @@ class KlearMatrix_Model_MatrixResponse
 
         if (sizeof($this->_messages) > 0) {
             $ret['actionMessages'] = $this->_messages->toArray();
+        }
+        
+        if (sizeof($this->_preconfiguredFilters) > 0) {
+            $ret['preconfiguredFilters'] = $this->_preconfiguredFilters->toArray();
         }
 
         $ret[$this->_item->getType()] = $this->_item->getItemName();

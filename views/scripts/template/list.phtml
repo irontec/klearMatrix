@@ -14,6 +14,13 @@ data-title="${info.text}"
 
 <div class="ui-widget-content ui-corner-all klearMatrixFiltering">
 <form class="klearMatrixFilteringForm {{if (typeof searchFields == 'undefined') }} not-loaded {{/if}} ">
+{{if (preconfiguredFilters)}}
+<p class="preconfiguredFilters">
+<span class="ui-silk inline ui-silk-zoom-in"></span><?php echo $this->translate('Atajos de búsqueda'); ?>: {{each(idx,filter) preconfiguredFilters}}
+    <button class="preconfigureFilters" data-field="${filter.field}" data-value="${filter.value}">${filter.title}</button>
+{{/each}}
+</p>
+{{/if}}
 <p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Filter fields'); ?></p>
     <p class="filterItem">
     <span class="searchOption">

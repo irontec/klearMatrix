@@ -277,7 +277,39 @@
 
             });
             
+            $("button.preconfigureFilters", panel).button().on('click', function (e) {
+            	
+            	e.stopPropagation();
+            	e.preventDefault();
+            	var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                
+            	_dispatchOptions.post = _dispatchOptions.post || {};
+                _dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
+                _dispatchOptions.post.searchOps = _dispatchOptions.post.searchOps || {};
 
+                var fieldName = $(this).data("field");
+                var _newVal = $(this).data("value");
+                var _searchOp = 'eq';
+                if ($(this).data("ops")) {
+                	_searchOp = $(this).data("ops");
+                }
+
+                _dispatchOptions.post.searchFields[fieldName] = _dispatchOptions.post.searchFields[fieldName] || [];
+                _dispatchOptions.post.searchOps[fieldName] = _dispatchOptions.post.searchOps[fieldName] || [];
+            	
+                _dispatchOptions.post.searchFields[fieldName].push(_newVal);
+                _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
+                
+                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
+                _dispatchOptions.post.page = 1;
+
+                $(self)
+                    .klearModule("option","dispatchOptions",_dispatchOptions)
+                    .klearModule("reDispatch");
+                 
+            });
+            
+            
             $(".klearMatrixFilteringForm",panel).form();
             
             var currentPlugin = false;
@@ -484,6 +516,13 @@
                     });
                 });
             });
+            
+            
+            
+
+            
+            
+            
             return this;
         }
         

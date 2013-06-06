@@ -345,6 +345,11 @@ a.ui-state-nojump {
     width:35px;
 }
 
+.klearMatrixFilteringForm p.preconfiguredFilters {
+	text-align:left;
+	margin-bottom: 0.5em;
+}
+
 .fieldInfo-tooltip {
     cursor:help;
 }

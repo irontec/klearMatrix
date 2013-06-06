@@ -38,6 +38,10 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
         $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
+        
+        // En el método save ya viaja el pk recalculado desde la pantalla de edición.
+        $this->_item->unsetCalculatedPk();
+        
         $pk = $this->_item->getCurrentPk();
         $this->_helper->log('edit::save action for mapper:' . $mapperName . ' > PK('.$pk.')');
 

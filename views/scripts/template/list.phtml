@@ -97,7 +97,7 @@ data-title="${info.text}"
 
 {{if ( (generalOptions.length>0) || $item.data.csv )  }}
     {{if (optionsPlacement == 'both' || optionsPlacement == 'top')}}
-        <div class="generalOptionsToolbar topToolbar">
+        <div class="generalOptionsToolbar{{if ($item.data.paginator)}} topToolbar{{/if}}">
         {{each generalOptions}}
             <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
             <span class="ui-silk inline ${icon}"></span>

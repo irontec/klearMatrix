@@ -996,6 +996,11 @@ class KlearMatrix_Model_ResponseItem
         $parent = new Klear_Model_ConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
 
+        if ($parent->getProperty("placement")) {
+            $generalOptions->setPlacement($parent->getProperty("placement"));
+        }
+            
+        
         $options = $this->_getItemFieldsOptionsConfig('screen', $parent);
 
         foreach ($options as $_screen) {

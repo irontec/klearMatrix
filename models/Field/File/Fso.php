@@ -70,6 +70,8 @@ class KlearMatrix_Model_Field_File_Fso
             'class' => ''
         );
 
+        $textAttrs = array('title','text');
+        
         if ($fileOptions = $this->_config->options) {
 
             $ret['options'] = array();
@@ -88,7 +90,7 @@ class KlearMatrix_Model_Field_File_Fso
                         if (is_object($data) && method_exists($data,'toArray')) {
                             $data = $data->toArray();
                         }
-                        if ($k == 'title') {
+                        if (in_array($k, $textAttrs )) {
                             $data = Klear_Model_Gettext::gettextCheck($data);
                         }
                         $ret['options'][$option][$k] = $data;

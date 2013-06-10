@@ -14,6 +14,28 @@ data-title="${info.text}"
 
 {{each(idx,row) values}}
 <form class="klearMatrix_form" action="${saveAction}" data-id="${$item.getIndex(row,pk)}">
+
+{{if (optionsPlacement == 'both' || optionsPlacement == 'top')}}
+    <div class="generalOptionsToolbar">
+        <a class="closeTab" href="" title="<?php echo $this->translate('Close'); ?>"><span class="ui-silk inline ui-silk-cross"></span><?php echo $this->translate('Close'); ?></a>
+        {{if (typeof disableSave == 'undefined' || disableSave != true)}}
+            <a class="action" href="" title="<?php echo $this->translate('Save'); ?>"><span class="ui-silk inline ui-silk-bullet-disk"></span><?php echo $this->translate('Save'); ?></a>
+            <span class="action autoClose "><span><input type="checkbox" name="autoclose" {{if (autoClose)}} checked="checked"{{/if}}/><?php echo $this->translate('Close automatically after save'); ?></span></span>
+        {{/if}}
+
+    {{if (generalOptions.length>0) }}
+        {{each generalOptions}}
+            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
+            <span class="ui-silk inline ${icon}"></span>
+            {{if (label) }}
+                ${$item.getTitle(title,idx,true)}
+            {{/if}}
+            </a>
+        {{/each}}
+    {{/if}}
+    </div>
+{{/if}}
+
     <fieldset class="ui-widget-content ui-corner-all">
         <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>
 
@@ -78,28 +100,28 @@ data-title="${info.text}"
         {{/each}}
     </fieldset>
 
-    <div class="generalOptionsToolbar ui-widget-content ui-corner-all">
+{{if (optionsPlacement == 'both' || optionsPlacement == 'bottom')}}
+    <div class="generalOptionsToolbar">
         <a class="closeTab" href="" title="<?php echo $this->translate('Close'); ?>"><span class="ui-silk inline ui-silk-cross"></span><?php echo $this->translate('Close'); ?></a>
         {{if (typeof disableSave == 'undefined' || disableSave != true)}}
             <a class="action" href="" title="<?php echo $this->translate('Save'); ?>"><span class="ui-silk inline ui-silk-bullet-disk"></span><?php echo $this->translate('Save'); ?></a>
-            <span class="action autoClose "><span><input type="checkbox" name="autoclose" /><?php echo $this->translate('Close automatically after save'); ?></span></span>
+            <span class="action autoClose "><span><input type="checkbox" name="autoclose" {{if (autoClose)}} checked="checked"{{/if}}/><?php echo $this->translate('Close automatically after save'); ?></span></span>
         {{/if}}
 
-{{if (generalOptions.length>0) }}
-    <br /><br />
-{{each generalOptions}}
-
-    <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
-    <span class="ui-silk inline ${icon}"></span>
-    {{if (label) }}
-        ${$item.getTitle(title,idx,true)}
+    {{if (generalOptions.length>0) }}
+        {{each generalOptions}}
+            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
+            <span class="ui-silk inline ${icon}"></span>
+            {{if (label) }}
+                ${$item.getTitle(title,idx,true)}
+            {{/if}}
+            </a>
+        {{/each}}
     {{/if}}
-
-    </a>
-{{/each}}
-{{/if}}
-
     </div>
+{{/if}}
+    
+    
 
 </form>
 {{/each}}

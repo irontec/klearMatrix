@@ -144,6 +144,11 @@ dl.multiLanguage dd.copied span.copied {
     margin-top: 0;
 }
 
+.generalOptionsToolbar.bottomToolbar {
+    margin-bottom: 0;
+    margin-top: -2em;
+}
+
 /* Form */
 
 .klearMatrix_form {

@@ -310,6 +310,33 @@
             });
             
             
+            //Ocultamos botones preconfigurados que estén en activo en este momento
+            $("p.filteredFields span.field",panel).each(function() {
+            	
+            	var $spanValues = $("span.content", $(this));
+            	var fieldName = $(this).data("field");
+
+            	
+            	$("button.preconfigureFilters", panel).filter(function() {
+                	
+            		if (!$(this).data('field') ||
+                			$(this).data('field') != fieldName ||
+                				!$(this).data('value')) {
+                		return false;               		
+                	}
+                	
+                	var candidateValue = $(this).data('value');
+                	
+                	return $spanValues.filter(function() {
+                		return (candidateValue == $(this).data("value"));
+                	}).length > 0
+                	
+                }).button("disable");
+                	
+            });
+            
+            
+            
             $(".klearMatrixFilteringForm",panel).form();
             
             var currentPlugin = false;

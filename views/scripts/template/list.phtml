@@ -76,7 +76,7 @@ data-title="${info.text}"
             <strong>${$item.getColumnName(columns,field)}</strong>:
 
             {{each(_valIdx,_val) searchValues}}
-                <span class="ui-widget-content ui-corner-all content">
+                <span class="ui-widget-content ui-corner-all content" data-value="${_val}" data-op="${searchOps[field][_valIdx]}">
                     <span data-idx="${_valIdx}" class="ui-silk inline ui-silk-cancel"></span>
                     {{if (searchOps[field][_valIdx] == 'lt')}}
                         <strong>&lt;</strong>

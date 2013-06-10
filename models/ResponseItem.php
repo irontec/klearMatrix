@@ -53,7 +53,7 @@ class KlearMatrix_Model_ResponseItem
      * Filtros preconfigurados para pantallas ListController
      */
     protected $_preconfiguredFilters = array();
-    
+
     /*
      * Definir subarrays si el tag depende de subfijos en los nombres de campo,
      * en caso contrario indicar el tag como string
@@ -281,7 +281,7 @@ class KlearMatrix_Model_ResponseItem
     {
         return $this->_preconfiguredFilters;
     }
-    
+
     public function getConfigAttribute($attribute)
     {
         return $this->_config->getProperty($attribute);
@@ -919,15 +919,15 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
-     * Se deshabilita la configuración de calculatedPk, para evitar que se recalcule el ID en el método de save (que ya viene resuelto) 
+     * Se deshabilita la configuración de calculatedPk, para evitar que se recalcule el ID en el método de save (que ya viene resuelto)
      */
     public function unsetCalculatedPk()
     {
         $this->_calculatedPkConfig = NULL;
         $this->_calculatedPk = false;
-        
-    } 
-    
+
+    }
+
     public function getCalculatedPk()
     {
         if (is_null($this->_calculatedPkConfig)) {
@@ -981,6 +981,9 @@ class KlearMatrix_Model_ResponseItem
         return $this->_getItemFieldsOptionsConfig('dialog', $parent);
     }
 
+    /**
+     * @return KlearMatrix_Model_OptionCollection
+     */
     public function getScreenOptions()
     {
         $generalOptions = new KlearMatrix_Model_OptionCollection();

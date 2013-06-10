@@ -11,6 +11,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_results;
     protected $_fieldOptions = false;
     protected $_generalOptions = false;
+    protected $_optionsPlacement = 'bottom';
 
     protected $_messages;
 
@@ -35,7 +36,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_searchAddModifier = false;
 
     protected $_preconfiguredFilters = array();
-    
+
     protected $_info = false;
 
     //@var KlearMatrix_Model_ResponseItem;
@@ -85,6 +86,19 @@ class KlearMatrix_Model_MatrixResponse
     }
 
     /**
+     * Where the option buttons should be placed [top|bottom|both] (default bottom)
+     * @param string $placement
+     */
+    public function setOptionsPlacement($placement)
+    {
+        $acceptedValues = array('top', 'bottom', 'both');
+        if (in_array(strtolower($placement), $acceptedValues)) {
+            $this->_optionsPlacement = strtolower($placement);
+        }
+        return $this;
+    }
+
+    /**
      * Opciones por fila
      * @param KlearMatrix_Model_OptionCollection $fieldOptsWrapper
      */
@@ -98,7 +112,7 @@ class KlearMatrix_Model_MatrixResponse
         $this->_preconfiguredFilters = $preConfFilters;
         return $this;
     }
-    
+
 
     public function setResponseItem(KlearMatrix_Model_ResponseItem $item)
     {
@@ -298,6 +312,8 @@ class KlearMatrix_Model_MatrixResponse
             $ret['generalOptions'] = $this->_generalOptions->toArray();
         }
 
+        $ret['optionsPlacement'] = $this->_optionsPlacement;
+
         if ($this->_csv !== false) {
             $ret['csv'] = true;
         }
@@ -326,7 +342,7 @@ class KlearMatrix_Model_MatrixResponse
         if (sizeof($this->_messages) > 0) {
             $ret['actionMessages'] = $this->_messages->toArray();
         }
-        
+
         if (sizeof($this->_preconfiguredFilters) > 0) {
             $ret['preconfiguredFilters'] = $this->_preconfiguredFilters->toArray();
         }

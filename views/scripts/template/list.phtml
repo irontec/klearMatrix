@@ -95,6 +95,29 @@ data-title="${info.text}"
 </form>
 </div>
 
+{{if ( (generalOptions.length>0) || $item.data.csv )  }}
+    {{if (optionsPlacement == 'both' || optionsPlacement == 'top')}}
+        <div class="generalOptionsToolbar topToolbar">
+        {{each generalOptions}}
+            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+            <span class="ui-silk inline ${icon}"></span>
+            {{if (label) }}
+                ${$item.getTitle(title,false)}
+            {{/if}}
+            </a>
+        {{/each}}
+
+        {{if ($item.data.csv)}}
+            <a class="_generalOption option csv" href="">
+                <span class="ui-silk inline ui-silk-page-white-database"></span><?php echo $this->translate('Export to CSV'); ?>
+            </a>
+        {{/if}}
+
+
+        </div>
+    {{/if}}
+{{/if}}
+
 {{if ($item.data.paginator)}}
     {{if (paginator.pageCount>1)}}
         {{tmpl(paginator) $item.getPaginatorTemplate()}}
@@ -207,30 +230,32 @@ ${$item.getTitle(title,false)}
 </table>
 
 
-{{if ($item.data.paginator)}}
-    {{if (paginator.pageCount>1)}}
-        {{tmpl(paginator) $item.getPaginatorTemplate()}}
+<div class="bottomPaginator">
+    {{if ($item.data.paginator)}}
+        {{if (paginator.pageCount>1)}}
+            {{tmpl(paginator) $item.getPaginatorTemplate()}}
+        {{/if}}
     {{/if}}
-{{/if}}
-
-
-{{if ( (generalOptions.length>0) || $item.data.csv )  }}
-<div class="generalOptionsToolbar ui-widget-content ui-corner-all">
-{{each generalOptions}}
-    <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
-    <span class="ui-silk inline ${icon}"></span>
-    {{if (label) }}
-        ${$item.getTitle(title,false)}
-    {{/if}}
-    </a>
-{{/each}}
-
-{{if ($item.data.csv)}}
-    <a class="_generalOption option csv" href="">
-        <span class="ui-silk inline ui-silk-page-white-database"></span><?php echo $this->translate('Export to CSV'); ?>
-    </a>
-{{/if}}
-
-
 </div>
+
+
+{{if ((generalOptions.length > 0) || $item.data.csv )  }}
+    {{if (optionsPlacement == 'both' || optionsPlacement == 'bottom')}}
+        <div class="generalOptionsToolbar topToolbar">
+        {{each generalOptions}}
+            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+            <span class="ui-silk inline ${icon}"></span>
+            {{if (label) }}
+                ${$item.getTitle(title,false)}
+            {{/if}}
+            </a>
+        {{/each}}
+
+        {{if ($item.data.csv)}}
+            <a class="_generalOption option csv" href="">
+                <span class="ui-silk inline ui-silk-page-white-database"></span><?php echo $this->translate('Export to CSV'); ?>
+            </a>
+        {{/if}}
+        </div>
+    {{/if}}
 {{/if}}

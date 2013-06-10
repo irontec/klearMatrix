@@ -24,12 +24,12 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
         $this->_loadConfiguration();
 
         $this->_js = array(
-                "/js/plugins/wym/" . $this->_scriptName,
-                "/js/plugins/wym/plugins/hovertools/jquery.wymeditor.hovertools.js",
-                "/js/plugins/wym/plugins/resizable/jquery.wymeditor.resizable.js",
-                "/js/plugins/wym/plugins/fullscreen/jquery.wymeditor.fullscreen.js",
-                "/js/plugins/jquery.klearmatrix.wym.js",
-                "/js/plugins/wym/plugins/kleargallery/jquery.wymeditor.kleargallery.js",
+            "/js/plugins/wym/" . $this->_scriptName,
+            "/js/plugins/wym/plugins/hovertools/jquery.wymeditor.hovertools.js",
+            "/js/plugins/wym/plugins/resizable/jquery.wymeditor.resizable.js",
+            "/js/plugins/wym/plugins/fullscreen/jquery.wymeditor.fullscreen.js",
+            "/js/plugins/jquery.klearmatrix.wym.js",
+            "/js/plugins/wym/plugins/kleargallery/jquery.wymeditor.kleargallery.js",
         );
     }
 
@@ -84,14 +84,9 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
     protected function _getLanguage()
     {
         $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
-        $language = $currentKlearLanguage->getLanguage();
         return $currentKlearLanguage->getLanguage();
-
-//         if (LANGUAGE EXISTS) {
-//             return $language;
-//         }
-//         return 'es';
     }
+
     protected function _setPlugin()
     {
         $this->_plugin = 'wym';

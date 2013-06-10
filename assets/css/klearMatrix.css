@@ -1,7 +1,7 @@
 /*List controller */
 
 table.kMatrix {
-    margin-top:1em;
+    margin-top: 0;
     width:100%;
 }
 
@@ -134,8 +134,8 @@ dl.multiLanguage dd.copied span.copied {
 }
 
 .generalOptionsToolbar {
-    padding:1em;
-    margin:1em 0 1em 0;
+    padding:1em 0;
+    margin: 0;
 }
 
 /* Form */
@@ -237,8 +237,10 @@ dl.multiLanguage dd.copied span.copied {
 .paginator {
     clear: both;
     overflow: hidden;
-    padding: 0.8em;
-    margin: 0.2em 0;
+    padding: 3px;
+    margin: 3px 0 0 0;
+    border-radius: 5px 5px 0 0;
+    border-bottom-width: 0;
 }
 
 .paginator a {
@@ -252,6 +254,12 @@ dl.multiLanguage dd.copied span.copied {
     text-decoration:none;
 }
 
+.bottomPaginator .paginator {
+    margin: 0;
+    border-radius: 0 0 5px 5px;
+    border-top: 0;
+    border-bottom-width: 1px;
+}
 a.ui-state-nojump {
     border: 1px solid transparent;
     text-decoration:none;

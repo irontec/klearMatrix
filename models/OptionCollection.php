@@ -4,40 +4,57 @@ class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
 {
     protected $_opts = array();
     protected $_title;
-    
+
     private $_acceptedValues = array('top', 'bottom', 'both');
-    
-    protected $_optionsPlacement = 'bottom';
+
+    protected $_optionsPlacement;
 
     public function __construct()
     {
-        
-        $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
-        $siteConfig = $bootstrap->getResource('modules')->offsetGet('klear')->getOption('siteConfig');
-        
-        $this->setPlacement($siteConfig->getDefaultCustomConfiguration('optionCollectionPlacement'));
-        
     }
-    
+
     public function addOption(KlearMatrix_Model_AbstractOption $opt)
     {
         $this->_opts[] = $opt;
 
     }
 
-    public function setPlacement($placement)
-    { 
+    public function setPlacement($placement, $module = 'default')
+    {
         if (in_array(strtolower($placement), $this->_acceptedValues)) {
-            $this->_optionsPlacement = strtolower($placement);
+            $this->_optionsPlacement[$module] = strtolower($placement);
         }
         return $this;
     }
-    
-    public function getPlacement()
+
+    public function getPlacement($module = 'default')
     {
-        return $this->_optionsPlacement;
+        if (!isset($this->_optionsPlacement)) {
+            $this->_initOptionsPlacement();
+        }
+
+        if (isset($this->_optionsPlacement[$module])) {
+            return $this->_optionsPlacement[$module];
+        }
+
+        return $this->_optionsPlacement['default'];
     }
-    
+
+    protected function _initOptionsPlacement()
+    {
+        $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
+        $siteConfig = $bootstrap->getResource('modules')->offsetGet('klear')->getOption('siteConfig');
+        $placement = $siteConfig->getDefaultCustomConfiguration('optionCollectionPlacement');
+
+        if ($placement instanceof \Zend_Config) {
+            foreach ($placement as $module => $value) {
+                $this->setPlacement($value, $module);
+            }
+        } else {
+            $this->setPlacement($placement, 'default');
+        }
+    }
+
     public function toArray()
     {
         $retArray = array();

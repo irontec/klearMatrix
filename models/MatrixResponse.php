@@ -27,7 +27,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_disableAddAnother = false;
 
     protected $_autoClose = false;
-    
+
     protected $_title;
 
     protected $_total = false;
@@ -47,24 +47,23 @@ class KlearMatrix_Model_MatrixResponse
 
     public function __construct()
     {
-        
         // Buscaremos éstas propiedades en klear.yaml > main > defaultCustomConfiguration
         // de cara a establecer su valor por defecto.
         $defaultValues = array('disableSave','disableAddAnother','autoClose');
-        
+
         $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
         $siteConfig = $bootstrap->getResource('modules')->offsetGet('klear')->getOption('siteConfig');
-        foreach($defaultValues as $key) {
+        foreach ($defaultValues as $key) {
             $value = $siteConfig->getDefaultCustomConfiguration($key);
             if (is_null($value)) {
                 continue;
             }
             $property = '_' . $key;
             $this->{$property} = $value;
-            
+
         }
     }
-    
+
     public function setColumnCollection(KlearMatrix_Model_ColumnCollection $columnCollection)
     {
         $this->_columns = $columnCollection;
@@ -319,7 +318,14 @@ class KlearMatrix_Model_MatrixResponse
 
         if (false !== $this->_generalOptions) {
             $ret['generalOptions'] = $this->_generalOptions->toArray();
-            $ret['optionsPlacement'] = $this->_generalOptions->getPlacement();
+
+            $currentModule = $this->_item->getRouteDispatcher()->getControllerName();
+            $ret['optionsPlacement'] = $this->_generalOptions->getPlacement($currentModule);
+        } else {
+            // FIXME: Ñapa por si nos llega la opción CSV sin otras opciones.
+            if ($this->_csv !== false) {
+                $ret['optionsPlacement'] = 'bottom';
+            }
         }
 
         if ($this->_csv !== false) {
@@ -356,11 +362,11 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         $ret[$this->_item->getType()] = $this->_item->getItemName();
-        
+
         if ($this->_autoClose === true) {
             $ret['autoClose'] = $this->_autoClose;
         }
-        
+
         return $ret;
     }
 }

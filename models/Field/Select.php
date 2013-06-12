@@ -27,6 +27,15 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         return $value;
     }
 
+    public function getCustomOrderField()
+    {
+        if (method_exists($this->_adapter, 'getCustomOrderField')) {
+
+            return $this->_adapter->getCustomOrderField();
+        }
+
+        return $this->_column->getDbFieldName();
+    }
 }
 
 //EOF

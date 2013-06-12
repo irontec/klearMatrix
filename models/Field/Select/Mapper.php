@@ -233,6 +233,44 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
         return $ret;
     }
+
+    //Hace la ordenación en el mapper por el campo o campos que se van a mostrar y devuelve los ids ordenados
+    public function getCustomOrderField()
+    {
+        $values = array();
+        $fieldName = $this->_config->getProperty('config')->fieldName;
+
+        if (is_object($fieldName)) {
+
+            $fieldConfig = new Klear_Model_ConfigParser();
+            $fieldConfig->setConfig($fieldName);
+            $template = $fieldConfig->getProperty("template");
+            preg_match_all('/%(.*)%/U', $template, $matches);
+
+            if (!count($matches[1])) {
+
+                return $this->_column->getDbFieldName();
+            }
+
+            $fieldName = $matches[1];
+        }
+
+        $mapperName = $this->_config->getProperty("config")->mapperName;
+        $dataMapper = new $mapperName;
+        $results = $dataMapper->fetchList('', $fieldName);
+
+        foreach ($results as $result) {
+
+            $values[] = $result->getPrimaryKey();
+        }
+
+        if (count($values)) {
+
+            return 'FIELD('. $this->_column->getDbFieldName() . ',"' . implode('","', $values) . '")';
+        }
+
+        return $this->_column->getDbFieldName();
+    }
 }
 
 //EOF

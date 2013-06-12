@@ -40,6 +40,42 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
             $this->_items[] = $value;
             $this->_keys[] = $key;
         }
+
+        if ($this->_config->getProperty('order') === true) {
+
+            $values = $this->_orderValues();
+            $this->_keys = array_keys($values);
+            $this->_items = array_values($values);
+        }
+    }
+
+    protected function _orderValues()
+    {
+        $keys = $this->_keys;
+        $items = $this->_items;
+
+        $values = array_combine($keys, $items);
+        asort($values);
+
+        return $values;
+    }
+
+    public function getCustomOrderField()
+    {
+        $keys = $this->_keys;
+
+        if ($this->_config->getProperty('order') !== true) {
+
+            $values = $this->_orderValues();
+            $keys = array_keys($values);
+        }
+
+        if (!count($keys)) {
+
+            return $this->_column->getDbFieldName();
+        }
+
+        return 'FIELD('. $this->_column->getDbFieldName() . ',"' . implode('","', $keys) . '")';
     }
 
 }

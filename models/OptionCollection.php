@@ -2,6 +2,8 @@
 
 class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
 {
+    const DEFAULT_PLACEMENT = 'bottom';
+
     protected $_opts = array();
     protected $_title;
 
@@ -45,6 +47,12 @@ class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
         $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
         $siteConfig = $bootstrap->getResource('modules')->offsetGet('klear')->getOption('siteConfig');
         $placement = $siteConfig->getDefaultCustomConfiguration('optionCollectionPlacement');
+
+        $this->setPlacement(self::DEFAULT_PLACEMENT, 'default');
+        
+        if (!$placement) {
+            $placement = self::DEFAULT_PLACEMENT;
+        }
 
         if ($placement instanceof \Zend_Config) {
             foreach ($placement as $module => $value) {

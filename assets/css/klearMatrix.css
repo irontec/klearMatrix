@@ -37,6 +37,9 @@ table.kMatrix th span.order {
 table.kMatrix td {
     padding: 3px;
     vertical-align: middle;
+    max-width: 30em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table.kMatrix td.options {

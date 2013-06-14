@@ -35,6 +35,7 @@ class KlearMatrix_Model_MatrixResponse
 
 
     protected $_searchAddModifier = false;
+    protected $_applySearchFilters = true;
 
     protected $_preconfiguredFilters = array();
 
@@ -207,6 +208,11 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_searchAddModifier = $toggle;
     }
+    
+    public function toggleApplySearchFilters($toggle)
+    {
+        $this->_applySearchFilters = $toggle;
+    }
 
 
     /**
@@ -340,6 +346,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['searchFields'] = $this->_searchFields;
             $ret['searchOps'] = $this->_searchOps;
             $ret['searchAddModifier'] = $this->_searchAddModifier;
+            $ret['applySearchFilters'] = $this->_applySearchFilters;
         }
 
         if (false !== $this->_info) {

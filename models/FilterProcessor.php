@@ -68,6 +68,15 @@ class KlearMatrix_Model_FilterProcessor
 
         $this->_data->addSearchAddModifier(true);
     }
+    
+    protected function _toggleApplySearchFilters($value)
+    {
+        if (false === $this->_data) {
+            return;
+        }
+        
+        $this->_data->toggleApplySearchFilters($value);
+    }
 
 
     protected function _generate()
@@ -97,11 +106,16 @@ class KlearMatrix_Model_FilterProcessor
             }
         }
 
-        if ($this->_request->getPost("searchAddModifier") == '1') {
-            $this->_addSearchAddModifierToData();
-            $this->_where = array('(' . implode(" or ", $expressions) . ')', $values);
+        if ($this->_request->getPost("applySearchFilters") == '0') {
+            $this->_toggleApplySearchFilters(false);
+            $this->_where = '(1=1)';
         } else {
-            $this->_where = array('(' . implode(" and ", $expressions) . ')', $values);
+            if ($this->_request->getPost("searchAddModifier") == '1') {
+                $this->_addSearchAddModifierToData();
+                $this->_where = array('(' . implode(" or ", $expressions) . ')', $values);
+            } else {
+                $this->_where = array('(' . implode(" and ", $expressions) . ')', $values);
+            }
         }
 
         return true;

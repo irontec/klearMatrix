@@ -306,9 +306,20 @@ a.ui-state-nojump {
     cursor:pointer;
 }
 
+.klearMatrixFiltering p.title {
+	float:left;
+}
+
+.klearMatrixFilteringForm .applyFilters {
+    margin-left: 25px;
+    margin-top: 9px;
+    font-size: 0.8em;
+    float:left; 
+}
+
 .klearMatrixFiltering span.ui-silk,
 .klearMatrixCsv span.ui-silk {
-    margin: 0 .5em;
+    margin: 0.5em;
 }
 
 .klearMatrixFiltering input.term {

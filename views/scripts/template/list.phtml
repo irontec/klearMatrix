@@ -22,6 +22,16 @@ data-title="${info.text}"
 </p>
 {{/if}}
 <p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Filter fields'); ?></p>
+{{if (searchFields) }}
+    <span class="applyFilters" title="<?php echo $this->translate('Returns records that satisfy any of filters'); ?>">
+        <?php echo $this->translate('Aplicar los filtros'); ?>
+        <input type="checkbox" name="applyFilters"
+        {{if (applySearchFilters) }}
+            checked="checked"
+        {{/if}}
+    />
+    </span>
+{{/if}}
     <p class="filterItem">
     <span class="searchOption">
         <select name="searchOption">
@@ -67,6 +77,7 @@ data-title="${info.text}"
         {{/if}}
         />
     </span>
+    
     <p class="filteredFields">
     {{each(field,searchValues) searchFields}}
 

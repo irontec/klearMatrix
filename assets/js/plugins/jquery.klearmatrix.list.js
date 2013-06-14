@@ -37,7 +37,7 @@
             var _self = this;
 
             $container = $(this.element.klearModule("getPanel"));
-
+            
             $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
 
             if ($("td.multilang",$container).length>0) {
@@ -226,6 +226,15 @@
                 }
 
                 _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
+                
+                if ( $("input[name=applyFilters]",panel).length > 0) {
+                    console.log("Existo");
+                    console.log($("input[name=applyFilters]:checked",panel).length);
+                    _dispatchOptions.post.applySearchFilters = $("input[name=applyFilters]:checked",panel).length;
+                } else {
+                    console.log("No Existo");
+                    _dispatchOptions.post.applySearchFilters = 1;
+                }
                 _dispatchOptions.post.page = 1;
 
                 $(self)
@@ -256,7 +265,12 @@
 
                 $("span.addTerm",panel).trigger("click",true);
             });
-
+            
+            $("input[name=applyFilters]",panel).on('change',function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $("span.addTerm",panel).trigger("click",true);
+            });
 
             $(".klearMatrixFiltering .filteredFields",panel).on('click','.ui-silk-cancel',function(e) {
 
@@ -308,7 +322,6 @@
                     .klearModule("reDispatch");
                  
             });
-            
             
             //Ocultamos botones preconfigurados que estén en activo en este momento
             $("p.filteredFields span.field",panel).each(function() {
@@ -544,7 +557,20 @@
                 });
             });
             
+            if ($("input[name=applyFilters]:checked",panel).length == 0
+                    && $(".klearMatrixFiltering .filteredFields .field",panel).length > 0) {
+                
+                $('.preconfiguredFilters button', panel).css('opacity','0.5');
+                $('.filterItem, .filteredFields', panel).hide();
+                
+                $(".klearMatrixFiltering .title",panel).unbind('click');
             
+                $('button.preconfigureFilters').unbind('click').on('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+            }
             
 
             

@@ -181,6 +181,7 @@
             });
 
 
+            var $applyFilters = $("input[name=applyFilters]",panel);
 
             $(".klearMatrixFiltering span.addTerm",panel).on('click',function(e,noNewValue) {
                 e.preventDefault();
@@ -226,9 +227,9 @@
                 }
 
                 _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
-                
-                if ( $("input[name=applyFilters]",panel).length > 0) {
-                    _dispatchOptions.post.applySearchFilters = $("input[name=applyFilters]:checked",panel).length;
+
+                if ( $applyFilters ) {
+                    _dispatchOptions.post.applySearchFilters = ( $applyFilters.is(':checked') ) ?  1 : 0;
                 } else {
                     _dispatchOptions.post.applySearchFilters = 1;
                 }
@@ -263,7 +264,7 @@
                 $("span.addTerm",panel).trigger("click",true);
             });
             
-            $("input[name=applyFilters]",panel).on('change',function(e) {
+            $applyFilters.on('change',function(e) {
                 e.stopPropagation();
                 e.preventDefault();
                 $("span.addTerm",panel).trigger("click",true);
@@ -460,12 +461,13 @@
                 
             }).trigger('manualchange.searchValues', true);
 
+            var $filteredFields = $(".klearMatrixFiltering .filteredFields .field",panel);
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");
                 var target = ".filterItem";
                 
-                if ($("input[name=applyFilters]:checked",panel).length == 0
-                    && $(".klearMatrixFiltering .filteredFields .field",panel).length > 0) {
+                if ( $applyFilters.is(':checked') == false
+                    && $filteredFields.length > 0 ) {
                     
                     target = ".filteredFields";
                     
@@ -482,6 +484,15 @@
                 }
             });
 
+            if ( $applyFilters.is(':checked') == false
+                    && $filteredFields.length > 0 ) {
+                
+                $('.filteredFields', panel).css('opacity','0.5');
+                $('.preconfiguredFilters, .filterItem', panel).hide();
+                
+                $(".klearMatrixFilteringForm:eq(0)",panel).addClass('not-loaded');
+
+            }
 
             //Exportar a CSV el listado
             $("a.option.csv", panel).on('click', function(event) {
@@ -562,21 +573,6 @@
                     });
                 });
             });
-            
-            if ($("input[name=applyFilters]:checked",panel).length == 0
-                    && $(".klearMatrixFiltering .filteredFields .field",panel).length > 0) {
-                
-                $('.preconfiguredFilters button', panel).css('opacity','0.5');
-                $('.filteredFields, .filterItem', panel).hide();
-                
-                $(".klearMatrixFilteringForm:eq(0)",panel).addClass('not-loaded');
-            
-                $('button.preconfigureFilters').unbind('click').on('click', function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-
-            }
             
             return this;
         }

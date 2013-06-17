@@ -30,19 +30,19 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
             $results = $mapper->findByField($pkField, $this->_request->getParam("value"));
             $totalItems = sizeof($results);
-            
+
         } else {
             $limit = NULL;
             $order = NULL;
-            
+
             if (isset($commandConfiguration->limit)) {
                 $limit = intval($commandConfiguration->limit);
             }
-            
+
             if (isset($commandConfiguration->order)) {
                 $order = $commandConfiguration->order;
             }
-            
+
             $condition = '';
 
             if (isset($commandConfiguration->condition)) {
@@ -55,10 +55,10 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                         '%' . $searchTerm . '%'
                     )
                 );
-            
+
             $results = $mapper->fetchList($where, $order, $limit);
             $totalItems = $mapper->countByQuery($where);
-            
+
         }
 
         $options = array();
@@ -72,14 +72,14 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                 'value' => $tienda->$labelGetter(),
             );
         }
-        
+
         $this->_view->totalItems = $this->_view->translate("%d items encontrados",$totalItems);
-        
-        if (!is_null($limit)) {
+
+        if (isset($limit) && !is_null($limit)) {
             $show = ($limit < $totalItems)? $limit : $totalItems;
             $this->_view->totalItems .= ' ' . $this->_view->translate("(mostrando %d)",$show);
         }
-        
+
         $this->_view->results = $options;
     }
 }

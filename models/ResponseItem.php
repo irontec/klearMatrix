@@ -860,6 +860,10 @@ class KlearMatrix_Model_ResponseItem
             return $field . ' is NULL';
         }
 
+        if (is_object($dbAdapter) && method_exists($dbAdapter, 'quoteIdentifier') ) {
+            $field = $dbAdapter->quoteIdentifier($field);
+        }
+
         /*
          * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
          * y usamos un namedParameter porque MasterLogic lo espera así
@@ -874,7 +878,6 @@ class KlearMatrix_Model_ResponseItem
         }
 
         return array(
-            $field . " = ? ",
             array($value)
         );
     }
@@ -999,8 +1002,8 @@ class KlearMatrix_Model_ResponseItem
         if ($parent->getProperty("placement")) {
             $generalOptions->setPlacement($parent->getProperty("placement"));
         }
-            
-        
+
+
         $options = $this->_getItemFieldsOptionsConfig('screen', $parent);
 
         foreach ($options as $_screen) {

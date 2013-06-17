@@ -228,11 +228,8 @@
                 _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
                 
                 if ( $("input[name=applyFilters]",panel).length > 0) {
-                    console.log("Existo");
-                    console.log($("input[name=applyFilters]:checked",panel).length);
                     _dispatchOptions.post.applySearchFilters = $("input[name=applyFilters]:checked",panel).length;
                 } else {
-                    console.log("No Existo");
                     _dispatchOptions.post.applySearchFilters = 1;
                 }
                 _dispatchOptions.post.page = 1;
@@ -465,12 +462,21 @@
 
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");
+                var target = ".filterItem";
+                
+                if ($("input[name=applyFilters]:checked",panel).length == 0
+                    && $(".klearMatrixFiltering .filteredFields .field",panel).length > 0) {
+                    
+                    target = ".filteredFields";
+                    
+                }
+                
                 if ($searchForm.hasClass("not-loaded")) {
-                    $(".filterItem",$searchForm).slideDown(function() {
+                    $(target,$searchForm).slideDown(function() {
                         $searchForm.removeClass("not-loaded");
                     });
                 } else {
-                    $(".filterItem",$searchForm).slideUp(function() {
+                    $(target,$searchForm).slideUp(function() {
                         $searchForm.addClass("not-loaded");
                     });
                 }
@@ -561,9 +567,9 @@
                     && $(".klearMatrixFiltering .filteredFields .field",panel).length > 0) {
                 
                 $('.preconfiguredFilters button', panel).css('opacity','0.5');
-                $('.filterItem, .filteredFields', panel).hide();
+                $('.filteredFields, .filterItem', panel).hide();
                 
-                $(".klearMatrixFiltering .title",panel).unbind('click');
+                $(".klearMatrixFilteringForm:eq(0)",panel).addClass('not-loaded');
             
                 $('button.preconfigureFilters').unbind('click').on('click', function(e){
                     e.preventDefault();
@@ -571,10 +577,6 @@
                 });
 
             }
-            
-
-            
-            
             
             return this;
         }

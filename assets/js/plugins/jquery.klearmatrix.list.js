@@ -461,13 +461,13 @@
                 
             }).trigger('manualchange.searchValues', true);
 
-            var $filteredFields = $(".klearMatrixFiltering .filteredFields .field",panel);
+            var $filteredFields = $(".klearMatrixFiltering .filteredFields",panel);
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");
                 var target = ".filterItem";
                 
                 if ( $applyFilters.is(':checked') == false
-                    && $filteredFields.length > 0 ) {
+                    && $filteredFields.find('.field').length > 0 ) {
                     
                     target = ".filteredFields";
                     
@@ -485,9 +485,10 @@
             });
 
             if ( $applyFilters.is(':checked') == false
-                    && $filteredFields.length > 0 ) {
+                    && $filteredFields.find('.field').length > 0 ) {
                 
-                $('.filteredFields', panel).css('opacity','0.5');
+                $filteredFields.css('opacity','0.5');
+                $filteredFields.unbind('click');
                 $('.preconfiguredFilters, .filterItem', panel).hide();
                 
                 $(".klearMatrixFilteringForm:eq(0)",panel).addClass('not-loaded');

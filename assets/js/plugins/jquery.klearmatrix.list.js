@@ -542,7 +542,7 @@
 
                 $.getJSON( _url , function( data, status, xhr ) {
 
-                    $.each(data, function () {
+                    $.each(data.results, function () {
 
                         var responseItem = this;
 

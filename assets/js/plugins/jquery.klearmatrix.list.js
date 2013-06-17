@@ -228,8 +228,8 @@
 
                 _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
 
-                if ( $applyFilters ) {
-                    _dispatchOptions.post.applySearchFilters = ( $applyFilters.is(':checked') ) ?  1 : 0;
+                if ( $applyFilters.length > 0 ) {
+                    _dispatchOptions.post.applySearchFilters = ( $applyFilters.is(':checked') ) ? 1 : 0;
                 } else {
                     _dispatchOptions.post.applySearchFilters = 1;
                 }

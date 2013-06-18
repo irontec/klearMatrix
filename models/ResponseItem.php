@@ -856,12 +856,12 @@ class KlearMatrix_Model_ResponseItem
     {
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
 
-        if (is_null($value) || $value == 'NULL') {
-            return $field . ' is NULL';
+        if ($dbAdapter) {
+            $field = $dbAdapter->quoteIdentifier($field);
         }
 
-        if (is_object($dbAdapter) && method_exists($dbAdapter, 'quoteIdentifier') ) {
-            $field = $dbAdapter->quoteIdentifier($field);
+        if (is_null($value) || $value == 'NULL') {
+            return $field . ' is NULL';
         }
 
         /*
@@ -874,10 +874,10 @@ class KlearMatrix_Model_ResponseItem
                 $field . ' = :' . $paramName,
                 array(':' . $paramName => $value)
             );
-
         }
 
         return array(
+            $field . " = ? ",
             array($value)
         );
     }
@@ -922,13 +922,13 @@ class KlearMatrix_Model_ResponseItem
     }
 
     /**
-     * Se deshabilita la configuración de calculatedPk, para evitar que se recalcule el ID en el método de save (que ya viene resuelto)
+     * Se deshabilita la configuración de calculatedPk, para evitar que se recalcule
+     * el ID en el método de save (que ya viene resuelto)
      */
     public function unsetCalculatedPk()
     {
         $this->_calculatedPkConfig = NULL;
         $this->_calculatedPk = false;
-
     }
 
     public function getCalculatedPk()
@@ -1049,8 +1049,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function getDialogsGeneralOptionsConfig()
     {
-        if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
-
+        if ((!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '')) {
             return array();
         }
 
@@ -1063,7 +1062,6 @@ class KlearMatrix_Model_ResponseItem
     public function getPaginationConfig()
     {
         if (!$this->_config->exists("pagination")) {
-
             return null;
         }
 
@@ -1080,7 +1078,6 @@ class KlearMatrix_Model_ResponseItem
     public function getInfo()
     {
         if ($this->_hasInfo) {
-
             return $this->_fieldInfo->getJsonArray();
         }
 
@@ -1090,7 +1087,6 @@ class KlearMatrix_Model_ResponseItem
     public function getOrderConfig()
     {
         if (!$this->_config->exists("order")) {
-
             return false;
         }
 
@@ -1121,17 +1117,13 @@ class KlearMatrix_Model_ResponseItem
         $_items = $parent->getProperty($property);
 
         if (!$_items) {
-
             return array();
         }
 
         foreach ($_items  as $_item=> $_enabled) {
-
             if (!(bool)$_enabled) {
-
                 continue;
             }
-
             $retArray[] = $_item;
         }
 

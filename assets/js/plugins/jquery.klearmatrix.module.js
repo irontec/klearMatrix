@@ -278,6 +278,9 @@
         				selectBox.close();
         			}
             		$(this).trigger("manualchange");
+    			})
+    			.each(function() {
+    			    $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
     			});
         	
             

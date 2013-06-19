@@ -76,7 +76,7 @@
             this.element.klearModule("option","PostDispatchMethod",function() {
                 if (!this.savedValues) return;
                 $.each(this.savedValues,function(name,value) {
-                    $("[name="+name+"]",self.options.theForm).val(value).trigger("manualchange");
+                    $("[name='"+name+"']",self.options.theForm).val(value).trigger("manualchange");
                 });
                 this.savedValues = {};
             });
@@ -247,6 +247,11 @@
 
             $("select,input,textarea",this.options.theForm).each(function() {
                 var _val = (null == $(this).val())? '':$(this).val();
+
+                if ($(this).val() == '__NULL__') {
+                    _val = $(this).data('preload').toString();
+                }
+
                 var _hash = Crypto.MD5(_val);
                 $(this)
                     .data("savedValue",_hash)
@@ -763,11 +768,14 @@
             }).trigger("manualchange.visualFilter",true);
 
             $("select, input, textarea", this.options.theForm).on('manualchange', function() {
-
-                var _target = $(this).is("select")? $(this).next("span").children("span:eq(0)"):$(this);
-
-                var _val = $(this).val()? $(this).val() : '';
-
+                if ($(this).data("target-for-change")) {
+                    var _target = $(this).data("target-for-change");
+                } else {
+                    var _target = $(this);
+                }
+                
+                var _val = $(this).val() ? $(this).val() : '';
+                
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
                     _target.addClass("changed ui-state-highlight");
                     $(this).addClass("changed");

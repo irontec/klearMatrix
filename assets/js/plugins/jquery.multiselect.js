@@ -45,7 +45,7 @@ $.widget("ech.multiselect", {
 	_create: function(){
 		var el = this.element.hide(),
 			o = this.options;
-
+			
 		this.speed = $.fx.speeds._default; // default speed for effects
 		this._isOpen = false; // assume no
 
@@ -97,6 +97,16 @@ $.widget("ech.multiselect", {
 		if( !o.multiple ){
 			menu.addClass('ui-multiselect-single');
 		}
+		
+		// By Irontec: Refresesh the object when we trigger 'postmanualchange'
+		var self = this;
+		this.element.on('postmanualchange', function() {
+		    self.refresh(true);
+		});
+		
+		// bla bla bla soy arkaitz
+	    this.element.data("target-for-change",this.element.next("button"));
+
 	},
 
 	_init: function(){

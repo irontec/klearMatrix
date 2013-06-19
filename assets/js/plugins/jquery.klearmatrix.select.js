@@ -84,6 +84,10 @@
                 }
             });
         },
+        
+        _postManualChange: function () {
+        //TO-DO: Cuando se recarga y hay un valor guardado hay que cargarlo...
+        },
 
         _initSelectedValue: function () {
 
@@ -131,12 +135,19 @@
                 .attr( "title", "" )
                 .addClass("ui-state-default ui-combobox-input ui-corner-all")
                 .addClass("ui-widget ui-widget-content ui-corner-left");
+            
+            //Se le envía el target para el highlight y se bindea "postmanualchange"
+            this.select.data('target-for-change',this.select.next("span").children("input:eq(0)"));
+            this.select.on('postmanualchange', function() {
+                _self._postManualChange();
+            });
 
            this._initUIsAutocomplete(this.input, this);
         },
 
         _initUIsAutocomplete: function (targetNode, context) {
 
+            var self = this;
             var _self = context;
 
             targetNode.autocomplete({
@@ -171,6 +182,7 @@
 
                     option.get(0).selected = true;
                 	
+                    self.select.trigger('manualchange');
                     _self._trigger( "selected", event, {
                         item: option
                     });

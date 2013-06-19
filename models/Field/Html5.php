@@ -23,5 +23,4 @@ class KlearMatrix_Model_Field_Html5 extends KlearMatrix_Model_Field_Abstract
         return $this->_adapter->filterValue($value);
         
     }
-    
 }

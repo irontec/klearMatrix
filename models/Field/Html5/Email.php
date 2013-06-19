@@ -39,9 +39,7 @@ class KlearMatrix_Model_Field_Html5_Email extends KlearMatrix_Model_Field_Html5_
                         throw new Klear_Exception_Default($translator->translate("Email inválido...."));
                         
                     }
-                    
-               }
-               
+                }
             }
         }
         

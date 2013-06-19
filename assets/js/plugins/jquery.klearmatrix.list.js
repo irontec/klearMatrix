@@ -4,7 +4,6 @@
         return;
     }
 
-
     var __namespace__ = "klearmatrix.list";
 
     $.widget("klearmatrix.list", $.klearmatrix.module,  {

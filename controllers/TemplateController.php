@@ -15,7 +15,8 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
             "text",
             "textarea",
             "video",
-            "map"
+            "map",
+            "html5"
     );
 
     public function init()

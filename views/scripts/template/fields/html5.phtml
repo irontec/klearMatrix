@@ -1,0 +1,45 @@
+{{if (_readonly)}}
+    {{html _fieldValue}}
+{{else}}
+    <input
+        type="${_dataConfig.settings.type}"
+        id="${_elemIden}"
+        name="${_elemName}"
+        value="${_fieldValue}"
+        
+        {{if (_dataConfig.settings.class)}}
+            class="${_dataConfig.settings.class}"
+        {{/if}}
+
+        {{if (_properties.required)}}
+            required=""
+        {{/if}}
+
+        {{if (_properties.placeholder)}}
+            placeholder="${_properties.placeholder}"
+        {{/if}}
+
+        {{if (_properties.pattern)}}
+            pattern="${_properties.pattern}"
+        {{/if}}
+
+        {{if (_properties.maxLength)}}
+            maxlength="${_properties.maxLength}"
+        {{/if}}
+
+        {{if (_errors)}}
+             {{each(eIndex,error) _errors}}
+                 data-${eIndex}="${error}"
+             {{/each}}
+        {{/if}}
+
+        {{each(idx,attrValue) _dataConfig.attributes}}
+            ${idx}="${attrValue}"
+        {{/each}}
+        
+        {{each(idx,attrValue) _dataConfig.nodeAttributes}}
+            ${idx}="${attrValue}"
+        {{/each}}
+    />
+{{/if}}
+

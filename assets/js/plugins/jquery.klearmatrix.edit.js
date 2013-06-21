@@ -268,7 +268,7 @@
                     focusin: false,
                     change: false,
                     keyup: false,
-                    allValidSelectors: ':input:visible:not(:button):not(:disabled):not(.novalidate), \
+                    allValidSelectors: 'input.hiddenFile, :input:visible:not(:button):not(:disabled):not(.novalidate), \
                                         select[required]:not(:disabled):not(.novalidate)'
                 })
                 .on('validated',function(formElement,validation) {

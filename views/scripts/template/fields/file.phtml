@@ -1,5 +1,5 @@
 {{if (!_readonly)}}
-    <input type="hidden" name="${_elemName}" value="${_fieldValue.name}"
+    <input type="hidden" class="hiddenFile" name="${_elemName}" value="${_fieldValue.name}"
     {{if (_properties.required)}}required="" {{/if}}
     {{if (_dataConfig.allowed_extensions)}} data-extensions="${_dataConfig.allowed_extensions}"{{/if}}
     {{if (_dataConfig.uploadCommnad)}} data-upload="command" data-command="${_dataConfig.uploadCommnad}"{{/if}}

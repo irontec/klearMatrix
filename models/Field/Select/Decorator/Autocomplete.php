@@ -6,8 +6,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
     const DYNAMIC_DATA_LOADING = true;
 
-    protected function _init()
-    {
+    protected function _init() {
         $this->_helper->viewRenderer->setNoRender(true);
     }
 

@@ -11,10 +11,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
-    public function run()
-    {
-
-
+    public function run() {
         $mainRouter = $this->_request->getParam("mainRouter");
         $commandConfiguration = $mainRouter->getCurrentCommand()->getConfig()->getRaw()->autocomplete;
 

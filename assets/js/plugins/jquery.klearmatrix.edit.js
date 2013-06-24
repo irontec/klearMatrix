@@ -249,7 +249,9 @@
                 var _val = (null == $(this).val())? '':$(this).val();
 
                 if ($(this).val() == '__NULL__') {
-                    _val = $(this).data('preload').toString();
+                    if ( $(this).data('preload') != '' ) {
+                        _val = $(this).data('preload').toString();
+                    }
                 }
 
                 var _hash = Crypto.MD5(_val);
@@ -416,10 +418,10 @@
                                         }).jPlayer("pause");
                                     },
                                     play: function() {
-                                    	item.jPlayer("pauseOthers");
+                                        item.jPlayer("pauseOthers");
                                     },
                                     ended : function() {
-                                    	item.jPlayer("ready");
+                                        item.jPlayer("ready");
                                     },
                                     cssSelectorAncestor : '#' + controlId,
                                     swfPath : '../klearMatrix/bin/',
@@ -716,66 +718,66 @@
 
                     var curOption = $("option[value="+$(this).val()+"]",$(this));
                 }
-                
+
                 if (!curOption.data("show") && !curOption.data("hide")) {
                     return;
                 }
-                
+
                 if (curOption.data("show")) {
-	                $.each(curOption.data("show").split(","),function(i,val) {
-	                    var fName = $.trim(val);
-	                    if (fName == '') return;
-	                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
-	
-	                    if (manual) {
-	
-	                        field.show();
-	
-	                    } else {
-	
-	                        //Cuando mostramos un campo, lanzamos el visualFilter si tiene
-	                        //por si está relacionado con otro campo que debemos ocultar o mostrar
-	                        field.slideDown('normal', function(){
-	                            $(".visualFilter", field).trigger("manualchange.visualFilter",true);
-	                        }).addClass("ui-state-highlight");
-	
-	                        setTimeout(function() {
-	                            field.removeClass('ui-state-highlight');
-	                        },1300);
-	                    }
-	                });
+                    $.each(curOption.data("show").split(","),function(i,val) {
+                        var fName = $.trim(val);
+                        if (fName == '') return;
+                        var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
+
+                        if (manual) {
+
+                            field.show();
+
+                        } else {
+
+                            //Cuando mostramos un campo, lanzamos el visualFilter si tiene
+                            //por si está relacionado con otro campo que debemos ocultar o mostrar
+                            field.slideDown('normal', function(){
+                                $(".visualFilter", field).trigger("manualchange.visualFilter",true);
+                            }).addClass("ui-state-highlight");
+
+                            setTimeout(function() {
+                                field.removeClass('ui-state-highlight');
+                            },1300);
+                        }
+                    });
                 }
                 if (curOption.data("hide")) {
-	                $.each(curOption.data("hide").split(","),function(i,val) {
-	
-	                    var fName = $.trim(val);
-	                    if (fName == '') return;
-	
-	                    var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
-	
-	                    if (manual) {
-	
-	                        field.hide();
-	
-	                    } else {
-	
-	                        //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
-	                        field.slideUp();
-	                    }
-	                });
+                    $.each(curOption.data("hide").split(","),function(i,val) {
+
+                        var fName = $.trim(val);
+                        if (fName == '') return;
+
+                        var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
+
+                        if (manual) {
+
+                            field.hide();
+
+                        } else {
+
+                            //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
+                            field.slideUp();
+                        }
+                    });
                 }
-                
+
             }).trigger("manualchange.visualFilter",true);
 
-            $("select, input, textarea", this.options.theForm).on('manualchange', function() {
+            $("select, input, textarea", this.options.theForm).on('manualchange', function(e) {
                 if ($(this).data("target-for-change")) {
                     var _target = $(this).data("target-for-change");
                 } else {
                     var _target = $(this);
                 }
-                
+
                 var _val = $(this).val() ? $(this).val() : '';
-                
+
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
                     _target.addClass("changed ui-state-highlight");
                     $(this).addClass("changed");

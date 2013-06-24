@@ -114,16 +114,16 @@
 
         _resolveParentHolder : function(element) {
 
-    		        	
-        	if ($(element).data("parentholderselector")) {
 
-        		var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
-        		if (_candidateParent.length > 0) {
-        			return _candidateParent;
-    			} 
-        	}
-            
-        	
+            if ($(element).data("parentholderselector")) {
+
+                var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
+                if (_candidateParent.length > 0) {
+                    return _candidateParent;
+                }
+            }
+
+
             // Si es un módulo con parent
             if (this.options.moduleParent) {
                 var modulecheck = this.options.moduleParent;
@@ -143,7 +143,7 @@
                 default:
 
                     throw 'no parentHolder found for option';
-                    
+
                 break;
             }
 
@@ -248,42 +248,54 @@
             });
 
             var $viewPort = $(this.element.klearModule("getPanel"));
-            
+
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
-            	.selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
-            	.on("change",function() {
-            		
-            		// Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
-            		if (!$(this).data("resizeTrick")) {
-	            		$(this).selectBoxIt({autoWidth: true})
-	            				.data("resizeTrick",true)
-	            					.data("selectBoxIt").refresh();
-            		}
-            		
-        			if ($(this).data('autofilter-select-by-data')) {
-        				var _configData = $(this).data('autofilter-select-by-data');
-        				var _filterField = _configData.split(":")[0];
-        				var _filterData = _configData.split(":")[1];
-        				var _targetValue = $(this).val();
-        				var $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
-        				var $parent = $field.parents(".container:eq(0)");
-        				$parent.css("opacity",'0.5');
-        				var selectBox = $field.data("selectBoxIt");
-        				var $holder = $("<div />");
-        				$("option",$field).not("[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
-        				selectBox.refresh();
-        				$holder.children().appendTo($field);
-        				$parent.css({'opacity':1});
-        				selectBox.dropdown.trigger("click");
-        				selectBox.close();
-        			}
-            		$(this).trigger("manualchange");
-    			})
-    			.each(function() {
-    			    $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
-    			});
-        	
-            
+                .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
+                .on("change",function() {
+                    // Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
+                    if (!$(this).data("resizeTrick")) {
+
+                        var cssClasses2Keep = $(this).data("target-for-change").attr("class");
+                        $(this).selectBoxIt({autoWidth: true})
+                                .data("resizeTrick",true)
+                                    .data("selectBoxIt").refresh(function () {
+                                        this.dropdown.addClass(cssClasses2Keep);
+                                    });
+                    }
+
+                    if ($(this).data('autofilter-select-by-data')) {
+                        var _configData = $(this).data('autofilter-select-by-data');
+                        var _filterField = _configData.split(":")[0];
+                        var _filterData = _configData.split(":")[1];
+                        var _targetValue = $(this).val();
+                        var $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
+                        var $parent = $field.parents(".container:eq(0)");
+                        $parent.css("opacity",'0.5');
+                        var selectBox = $field.data("selectBoxIt");
+                        var $holder = $("<div />");
+                        $("option",$field).not("[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
+                        selectBox.refresh();
+                        $holder.children().appendTo($field);
+                        $parent.css({'opacity':1});
+                        selectBox.dropdown.trigger("click");
+                        selectBox.close();
+                    }
+                })
+                .on("postmanualchange", function () {
+
+                    if ($(this).data("target-for-change")) {
+
+                        var cssClasses2Keep = $(this).data("target-for-change").attr("class");
+                        $(this).selectBoxIt().data("selectBoxIt").refresh(function () {
+                            this.dropdown.addClass(cssClasses2Keep);
+                        });
+                    }
+                })
+                .each(function() {
+                    $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
+                });
+
+
             $('a.option.screen', this.element.klearModule("getPanel"))
                 .off('mouseup.screenOption')
                 .on('mouseup.screenOption', function(e) {
@@ -303,100 +315,100 @@
 
                 var _iden = "#tabs-" + _file;
                 if (!_menuLink.data("externalremovescreen")) {
-                	_iden += '_' + _screen;                	
+                    _iden += '_' + _screen;
                 }
-                
+
                 var _parentHolder = _self._resolveParentHolder(this);
 
-                
+
                 if (!_menuLink.data("externalnoiden")) {
-                	
-                	if (_menuLink.data("multiinstance")) {
-                		_iden += '_' + Math.round(Math.random(1000, 9999)*100000);
-                	} else {
-                		if (_menuLink.data("externalid")) {
-                			_iden += '_' + _menuLink.data("externalid");
-                		} else {
-                			_iden += '_' + _parentHolder.data("id");
-                		}
-                	}
+
+                    if (_menuLink.data("multiinstance")) {
+                        _iden += '_' + Math.round(Math.random(1000, 9999)*100000);
+                    } else {
+                        if (_menuLink.data("externalid")) {
+                            _iden += '_' + _menuLink.data("externalid");
+                        } else {
+                            _iden += '_' + _parentHolder.data("id");
+                        }
+                    }
                 }
 
                 var _curPk = _parentHolder.data("id");
-                
-                
-                if (_menuLink.data("externalname")) {
-                	var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
-            		if (_field.length >0) {
-            			_curPk = _field.val();
-            		}
-            	}
-            	if (_menuLink.data("externalid")) {
-            		_curPk = _menuLink.data("externalid");
-            	}
 
-            	
+
+                if (_menuLink.data("externalname")) {
+                    var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
+                    if (_field.length >0) {
+                        _curPk = _field.val();
+                    }
+                }
+                if (_menuLink.data("externalid")) {
+                    _curPk = _menuLink.data("externalid");
+                }
+
+
                 // Seteamos el valor para dispatchOptions
                 var _dispatchOptions = {
                     post : {
                         callerScreen : _self.options.data.screen
                     }
                 };
-                
-                if (!_menuLink.data("externalremovescreen")) {
-                	_dispatchOptions['screen'] = _menuLink.data("screen");                	
-                }
-                
-                
-                if (!_menuLink.data("externalnoiden")) {
-                	_dispatchOptions ['pk'] = _curPk;
-                }
-                               
-                var _searchOps = false;
-                
-                // de momento "damos por hecho" que serán campos select, y llevan implícito un 'eq';
-            	if (_menuLink.data("externalsearchby")) {
-            		_searchOps = {searchFields : {}, searchOps : {}};
-					var _searchField = _menuLink.data("externalsearchby");
-            		_searchOps['searchFields'][_searchField] = [_curPk];
-            		_searchOps['searchOps'][_searchField] = ['eq'];
-                }
-            	
-            	$.extend(_dispatchOptions['post'], _searchOps);
 
-            	
-            	
-            	if (_menuLink.data("externaltitle")) {
-            		var tabTitle = _menuLink.data("externaltitle");
-            	} else {
-            		var tabTitle = _menuLink.tooltip("close").attr("title");	
-            	}
-            	
+                if (!_menuLink.data("externalremovescreen")) {
+                    _dispatchOptions['screen'] = _menuLink.data("screen");
+                }
+
+
+                if (!_menuLink.data("externalnoiden")) {
+                    _dispatchOptions ['pk'] = _curPk;
+                }
+
+                var _searchOps = false;
+
+                // de momento "damos por hecho" que serán campos select, y llevan implícito un 'eq';
+                if (_menuLink.data("externalsearchby")) {
+                    _searchOps = {searchFields : {}, searchOps : {}};
+                    var _searchField = _menuLink.data("externalsearchby");
+                    _searchOps['searchFields'][_searchField] = [_curPk];
+                    _searchOps['searchOps'][_searchField] = ['eq'];
+                }
+
+                $.extend(_dispatchOptions['post'], _searchOps);
+
+
+
+                if (_menuLink.data("externaltitle")) {
+                    var tabTitle = _menuLink.data("externaltitle");
+                } else {
+                    var tabTitle = _menuLink.tooltip("close").attr("title");
+                }
+
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
 
-            	
+
                 // Si el tab ya está abierto
                 if ($(_iden).length > 0) {
-                    
-                	$selTabLi = _container
-                    				.tabs('select', _iden)
-                    				.find(".ui-tabs-selected:eq(0)");
-                    
+
+                    $selTabLi = _container
+                                    .tabs('select', _iden)
+                                    .find(".ui-tabs-selected:eq(0)");
+
                     if (_searchOps !== false) {
-                    	$selTabLi
-                    		.klearModule("option", "dispatchOptions", _dispatchOptions)
-                    		.klearModule("reDispatch");
+                        $selTabLi
+                            .klearModule("option", "dispatchOptions", _dispatchOptions)
+                            .klearModule("reDispatch");
                     }
-                    
+
                     $selTabLi.klearModule("updateTitle", tabTitle);
-                    
+
                     return;
                 }
 
                 var _newIndex = self.klearModule("option", "tabIndex")+1;
-                
+
 
                 _container.one( "tabspostadd", function(event, ui) {
 
@@ -410,7 +422,7 @@
                     // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
                     $tabLi.klearModule("option", "file", _file);
 
-                   
+
                     // Si la pantalla llamante tiene condición (parentId -- en data --
                     // enviarlos a la nueva pantalla
                     if (_self.options.data.parentId) {
@@ -439,14 +451,14 @@
                 e.preventDefault();
                 e.stopPropagation();
             });
-            
+
             /*
              * Capturar opciones de diálogo.
              */
             $('a.option.dialog', this.element.klearModule("getPanel"))
                 .off('click.dialogOptions')
                 .on('click.dialogOptions', function(e, data) {
-                
+
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -457,7 +469,7 @@
                 var _parentHolder = _self._resolveParentHolder(this);
 
                 var $caller = $(this);
-                
+
                 $(self).klearModule("showDialog",
                         '<br />',
                         {

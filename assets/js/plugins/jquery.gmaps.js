@@ -13,7 +13,7 @@
             defaultLng : -2.9352541503906195,
         },
 
-        imgUrl: 'http://maps.googleapis.com/maps/api/staticmap?center=%lat%,%lng%&zoom=%zoom%&size=%width%x%height%&sensor=false',
+        imgUrl: '//maps.googleapis.com/maps/api/staticmap?center=%lat%,%lng%&zoom=%zoom%&size=%width%x%height%&sensor=false',
         markerUrl: '&markers=color:red%7C%lat%,%lng%',
         readOnly: false,
         geocoder: null,
@@ -35,7 +35,7 @@
                 if ( !window.google ) {
                     var script = document.createElement("script");
                     script.type = "text/javascript";
-                    script.src = "http://www.google.com/jsapi?sensor=false&language=es";
+                    script.src = "//www.google.com/jsapi?sensor=false&language=es";
                     document.head.appendChild(script);
                 }
     

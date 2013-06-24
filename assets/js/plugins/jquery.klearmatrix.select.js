@@ -84,21 +84,29 @@
                 }
             });
         },
-        
+
         _postManualChange: function () {
-        //TO-DO: Cuando se recarga y hay un valor guardado hay que cargarlo...
+
+            var recoveredValue = this.options.cache.element.data("recoveredValue");
+            if (recoveredValue && (recoveredValue !== this.options.cache.element.val())) {
+
+                this._initSelectedValue();
+            }
         },
 
         _initSelectedValue: function () {
 
-            if (this.options.cache.element.data("preload")) {
+            var preloadValue = this.options.cache.element.data("preload");
+            var recoveredValue = this.options.cache.element.data("recoveredValue");
+
+            if (preloadValue || recoveredValue) {
 
                 var _self = this;
-                var preloadValue = this.options.cache.element.data("preload");
+                var value2load = preloadValue || recoveredValue;
 
-                if (this.options.cache.element.find("option[value"+ preloadValue +"]").length == 0) {
+                if (this.options.cache.element.find("option[value"+ value2load +"]").length == 0) {
 
-                   var targetUrl = this.options.cache.dummy.attr("href").replace("value=__NULL__", "value=" + preloadValue);
+                   var targetUrl = this.options.cache.dummy.attr("href").replace("value=__NULL__", "value=" + value2load);
 
                    $.ajax({
                       url: targetUrl + "&reverse=true",
@@ -106,12 +114,24 @@
                       type: 'GET',
                       async: false,
                       success: function(data) {
-                    	var element = data.results[0];
+                        _self.options.cache.element.children("[selected]").removeAttr("selected");
+                        var element = data.results[0];
                         var option = $("<option>").attr("value", element.id )
+                                                  .attr("selected", "selected")
                                                   .html(element.value);
 
                         option.appendTo(_self.options.cache.element);
-                        option.attr("selected",true);
+                        _self.options.cache.element.val(element.id);
+
+                        if (_self.input && _self.input.data("autocomplete")) {
+
+                            _self.input.val(element.value );
+                            _self.input.data("autocomplete")._trigger("change");
+                        }
+
+                        if (recoveredValue) {
+                            _self.options.cache.element.data("recoveredValue", null);
+                        }
                       }
                    });
 
@@ -120,6 +140,7 @@
         },
 
         _initAutocomplete: function () {
+
             var _self = this;
 
             this.select = this.options.cache.element.hide(),
@@ -135,7 +156,7 @@
                 .attr( "title", "" )
                 .addClass("ui-state-default ui-combobox-input ui-corner-all")
                 .addClass("ui-widget ui-widget-content ui-corner-left");
-            
+
             //Se le envía el target para el highlight y se bindea "postmanualchange"
             this.select.data('target-for-change',this.select.next("span").children("input:eq(0)"));
             this.select.on('postmanualchange', function() {
@@ -156,8 +177,6 @@
                 source: function( request, response ) {
 
                     var term = request.term;
-
-                    
 
                     $.getJSON( _self.options.cache.dummy.attr("href") , request, function( data, status, xhr ) {
 
@@ -181,27 +200,30 @@
                     }
 
                     option.get(0).selected = true;
-                	
-                    self.select.trigger('manualchange');
+
+					if(_self.select) {
+	                    _self.select.trigger('manualchange');				
+					}
+	
                     _self._trigger( "selected", event, {
                         item: option
                     });
                 },
                 open : function() {
-                	if ($(".autocompleteCounter",$(this).parents("span:eq(0)")).length == 0) {
-                		$(this).parents("span:eq(0)").append('<span class="autocompleteCounter"></span>');
-                	}
-                	var $counter = $(".autocompleteCounter",$(this).parents("span:eq(0)"));
-                	$counter.html(_self.lastCounter).show();
+                    if ($(".autocompleteCounter",$(this).parents("span:eq(0)")).length == 0) {
+                        $(this).parents("span:eq(0)").append('<span class="autocompleteCounter"></span>');
+                    }
+                    var $counter = $(".autocompleteCounter",$(this).parents("span:eq(0)"));
+                    $counter.html(_self.lastCounter).show();
 
                 },
                 close : function() {
                     $(".autocompleteCounter",$(this).parents("span:eq(0)")).fadeOut('fast');
                 },
                 change: function( event, ui ) {
-
-                    if ( !ui.item )
+                    if ( !ui.item ) {
                         return _self._removeIfInvalid( this );
+                    }
                 }
 
             }).on("focusin", function () {

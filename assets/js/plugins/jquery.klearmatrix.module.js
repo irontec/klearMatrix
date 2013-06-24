@@ -280,6 +280,8 @@
                         selectBox.dropdown.trigger("click");
                         selectBox.close();
                     }
+
+                    $(this).trigger("manualchange");
                 })
                 .on("postmanualchange", function () {
 

@@ -76,7 +76,7 @@
             this.element.klearModule("option","PostDispatchMethod",function() {
                 if (!this.savedValues) return;
                 $.each(this.savedValues,function(name,value) {
-                    $("[name='"+name+"']",self.options.theForm).val(value).trigger("manualchange");
+                    $("[name='"+name+"']",self.options.theForm).val(value).data("recoveredValue", value).trigger("manualchange");
                 });
                 this.savedValues = {};
             });

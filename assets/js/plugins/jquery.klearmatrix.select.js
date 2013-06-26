@@ -89,7 +89,6 @@
 
             var recoveredValue = this.options.cache.element.data("recoveredValue");
             if (recoveredValue && (recoveredValue !== this.options.cache.element.val())) {
-
                 this._initSelectedValue();
             }
         },
@@ -102,11 +101,11 @@
             if (preloadValue || recoveredValue) {
 
                 var _self = this;
-                var value2load = preloadValue || recoveredValue;
+                var value2load = recoveredValue || preloadValue;
 
                 if (this.options.cache.element.find("option[value"+ value2load +"]").length == 0) {
 
-                   var targetUrl = this.options.cache.dummy.attr("href").replace("value=__NULL__", "value=" + value2load);
+                   var targetUrl = this.options.cache.dummy.attr("href") + "&value=" + value2load;
 
                    $.ajax({
                       url: targetUrl + "&reverse=true",
@@ -124,14 +123,15 @@
                         _self.options.cache.element.val(element.id);
 
                         if (_self.input && _self.input.data("autocomplete")) {
-
-                            _self.input.val(element.value );
+                            _self.input.val(element.value);
                             _self.input.data("autocomplete")._trigger("change");
                         }
 
                         if (recoveredValue) {
                             _self.options.cache.element.data("recoveredValue", null);
                         }
+
+                        _self.options.cache.element.trigger("change");
                       }
                    });
 
@@ -201,10 +201,10 @@
 
                     option.get(0).selected = true;
 
-					if(_self.select) {
-	                    _self.select.trigger('manualchange');				
-					}
-	
+                    if(_self.select) {
+                        _self.select.trigger('manualchange');
+                    }
+
                     _self._trigger( "selected", event, {
                         item: option
                     });

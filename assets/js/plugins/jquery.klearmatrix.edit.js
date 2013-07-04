@@ -679,6 +679,9 @@
 
             var self = this;
 
+            $container = this.element.klearModule("getPanel");
+            
+            
             this.options.theForm.on('updateChangedState',function() {
                 if ($(".changed",$(this)).length > 0) {
 
@@ -715,13 +718,13 @@
                 }
             });
 
-            $(".generalOptionsToolbar a.action",this.element.klearModule("getPanel")).on('click',function(e) {
+            $(".generalOptionsToolbar a.action",$container).on('click',function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 self.options.theForm.trigger("submit");
             });
 
-            $(".visualFilter",this.element.klearModule("getPanel")).on('manualchange.visualFilter',function(e,manual) {
+            $(".visualFilter",$container).on('manualchange.visualFilter',function(e,manual) {
 
                 //Si es manual y es un campo oculto no hacemos los filtros
                 //porque este campo oculto puede tener a su vez otros filtros
@@ -874,9 +877,31 @@
 
             }).trigger("keyup");
 
-            return this;
-        }
 
+            // Gestión del autoClose
+            
+            var $autoCloseCheckbox = $("input[name=autoclose]",$container);
+            $autoCloseCheckbox.on('change',function(e) {
+            	// El cliente ha usado autoclose, guardamos su valor
+            	if (localStorage) {
+            		localStorage.setItem('klearmatrix.autoclose',$(this).is(":checked"));
+            	}
+            	$autoCloseCheckbox.not($(this)).trigger('toggleValue');
+            });
+            
+            // En la carga de la pantalla, comprobamos si existe la preferencia sobre autoclose
+            // Preferencia que se setea automáticamente si el usuario la utiliza 
+        	if (localStorage && localStorage.getItem('klearmatrix.autoclose') != null) {
+        		var savedVal = localStorage.getItem('klearmatrix.autoclose') == 'true';
+        		$autoCloseCheckbox.trigger('forceValue', savedVal);
+        	}
+            
+            
+            return this;
+                        
+        }
+        
+        
     });
 
     $.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);

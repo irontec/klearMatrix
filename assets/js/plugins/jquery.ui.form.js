@@ -63,7 +63,7 @@ $.widget('ui.form', {
             parent.addClass('ui-icon ui-icon-check');
         }
     
-        parent.parent().on('click', function(event){
+        parent.parent().on('click', function(event, manual){
     
             parent.toggleClass('ui-icon ui-icon-check');
     
@@ -76,8 +76,30 @@ $.widget('ui.form', {
                 $input.prop('checked', false);
                 
             }
+            
+            if (manual) {
+            	return;
+            }
+            
             $input.trigger('change');
         });
+        
+        
+        $input.on('toggleValue',function() {
+        	parent.parent().trigger('click', true);
+        });
+        
+        $input.on('forceValue',function(e, targetValue) {
+        	if (targetValue == null) {
+        		return;
+        	}
+        	
+        	if (targetValue != $(this).prop('checked')) {
+        		parent.parent().trigger('click', true);
+        	}
+        });
+        
+        
     },
     
     radios: function(element){

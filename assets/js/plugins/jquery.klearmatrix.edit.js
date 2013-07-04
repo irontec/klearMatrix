@@ -520,7 +520,30 @@
                     };
 
                     var request = $.klear.buildRequest(requestData);
-
+                    
+                    
+                    
+                    
+                    // Capa que se pondrá por encima el control input:file (opacity=0)... la única manera de "deshabilitarlo" temporalmente
+                    // TODO: testearlo en IE
+                    var $buttonHidder = $("<div />")
+                    				.addClass('buttonHidder')
+                    				.css({position:'absolute',top:'0',left:'0',zIndex:'1000',width:'100%',height:'100%'});
+                    
+                    
+                    // Objeto que encapsula métodos para habilitar/deshabilitar el botón de upload
+                    var buttonAcc = {
+                		disable : function($context) {
+                			$(".qq-upload-button",$context).addClass("ui-state-disabled");
+                			$(".qq-upload-button",$context).append($buttonHidder);
+                			
+                		},
+                		enable : function($context) {
+                			$(".qq-upload-button",$context).removeClass("ui-state-disabled");
+                			$(".qq-upload-button .buttonHidder",$context).remove();
+                			
+                		}
+                    };
                     var qqOptions = {
                             element: item[0],
                             action: request.action,
@@ -539,8 +562,8 @@
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
-
                                 $(_self).klearModule("unsetUploadInProgress", id);
+                            	buttonAcc.enable($(this._element));
                                 var $list = $(".qq-upload-list",$(this._element));
 
                                 if (result.error) {
@@ -559,17 +582,17 @@
                                 $list.html('');
                             },
                             onSubmit: function (id, fileName) {
-
+                            	buttonAcc.disable($(this._element));
                                 $(_self).klearModule("setUploadInProgress", id);
                                 return true;
                             },
 
                             onCancel: function(id, fileName){
-
-                                $(_self).klearModule("unsetUploadInProgress", id);
+                            	buttonAcc.enable($(this._element));
+                            	$(_self).klearModule("unsetUploadInProgress", id);
                             },
                             onError: function(id, fileName, reason) {
-
+                            	buttonAcc.enable($(this._element));
                                 $(_self).klearModule("unsetUploadInProgress", id);
                             },
                             showMessage : function(message) {

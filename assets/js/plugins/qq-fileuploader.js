@@ -277,11 +277,11 @@ qq.FileUploaderBasic = function(o){
     this._options = {
         // set to true to see the server response
         debug: false,
-        action: '/server/upload',
+        action: '',
         params: {},
         customHeaders: {},
         button: null,
-        multiple: true,
+        multiple: false,
         maxConnections: 3,
         disableCancelForFormUploads: false,
         autoUpload: true,

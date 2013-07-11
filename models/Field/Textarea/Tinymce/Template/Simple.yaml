@@ -9,7 +9,7 @@ production:
 
   plugins: |
     "advlist autolink lists link image charmap print preview hr anchor pagebreak"
-    "wordcount visualblocks visualchars code fullscreen fullpage searchreplace"
+    "wordcount visualblocks visualchars code fullscreen searchreplace"
     "insertdatetime media nonbreaking save table contextmenu "
     "emoticons template paste textcolor moxiemanager"
   

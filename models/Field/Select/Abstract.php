@@ -18,6 +18,16 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
         $this->init();
     }
 
+    protected function _quoteIdentifier($fieldName)
+    {
+        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+        if ($dbAdapter) {
+           return $dbAdapter->quoteIdentifier($fieldName);
+        }
+
+        return $fieldName;
+    }
+
     public function setConfig(Zend_Config $config)
     {
         $this->_config = new Klear_Model_ConfigParser;
@@ -51,20 +61,17 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
         $ret = array();
 
         if (sizeof($this->_showOnSelect) || sizeof($this->_hideOnSelect)) {
-            
+
             $ret['visualFilter']['show'] = array();
             $ret['visualFilter']['hide'] = array();
-            
-            
+
             foreach($this->_showOnSelect as $field => $fieldColection) {
                 $ret['visualFilter']['show'][$field] = $fieldColection->toArray();
             }
-            
+
             foreach($this->_hideOnSelect as $field => $fieldColection) {
                 $ret['visualFilter']['hide'][$field] = $fieldColection->toArray();
             }
-            
-            
         }
 
         return $ret;

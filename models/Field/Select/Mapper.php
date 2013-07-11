@@ -238,6 +238,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     public function getCustomOrderField()
     {
         $values = array();
+
         $fieldName = $this->_config->getProperty('config')->fieldName;
 
         if (is_object($fieldName)) {
@@ -249,7 +250,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
             if (!count($matches[1])) {
 
-                return $this->_column->getDbFieldName();
+                return $this->_quoteIdentifier($this->_column->getDbFieldName());
             }
 
             $fieldName = $matches[1];
@@ -260,16 +261,21 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $results = $dataMapper->fetchList('', $fieldName);
 
         foreach ($results as $result) {
-
             $values[] = $result->getPrimaryKey();
         }
 
-        if (count($values)) {
-
-            return 'FIELD('. $this->_column->getDbFieldName() . ',"' . implode('","', $values) . '")';
+        if (! count($values)) {
+            return $this->_quoteIdentifier($this->_column->getDbFieldName());
         }
 
-        return $this->_column->getDbFieldName();
+        $priority = 1;
+        $response =  '(CASE '. $this->_quoteIdentifier($this->_column->getDbFieldName()) .' ';
+        foreach ($values as $posibleResult) {
+            $response .= " WHEN '" . $posibleResult . "' THEN " . $priority++;
+        }
+        $response .= ' END)';
+
+        return $response;
     }
 }
 

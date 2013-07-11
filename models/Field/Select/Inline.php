@@ -72,10 +72,17 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
 
         if (!count($keys)) {
 
-            return $this->_column->getDbFieldName();
+            return $this->_quoteIdentifier($this->_column->getDbFieldName());
         }
 
-        return 'FIELD('. $this->_column->getDbFieldName() . ',"' . implode('","', $keys) . '")';
+        $priority = 1;
+        $response =  '(CASE '. $this->_quoteIdentifier($this->_column->getDbFieldName()) .' ';
+        foreach ($keys as $posibleResult) {
+            $response .= " WHEN '" . $posibleResult . "' THEN " . $priority++;
+        }
+        $response .= ' END)';
+
+        return $response;
     }
 
 }

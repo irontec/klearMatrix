@@ -47,8 +47,7 @@
             
             $.extend(tinySettings, options);
             
-            console.log(tinySettings);
-           
+          
             $el.tinymce(tinySettings);
         }
     });

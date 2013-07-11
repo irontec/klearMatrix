@@ -174,9 +174,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
                 if ($partialDownload) {
                     $this->_helper->sendPartialFileToClient(
-                            $file,
-                            array('filename' => $this->_model->{$nameGetter}()),
-                            $isRaw
+                        $file,
+                        array('filename' => $this->_model->{$nameGetter}()),
+                        $isRaw
                     );
 
                 } else {

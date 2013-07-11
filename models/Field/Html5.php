@@ -1,5 +1,4 @@
 <?php
-
 class KlearMatrix_Model_Field_Html5 extends KlearMatrix_Model_Field_Abstract
 {
     protected $_adapter;

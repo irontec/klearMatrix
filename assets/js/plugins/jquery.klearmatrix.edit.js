@@ -375,7 +375,11 @@
 
                             if (target[pluginName]) {
                                 settings._contentTab = _self;
-                                target[pluginName](settings);
+                                if (target.data("basename")) {
+                                	target[pluginName](settings, self.options.data.columns[target.data("basename")].config);
+                                } else {
+                                	target[pluginName](settings);	
+                                }
                             }
 
                         })($(this), $(this).data("plugin"), pluginSettings);

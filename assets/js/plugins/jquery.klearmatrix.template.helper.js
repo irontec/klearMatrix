@@ -85,6 +85,7 @@
             var fieldData = {
                     _elemIden: column.id + randIden,
                     _elemName: column.id,
+                    _elemBaseName: column.id,
                     _readonly: column.readonly? true:false,
                     _dataConfig : extraConfig,
                     _decorators: column.decorators,
@@ -118,6 +119,7 @@
                     var _curFieldData = {
                         _elemIden: column.id + lang + randIden,
                         _elemName : column.id + lang,
+                        _elemBaseName: column.id,
                         _readonly: column.readonly? true:false,
                         _dataConfig : extraConfig,
                         _properties : properties,

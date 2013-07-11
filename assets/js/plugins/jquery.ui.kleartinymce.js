@@ -6,9 +6,14 @@
     $.widget('ui.kleartinymce', {
         options: {
         },
-        _init:function(){
+        _init : function(){
             
             var $el = $(this.element);
+           
+            $.extend(
+            		this.options, 
+            		this.options.settings //settings originales cogidos de column
+            		);
             
             var options = this.options;
             
@@ -36,11 +41,14 @@
                 },
                 init_instance_callback : function (instance) {
                     
-                }
+                },
+               
             };
             
             $.extend(tinySettings, options);
             
+            console.log(tinySettings);
+           
             $el.tinymce(tinySettings);
         }
     });

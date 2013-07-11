@@ -184,18 +184,20 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
             $templateFile = __DIR__ . '/Template/' . ucfirst($this->_defaultTemplate) . '.yaml';
         }
         $this->_templateConfig = new Zend_Config_Yaml(
-                $templateFile,
-                APPLICATION_ENV,
-                array(
-                        "yamldecoder"=>"yaml_parse"
-                )
+            $templateFile,
+            APPLICATION_ENV,
+            array(
+                "yamldecoder"=>"yaml_parse"
+            )
         );
 
         $this->_jsController = "/js/plugins/tinymce/templates/jquery.tinymce.".strtolower($template).".js";
         $this->_jsControllerClass = ucfirst($template);
 
-        $this->_settings = array_merge($this->_templateConfig->toArray(),
-                $this->_config->getProperty('settings')->toArray());
+        $this->_settings = array_merge(
+            $this->_templateConfig->toArray(),
+            $this->_config->getProperty('settings')->toArray()
+        );
         
     }
     
@@ -290,11 +292,11 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         }
     }
 
-    public function getSettings() {
-        
+    public function getSettings() 
+    {
         $buttonsBars = $this->getButtonsBar();
         foreach ($buttonsBars as $index => $set) {
-             $this->_settings['toolbar' . ($index)] = implode(',', $set);
+            $this->_settings['toolbar' . ($index)] = implode(',', $set);
         }
         return $this->_settings;
     }

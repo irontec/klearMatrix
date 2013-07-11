@@ -15,7 +15,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
      */
     protected $_template;
 
-   public function init()
+    public function init()
     {
         $this->_loadTemplateClass();
 

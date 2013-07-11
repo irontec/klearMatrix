@@ -9,8 +9,8 @@ production:
 
   plugins: |
     "advlist autolink lists link image charmap print preview hr anchor pagebreak"
-    "searchreplace wordcount visualblocks visualchars code fullscreen"
-    "insertdatetime media nonbreaking save table contextmenu directionality"
+    "wordcount visualblocks visualchars code fullscreen fullpage searchreplace"
+    "insertdatetime media nonbreaking save table contextmenu "
     "emoticons template paste textcolor moxiemanager"
   
 #### Basic conf ####
@@ -18,20 +18,18 @@ production:
   end_container_on_empty_block: true
   force_p_newlines: true
   resize: true
-  visualblocks_default_state: true
+  visualblocks_default_state: false
   toolbar_items_size: 'small'
   image_advtab: true
 
 #### Menu bars ####
 
-#  menubar: false
+  menubar: false
 #  menubar: "tools table format view insert edit"
 
 #### Toolbars ####
   
-  toolbar1: "newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect"
-  toolbar2: "cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | undo redo | link unlink anchor image media code | inserttime preview | forecolor backcolor"
-  toolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft"
+  toolbar1: "bold italic underline | bullist numlist | styleselect | undo redo | link unlink code | fullscreen | visualblocks | cut copy paste | searchreplace"
    
 #### Style formats ####
 

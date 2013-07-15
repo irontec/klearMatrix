@@ -7,17 +7,16 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
     protected $_jsControllerClass;
 
     protected $_defaultTemplate = 'simple';
-    
+
     protected $_templateConfig;
 
     /*
      * TinyMCE settings
      */
     protected $_settings = array();
-    
+
     protected $_toolBars = array();
 
-    
     protected $_tinyMceToolbar = array(
             'core' => array(
                     'newdocument',
@@ -48,7 +47,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
                     'superscript'),
             'hr' => array('hr'),
             'link' => array(
-                    'link', 
+                    'link',
                     'unlink'),
             'image' => array('image'),
             'charmap' => array('charmap'),
@@ -66,19 +65,19 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
             'media' => array('media'),
             'nonbreaking' => array('nonbreaking'),
             'save' => array(
-                    'save', 
+                    'save',
                     'cancel'),
             'table' => array('table'),
             'directionality' => array(
-                    'ltr', 
+                    'ltr',
                     'rtl'),
             'emoticons' => array('emoticons'),
             'template' => array('template'),
             'textcolor' => array(
-                    'forecolor', 
+                    'forecolor',
                     'backcolor')
             );
-    
+
     protected $_tinyMceMenu = array(
             'core' => array('newdocument',
                     'undo',
@@ -120,11 +119,8 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
                     'cell',
                     'row',
                     'column')
-            );    
-    
+            );
 
-    
-    
     protected $_tinyMcePlugins = array(
             'advlist',
             'anchor',
@@ -173,13 +169,13 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
     public function __construct($config)
     {
         $this->_config = $config;
-        
+
         if (!$template = $this->_config->getProperty('template')) {
             $template = $this->_defaultTemplate;
         }
-        
+
         $templateFile = __DIR__ . '/Template/' . ucfirst($template) . '.yaml';
-        
+
         if (!file_exists($templateFile)) {
             $templateFile = __DIR__ . '/Template/' . ucfirst($this->_defaultTemplate) . '.yaml';
         }
@@ -194,13 +190,16 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         $this->_jsController = "/js/plugins/tinymce/templates/jquery.tinymce.".strtolower($template).".js";
         $this->_jsControllerClass = ucfirst($template);
 
-        $this->_settings = array_merge(
-            $this->_templateConfig->toArray(),
-            $this->_config->getProperty('settings')->toArray()
-        );
-        
+        if ($this->_config->hasProperty('settings')) {
+            $this->_settings = array_merge(
+                $this->_templateConfig->toArray(),
+                $this->_config->getProperty('settings')->toArray()
+            );
+        } else {
+            $this->_settings = $this->_templateConfig->toArray();
+        }
     }
-    
+
     public function getJsController()
     {
         return $this->_jsController;
@@ -225,7 +224,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         foreach ($this->_toolBars as $barIndex => $bar) {
             $this->_toolBars[$barIndex] = explode(" ", $this->_settings['toolbar' . $barIndex]);
             unset($this->_settings['toolbar' . $barIndex]);
-        } 
+        }
     }
 
     public function getButtonsBar()
@@ -292,7 +291,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         }
     }
 
-    public function getSettings() 
+    public function getSettings()
     {
         $buttonsBars = $this->getButtonsBar();
         foreach ($buttonsBars as $index => $set) {
@@ -300,7 +299,4 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         }
         return $this->_settings;
     }
-
 }
-
-//EOF

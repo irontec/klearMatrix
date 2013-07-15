@@ -213,15 +213,12 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
     protected function _loadBars()
     {
         $toolbarCounter = 1;
-        while (true) {
-            if (!isset($this->_settings['toolbar' . $toolbarCounter])) {
-                break;
-            }
+        while (!isset($this->_settings['toolbar' . $toolbarCounter])) {
             $this->_toolBars[$toolbarCounter] = array();
             $toolbarCounter++;
         }
 
-        foreach ($this->_toolBars as $barIndex => $bar) {
+        for ($barIndex = 1; $barIndex < $toolbarCounter; ++$barIndex) {
             $this->_toolBars[$barIndex] = explode(" ", $this->_settings['toolbar' . $barIndex]);
             unset($this->_settings['toolbar' . $barIndex]);
         }

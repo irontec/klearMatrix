@@ -439,7 +439,7 @@ class KlearMatrix_Model_Column
 
         if ($disabledConfig->getProperty('label')) {
             $disabledOptions['label'] = Klear_Model_Gettext::gettextCheck($disabledConfig->getProperty('label'));
-            
+
             ;
         }
 
@@ -503,11 +503,12 @@ class KlearMatrix_Model_Column
 
                 } else {
 
+                    $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
                     if ($this->_namedParamsAreSupported()) {
-                        $comparisons[] = 'concat(' . $searchField . ') like ' . $template;
+                        $comparisons[] = 'concat(' . $searchField . ') ' . $searchOperator . ' ' . $template;
                         $fieldValues[$template] = '%' . $_val . '%';
                     } else {
-                        $comparisons[] = 'concat(' . $searchField . ') like ?';
+                        $comparisons[] = 'concat(' . $searchField . ') ' . $searchOperator . ' ?';
                         $fieldValues[] = '%' . $_val . '%';
                     }
                 }
@@ -537,6 +538,17 @@ class KlearMatrix_Model_Column
          */
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
         return !$dbAdapter || $dbAdapter->supportsParameters('named');
+    }
+
+    protected function _getStringSearchOperatorByDbAdapter()
+    {
+        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+        $dbAdapterClass = get_class($dbAdapter);
+
+        if ($dbAdapterClass == 'Zend_Db_Adapter_Pdo_Pgsql'){
+           return 'ILIKE';
+        }
+        return 'LIKE';
     }
 
 

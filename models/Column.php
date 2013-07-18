@@ -545,7 +545,7 @@ class KlearMatrix_Model_Column
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
         $dbAdapterClass = get_class($dbAdapter);
 
-        if ($dbAdapterClass == 'Zend_Db_Adapter_Pdo_Pgsql'){
+        if ($dbAdapterClass == 'Zend_Db_Adapter_Pdo_Pgsql') {
            return 'ILIKE';
         }
         return 'LIKE';

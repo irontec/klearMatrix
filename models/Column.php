@@ -114,6 +114,11 @@ class KlearMatrix_Model_Column
         return $this->_isFile;
     }
 
+    public function isDirty()
+    {
+        return $this->_dirty;
+    }
+
     public function setConfig(Zend_Config $config)
     {
 
@@ -623,6 +628,40 @@ class KlearMatrix_Model_Column
         return array();
     }
 
+    protected function _getFieldConfigToArray()
+    {
+        $ret = array();
+        $fieldConfig = $this->getFieldConfig();
+        if (!$fieldConfig) {
+            return $ret;
+        }
+
+        $decoratorsConfig = $this->_getDecoratorsConfig();
+
+        if ($decoratorsConfig) {
+
+            $ret['decorators'] = $decoratorsConfig;
+        }
+
+        $ret['searchable'] = $fieldConfig->isSearchable();
+        $ret['sortable'] = $fieldConfig->isSortable();
+
+        if ($config = $fieldConfig->getConfig()) {
+            $ret['config'] = $config;
+        }
+
+        if ($props = $fieldConfig->getProperties()) {
+            $ret['properties'] = $props;
+        }
+
+        if ($errors = $fieldConfig->getCustomErrors()) {
+            $ret['errors'] = $errors;
+        }
+
+        return $ret;
+    }
+
+
     public function toArray()
     {
         $ret = array();
@@ -631,20 +670,22 @@ class KlearMatrix_Model_Column
         $ret["name"] = $this->getPublicName();
         $ret["type"] = $this->_type;
 
-        if ($this->_dirty) {
-            $ret["dirty"] = true; //Para mostrar el valor con html si está a true
-        }
+        /*
+         * Propiedades de la clase booleanas.
+         * Deben tener un método 'is' . ucFirst($propiedad)
+         * En caso de no ser true, no "viajan"
+         */
+        $booleanProperties = array(
+        	'dirty',
+            'default',
+            'multilang',
+            'readonly',
+        );
 
-        if ($this->isDefault()) {
-            $ret['default'] = true;
-        }
-
-        if ($this->isMultilang()) {
-            $ret['multilang'] = true;
-        }
-
-        if ($this->isReadonly()) {
-            $ret['readonly'] = true;
+        foreach ($booleanProperties as $prop) {
+            if ($this->{'is' . ucfirst($prop)}()) {
+                $ret[$prop] = true;
+            }
         }
 
         if ($this->hasInfo()) {
@@ -663,37 +704,15 @@ class KlearMatrix_Model_Column
             $ret['disabledOptions'] = $this->_disabledOptions;
         }
 
-        $fieldConfig = $this->getFieldConfig();
-        if ($fieldConfig) {
-
-            $decoratorsConfig = $this->_getDecoratorsConfig();
-
-            if ($decoratorsConfig) {
-
-                $ret['decorators'] = $decoratorsConfig;
-            }
-
-            $ret['searchable'] = $fieldConfig->isSearchable();
-            $ret['sortable'] = $fieldConfig->isSortable();
-
-            if ($config = $fieldConfig->getConfig()) {
-                $ret['config'] = $config;
-            }
-
-            if ($props = $fieldConfig->getProperties()) {
-                $ret['properties'] = $props;
-            }
-
-            if ($errors = $fieldConfig->getCustomErrors()) {
-                $ret['errors'] = $errors;
-            }
-        }
-
         if ($this->_searchSpecs) {
             $ret['search'] = $this->_searchSpecs;
         }
 
+        $ret += $this->_getFieldConfigToArray();
+
         return $ret;
     }
+
+
 
 }

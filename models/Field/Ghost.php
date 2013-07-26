@@ -74,7 +74,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
         $ghostModel = $this->_getGhostModel();
         $searchMethod = $this->_searchMethod;
 
-        if (method_exists($ghostModel, $searchMethood)) {
+        if (method_exists($ghostModel, $searchMethod)) {
 
             $searchCondition = $ghostModel->{$searchMethod}
                 ($values, $searchOps, $this->_column->getModel());

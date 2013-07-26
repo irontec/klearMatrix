@@ -676,7 +676,7 @@ class KlearMatrix_Model_Column
          * En caso de no ser true, no "viajan"
          */
         $booleanProperties = array(
-        	'dirty',
+            'dirty',
             'default',
             'multilang',
             'readonly',

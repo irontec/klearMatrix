@@ -33,15 +33,65 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
     }
 
+    /**
+     * @param unknown $model Entidad sobre la que se setea
+     * @param unknown $column Campo concreto que se comprueba
+     */
+    protected function _parseColumnIntoModel($model, $column)
+    {
+        if ($this->_columnIsNotEditable($column)) {
+            return;
+        }
+
+        $setter = $column->getSetterName();
+
+        if ($column->isMultilang()) {
+            $value = array();
+            foreach ($columns->getLangs() as $lang) {
+                $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
+            }
+        } else {
+            $value = $this->getRequest()->getPost($column->getDbFieldName());
+        }
+
+        // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
+        if (is_null($value)) {
+            return;
+        }
+
+        $value = $column->filterValue($value);
+
+        if ($column->isMultilang()) {
+            foreach ($value as $lang => $_value) {
+                $model->$setter($_value, $lang);
+            }
+            return;
+        }
+
+        if ($column->isDependant()) {
+            $model->$setter($value, true);
+            return;
+        }
+
+        if ($column->isFile()) {
+            if ($value !== false && file_exists($value['path'])) {
+                $model->$setter($value['path'], $value['basename']);
+            }
+            return;
+        }
+
+        $model->$setter($value);
+    }
+
     public function saveAction()
     {
         $mapperName = $this->_item->getMapperName();
         $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
 
-        
+
         // En el método save ya viaja el pk recalculado desde la pantalla de edición.
         $this->_item->unsetCalculatedPk();
-        
+
         $pk = $this->_item->getCurrentPk();
         $this->_helper->log('edit::save action for mapper:' . $mapperName . ' > PK('.$pk.')');
 
@@ -61,50 +111,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $hasDependant = false;
 
         foreach ($columns as $column) {
-            if ($this->_columnIsNotEditable($column)) {
-                continue;
-            }
+            $this->_parseColumnIntoModel($model, $column);
 
-            $setter = $column->getSetterName();
-
-            if ($column->isMultilang()) {
-                $value = array();
-                foreach ($columns->getLangs() as $lang) {
-                    $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
-                }
-            } else {
-                $value = $this->getRequest()->getPost($column->getDbFieldName());
-            }
-
-            // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
-            if (is_null($value)) {
-                continue;
-            }
-
-            $value = $column->filterValue($value);
-
-            switch(true) {
-                case ($column->isMultilang()):
-                    foreach ($value as $lang => $_value) {
-                        $model->$setter($_value, $lang);
-                    }
-                    break;
-
-                case ($column->isDependant()):
-                    $model->$setter($value, true);
-                    $hasDependant = true;
-                    break;
-
-                case ($column->isFile()):
-                    if ($value !== false && file_exists($value['path'])) {
-
-                        $model->$setter($value['path'], $value['basename']);
-                    }
-                    break;
-
-                default:
-                    $model->$setter($value);
-            }
+            // Si una de las columnas tienen dependencias,
+            // el save deberá llevar "saveRecursive"
+            $hasDependant |= $column->isDependant();
         }
 
         try {

@@ -16,22 +16,6 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $this->_css = $this->_adapter->getExtraCss();
     }
 
-    
-    protected function _namedParamsAreSupported()
-    {
-       /*
-        * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
-        * y usamos un namedParameter porque MasterLogic lo espera así
-        * TODO: Molaría sacar esto de aquí porque es específico de Euskaltel
-        * 
-        * Viene desde COLUMN!! 
-        * TODO: Molaría sacarlo de aquí, porque se utiliza en dos sítios (mínimo...) habría que buscar más getCustomSearchCondition
-        */
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        return !$dbAdapter || $dbAdapter->supportsParameters('named');
-    }
-    
-    
     public function getCustomSearchCondition($values, $searchOps)
     {
         $searchField = $this->_column->getDbFieldName();
@@ -52,21 +36,16 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
                 }
             }
 
+            if ($this->_column->namedParamsAreSupported()) {
 
-            if ($this->_namedParamsAreSupported()) {
-                
                 $vals[] = $searchField .' '.$op.' '. $template;
                 $_fieldValues[$template] = $this->filterValue($_val);
-                
-                
+
             } else {
-                
+
                 $vals[] = $searchField . ' ' . $op .' ?';
                 $_fieldValues[] = $this->filterValue($_val);
             }
-            
-            
-            
 
             $cont++;
 

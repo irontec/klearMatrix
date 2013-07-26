@@ -493,7 +493,7 @@ class KlearMatrix_Model_Column
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_isMapperSelect()) {
 
-                    if ($this->_namedParamsAreSupported()) {
+                    if ($this->namedParamsAreSupported()) {
                         $comparisons[] = $searchField . ' = ' . $template;
                         $fieldValues[$template] = intval($_val);
                     } else {
@@ -504,7 +504,7 @@ class KlearMatrix_Model_Column
                 } else {
 
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
-                    if ($this->_namedParamsAreSupported()) {
+                    if ($this->namedParamsAreSupported()) {
                         $comparisons[] = 'concat(' . $searchField . ') ' . $searchOperator . ' ' . $template;
                         $fieldValues[$template] = '%' . $_val . '%';
                     } else {
@@ -529,7 +529,7 @@ class KlearMatrix_Model_Column
                && $this->_config->getProperty("source")->data == 'mapper';
     }
 
-    protected function _namedParamsAreSupported()
+    public function namedParamsAreSupported()
     {
         /*
          * Si no tiene $dbAdapter damos por hecho que es una petición SOAP

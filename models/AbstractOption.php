@@ -122,7 +122,7 @@ abstract class KlearMatrix_Model_AbstractOption
      */
     public function customizeParentOption($model)
     {
-        foreach ($this->_parentOptionCustomizers as $name => $parser) {
+        foreach ($this->_parentOptionCustomizers as $parser) {
 
             $values = $parser->customize($model);
 

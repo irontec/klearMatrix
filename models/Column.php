@@ -601,7 +601,7 @@ class KlearMatrix_Model_Column
                  */
 
                 foreach ($ret as $key => $decorator) {
-
+                    $decorator; //Avoid PMD UnusedLocalVariable warning
                     $fieldDecoratorClassName = 'KlearMatrix_Model_Field_' .
                                 ucfirst($this->_type) . '_Decorator_' .
                                 ucfirst($key);

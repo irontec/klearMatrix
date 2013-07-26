@@ -70,6 +70,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
                         && get_class($this->_csv) == 'Zend_Config') {
 
             foreach ($csvOptions as $option => $value) {
+                $value; //Avoid PMD UnusedLocalVariable warning
                 if (isset($this->_csv->{$option})) {
                     $csvOptions[$option] = $this->_csv->{$option};
                 }

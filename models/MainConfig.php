@@ -82,6 +82,7 @@ class KlearMatrix_Model_MainConfig
             // Si no hay una defaultScreen, devolvemos la primera definida en el fichero de configuración.
             if ($this->_config->exists($itemConfigWrapper)) {
                 foreach ($this->_config->getRaw()->{$itemConfigWrapper} as $_name => $_data) {
+                    $data; //Avoid PMD UnusedLocalVariable warning
                     $this->{$attrName} = $_name;
                     break;
                 }

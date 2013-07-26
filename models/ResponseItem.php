@@ -589,7 +589,7 @@ class KlearMatrix_Model_ResponseItem
         $multiLangFields = $model->getMultiLangColumnsList();
 
         foreach ($multiLangFields as $dbFieldName => $columnName) {
-
+            $columnName; //Avoid PMD UnusedLocalVariable warning
             foreach ($availableLangsPerModel as $langIden) {
 
                 $returnMultiLangFields[] = $dbFieldName . '_'. $langIden;

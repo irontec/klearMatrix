@@ -1,6 +1,7 @@
 <?php
 
-class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Field_File_Preview_Interface
+class KlearMatrix_Model_Field_File_Preview_Image
+    implements KlearMatrix_Model_Field_File_Preview_Interface
 {
 
     protected $_width;

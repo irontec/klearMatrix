@@ -94,8 +94,10 @@ class KlearMatrix_Model_ResponseItem
         '_customTemplate' => array('template', false),
         '_customScripts' => array('scripts', false),
         '_actionMessages' => array('actionMessages', false),
-        '_disableSave' => array('disableSave', false), // en EditController evitamos "salvar"
-        '_disableAddAnother' => array('disableAddAnother', false), // en NewController evitamos el botón de añadir otro. close on success.
+        // disableSave >> en EditController evitamos "salvar"
+        '_disableSave' => array('disableSave', false),
+        // disableAddAnother >> en NewController evitamos el botón de añadir otro.
+        '_disableAddAnother' => array('disableAddAnother', false),
         '_useExplain' => array('useExplain', false),
         '_preconfiguredFilters' => array('preconfiguredFilters', false)
     );
@@ -616,9 +618,12 @@ class KlearMatrix_Model_ResponseItem
     protected function _getVisibleFileColumns($model)
     {
         $columns = array();
-        $blacklistSubfields = array('sizeName', 'mimeName', 'baseNameName', 'md5SumName');
+        $blacklistSubfields = array(
+            'sizeName',
+            'mimeName',
+            'baseNameName',
+            'md5SumName');
 
-        // TODO: Revisar esto, deberíamos estar seguros de que getFileObjects existe, con que devuelva un array vacío basta.
         if (method_exists($model, 'getFileObjects')) {
 
             $fileObjects = $model->getFileObjects();

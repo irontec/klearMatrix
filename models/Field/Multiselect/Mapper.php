@@ -123,7 +123,11 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             if ((!is_object($model))
                 || (!$model->getMapper() instanceof $this->_relationMapper)) {
 
-                    throw new Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
+                $exceptionMessage = 'El valor ('.get_class($model).') ' .
+                        'no tiene una estructura válida para mapper multiselect ' .
+                        '('.$this->_relationMapper.')';
+                throw new Zend_Exception($exceptionMessage);
+
             }
 
             $fkName = false;
@@ -143,7 +147,8 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 throw new Zend_Exception('No se encuentra el valor de la FK.');
             }
 
-            // Recuperamos el atributo de bd de la tabla de relación, que coincide con la clave foránea de la tabla relacionada
+            // Recuperamos el atributo de bd de la tabla de relación,
+            // que coincide con la clave foránea de la tabla relacionada
             $columnName = $model->getMapper()->getDbTable()->getReferenceMap($fkName);
 
             $relationAttributte = $model->columnNameToVar($columnName);
@@ -191,7 +196,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                     || (!$model->getMapper() instanceof $this->_relationMapper)
                 ) {
 
-                    throw new Zend_Exception('El valor ('.get_class($model).') no tiene una estructura válida para mapper multiselect ('.$this->_relationMapper.')');
+                    $exceptionMessage = 'El valor ('.get_class($model).') ' .
+                            'no tiene una estructura válida para mapper ' .
+                            'multiselect ('.$this->_relationMapper.')';
+                    throw new Zend_Exception($exceptionMessage);
                 }
 
                 if (false === $fkColumn) {

@@ -36,8 +36,9 @@ abstract class KlearMatrix_Model_Field_Ghost_Abstract
 
     method: método invocado para el valor RAW del modelo
 
-    seachMethod($values, $optionSearch, $object) >> Recibe el array de valores a buscar, la opción de buscar y el modelo - vacío-
-            >> debe devolver un array de condiciones para la consulta general por ejemplo 
+    seachMethod($values, $optionSearch, $object)
+            >> Recibe el array de valores a buscar, la opción de buscar y el modelo - vacío-
+            >> debe devolver un array de condiciones para la consulta general por ejemplo
 
     orderMethod: Método invocado para conseguir el campo que se insertará en "order by %campo% [desc]"
         compatible con: order by Field(nombre_campo,1,2,3,4,5)

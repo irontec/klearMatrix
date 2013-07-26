@@ -199,7 +199,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
      */
     public function setLangs($langs)
     {
-        //TODO: Sacar esto a una clase externa que se encarge de filtrar los idiomas del modelo, por lo que queramos (o lo del site como hace el siguiente fragmento).
+        // TODO: Sacar esto a una clase externa que se encarge de filtrar los
+        // idiomas del modelo, por lo que queramos (o lo del site como hace
+        // el siguiente fragmento).
         $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
         $this->_klearBootstrap = $bootstrap->getResource('modules')->offsetGet('klear');
 

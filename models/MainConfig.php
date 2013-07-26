@@ -30,7 +30,8 @@ class KlearMatrix_Model_MainConfig
     }
 
     /**
-     * La configuración debe recibir la ruta de ficheros de configuración, para cargar configuraciones auxiliares de cada módulo
+     * La configuración debe recibir la ruta de ficheros de configuración,
+     * para cargar configuraciones auxiliares de cada módulo
      * @param string $path
      */
     public function setConfigPath($path)
@@ -64,7 +65,8 @@ class KlearMatrix_Model_MainConfig
         $itemName = trim($itemName);
 
         if (!in_array($itemName, $this->_types)) {
-            Throw new Zend_Exception("Error accediendo a la configuración. No se ha especificado un tipo de enrutado válido.");
+            $msgString = "Invalid item specified [" . $itemName . "]";
+            Throw new Zend_Exception($msgString);
         }
 
         $attrName = "_default" . ucfirst($itemName);

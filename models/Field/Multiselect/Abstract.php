@@ -67,7 +67,8 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
 
 
     /**
-     * Un multiselect deberá implementar su método de Filtrado propio (ya que es un campo fantasma, no presente en al tabla).
+     * Un multiselect deberá implementar su método de Filtrado propio
+     * (ya que es un campo fantasma, no presente en al tabla).
      * @param unknown_type $values
      * @param unknown_type $searchOps
      */

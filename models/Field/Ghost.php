@@ -6,11 +6,15 @@
       method: getManufacturer -> Método de la clase a la que vamos a enviar el model del registro
       orderMethod: getOrderForDuration devuelve el campo a aplicar en el "order by" << (se puede lista
       searchMethod: getSearchConditionsForDuration
-      field: modelId -> Si ponemos field, pasamos al ghost el valor del campo que pongamos en field. Si no se pone, se pasa el primaryKey
+      field: modelId
+                -> Si ponemos field, pasamos al ghost el valor del campo que pongamos en field.
+                ->  Si no se pone, se pasa el primaryKey
       cache:
         campo: true -> Los valores de estos campos se añaden al valor del campo para comprobar la cache
       conditions:
-        campo: valor -> Se hace el ghost si cumple las condiciones. Si no cumple las condiciones, se devuelve el valor del campo
+        campo: valor
+                -> Se hace el ghost si cumple las condiciones.
+                -> Si no cumple las condiciones, se devuelve el valor del campo
 
 * @author David Lores
 *
@@ -67,9 +71,17 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             return false;
         }
 
-        $searchCondition = $this->_getGhostModel()->{$this->_searchMethod}($values, $searchOps, $this->_column->getModel());
-        if ($searchCondition) {
-            return $searchCondition;
+        $ghostModel = $this->_getGhostModel();
+        $searchMethood = $this->_searchMethod;
+
+        if (method_exists($ghostModel, $searchMethood)) {
+
+            $searchCondition = $ghostModel->{$searchMethod}
+                ($values, $searchOps, $this->_column->getModel());
+
+            if ($searchCondition) {
+                return $searchCondition;
+            }
         }
 
         return false;

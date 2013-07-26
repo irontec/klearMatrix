@@ -26,6 +26,21 @@ class KlearMatrix_Model_MatrixResponse
     protected $_disableSave = false;
     protected $_disableAddAnother = false;
 
+    /**
+     * These fields will be returned in the "toArray" method
+     * when !== false
+     * @var $_simpleFields
+     */
+    protected $_simpleFields = array(
+        'total',
+        'parentIden',
+        'parentId',
+        'parentScreen',
+        'parentItem',
+        'parentPk',
+        'disableSave',
+        'disableAddAnother');
+
     protected $_autoClose = false;
 
     protected $_title;
@@ -208,7 +223,7 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_searchAddModifier = $toggle;
     }
-    
+
     public function toggleApplySearchFilters($toggle)
     {
         $this->_applySearchFilters = $toggle;
@@ -353,8 +368,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['info'] = $this->_info;
         }
 
-        $simpleFields = array('total', 'parentIden','parentId','parentScreen','parentItem','parentPk','disableSave','disableAddAnother');
-        foreach ($simpleFields as $_fld) {
+        foreach ($this->_simpleFields as $_fld) {
             if (false !== $this->{'_' . $_fld}) {
                 $ret[$_fld] = $this->{'_'. $_fld};
             }

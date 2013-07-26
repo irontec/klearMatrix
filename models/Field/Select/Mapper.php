@@ -65,7 +65,9 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $dataMapper = new $mapperName;
 
         if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
-            $this->_extraDataAttributes = $this->_parseExtraAttrs($this->_config->getProperty('config')->extraDataAttributes, $dataMapper);
+
+            $extraAttrs = $this->_config->getProperty('config')->extraDataAttributes;
+            $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs, $dataMapper);
         }
 
         $where = $this->_getFilterWhere();

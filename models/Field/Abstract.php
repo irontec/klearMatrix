@@ -70,10 +70,10 @@ abstract class KlearMatrix_Model_Field_Abstract
     {
         if (is_object($this->_config)
                            && $this->_config->exists("sortable")) {
-         
+
             $this->_isSortable =(bool)$this->_config->getProperty('sortable');
         }
-        
+
         return $this;
     }
 
@@ -81,13 +81,13 @@ abstract class KlearMatrix_Model_Field_Abstract
     {
         if (is_object($this->_config)
                 && $this->_config->exists("searchable")) {
-             
+
             $this->_isSearchable =(bool)$this->_config->getProperty('searchable');
         }
-        
+
         return $this;
     }
-    
+
     public function setColumn($column)
     {
         $this->_column = $column;
@@ -117,7 +117,12 @@ abstract class KlearMatrix_Model_Field_Abstract
 
         foreach ($this->_errorIndex as $errorIndex) {
             if (isset($_errorMsgs->$errorIndex)) {
-                $this->_errorMessages[$errorIndex] = Klear_Model_Gettext::gettextCheck($errorConfig->getProperty($errorIndex));
+                if (is_string($errorIndex)) {
+                    $errorString = Klear_Model_Gettext::gettextCheck($errorIndex);
+                } else {
+                    $errorString = $errorConfig->getProperty($errorIndex);
+                }
+                $this->_errorMessages[$errorIndex] = $errorString;
             }
         }
     }
@@ -131,7 +136,7 @@ abstract class KlearMatrix_Model_Field_Abstract
         $fieldConfig = $this->_getAdapterConfig();
         $fieldConfig['attributes'] = $this->_getAttributes($fieldConfig);
 
-        
+
         return $fieldConfig;
     }
 

@@ -1,5 +1,6 @@
 <?php
-class KlearMatrix_Model_ParentOptionCustomizer_RecordCount extends KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
+class KlearMatrix_Model_ParentOptionCustomizer_RecordCount
+    extends KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
 {
     protected $_cssClass = "recordCount";
 

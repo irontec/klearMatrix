@@ -113,7 +113,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $filteredValue = $this->_mainRouter->getParam($filteredField);
             }
 
-            // TODO: Para el screename del parent, recuperar mapper, fetchById, y comprobar que existe el parámetro recibido.
+            // TODO: Para el screename del parent,
+            // recuperar mapper. Hacer fetchById y comprobar
+            // que existe el parámetro recibido.
 
             $filterFieldSetter = 'set' . $model->columnNameToVar($filteredField);
             $model->{$filterFieldSetter}($filteredValue);

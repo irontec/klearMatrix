@@ -1,5 +1,6 @@
 <?php
-abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount implements KlearMatrix_Model_Interfaces_ParentOptionCustomizer
+abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
+    implements KlearMatrix_Model_Interfaces_ParentOptionCustomizer
 {
     /**
      * @var KlearMatrix_Model_RouteDispatcher

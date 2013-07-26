@@ -33,6 +33,21 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
     }
 
+    protected function _retrieveValueForColumn($column, $langs)
+    {
+        $request = $this->getRequest();
+
+        if (!$column->isMultilang()) {
+            return $request->getPost($column->getDbFieldName());
+        }
+
+        $value = array();
+        foreach ($langs as $lang) {
+            $value[$lang] = $request->getPost($column->getDbFieldName() . $lang);
+        }
+        return $value;
+    }
+
     /**
      * @param unknown $model Entidad sobre la que se setea
      * @param unknown $column Campo concreto que se comprueba
@@ -45,14 +60,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $setter = $column->getSetterName();
 
-        if ($column->isMultilang()) {
-            $value = array();
-            foreach ($columns->getLangs() as $lang) {
-                $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
-            }
-        } else {
-            $value = $this->getRequest()->getPost($column->getDbFieldName());
-        }
+        $value = $this->_retrieveValueForColumn($column, $model->getAvailableLangs());
 
         // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
         if (is_null($value)) {

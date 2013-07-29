@@ -182,7 +182,7 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
         $cache = '';
         foreach ($cacheIdentifiers as $fieldName => $condition) {
-
+            $condition; // Avoid PMD UnusedLocalVariable warning
             $getter = 'get' . $model->columnNameToVar($fieldName);
             $fieldValue = $model->$getter();
             $cache .= $fieldName . $fieldValue;

@@ -825,9 +825,12 @@
             });
 
             $("select, input, textarea", this.options.theForm).on("keydown", function(e) {
-                if(e.shiftKey && e.ctrlKey && e.which == 13) {
+                // Support for shortcuts the klear-way (ctrl + Alt + [X])
+                if(e.altKey && e.ctrlKey && e.which == 13) {
                     e.preventDefault();
+                    e.stopPropagation();
                     self.options.theForm.trigger('submit');
+                    return;
                 }
             });
 

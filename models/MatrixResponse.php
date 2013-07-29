@@ -22,6 +22,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_parentPk = false;
     protected $_parentScreen = false;
     protected $_parentItem = false;
+    protected $_parentData = false;
 
     protected $_disableSave = false;
     protected $_disableAddAnother = false;
@@ -155,32 +156,49 @@ class KlearMatrix_Model_MatrixResponse
         $this->_paginator = $paginator;
     }
 
-    public function setParentIden($parentIden)
+    public function calculateParentData(KlearMatrix_Model_RouteDispatcher $router, $parentScreenName)
     {
-        $this->_parentIden = $parentIden;
+        $item = $router->getCurrentItem();
+
+        // Informamos a la respuesta de que campo es el "padre"
+        $this->_parentItem = $item->getFilterField();
+        $this->_parentPk = $router->getParam('pk', false);
+        $this->_parentScreen = $parentScreenName;
+
+        if (false !== $this->_parentScreen) {
+            // Instanciamos pantalla
+            $parentScreen = new KlearMatrix_Model_Screen;
+            $parentScreen->setRouteDispatcher($router);
+            $parentScreen->setConfig($router->getConfig()->getScreenConfig($parentScreenName));
+            $parentMapperName = $parentScreen->getMapperName();
+
+            $parentColumns = $parentScreen->getVisibleColumns();
+            $defaultParentCol = $parentColumns->getDefaultCol();
+
+            // Recuperamos mapper, para recuperar datos principales (default value)
+            $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
+            $this->_parentId = $router->getParam('parentId', false);
+            if (false === $this->_parentId) {
+                if (false !== $this->_parentPk) {
+                    $this->_parentId = $this->_parentPk;
+                } else {
+                    throw new Exception("No Parent id / pk found");
+                }
+
+            }
+            $this->_parentData = $parentMapper->find($this->_parentId);
+            $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+
+            $this->_parentIden = $this->_parentData->$getter();
+
+        }
+    } // FIN!
+
+    public function getParentData()
+    {
+        return $this->_parentData;
     }
 
-    public function setParentId($parentId)
-    {
-        $this->_parentId = $parentId;
-        return $this;
-    }
-
-    public function setParentPk($parentPk)
-    {
-        $this->_parentPk = $parentPk;
-        return $this;
-    }
-
-    public function setParentScreen($parentScreen)
-    {
-        $this->_parentScreen = $parentScreen;
-    }
-
-    public function setParentItem($parentItem)
-    {
-        $this->_parentItem = $parentItem;
-    }
 
     public function setDisableSave($disableSave)
     {
@@ -228,7 +246,6 @@ class KlearMatrix_Model_MatrixResponse
     {
         $this->_applySearchFilters = $toggle;
     }
-
 
     /**
      * Setea para su procesamiento el array de mensajes de confirmación y error predefinidos

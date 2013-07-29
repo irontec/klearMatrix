@@ -181,48 +181,12 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $data->setResponseItem($this->_item)
              ->setTitle($this->_item->getTitle())
              ->setColumnCollection($columns);
-        $parentData = null;
-        // La pantalla "nuevo" tiene filtro? cae de otro listado?
+
+
+        // La pantalla "nuevo" tiene filtro?  >> cae de otro listado.
         if ($this->_item->isFilteredScreen()) {
-
-            // Informamos a la respuesta de que campo es el "padre"
-            $data->setParentItem($this->_item->getFilterField());
-
-            // A partir del nombre de pantalla (de nuestro .yaml principal...
-            if ($parentScreenName = $this->getRequest()->getPost("parentScreen")) {
-
-                // Instanciamos pantalla
-                $parentScreen = new KlearMatrix_Model_Screen;
-                $parentScreen->setRouteDispatcher($this->_mainRouter);
-                $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($parentScreenName));
-                $parentMapperName = $parentScreen->getMapperName();
-
-                $parentColumns = $parentScreen->getVisibleColumns();
-                $defaultParentCol = $parentColumns->getDefaultCol();
-
-                // Recuperamos mapper, para recuperar datos principales (default value)
-                $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
-                $parentId = $this->_mainRouter->getParam('parentId');
-                $parentData = $parentMapper->find($parentId);
-
-                $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-
-                // Se añaden los datos a la respuesta
-                // Se recogerán en el new, y se mostrará información por pantalla
-                $data->setParentIden($parentData->$getter());
-                $data->setParentId($parentId);
-                $data->setParentScreen($parentScreenName);
-            }
-        }
-
-        /*
-         * Es un "new", invocado con PK. Posiblemente desde una opción de campo de una edición.
-         * Hay que devolverlo para que se use en la invocación de save
-         * y que pueda ser usado como force value con ${param.parentPk}
-         */
-        $newPk = $this->_mainRouter->getParam('pk', false);
-        if (false !== $newPk) {
-            $data->setParentPk($newPk);
+            $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
+            $data->calculateParentData($this->_mainRouter, $parentScreenName);
         }
 
         $data->setInfo($this->_item->getInfo());
@@ -272,7 +236,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         // Get data from hooks (if any)
         $jsonResponse->addJsArray($this->_getJsArray($columns));
         $jsonResponse->addCssArray($this->_getCssArray($columns));
-        $jsonResponse->setData($this->_getResponseData($data, $parentData));
+        $jsonResponse->setData($this->_getResponseData($data));
         $jsonResponse->attachView($this->_getView());
     }
 
@@ -299,12 +263,12 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         return $columns->getColsCssArray();
     }
 
-    protected function _getResponseData($data, $parentData = null)
+    protected function _getResponseData($data)
     {
         if ($this->_item->getHook('setData')) {
 
             $hook = $this->_item->getHook('setData');
-            return $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
+            return $this->_helper->{$hook->helper}->{$hook->action}($data, $data->getParentData());
         }
 
         return $data->toArray();

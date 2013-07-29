@@ -86,19 +86,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $cols = $this->_item->getVisibleColumns($ignoreBlackList);
         $model = $this->_item->getObjectInstance();
 
-        $callerScreen = $this->getRequest()->getPost("callerScreen");
-        $parentScreen = $this->_getParentScreen($callerScreen);
-        $parentData = $this->_getParentData($parentScreen);
 
-        if (!is_null($parentData)) {
-            $parentColumns = $parentScreen->getVisibleColumns();
-            $defaultParentCol = $parentColumns->getDefaultCol();
-
-            $getter = 'get' . $parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-
-            $data->setParentIden($parentData->$getter());
-            $data->setParentScreen($callerScreen);
-            $data->setParentId($parentData->getPrimaryKey());
+        if ($this->_item->isFilteredScreen()) {
+            $parentScreenName = $this->getRequest()->getPost("callerScreen", false);
+            $data->calculateParentData($this->_mainRouter, $parentScreenName);
         }
 
         $data
@@ -146,7 +137,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $data->setInfo($this->_item->getInfo());
         $data->setPreconfiguredFilters($this->_item->getPreconfiguredFilters());
         $data->setGeneralOptions($this->_item->getScreenOptions());
-        
+
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin($this->_item->getPlugin('list'));
 
@@ -170,7 +161,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $hook = $this->_item->getHook('setData');
         if ($hook) {
-            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $parentData);
+            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $data->getParentData());
         } else {
             $data = $data->toArray();
         }
@@ -185,43 +176,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->attachView($this->view);
-    }
-
-    /**
-     * Returns parent screen's configuration
-     * @return KlearMatrix_Model_Screen|NULL
-     */
-    protected function _getParentScreen($callerScreen = null)
-    {
-        if (!$callerScreen || !$this->_item->isFilteredScreen()) {
-            return null;
-        }
-
-        $parentScreen = new KlearMatrix_Model_Screen;
-        $parentScreen->setRouteDispatcher($this->_mainRouter);
-        $parentScreen->setConfig($this->_mainRouter->getConfig()->getScreenConfig($callerScreen));
-
-        return $parentScreen;
-    }
-
-    /**
-     * Returns parent screen's entity object
-     * @param KlearMatrix_Model_Screen $parentScreen
-     * @return Object Model
-     */
-    protected function _getParentData(KlearMatrix_Model_Screen $parentScreen = null)
-    {
-        if (is_null($parentScreen)) {
-            return null;
-        }
-
-        $parentMapperName = $parentScreen->getMapperName();
-
-        $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
-        $parentId = $this->_mainRouter->getParam('pk');
-        $parentData = $parentMapper->find($parentId);
-
-        return $parentData;
     }
 
     protected function _getItemsPerPage()

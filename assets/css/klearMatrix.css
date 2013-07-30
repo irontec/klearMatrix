@@ -179,6 +179,30 @@ dl.multiLanguage dd.copied span.copied {
     margin:.3em 0;
 }
 
+.klearMatrix_form div.containerFixed {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.klearMatrix_form fieldset.superContainer {
+    padding:0.4em 0;
+    margin: 1.4em 0 0.4em 0;
+    width:100%;
+    text-align: justify;
+    position: relative;
+}
+
+.klearMatrix_form fieldset.superContainer legend {
+    position:absolute;
+    top:-1em;
+    left:1em;
+}
+
+.klearMatrix_form fieldset.superContainer div.containerFixed {
+	border:0;
+}
+
+
 .klearMatrix_form label {
     font-weight: bold;
     display:block;

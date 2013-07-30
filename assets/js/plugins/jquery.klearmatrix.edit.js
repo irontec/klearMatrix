@@ -628,11 +628,15 @@
 
             $("input, textarea", this.options.theForm)
                 .autoResize({
+                	maxWidth : function() {
+                		return this.el.parent().width();
+                	}, 
                     onStartCheck: function() {
                         // El plugin se "come" el evento :S
-                        $(this).trigger("manualchange");
+                    	$(this).trigger("manualchange");
                     }
                 })
+                .trigger("paste")
                 .end()
                 .filter(":not(:disabled)").filter(":not(:hidden)").eq(0).trigger("focusin").select().focus();
 
@@ -675,6 +679,15 @@
                     e.preventDefault();
                 });
             });
+            
+
+            if (this.options.data.fixedPositions.length) {
+                for (var i in this.options.data.fixedPositions) {
+                    this._joinFields(this.options.data.fixedPositions[i].label || false,
+                        this.options.data.fixedPositions[i].fields);
+                }
+            }
+
             return this;
         },
 
@@ -906,6 +919,64 @@
             
             return this;
                         
+        },
+        
+        _joinFields : function(label, fields) {
+        	var first = true;
+            $container = this.element.klearModule("getPanel");
+            $elements = [];
+        	for (var idx in fields) {
+        		var $field = $("label[rel="+fields[idx]+"]", $container)
+        						.parents(".container:eq(0)");
+        		if ($field.length != 1) {
+        			continue;
+        		}
+        		$elements.push($field);	
+        	}
+        	
+        	
+        	var widthPercent = Math.floor(100/$elements.length) * 0.92;
+        	var maxHeight = 0;
+        	var $prev = false;
+        	var curPrev = 1;
+        	var noOfItems = 0;
+        	var $superContainer = $("<fieldset />")
+        		.addClass("superContainer")
+        		.addClass("ui-widget-content")
+        		.addClass("ui-corner-all");
+        	$("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
+        	$elements[0].before($superContainer);
+        	
+        	$.each($elements,function() {
+        		if ($prev.selector && ($(this).selector == $prev.selector)) {
+        			curPrev++;
+        		} else {
+        			noOfItems++;
+        			curPrev = 1;
+        		}
+        		
+        		$(this).addClass("containerFixed").data("numberWidth",curPrev);
+    			if ($(this).height() > maxHeight) {
+    				maxHeight = parseInt($(this).height()); 
+    			}
+    			$(this).appendTo($superContainer);
+    			$prev = $(this);
+        	});
+        	
+        	var totalPainted = 0;
+        	$.each($elements,function() {
+        		if ($(this).data("repainted")) {
+        			return;
+        		}
+        		var curPercent = widthPercent * $(this).data("numberWidth");
+        		if (noOfItems < 3) {
+        			curPercent += 1;
+        		}
+        		$(this)
+        			.css({height: maxHeight + 'px', width: curPercent + '%'})
+        			.data("repainted", true);
+        	});
+        	
         }
         
         

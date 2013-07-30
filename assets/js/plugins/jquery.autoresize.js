@@ -26,7 +26,7 @@
 			minHeight: 'original',
 			maxHeight: 500,
 			minWidth: 'original',
-			maxWidth: 500
+			maxWidth: '500'
 		};
 
 	autoResize.cloneCSSProperties = [
@@ -122,7 +122,7 @@
 				//.bind('keydown.autoResize', check)
 				.bind('change.autoResize', check)
 				.bind('paste.autoResize', function() {
-					setTimeout(function() { check(); }, 0);
+					setTimeout(function() { check(); }, 100);
 				});
 
 			if (!this.el.is(':hidden')) {
@@ -193,11 +193,19 @@
 						cloneWidth + config.extraSpace : config.minWidth,
 					currentWidth = el.width();
 
-				newWidth = Math.min(newWidth, config.maxWidth);
+				if (typeof config.maxWidth == 'function') {
+					var _maxWidth = config.maxWidth.apply(this);
+				} else {
+					var _maxWidth = config.maxWidth;
+				}
+				
+				_maxWidth -= config.extraSpace;
+				
+				newWidth = Math.min(newWidth, _maxWidth);
 
 				if (
 					(newWidth < currentWidth && newWidth >= config.minWidth) ||
-					(newWidth >= config.minWidth && newWidth <= config.maxWidth)
+					(newWidth >= config.minWidth && newWidth <= _maxWidth)
 				) {
 
 					config.onBeforeResize.call(el);

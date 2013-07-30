@@ -681,7 +681,7 @@
             });
             
 
-            if (this.options.data.fixedPositions.length) {
+            if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
                 for (var i in this.options.data.fixedPositions) {
                     this._joinFields(this.options.data.fixedPositions[i].label || false,
                         this.options.data.fixedPositions[i].fields);
@@ -935,7 +935,7 @@
         	}
         	
         	
-        	var widthPercent = Math.floor(100/$elements.length) * 0.92;
+        	var widthPercent = Math.floor(100/$elements.length) * 0.9;
         	var maxHeight = 0;
         	var $prev = false;
         	var curPrev = 1;

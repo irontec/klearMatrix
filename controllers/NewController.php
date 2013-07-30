@@ -189,10 +189,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $data->calculateParentData($this->_mainRouter, $parentScreenName);
         }
 
-        $data->setInfo($this->_item->getInfo());
-        $data->setGeneralOptions($this->_item->getScreenOptions());
-        $data->setActionMessages($this->_item->getActionMessages());
-        $data->setDisableAddAnother($this->_item->getDisableAddAnother());
+        $data->parseItemAttrs($this->_item);
 
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin($this->_item->getPlugin('klearMatrixNew'));

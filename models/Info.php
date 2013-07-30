@@ -40,15 +40,14 @@ class KlearMatrix_Model_Info
         return $value;
     }
 
+
     /**
      * devuelve la intel preparada para ser JSON-eada.
-     * Por favor, poner el nombre que deseeis;
      * @return multitype:
      */
-    public function getJsonArray()
+    public function toArray()
     {
         return $this->_fieldInfo;
     }
-
 
 }

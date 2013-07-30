@@ -15,6 +15,11 @@ class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
     {
     }
 
+    public function count()
+    {
+        return sizeof($this->_opts);
+    }
+
     public function addOption(KlearMatrix_Model_AbstractOption $opt)
     {
         $this->_opts[] = $opt;
@@ -49,7 +54,7 @@ class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
         $placement = $siteConfig->getDefaultCustomConfiguration('optionCollectionPlacement');
 
         $this->setPlacement(self::DEFAULT_PLACEMENT, 'default');
-        
+
         if (!$placement) {
             $placement = self::DEFAULT_PLACEMENT;
         }

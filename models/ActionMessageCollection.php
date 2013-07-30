@@ -11,6 +11,10 @@ class KlearMatrix_Model_ActionMessageCollection implements \IteratorAggregate
         return new \ArrayIterator($this->_msgs);
     }
 
+    public function count()
+    {
+        return sizeof($this->_msgs);
+    }
     public function addMessage(KlearMatrix_Model_ActionMessage $msg)
     {
 

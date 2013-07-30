@@ -214,10 +214,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $data->calculateParentData($this->_mainRouter, $parentScreenName);
         }
 
-        $data->setInfo($this->_item->getInfo());
-        $data->setGeneralOptions($this->_item->getScreenOptions());
-        $data->setActionMessages($this->_item->getActionMessages());
-        $data->setDisableSave($this->_item->getDisableSave());
+        $data->parseItemAttrs($this->_item);
 
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin($this->_item->getPlugin('edit'));

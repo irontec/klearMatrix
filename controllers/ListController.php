@@ -134,9 +134,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $data->fixResults($this->_item);
         }
 
-        $data->setInfo($this->_item->getInfo());
-        $data->setPreconfiguredFilters($this->_item->getPreconfiguredFilters());
-        $data->setGeneralOptions($this->_item->getScreenOptions());
+        $data->parseItemAttrs($this->_item);
 
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin($this->_item->getPlugin('list'));

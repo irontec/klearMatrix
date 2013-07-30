@@ -41,6 +41,8 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_actionMessages;
 
+    protected $_fixedPositions;
+
     protected $_modelSpec;
 
     protected $_visibleColumns;
@@ -99,7 +101,8 @@ class KlearMatrix_Model_ResponseItem
         // disableAddAnother >> en NewController evitamos el botón de añadir otro.
         '_disableAddAnother' => array('disableAddAnother', false),
         '_useExplain' => array('useExplain', false),
-        '_preconfiguredFilters' => array('preconfiguredFilters', false)
+        '_preconfiguredFilters' => array('preconfiguredFilters', false),
+        '_fixedPositions' => array('fixedPositions', false),
     );
 
     //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
@@ -1037,7 +1040,6 @@ class KlearMatrix_Model_ResponseItem
         $msgs = new KlearMatrix_Model_ActionMessageCollection();
 
         if (!$this->_actionMessages) {
-
             return $msgs;
         }
 
@@ -1052,9 +1054,28 @@ class KlearMatrix_Model_ResponseItem
         return $msgs;
     }
 
+
+    public function getFixedPositions()
+    {
+        $positions = new KlearMatrix_Model_FieldPositionCollection();
+
+        if (!$this->_fixedPositions) {
+            return $positions;
+        }
+
+        foreach ($this->_fixedPositions as $positionData) {
+            $pos = new \KlearMatrix_Model_FieldPosition;
+            $pos->setConfig($positionData);
+            $positions->addPosition($pos);
+        }
+
+        return $positions;
+    }
+
     public function getDialogsGeneralOptionsConfig()
     {
-        if ((!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '')) {
+        if ((!$this->_config->exists("options"))
+            || ($this->_config->getRaw()->options == '')) {
             return array();
         }
 
@@ -1075,6 +1096,7 @@ class KlearMatrix_Model_ResponseItem
         return $pagination;
     }
 
+
     /**
      * Devuelve el Objeto info (ayuda inline), resuelto a array para JSON-ear.
      * Listo para ser enchufado a Matrixresponse.
@@ -1083,7 +1105,7 @@ class KlearMatrix_Model_ResponseItem
     public function getInfo()
     {
         if ($this->_hasInfo) {
-            return $this->_fieldInfo->getJsonArray();
+            return $this->_fieldInfo;
         }
 
         return false;

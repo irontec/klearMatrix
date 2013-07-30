@@ -12,7 +12,8 @@ class KlearMatrix_Model_MatrixResponse
     protected $_fieldOptions = false;
     protected $_generalOptions = false;
 
-    protected $_messages;
+    protected $_actionMessages;
+    protected $_fixedPositions;
 
     protected $_paginator = false;
     protected $_csv = false;
@@ -26,6 +27,7 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_disableSave = false;
     protected $_disableAddAnother = false;
+    protected $_autoClose = false;
 
     /**
      * These fields will be returned in the "toArray" method
@@ -40,9 +42,18 @@ class KlearMatrix_Model_MatrixResponse
         'parentItem',
         'parentPk',
         'disableSave',
-        'disableAddAnother');
+        'disableAddAnother',
+        'autoClose'
+    );
 
-    protected $_autoClose = false;
+    protected $_arrayFields = array(
+        'actionMessages',
+        'preconfiguredFilters',
+        'generalOptions',
+        'fieldOptions',
+        'info',
+        'fixedPositions'
+    );
 
     protected $_title;
 
@@ -253,10 +264,14 @@ class KlearMatrix_Model_MatrixResponse
      */
     public function setActionMessages(KlearMatrix_Model_ActionMessageCollection $msgs)
     {
-        $this->_messages = $msgs;
-
+        $this->_actionMessages = $msgs;
     }
 
+
+    public function setFixedPositions($fixedPositions)
+    {
+        $this->_fixedPositions = $fixedPositions;
+    }
 
     /**
      * Si los resultados (de data) son objetos, los pasa a array (para JSON)
@@ -333,6 +348,18 @@ class KlearMatrix_Model_MatrixResponse
         $this->_results = $_newResults;
     }
 
+    public function parseItemAttrs(KlearMatrix_Model_ResponseItem $item)
+    {
+
+        $this->setInfo($item->getInfo());
+        $this->setGeneralOptions($item->getScreenOptions());
+        $this->setActionMessages($item->getActionMessages());
+        $this->setDisableAddAnother($item->getDisableAddAnother());
+        $this->setPreconfiguredFilters($item->getPreconfiguredFilters());
+        $this->setFixedPositions($item->getFixedPositions());
+
+    }
+
     public function toArray()
     {
 
@@ -345,18 +372,13 @@ class KlearMatrix_Model_MatrixResponse
         $ret['defaultLang'] = $this->_columns->getDefaultLang();
         $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
 
+        $ret['generalOptions'] = array();
+
         $ret['values'] = $this->_results;
 
         $ret['pk'] = $this->_pk;
 
-        if (false !== $this->_fieldOptions) {
-
-            $ret['fieldOptions'] = $this->_fieldOptions->toArray();
-        }
-
         if (false !== $this->_generalOptions) {
-            $ret['generalOptions'] = $this->_generalOptions->toArray();
-
             $currentModule = $this->_item->getRouteDispatcher()->getControllerName();
             $ret['optionsPlacement'] = $this->_generalOptions->getPlacement($currentModule);
         } else {
@@ -385,25 +407,35 @@ class KlearMatrix_Model_MatrixResponse
             $ret['info'] = $this->_info;
         }
 
+
         foreach ($this->_simpleFields as $_fld) {
             if (false !== $this->{'_' . $_fld}) {
                 $ret[$_fld] = $this->{'_'. $_fld};
             }
         }
 
-        if (sizeof($this->_messages) > 0) {
-            $ret['actionMessages'] = $this->_messages->toArray();
-        }
+        foreach ($this->_arrayFields as $_fld) {
 
-        if (sizeof($this->_preconfiguredFilters) > 0) {
-            $ret['preconfiguredFilters'] = $this->_preconfiguredFilters->toArray();
+            if (empty($this->{'_' . $_fld})) {
+                continue;
+            }
+            $total = 0;
+            // Si es una clase que implementa IteratorAggregate
+            // (no funciona count / sizeof en las implementaciones de IteratorAggregate)
+            if (method_exists($this->{'_' . $_fld}, 'count')) {
+                $total = $this->{'_' . $_fld}->count();
+            } else if (is_array($this->{'_' . $_fld})) {
+                $total = count($this->{'_' . $_fld});
+            }
+
+            if ($total == 0) {
+                continue;
+            }
+
+            $ret[$_fld] = $this->{'_' . $_fld}->toArray();
         }
 
         $ret[$this->_item->getType()] = $this->_item->getItemName();
-
-        if ($this->_autoClose === true) {
-            $ret['autoClose'] = $this->_autoClose;
-        }
 
         return $ret;
     }

@@ -33,7 +33,7 @@ class KlearMatrix_Model_FieldPosition
                     $this->_fields[]  = $field;
                     continue;
                 } else {
-                    for($i=0;$i<$number;$i++) {
+                    for ($i=0;$i<$number;$i++) {
                         $this->_fields[]  = $field;
                     }
                 }

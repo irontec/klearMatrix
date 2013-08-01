@@ -181,7 +181,7 @@ dl.multiLanguage dd.copied span.copied {
 
 .klearMatrix_form div.containerFixed {
     display: inline-block;
-    vertical-align: bottom;
+    vertical-align: middle;
 }
 
 .klearMatrix_form fieldset.superContainer {

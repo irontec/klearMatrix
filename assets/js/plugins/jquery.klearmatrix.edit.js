@@ -740,7 +740,21 @@
                 e.stopPropagation();
                 self.options.theForm.trigger("submit");
             });
-
+            // Comprobación para los contenedores de campos (fixedPositions)
+            var checkSuperContainer = {
+            	_getFieldSet : function($field) {
+            		return $field.parents("fieldset.superContainer:eq(0)");
+            	},
+            	show : function($f) {
+            		this._getFieldSet($f).slideDown();
+            	},
+            	hide : function($f) {
+            		$fSet = this._getFieldSet($f);
+            		if ($(".container:visible",$fSet).length == 0) {
+            			$fSet.slideUp();
+            		}
+            	}
+            };
             $(".visualFilter",$container).on('manualchange.visualFilter',function(e,manual) {
 
                 //Si es manual y es un campo oculto no hacemos los filtros
@@ -775,6 +789,7 @@
                         if (manual) {
 
                             field.show();
+                            checkSuperContainer.show(field);
 
                         } else {
 
@@ -782,6 +797,7 @@
                             //por si está relacionado con otro campo que debemos ocultar o mostrar
                             field.slideDown('normal', function(){
                                 $(".visualFilter", field).trigger("manualchange.visualFilter",true);
+                                checkSuperContainer.show(field);
                             }).addClass("ui-state-highlight");
 
                             setTimeout(function() {
@@ -799,15 +815,19 @@
                         var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
 
                         if (manual) {
-
-                            field.hide();
-
+                            field.hide(1,function() {
+                            	// Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
+                            	checkSuperContainer.hide($(this));
+                            });
                         } else {
 
                             //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
-                            field.slideUp();
+                            field.slideUp(function() {
+                            	checkSuperContainer.hide($(this));
+                            });
                         }
                     });
+                    setTimeout
                 }
 
             }).trigger("manualchange.visualFilter",true);
@@ -934,9 +954,7 @@
         		$elements.push($field);	
         	}
         	
-        	
         	var widthPercent = Math.floor(100/$elements.length) * 0.9;
-        	var maxHeight = 0;
         	var $prev = false;
         	var curPrev = 1;
         	var noOfItems = 0;
@@ -944,7 +962,11 @@
         		.addClass("superContainer")
         		.addClass("ui-widget-content")
         		.addClass("ui-corner-all");
-        	$("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
+        	
+        	if (false !== label) {
+        		$("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
+        	}
+        	
         	$elements[0].before($superContainer);
         	
         	$.each($elements,function() {
@@ -956,10 +978,7 @@
         		}
         		
         		$(this).addClass("containerFixed").data("numberWidth",curPrev);
-    			if ($(this).height() > maxHeight) {
-    				maxHeight = parseInt($(this).height()); 
-    			}
-    			$(this).appendTo($superContainer);
+        		$(this).appendTo($superContainer);
     			$prev = $(this);
         	});
         	
@@ -973,9 +992,10 @@
         			curPercent += 1;
         		}
         		$(this)
-        			.css({height: maxHeight + 'px', width: curPercent + '%'})
+        			.css({width: curPercent + '%'})
         			.data("repainted", true);
         	});
+        	
         	
         }
         

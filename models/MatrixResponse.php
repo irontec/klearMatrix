@@ -35,6 +35,8 @@ class KlearMatrix_Model_MatrixResponse
      * @var $_simpleFields
      */
     protected $_simpleFields = array(
+        'title',
+        'description',
         'total',
         'parentIden',
         'parentId',
@@ -56,6 +58,7 @@ class KlearMatrix_Model_MatrixResponse
     );
 
     protected $_title;
+    protected $_description;
 
     protected $_total = false;
     protected $_searchFields = array();
@@ -120,6 +123,12 @@ class KlearMatrix_Model_MatrixResponse
     public function setTitle($title)
     {
         $this->_title = $title;
+        return $this;
+    }
+
+    public function setDescription($description)
+    {
+        $this->_description= $description;
         return $this;
     }
 
@@ -222,11 +231,13 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         $this->_disableSave = $disableSave;
+        return $this;
     }
 
     public function setDisableAddAnother($disableAddAnother)
     {
         $this->_disableAddAnother = $disableAddAnother;
+        return $this;
     }
 
     /**
@@ -235,11 +246,10 @@ class KlearMatrix_Model_MatrixResponse
      */
     public function setInfo($info)
     {
-        if (false === $info) {
-            return;
+        if (false !== $info) {
+            $this->_info = $info;
         }
-
-        $this->_info = $info;
+        return $this;
     }
 
     public function addSearchField($field, $values, $ops)
@@ -265,12 +275,14 @@ class KlearMatrix_Model_MatrixResponse
     public function setActionMessages(KlearMatrix_Model_ActionMessageCollection $msgs)
     {
         $this->_actionMessages = $msgs;
+        return $this;
     }
 
 
     public function setFixedPositions($fixedPositions)
     {
         $this->_fixedPositions = $fixedPositions;
+        return $this;
     }
 
     /**
@@ -350,13 +362,15 @@ class KlearMatrix_Model_MatrixResponse
 
     public function parseItemAttrs(KlearMatrix_Model_ResponseItem $item)
     {
-
-        $this->setInfo($item->getInfo());
-        $this->setGeneralOptions($item->getScreenOptions());
-        $this->setActionMessages($item->getActionMessages());
-        $this->setDisableAddAnother($item->getDisableAddAnother());
-        $this->setPreconfiguredFilters($item->getPreconfiguredFilters());
-        $this->setFixedPositions($item->getFixedPositions());
+        $this
+            ->setTitle($item->getTitle())
+            ->setDescription($item->getDescription())
+            ->setInfo($item->getInfo())
+            ->setGeneralOptions($item->getScreenOptions())
+            ->setActionMessages($item->getActionMessages())
+            ->setDisableAddAnother($item->getDisableAddAnother())
+            ->setPreconfiguredFilters($item->getPreconfiguredFilters())
+            ->setFixedPositions($item->getFixedPositions());
 
     }
 
@@ -364,7 +378,6 @@ class KlearMatrix_Model_MatrixResponse
     {
 
         $ret = array();
-        $ret['title'] = $this->_title;
         $ret['columns'] = $this->_columns->toArray();
 
         // Probablemente no es la mejor forma de devolver los idiomas disponibles en los campos...

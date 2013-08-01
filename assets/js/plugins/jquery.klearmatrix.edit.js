@@ -827,7 +827,6 @@
                             });
                         }
                     });
-                    setTimeout
                 }
 
             }).trigger("manualchange.visualFilter",true);

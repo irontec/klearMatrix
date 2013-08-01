@@ -18,6 +18,8 @@ class KlearMatrix_Model_ResponseItem
     protected $_plugin;
 
     protected $_title;
+    protected $_description;
+    protected $_message; // right only, only valid for DeleteController
 
     protected $_customTemplate;
     protected $_customScripts;
@@ -93,6 +95,8 @@ class KlearMatrix_Model_ResponseItem
         '_calculatedPkConfig' => array('calculatedPk', false),
         '_plugin' => array('plugin', false),
         '_title' => array('title', false),
+        '_description' => array('description', false),
+        '_message' => array('message', false),
         '_customTemplate' => array('template', false),
         '_customScripts' => array('scripts', false),
         '_actionMessages' => array('actionMessages', false),
@@ -266,6 +270,17 @@ class KlearMatrix_Model_ResponseItem
     {
         return Klear_Model_Gettext::gettextCheck($this->_title);
     }
+
+    public function getDescription()
+    {
+        return Klear_Model_Gettext::gettextCheck($this->_description);
+    }
+
+    public function getMessage()
+    {
+        return Klear_Model_Gettext::gettextCheck($this->_message);
+    }
+
 
     public function getUseExplain()
     {

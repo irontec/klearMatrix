@@ -689,7 +689,7 @@ class KlearMatrix_Model_Column
         }
 
         if ($this->hasInfo()) {
-            $ret['fieldInfo'] = $this->_fieldInfo->getJsonArray();
+            $ret['fieldInfo'] = $this->_fieldInfo->toArray();
         }
 
         if ($this->_ordered) {

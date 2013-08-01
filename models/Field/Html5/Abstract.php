@@ -43,5 +43,7 @@ abstract class KlearMatrix_Model_Field_Html5_Abstract
             "nodeAttributes" => $this->_nodeAttributes
         );
     }
-    
+
+    abstract public function filterValue($value);
+
 }

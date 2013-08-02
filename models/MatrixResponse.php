@@ -374,6 +374,46 @@ class KlearMatrix_Model_MatrixResponse
 
     }
 
+    protected function _countArrayItemsForProperty($_fld)
+    {
+        $total = 0;
+
+        if (empty($this->{'_' . $_fld})) {
+            return 0;
+        }
+
+        // Si la propiedad instancia una clase que implementa IteratorAggregate
+        // (no funciona count / sizeof en las implementaciones de IteratorAggregate)
+        // debe tener count implementado
+
+        if (method_exists($this->{'_' . $_fld}, 'count')) {
+            $total = $this->{'_' . $_fld}->count();
+        } else if (is_array($this->{'_' . $_fld})) {
+            $total = count($this->{'_' . $_fld});
+        }
+        return $total;
+    }
+
+    protected function _getSearchDataToArray()
+    {
+        $ret = array();
+        $ret['searchFields'] = $this->_searchFields;
+        $ret['searchOps'] = $this->_searchOps;
+        $ret['searchAddModifier'] = $this->_searchAddModifier;
+        $ret['applySearchFilters'] = $this->_applySearchFilters;
+        return $ret;
+    }
+
+    protected function _getLanguageDataToArray()
+    {
+        $ret = array();
+        $ret['langs'] = $this->_columns->getLangs();
+        $ret['defaultLang'] = $this->_columns->getDefaultLang();
+        $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
+        return $ret;
+    }
+
+
     public function toArray()
     {
 
@@ -381,9 +421,7 @@ class KlearMatrix_Model_MatrixResponse
         $ret['columns'] = $this->_columns->toArray();
 
         // Probablemente no es la mejor forma de devolver los idiomas disponibles en los campos...
-        $ret['langs'] = $this->_columns->getLangs();
-        $ret['defaultLang'] = $this->_columns->getDefaultLang();
-        $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
+        $ret += $this->_getLanguageDataToArray();
 
         $ret['generalOptions'] = array();
 
@@ -394,15 +432,13 @@ class KlearMatrix_Model_MatrixResponse
         if (false !== $this->_generalOptions) {
             $currentModule = $this->_item->getRouteDispatcher()->getControllerName();
             $ret['optionsPlacement'] = $this->_generalOptions->getPlacement($currentModule);
-        } else {
-            // FIXME: Ñapa por si nos llega la opción CSV sin otras opciones.
-            if ($this->_csv !== false) {
-                $ret['optionsPlacement'] = 'bottom';
-            }
         }
 
         if ($this->_csv !== false) {
             $ret['csv'] = true;
+            if (!isset($ret['optionsPlacement'])) {
+                $ret['optionsPlacement'] = 'bottom';
+            }
         }
 
         if (false !== $this->_paginator && count($this->_paginator) > 1) {
@@ -410,16 +446,8 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         if (sizeof($this->_searchFields)>0) {
-            $ret['searchFields'] = $this->_searchFields;
-            $ret['searchOps'] = $this->_searchOps;
-            $ret['searchAddModifier'] = $this->_searchAddModifier;
-            $ret['applySearchFilters'] = $this->_applySearchFilters;
+            $ret += $this->_getSearchDataToArray();
         }
-
-        if (false !== $this->_info) {
-            $ret['info'] = $this->_info;
-        }
-
 
         foreach ($this->_simpleFields as $_fld) {
             if (false !== $this->{'_' . $_fld}) {
@@ -428,23 +456,9 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         foreach ($this->_arrayFields as $_fld) {
-
-            if (empty($this->{'_' . $_fld})) {
+            if ($this->_countArrayItemsForProperty($_fld) == 0) {
                 continue;
             }
-            $total = 0;
-            // Si es una clase que implementa IteratorAggregate
-            // (no funciona count / sizeof en las implementaciones de IteratorAggregate)
-            if (method_exists($this->{'_' . $_fld}, 'count')) {
-                $total = $this->{'_' . $_fld}->count();
-            } else if (is_array($this->{'_' . $_fld})) {
-                $total = count($this->{'_' . $_fld});
-            }
-
-            if ($total == 0) {
-                continue;
-            }
-
             $ret[$_fld] = $this->{'_' . $_fld}->toArray();
         }
 

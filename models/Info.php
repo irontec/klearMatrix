@@ -11,6 +11,13 @@ class KlearMatrix_Model_Info
         'label' => ''
     );
 
+    /**
+     * Debemnos "engañar" a matrixResponse::toArray
+     */
+    public function count() {
+        return 1;
+    }
+
     public function setConfig(Zend_Config $info)
     {
         $this->_config = new Klear_Model_ConfigParser();

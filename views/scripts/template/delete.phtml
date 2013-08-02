@@ -10,8 +10,7 @@
     {{each(colIdx,column) columns}}
         {{if (column['default'])}}
             ${name}:
-            <strong>{{html $item.getIndexFromColumn(row,column)}}</strong>
-
+            <strong>{{html $item.getStringIndexFromColumn(row,column)}}</strong>
         {{/if}}
     {{/each}}
         <em>(#${$item.getIndex(row,pk)})</em>

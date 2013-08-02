@@ -86,11 +86,18 @@
 					]
 					
 					);
+			
+			
 			if (this.options.data && this.options.data.title) {
 				$(this.element).moduleDialog("updateTitle",this.options.data.title);
 			}
-			$(this.element).moduleDialog("updateContent",$appliedTemplate);
 			
+			
+			$(this.element).moduleDialog("updateContent",$appliedTemplate,function() {
+				
+				
+			});
+
 		}
 	});
 	

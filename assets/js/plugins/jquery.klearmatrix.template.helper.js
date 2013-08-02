@@ -321,7 +321,17 @@
                 return false;
             }
         },
-
+        getStringIndexFromColumn : function(row,column) {
+        	var ret = this.getIndexFromColumn(row, column);
+        	var $ret = $("<div />").html(ret);
+        	if ($("div.multilangValue", $ret).length > 0) {
+        		var $elem = $("div.multilangValue.selected", $ret);
+        		$("span",$elem).remove();
+        		return $elem.text();
+        	}
+        	
+        	return ret;
+        },
         getIndexFromColumn : function(values, column) {
 
             if (typeof values[column.id] == 'undefined') {

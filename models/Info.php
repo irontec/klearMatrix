@@ -11,10 +11,15 @@ class KlearMatrix_Model_Info
         'label' => ''
     );
 
+
+    protected $_textAttrs = array('text','label');
+
+
     /**
      * Debemnos "engañar" a matrixResponse::toArray
      */
-    public function count() {
+    public function count()
+    {
         return 1;
     }
 
@@ -22,12 +27,14 @@ class KlearMatrix_Model_Info
     {
         $this->_config = new Klear_Model_ConfigParser();
         $this->_config->setConfig($info);
-
-        $this->_fieldInfo['type'] = $this->_getProperty('type');
-        $this->_fieldInfo['position'] = $this->_getProperty('position');
-        $this->_fieldInfo['icon'] = $this->_getProperty('icon');
-        $this->_fieldInfo['text'] = $this->_getTranslatedProperty('text');
-        $this->_fieldInfo['label'] = $this->_getTranslatedProperty('label');
+        $keys = array_keys($this->_fieldInfo);
+        foreach($keys as $key) {
+            if (in_array($key, $this->_textAttrs)) {
+                $this->_fieldInfo[$key] = $this->_getTranslatedProperty($key);
+            } else {
+                $this->_fieldInfo[$key] = $this->_getProperty($key);
+            }
+        }
     }
 
     protected function _getTranslatedProperty($key)

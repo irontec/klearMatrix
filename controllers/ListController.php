@@ -155,25 +155,9 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         }
 
         $jsonResponse->addCssFile("/css/jquery.ui.spinner.css");
-        //setData hook
 
-        $hook = $this->_item->getHook('setData');
-        if ($hook) {
-            $data = $this->_helper->{$hook->helper}->{$hook->action}($data, $data->getParentData());
-        } else {
-            $data = $data->toArray();
-        }
-
-        $jsonResponse->setData($data);
-
-        //attachView hook
-        $hook = $this->_item->getHook('attachView');
-        if ($hook) {
-
-            $this->_helper->{$hook->helper}->{$hook->action}($this->view);
-        }
-
-        $jsonResponse->attachView($this->view);
+        $jsonResponse->setData($this->_helper->hookedDataForScreen($this->_item, 'setData', $data));
+        $jsonResponse->attachView($this->_helper->hookedDataForScreen($this->_item, 'attachView', $this->view));
     }
 
     protected function _getItemsPerPage()

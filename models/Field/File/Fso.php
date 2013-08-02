@@ -10,6 +10,11 @@ class KlearMatrix_Model_Field_File_Fso
     protected $_fileSize;
     protected $_mimeType;
 
+    protected $_defaultOptionAttributtes = array(
+        'type' => 'command',
+        'class' => ''
+    );
+
     protected $_js = array(
         "/js/plugins/jquery.jplayer.min.js",
         "/js/plugins/qq-fileuploader.js",
@@ -59,58 +64,67 @@ class KlearMatrix_Model_Field_File_Fso
         return null;
     }
 
+    protected function _parseOptions()
+    {
+        $ret = array();
+        foreach ($this->_config->options as $optionIndex => $option) {
+            $ret[$optionIndex] = $this->_parseOption($option);
+        }
+
+        return $ret;
+
+    }
+
+    protected function _parseOption($option)
+    {
+        if (!$option instanceof Zend_Config) {
+            return $curOption;
+        }
+
+        $ret = array();
+        // Attributes to be translated
+        $textAttrs = array('title','text');
+
+        $parser = new Klear_Model_ConfigParser;
+        $parser->setConfig($option);
+
+        foreach ($option as $k => $v) {
+            $v; //Avoid PMD UnusedLocalVariable warning
+            $data = $parser->getProperty($k);
+            if (is_object($data) && method_exists($data, 'toArray')) {
+                $data = $data->toArray();
+            }
+
+            if (in_array($k, $textAttrs)) {
+                $data = Klear_Model_Gettext::gettextCheck($data);
+            }
+            $ret[$k] = $data;
+        }
+
+        $ret += $this->_fillWithDefaultAttrs($ret);
+        return $ret;
+    }
+
+    protected function _fillWithDefaultAttrs($curRet)
+    {
+        $ret = array();
+        foreach ($this->_defaultOptionAttributtes as $attr => $value) {
+            if (!isset($curRet[$attr])) {
+                $ret[$attr] = $value;
+            }
+        }
+        return $ret;
+    }
+
     public function getConfig()
     {
         $ret = array();
         $ret['allowed_extensions'] = $this->_getAllowedExtensions();
         $ret['size_limit'] = $this->_getSizeLimit();
 
-        $defaultOptions = array(
-            'type' => 'command',
-            'class' => ''
-        );
-
-        $textAttrs = array('title','text');
-
-        if ($fileOptions = $this->_config->options) {
-
-            $ret['options'] = array();
-            $parser = new Klear_Model_ConfigParser;
-            $parser->setConfig($fileOptions);
-
-            foreach ($fileOptions as $option => $opObject) {
-
-                if ($opObject instanceof Zend_Config) {
-
-                    $parser->setConfig($opObject);
-
-                    foreach ($opObject as $k => $v) {
-
-                        $data = $parser->getProperty($k);
-                        if (is_object($data) && method_exists($data, 'toArray')) {
-                            $data = $data->toArray();
-                        }
-                        if (in_array($k, $textAttrs)) {
-                            $data = Klear_Model_Gettext::gettextCheck($data);
-                        }
-                        $ret['options'][$option][$k] = $data;
-                    }
-                } else {
-
-                    $ret['options'][$option] = $opObject;
-                }
-
-
-                foreach ($defaultOptions as $key => $value) {
-
-                    if (is_array($ret['options'][$option]) &&
-                            !isset($ret['options'][$option][$key])) {
-                        $ret['options'][$option][$key] = $value;
-                    }
-                }
-            }
+        if ($this->_config->options) {
+            $ret['options'] = $this->_parseOptions();
         }
-
         return $ret;
     }
 

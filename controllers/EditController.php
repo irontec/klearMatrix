@@ -33,64 +33,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
     }
 
-    protected function _retrieveValueForColumn($column, $langs)
-    {
-        $request = $this->getRequest();
-
-        if (!$column->isMultilang()) {
-            return $request->getPost($column->getDbFieldName());
-        }
-
-        $value = array();
-        foreach ($langs as $lang) {
-            $value[$lang] = $request->getPost($column->getDbFieldName() . $lang);
-        }
-        return $value;
-    }
-
-    /**
-     * @param unknown $model Entidad sobre la que se setea
-     * @param unknown $column Campo concreto que se comprueba
-     */
-    protected function _parseColumnIntoModel($model, $column)
-    {
-        if ($this->_columnIsNotEditable($column)) {
-            return;
-        }
-
-        $setter = $column->getSetterName();
-
-        $value = $this->_retrieveValueForColumn($column, $model->getAvailableLangs());
-
-        // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
-        if (is_null($value)) {
-            return;
-        }
-
-        $value = $column->filterValue($value);
-
-        if ($column->isMultilang()) {
-            foreach ($value as $lang => $_value) {
-                $model->$setter($_value, $lang);
-            }
-            return;
-        }
-
-        if ($column->isDependant()) {
-            $model->$setter($value, true);
-            return;
-        }
-
-        if ($column->isFile()) {
-            if ($value !== false && file_exists($value['path'])) {
-                $model->$setter($value['path'], $value['basename']);
-            }
-            return;
-        }
-
-        $model->$setter($value);
-    }
-
     public function saveAction()
     {
         $mapperName = $this->_item->getMapperName();
@@ -119,7 +61,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $hasDependant = false;
 
         foreach ($columns as $column) {
-            $this->_parseColumnIntoModel($model, $column);
+            $this->_helper->Column2Model($model, $column);
 
             // Si una de las columnas tienen dependencias,
             // el save deberá llevar "saveRecursive"
@@ -151,11 +93,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $jsonResponse = new Klear_Model_SimpleResponse();
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
-    }
-
-    protected function _columnIsNotEditable(KlearMatrix_Model_Column $column)
-    {
-        return $column->isOption() || $column->isReadOnly();
     }
 
     protected function _save($model, $hasDependant)
@@ -253,11 +190,11 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
-        // Get data from hooks (if any)
-        $jsonResponse->addJsArray($this->_getJsArray($columns));
-        $jsonResponse->addCssArray($this->_getCssArray($columns));
-        $jsonResponse->setData($this->_getResponseData($data));
-        $jsonResponse->attachView($this->_getView());
+        $jsonResponse->addJsArray($this->_helper->hookedDataForScreen($this->_item, 'addJsArray', $columns));
+        $jsonResponse->addCssArray($this->_helper->hookedDataForScreen($this->_item, 'addCssArray', $columns));
+        $jsonResponse->setData($this->_helper->hookedDataForScreen($this->_item, 'setData', $data));
+        $jsonResponse->attachView($this->_helper->hookedDataForScreen($this->_item, 'attachView', $this->view));
+
     }
 
     protected function _addConditionalBlackList($model)
@@ -276,48 +213,4 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         }
     }
 
-    protected function _getJsArray(KlearMatrix_Model_ColumnCollection $columns)
-    {
-        //addJsArray hook
-        if ($this->_item->getHook('addJsArray')) {
-
-            $hook = $this->_item->getHook('addJsArray');
-            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
-        }
-
-        return $columns->getColsJsArray();
-    }
-
-    protected function _getCssArray(KlearMatrix_Model_ColumnCollection $columns)
-    {
-        if ($this->_item->getHook('addCssArray')) {
-
-            $hook = $this->_item->getHook('addCssArray');
-            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
-        }
-
-        return $columns->getColsCssArray();
-    }
-
-    protected function _getResponseData($data)
-    {
-        if ($this->_item->getHook('setData')) {
-
-            $hook = $this->_item->getHook('setData');
-            return $this->_helper->{$hook->helper}->{$hook->action}($data, $data->getParentData());
-        }
-
-        return $data->toArray();
-    }
-
-    protected function _getView()
-    {
-        if ($this->_item->getHook('attachView')) {
-
-            $hook = $this->_item->getHook('attachView');
-            return $this->_helper->{$hook->helper}->{$hook->action}($this->view);
-        }
-
-        return $this->view;
-    }
 }

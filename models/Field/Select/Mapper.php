@@ -90,7 +90,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
 
             foreach ($decorators as $key => $decorator) {
-
+                $decorator; //Avoid PMD UnusedLocalVariable warning
                 $decoratorClassName = $decoratorClassBaseName . ucfirst($key);
 
                 if (class_exists($decoratorClassName)

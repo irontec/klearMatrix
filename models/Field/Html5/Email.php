@@ -19,12 +19,11 @@ class KlearMatrix_Model_Field_Html5_Email extends KlearMatrix_Model_Field_Html5_
 
             if ($check && $value != "") {
 
-                list($name, $host) = explode('@', $value);
+                list(, $host) = explode('@', $value);
 
+                $mxhosts = array();
                 if (false !== getmxrr($host, $mxhosts) || gethostbyname($host) !== $host) {
-
                     return $value;
-
                 } else {
 
                     $translator = Zend_Registry::get(Klear_Plugin_Translator::DEFAULT_REGISTRY_KEY);

@@ -46,44 +46,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $hasDependant = false;
 
         foreach ($columns as $column) {
-            if ($this->_columnIsNotEditable($column)) {
-                continue;
-            }
+            $this->_helper->Column2Model($model, $column);
 
-            $setter = $column->getSetterName();
-
-            if ($column->isMultilang()) {
-                $value = array();
-                foreach ($columns->getLangs() as $lang) {
-                    $value[$lang] = $this->getRequest()->getPost($column->getDbFieldName() . $lang);
-                }
-            } else {
-                $value = $this->getRequest()->getPost($column->getDbFieldName());
-            }
-
-            $value = $column->filterValue($value);
-
-            switch(true) {
-                case ($column->isMultilang()):
-                    foreach ($value as $lang => $_value) {
-                        $model->$setter($_value, $lang);
-                    }
-                    break;
-
-                case ($column->isDependant()):
-                    $model->$setter($value, true);
-                    $hasDependant = true;
-                    break;
-
-                case ($column->isFile()):
-                    if ($value !== false) {
-                        $model->$setter($value['path'], $value['basename']);
-                    }
-                    break;
-
-                default:
-                    $model->$setter($value);
-            }
+            // Si una de las columnas tienen dependencias,
+            // el save deberá llevar "saveRecursive"
+            $hasDependant |= $column->isDependant();
         }
 
         if ($this->_item->hasForcedValues()) {
@@ -148,10 +115,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
-    protected function _columnIsNotEditable(KlearMatrix_Model_Column $column)
-    {
-        return $column->isOption() || $column->isReadOnly();
-    }
 
     protected function _save($model, $hasDependant)
     {
@@ -230,55 +193,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $jsonResponse->addJsFile("/js/custom/" . $customScripts->name, $customScripts->module);
         }
 
-        // Get data from hooks (if any)
-        $jsonResponse->addJsArray($this->_getJsArray($columns));
-        $jsonResponse->addCssArray($this->_getCssArray($columns));
-        $jsonResponse->setData($this->_getResponseData($data));
-        $jsonResponse->attachView($this->_getView());
+        $jsonResponse->addJsArray($this->_helper->hookedDataForScreen($this->_item, 'addJsArray', $columns));
+        $jsonResponse->addCssArray($this->_helper->hookedDataForScreen($this->_item, 'addCssArray', $columns));
+        $jsonResponse->setData($this->_helper->hookedDataForScreen($this->_item, 'setData', $data));
+        $jsonResponse->attachView($this->_helper->hookedDataForScreen($this->_item, 'attachView', $this->view));
+
     }
 
-    protected function _getJsArray(KlearMatrix_Model_ColumnCollection $columns)
-    {
-        //addJsArray hook
-        if ($this->_item->getHook('addJsArray')) {
-
-            $hook = $this->_item->getHook('addJsArray');
-            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
-        }
-
-        return $columns->getColsJsArray();
-    }
-
-    protected function _getCssArray(KlearMatrix_Model_ColumnCollection $columns)
-    {
-        if ($this->_item->getHook('addCssArray')) {
-
-            $hook = $this->_item->getHook('addCssArray');
-            return $this->_helper->{$hook->helper}->{$hook->action}($columns);
-        }
-
-        return $columns->getColsCssArray();
-    }
-
-    protected function _getResponseData($data)
-    {
-        if ($this->_item->getHook('setData')) {
-
-            $hook = $this->_item->getHook('setData');
-            return $this->_helper->{$hook->helper}->{$hook->action}($data, $data->getParentData());
-        }
-
-        return $data->toArray();
-    }
-
-    protected function _getView()
-    {
-        if ($this->_item->getHook('attachView')) {
-
-            $hook = $this->_item->getHook('attachView');
-            return $this->_helper->{$hook->helper}->{$hook->action}($this->view);
-        }
-
-        return $this->view;
-    }
 }

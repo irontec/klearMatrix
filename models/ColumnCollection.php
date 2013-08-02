@@ -17,6 +17,11 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
     protected $_langDefinitions = array();
 
+    public function count()
+    {
+        return sizeof($this->_columns);
+    }
+
     public function addCol(KlearMatrix_Model_Column $column)
     {
         $this->_columns[$column->getDbFieldName()] = $column;

@@ -35,6 +35,7 @@ class KlearMatrix_Model_MatrixResponse
      * @var $_simpleFields
      */
     protected $_simpleFields = array(
+        'pk',
         'title',
         'description',
         'total',
@@ -49,6 +50,7 @@ class KlearMatrix_Model_MatrixResponse
     );
 
     protected $_arrayFields = array(
+        'columns',
         'actionMessages',
         'preconfiguredFilters',
         'generalOptions',
@@ -413,32 +415,57 @@ class KlearMatrix_Model_MatrixResponse
         return $ret;
     }
 
+    protected function _loadSimpleFields()
+    {
+        $ret = array();
+        foreach ($this->_simpleFields as $_fld) {
+            if (false !== $this->{'_' . $_fld}) {
+                $ret[$_fld] = $this->{'_'. $_fld};
+            }
+        }
+        return $ret;
+    }
+
+    protected function _loadArrayFields()
+    {
+        $ret = array();
+        foreach ($this->_arrayFields as $_fld) {
+            if ($this->_countArrayItemsForProperty($_fld) == 0) {
+                continue;
+            }
+            $ret[$_fld] = $this->{'_' . $_fld}->toArray();
+        }
+        return $ret;
+    }
+
+    protected function _loadOptionsPlacementValue()
+    {
+        $ret = array();
+        $ret['optionsPlacement'] = 'bottom';
+
+        if ($this->_generalOptions->count() > 0) {
+            $currentModule = $this->_item->getRouteDispatcher()->getControllerName();
+            $placement = $this->_generalOptions->getPlacement($currentModule);
+            $ret['optionsPlacement'] = $placement;
+        } else {
+            $ret['generalOptions'] = array();
+        }
+
+        return $ret;
+    }
 
     public function toArray()
     {
 
         $ret = array();
-        $ret['columns'] = $this->_columns->toArray();
-
-        // Probablemente no es la mejor forma de devolver los idiomas disponibles en los campos...
         $ret += $this->_getLanguageDataToArray();
-
-        $ret['generalOptions'] = array();
 
         $ret['values'] = $this->_results;
 
-        $ret['pk'] = $this->_pk;
-
-        if (false !== $this->_generalOptions) {
-            $currentModule = $this->_item->getRouteDispatcher()->getControllerName();
-            $ret['optionsPlacement'] = $this->_generalOptions->getPlacement($currentModule);
-        }
+        $ret += $this->_loadOptionsPlacementValue();
 
         if ($this->_csv !== false) {
             $ret['csv'] = true;
-            if (!isset($ret['optionsPlacement'])) {
-                $ret['optionsPlacement'] = 'bottom';
-            }
         }
 
         if (false !== $this->_paginator && count($this->_paginator) > 1) {
@@ -449,18 +476,8 @@ class KlearMatrix_Model_MatrixResponse
             $ret += $this->_getSearchDataToArray();
         }
 
-        foreach ($this->_simpleFields as $_fld) {
-            if (false !== $this->{'_' . $_fld}) {
-                $ret[$_fld] = $this->{'_'. $_fld};
-            }
-        }
-
-        foreach ($this->_arrayFields as $_fld) {
-            if ($this->_countArrayItemsForProperty($_fld) == 0) {
-                continue;
-            }
-            $ret[$_fld] = $this->{'_' . $_fld}->toArray();
-        }
+        $ret += $this->_loadSimpleFields();
+        $ret += $this->_loadArrayFields();
 
         $ret[$this->_item->getType()] = $this->_item->getItemName();
 

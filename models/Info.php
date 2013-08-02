@@ -28,7 +28,7 @@ class KlearMatrix_Model_Info
         $this->_config = new Klear_Model_ConfigParser();
         $this->_config->setConfig($info);
         $keys = array_keys($this->_fieldInfo);
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             if (in_array($key, $this->_textAttrs)) {
                 $this->_fieldInfo[$key] = $this->_getTranslatedProperty($key);
             } else {

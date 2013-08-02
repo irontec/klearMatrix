@@ -78,7 +78,7 @@ class KlearMatrix_Model_Field_File_Fso
     protected function _parseOption($option)
     {
         if (!$option instanceof Zend_Config) {
-            return $curOption;
+            return $option;
         }
 
         $ret = array();

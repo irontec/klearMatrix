@@ -20,6 +20,7 @@
 			
 			var $refParent = $(this.options.parent);
 			var $self = $(this.element);
+			var self = this;
 			var _ids = $(".deleteable-item",$(moduleDialogCaller)).data("id");
 			
 			$self
@@ -48,6 +49,12 @@
 									$(this).remove();
 								});
 							});
+							
+							if (self.mustBeClosed) {
+								$self.moduleDialog("close");
+							}
+							
+							
 						}
 
 						$self.moduleDialog("option","buttons",
@@ -70,6 +77,8 @@
 			
 			var $appliedTemplate = this._loadTemplate("klearmatrixDelete");
 			var self = this;
+			
+			this.mustBeClosed = false;
 			
 			$(this.element).moduleDialog("option","buttons",
 					 [
@@ -94,10 +103,33 @@
 			
 			
 			$(this.element).moduleDialog("updateContent",$appliedTemplate,function() {
-				
-				
-			});
+			
+				$autoClose = $("form.autoclose-dialog", $(this.element));
+				$autoClose
+					.form()
+					.appendTo($(this.uiDialog).find(".ui-dialog-buttonpane"));
 
+				
+				var $autoCloseCheckbox = $("input[name=autoclose]",$autoClose);
+	            $autoCloseCheckbox.on('change',function(e) {
+	            	// El cliente ha usado autoclose, guardamos su valor
+	            	if (localStorage) {
+	            		localStorage.setItem('klearmatrix.autoclose',$(this).is(":checked"));
+	            	}
+	            	self.mustBeClosed = $(this).is(":checked");
+	            	$autoCloseCheckbox.not($(this)).trigger('toggleValue');
+	            });
+	            
+	            // En la carga de la pantalla, comprobamos si existe la preferencia sobre autoclose
+	            // Preferencia que se setea automáticamente si el usuario la utiliza 
+	        	if (localStorage && localStorage.getItem('klearmatrix.autoclose') != null) {
+	        		var savedVal = localStorage.getItem('klearmatrix.autoclose') == 'true';
+	        		self.mustBeClosed = savedVal;
+	        		$autoCloseCheckbox.trigger('forceValue', savedVal);
+	        	}
+	            
+			});
+			
 		}
 	});
 	

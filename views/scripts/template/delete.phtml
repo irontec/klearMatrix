@@ -15,4 +15,11 @@
     {{/each}}
         <em>(#${$item.getIndex(row,pk)})</em>
     </p>
+    <form class="klearMatrix_form autoclose-dialog">
+    <span class="action autoClose ">
+        <span>
+            <input type="checkbox" name="autoclose" {{if (autoClose)}} checked="checked"{{/if}}/><?php echo $this->translate('Close automatically'); ?>
+        </span>
+    </span>
+    </form>
 {{/each}}

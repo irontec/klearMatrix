@@ -310,6 +310,12 @@ a.ui-state-nojump {
     padding:.5em;
 }
 
+form.klearMatrix_form.autoclose-dialog {
+   clear: both;
+   font-size: 0.8em;
+   margin: 0;
+   text-align: right;
+}
 
 .klearMatrixFiltering,
 .klearMatrixCsv {

@@ -186,6 +186,8 @@ class KlearMatrix_Model_MatrixResponse
         $this->_parentItem = $item->getFilterField();
         $this->_parentPk = $router->getParam('pk', false);
         $this->_parentScreen = $parentScreenName;
+        
+        
 
         if (false !== $this->_parentScreen) {
             // Instanciamos pantalla
@@ -200,6 +202,7 @@ class KlearMatrix_Model_MatrixResponse
             // Recuperamos mapper, para recuperar datos principales (default value)
             $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
             $this->_parentId = $router->getParam('parentId', false);
+            
             if (false === $this->_parentId) {
                 if (false !== $this->_parentPk) {
                     $this->_parentId = $this->_parentPk;
@@ -208,11 +211,15 @@ class KlearMatrix_Model_MatrixResponse
                 }
 
             }
+            
+            
             $this->_parentData = $parentMapper->find($this->_parentId);
-            $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-
-            $this->_parentIden = $this->_parentData->$getter();
-
+            
+            if ($this->_parentData) {
+                $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+                $this->_parentIden = $this->_parentData->$getter();
+            }
+            
         }
     } // FIN!
 

@@ -510,13 +510,27 @@
                 $.extend(_tmpOptions, _dispatchOptions.post);
                 _tmpOptions['format'] = 'csv';
 
-                $.klear.request({
-                    file: $(self).klearModule("option","file"),
-                    type: 'screen',
-                    screen: _self.options.data.screen,
-                    post: _tmpOptions,
-                    external: true
-                });
+                
+                var reqOpts = {
+                        file: $(self).klearModule("option","file"),
+                        type: 'screen',
+                        screen: _self.options.data.screen,
+                        post: _tmpOptions,
+                        external: true
+                    };
+                
+                
+                
+                if (_dispatchOptions.pk!=undefined) {
+                	reqOpts.pk = _dispatchOptions.pk;
+                	reqOpts.screen = _dispatchOptions.screen;
+                }
+                
+                
+                
+                
+                
+                $.klear.request(reqOpts);
             });
 
             //Autocompletes

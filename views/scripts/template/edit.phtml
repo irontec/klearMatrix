@@ -37,7 +37,7 @@ data-title="${info.text}"
 {{/if}}
 
     <fieldset class="ui-widget-content ui-corner-all">
-        <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,idx)}</legend>
+        <legend class="ui-widget-header ui-corner-all">${$item.getTitle($item.data.title,idx)}</legend>
 
          {{each(colIdx,column) columns}}
         <div class="container ui-widget-content ui-corner-all{{if (column.properties && column.properties.expandable == true)}} expandable{{/if}}">
@@ -120,8 +120,8 @@ data-title="${info.text}"
     {{/if}}
     </div>
 {{/if}}
-    
-    
+
+
 
 </form>
 {{/each}}

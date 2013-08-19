@@ -541,7 +541,7 @@
         _parseDefaultValues : function(settings) {
 
             var title = settings.title;
-
+            
             if (typeof settings.title != 'string' || !title.match(/\%item\%|%parent%/)) {
                 return title;
             }
@@ -591,17 +591,16 @@
             } else {
                 var defaultValue = '';
             }
-
             // Si el método es invocado con replaceParentPerItem, éste viene de un listado
             // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
-            var parentValue = (replaceParentPerItem)?
+            // siempre que no esé definido parentIden (el listado sea a su vez hijo de otro)
+            var parentValue = (replaceParentPerItem && !parentIden)?
                                     this.cleanValue(defaultValue) :
                                     this.cleanValue(parentIden);
 
             var _r = title
                     .replace(/\%parent\%/,parentValue)
                     .replace(/\%item\%/,this.cleanValue(defaultValue));
-
             return _r;
 
         },

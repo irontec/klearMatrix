@@ -29,12 +29,12 @@ data-title="${info.text}"
         </a>
     {{/each}}
     {{/if}}
-    
+
     </div>
-{{/if}}   
+{{/if}}
 
     <fieldset class="ui-widget-content ui-corner-all">
-        <legend class="ui-widget-header ui-corner-all">${$item.getTitle(title,false)}</legend>
+        <legend class="ui-widget-header ui-corner-all">${$item.getTitle($item.data.title,false)}</legend>
 
         {{each(colIdx,column) columns}}
         <div class="container ui-widget-content ui-corner-all">
@@ -96,5 +96,5 @@ data-title="${info.text}"
     {{/if}}
     </div>
 {{/if}}
-    
+
 </form>

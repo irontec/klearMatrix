@@ -32,8 +32,6 @@
 
         _init: function() {
 
-            $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
-
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
 
             var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixEdit";

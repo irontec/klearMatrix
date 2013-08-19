@@ -146,8 +146,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $data->setResults($model)
              ->fixResults($this->_item);
 
-        if ($this->_item->isFilteredScreen()) {
-            $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
+        $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
+        if (false !== $parentScreenName) {
             $data->calculateParentData($this->_mainRouter, $parentScreenName);
         }
 

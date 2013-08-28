@@ -89,6 +89,11 @@ class KlearMatrix_Model_Column
         $this->_isFile = true;
     }
 
+    public function markAsDirty()
+    {
+        $this->_dirty = true;
+    }
+
     public function setReadOnly($readOnly = true)
     {
         $this->_isReadonly = (bool)$readOnly;
@@ -510,10 +515,10 @@ class KlearMatrix_Model_Column
 
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
                     if ($this->namedParamsAreSupported()) {
-                        $comparisons[] = 'concat(' . $searchField . ') ' . $searchOperator . ' ' . $template;
+                        $comparisons[] =  $searchField . $searchOperator . ' ' . $template;
                         $fieldValues[$template] = '%' . $_val . '%';
                     } else {
-                        $comparisons[] = 'concat(' . $searchField . ') ' . $searchOperator . ' ?';
+                        $comparisons[] = $searchField . $searchOperator . ' ?';
                         $fieldValues[] = '%' . $_val . '%';
                     }
                 }
@@ -540,6 +545,7 @@ class KlearMatrix_Model_Column
          * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
          * y usamos un namedParameter porque MasterLogic lo espera así
          * TODO: Molaría sacar esto de aquí porque es específico de Euskaltel
+         * TODO: Seguro? no depende sólo ed PDO/MySQLi?
          */
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
         return !$dbAdapter || $dbAdapter->supportsParameters('named');

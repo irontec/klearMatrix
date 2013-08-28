@@ -33,6 +33,26 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
 
     protected function _init()
     {
+
+        $this->_column->setReadOnly(true);
+        $this->_isSearchable = false;
+        $this->_isSortable = false;
+
+        if ($this->_config->getRaw()->source->predefined) {
+
+            $predefinedClassName = 'KlearMatrix_Model_Field_Ghost_'
+                . ucfirst($this->_config->getRaw()->source->predefined);
+
+            $this->_ghostObject = new $predefinedClassName;
+            $this->_ghostObject
+                    ->setConfig($this->_config->getRaw())
+                    ->configureHostFieldConfig($this)
+                    ->init();
+            return;
+
+        }
+
+
         // Required configuration
         if (!$this->_config->getRaw()->source->class) {
             throw new Klear_Exception_MissingConfiguration('Missing "class" in Ghost field configuration');
@@ -42,26 +62,41 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             throw new Klear_Exception_MissingConfiguration('Missing "method" in Ghost field configuration');
         }
 
-
+        $this->setGetterMethod($this->_config->getRaw()->source->method);
         $this->_ghostClassName = $this->_config->getRaw()->source->class;
-        $this->_ghostMethod = $this->_config->getRaw()->source->method;
+
 
 
         // Optional configuration
 
-        if (!$this->_config->getRaw()->source->searchMethod) {
-            $this->_isSearchable = false;
-        } else {
-            $this->_searchMethod = $this->_config->getRaw()->source->searchMethod;
+        if ($this->_config->getRaw()->source->searchMethod) {
+            $this->setSearchMethod($this->_config->getRaw()->source->searchMethod);
         }
 
-        if (!$this->_config->getRaw()->source->orderMethod) {
-            $this->_isSortable = false;
-        } else {
-            $this->_orderMethod = $this->_config->getRaw()->source->orderMethod;
+        if ($this->_config->getRaw()->source->orderMethod) {
+            $this->setOrderMethod($this->_config->getRaw()->source->orderMethod);
         }
 
-        $this->_column->setReadOnly(true);
+    }
+
+    public function setSearchMethod($method)
+    {
+        $this->_searchMethod = $method;
+        $this->_isSearchable = true;
+        return $this;
+    }
+
+    public function setOrderMethod($method)
+    {
+        $this->_orderMethod = $method;
+        $this->_isSortable = true;
+        return $this;
+    }
+
+    public function setGetterMethod($method)
+    {
+        $this->_ghostMethod = $method;
+        return $this;
     }
 
     public function getCustomSearchCondition($values, $searchOps)

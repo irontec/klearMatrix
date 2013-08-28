@@ -9,8 +9,12 @@ abstract class KlearMatrix_Model_Field_Ghost_Abstract
         $kconfig->setConfig($config);
 
         $this->_config = $kconfig;
+
         return $this;
     }
+
+    abstract public function configureHostFieldConfig(KlearMatrix_Model_Field_Abstract $field);
+
 }
 
 //EOF
@@ -32,7 +36,6 @@ abstract class KlearMatrix_Model_Field_Ghost_Abstract
       sortable: true
 
     Dado como se ha diseñado, no tiene sentido tener una clase abstracta... hubiera sido lo suyo.
-
 
     method: método invocado para el valor RAW del modelo
 

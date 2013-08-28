@@ -71,8 +71,6 @@ class KlearMatrix_Model_Field_Ghost_Concat extends KlearMatrix_Model_Field_Ghost
             return $returnStr;
         }
 
-        $replaces = array();
-
         foreach ($this->_searchedValues as $value) {
             $returnStr = preg_replace(
                 '/('.preg_quote(trim($value)).')(?=[^><]*<|.$)/i',
@@ -110,6 +108,9 @@ class KlearMatrix_Model_Field_Ghost_Concat extends KlearMatrix_Model_Field_Ghost
     public function getSearch($values, $searchOps, $model)
     {
 
+        $searchOps; // Avoid PMD UnusedLocalVariable warning
+        $model; // Avoid PMD UnusedLocalVariable warning
+
         $this->_searchedValues = $values;
         $masterConditions = array();
         $fieldValues = array();
@@ -123,7 +124,7 @@ class KlearMatrix_Model_Field_Ghost_Concat extends KlearMatrix_Model_Field_Ghost
                 continue;
             }
 
-            foreach ($values as $idx => $value) {
+            foreach ($values as $value) {
                 $template = $field . $cont++;
                 if ($namedParams) {
                     $auxCondition[] =  $field . ' like ' . $template;
@@ -146,6 +147,7 @@ class KlearMatrix_Model_Field_Ghost_Concat extends KlearMatrix_Model_Field_Ghost
 
     public function getOrder($model)
     {
+        $model; // Avoid PMD UnusedLocalVariable warning
         return array_keys($this->_templateFields);
     }
 

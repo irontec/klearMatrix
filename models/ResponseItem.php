@@ -53,6 +53,9 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_blacklist = array();
 
+    protected $_disableSave = false;
+    protected $_disableAddAnother = false;
+
     /*
      * Filtros preconfigurados para pantallas ListController
      */

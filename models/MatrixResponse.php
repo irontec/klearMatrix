@@ -186,8 +186,8 @@ class KlearMatrix_Model_MatrixResponse
         $this->_parentItem = $item->getFilterField();
         $this->_parentPk = $router->getParam('pk', false);
         $this->_parentScreen = $parentScreenName;
-        
-        
+
+
 
         if (false !== $this->_parentScreen) {
             // Instanciamos pantalla
@@ -202,7 +202,7 @@ class KlearMatrix_Model_MatrixResponse
             // Recuperamos mapper, para recuperar datos principales (default value)
             $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
             $this->_parentId = $router->getParam('parentId', false);
-            
+
             if (false === $this->_parentId) {
                 if (false !== $this->_parentPk) {
                     $this->_parentId = $this->_parentPk;
@@ -211,15 +211,15 @@ class KlearMatrix_Model_MatrixResponse
                 }
 
             }
-            
-            
+
+
             $this->_parentData = $parentMapper->find($this->_parentId);
-            
+
             if ($this->_parentData) {
                 $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
                 $this->_parentIden = $this->_parentData->$getter();
             }
-            
+
         }
     } // FIN!
 
@@ -294,6 +294,44 @@ class KlearMatrix_Model_MatrixResponse
         return $this;
     }
 
+    protected function _getValueFromColumn($column, $result)
+    {
+        if ($column->isMultilang()) {
+            $rValue = array();
+            foreach ($this->_columns->getLangs() as $_lang) {
+                $rValue[$_lang] = $result->{$column->getGetterName()}($_lang);
+            }
+
+        } else {
+            $rValue = $result->{$column->getGetterName()}();
+        }
+        return $rValue;
+    }
+
+    protected function _getCustomOptionsForResult($result)
+    {
+        $customOptions = array();
+
+        if (!empty($this->_fieldOptions)) {
+
+            foreach ($this->_fieldOptions as $option) {
+                if ($option->mustCustomize() === true) {
+
+                    $customization = $option->customizeParentOption($result);
+                    if (! is_null($customization)
+                        && !isset($customOptions[key($customization)])
+                    ) {
+
+                        $customOptions += $customization;
+                    }
+                }
+            }
+        }
+
+        return $customOptions;
+    }
+
+
     /**
      * Si los resultados (de data) son objetos, los pasa a array (para JSON)
      * Se eliminan los campos no presentes en el column-wrapper
@@ -316,50 +354,21 @@ class KlearMatrix_Model_MatrixResponse
             if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
 
                 foreach ($this->_columns as $column) {
-
                     $column->setModel($result);
-                    if (!$getter = $column->getGetterName()) {
+                    if (!$column->getGetterName()) {
                         continue;
                     }
 
-                    if ($column->isMultilang()) {
-
-                        $rValue = array();
-                        foreach ($this->_columns->getLangs() as $_lang) {
-                            $rValue[$_lang] = $result->{$getter}($_lang);
-                        }
-
-                    } else {
-
-                        $rValue = $result->{$getter}();
-                    }
-
+                    $rValue = $this->_getValueFromColumn($column, $result);
                     $_newResult[$column->getDbFieldName()] = $column->prepareValue($rValue);
                 }
 
                 // Recuperamos también la clave primaria
                 $_newResult[$primaryKeyName] = $result->getPrimaryKey();
 
-                if (! empty($this->_fieldOptions)) {
-
-                    foreach ($this->_fieldOptions as $option) {
-                        if ($option->mustCustomize() === true) {
-
-                            if (! isset($_newResult['_optionCustomization'])) {
-
-                                $_newResult['_optionCustomization'] = array();
-                            }
-
-                            $customization = $option->customizeParentOption($result);
-
-                            if (! is_null($customization)
-                                && !isset($_newResult['_optionCustomization'][key($customization)])
-                            ) {
-
-                                $_newResult['_optionCustomization'] += $customization;
-                            }
-                        }
-                    }
+                $_customOptions = $this->_getCustomOptionsForResult($result);
+                if (sizeof($_customOptions) > 0) {
+                    $_newResult['_optionCustomization'] = $_customOptions;
                 }
 
                 $_newResults[] = $_newResult;

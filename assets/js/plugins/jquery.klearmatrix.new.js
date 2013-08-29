@@ -27,15 +27,32 @@
 
             var $appliedTemplate = this._loadTemplate(tplName);
 
-            $(this.element.klearModule("getPanel")).append($appliedTemplate);
+            var $container = $(this.element.klearModule("getPanel"));
+            
+            $container.append($appliedTemplate);
+            
+            var self = this;
+            
+            $container.one("focusin",function(e) {
+                self.element.klearModule("showOverlay");
+                
+                e.preventDefault();
+                e.stopPropagation();
 
-            this._applyDecorators()
-                ._registerReDispatchSavers()
-                ._registerBaseEvents()
-                ._initFormElements()
-                ._registerEvents()
-                ._registerFieldsEvents()
-                ._registerMainActionEvent();
+                self._applyDecorators()
+                    ._registerReDispatchSavers()
+                    ._initFormElements()
+                    ._registerBaseEvents()
+                    ._registerEvents()
+                    ._registerFieldsEvents()
+                    ._registerMainActionEvent();
+
+                self.element.klearModule("hideOverlay")
+            });
+
+            if ($container.is(":visible")) {
+                $container.trigger("focusin");
+            }
 
         },
 

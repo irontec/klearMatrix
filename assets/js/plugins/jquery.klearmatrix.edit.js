@@ -59,10 +59,7 @@
             });
 
             if ($container.is(":visible")) {
-            	console.log("se ve!");
                 $container.trigger("focusin");
-            } else {
-            	console.log("NOOOOO se ve!");
             }
         },
         _applyDecorators : function() {

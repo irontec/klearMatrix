@@ -418,6 +418,11 @@ $.widget("ech.multiselect", {
 		if( /\d/.test(o.minWidth) && width < o.minWidth){
 			width = o.minWidth;
 		}
+		// By Irontec, comprobar que no sea mayor que su contenedor
+		// Si es así, adecuar su ancho al de su contenedor
+		if (width > this.element.parent().outerWidth()) {
+			width = parseInt(this.element.parent().width());
+		}
 
 		// set widths
 		this.button.outerWidth( width );
@@ -426,7 +431,12 @@ $.widget("ech.multiselect", {
 	// set menu width
 	_setMenuWidth: function(){
 		var m = this.menu;
-		m.outerWidth( this.button.outerWidth() );
+		// By Irontec, el menu desplegado, mínimo tendrá 350 pixels
+		var _width = this.button.outerWidth();
+		if (_width < 350) {
+			_width = 350;
+		}
+		m.outerWidth(_width);
 	},
 
 	// move up or down within the menu

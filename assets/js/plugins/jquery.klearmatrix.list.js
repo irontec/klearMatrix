@@ -520,15 +520,10 @@
                     };
                 
                 
-                
                 if (_dispatchOptions.pk!=undefined) {
                 	reqOpts.pk = _dispatchOptions.pk;
                 	reqOpts.screen = _dispatchOptions.screen;
                 }
-                
-                
-                
-                
                 
                 $.klear.request(reqOpts);
             });

@@ -994,8 +994,12 @@
         	});
         	
         	
+        	// Elementos que necesiten ser "actualizados", despues de cambiar su contenedor
+        	// De momento sólo se ha detectado los multiselect (que deben resizearse).
+        	var toBerefreshedElements = ['select.multiselect'];
+        	$(toBerefreshedElements.join(','), $superContainer).trigger("postmanualchange");
+        	
         }
-        
         
     });
 

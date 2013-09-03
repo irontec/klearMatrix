@@ -53,6 +53,9 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $filterClassName = $this->_parsedValues->getProperty("filterClass");
         if ($filterClassName) {
             $filter = new $filterClassName;
+            if ( !$filter instanceof KlearMatrix_Model_Field_Multiselect_Filter_Interface ) {
+                throw new Exception('Filters must implement KlearMatrix_Model_Field_Multiselect_Filter_Interface.');
+            }
             return $this->_getFilterCondition($filter);
         }
         return null;

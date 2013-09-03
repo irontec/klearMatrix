@@ -828,6 +828,9 @@ class KlearMatrix_Model_ResponseItem
     public function getFilterClassCondition()
     {
         $filterClass = new $this->_filterClass;
+        if ( !$filterClass instanceof KlearMatrix_Model_Interfaces_FilterList) {
+            throw new Exception('List filters must implement KlearMatrix_Model_Interfaces_FilterList');
+        }
         $filterClass->setRouteDispatcher($this->_routeDispatcher);
 
         return array($filterClass->getCondition(),array());

@@ -117,11 +117,14 @@ abstract class KlearMatrix_Model_Field_Abstract
 
         foreach ($this->_errorIndex as $errorIndex) {
             if (isset($_errorMsgs->$errorIndex)) {
-                if (is_string($errorIndex)) {
-                    $errorString = Klear_Model_Gettext::gettextCheck($errorIndex);
+                $errorData = $_errorMsgs->$errorIndex;
+
+                if (is_string($errorData)) {
+                    $errorString = Klear_Model_Gettext::gettextCheck($errorData);
                 } else {
-                    $errorString = $errorConfig->getProperty($errorIndex);
+                    $errorString = $errorConfig->getProperty($errorData);
                 }
+
                 $this->_errorMessages[$errorIndex] = $errorString;
             }
         }

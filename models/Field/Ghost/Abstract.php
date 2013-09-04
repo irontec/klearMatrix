@@ -2,6 +2,7 @@
 abstract class KlearMatrix_Model_Field_Ghost_Abstract
 {
     protected $_config;
+    protected $_parentField;
 
     public function setConfig(Zend_Config $config)
     {
@@ -13,7 +14,17 @@ abstract class KlearMatrix_Model_Field_Ghost_Abstract
         return $this;
     }
 
-    abstract public function configureHostFieldConfig(KlearMatrix_Model_Field_Abstract $field);
+    /**
+     * Inyección del campo field a su configurador.
+     * Debería quizás ser un método abstracto, pero mejor lo implementamos
+     * con la idea de no romper clases que extienden de ésta.
+     * @param KlearMatrix_Model_Field_Abstract $field
+     */
+    public function configureHostFieldConfig(KlearMatrix_Model_Field_Abstract $field)
+    {
+        $this->_parentField = $field;
+
+    }
 
 }
 

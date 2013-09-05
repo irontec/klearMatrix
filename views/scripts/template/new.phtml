@@ -33,7 +33,7 @@ data-title="${info.text}"
     </div>
 {{/if}}
 
-    <fieldset class="ui-widget-content ui-corner-all">
+    <fieldset class="ui-widget-content ui-corner-all{{if (fullWidth)}} fullWidth{{/if}}">
         <legend class="ui-widget-header ui-corner-all">${$item.getTitle($item.data.title,false)}</legend>
 
         {{each(colIdx,column) columns}}

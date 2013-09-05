@@ -28,6 +28,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_disableSave = false;
     protected $_disableAddAnother = false;
     protected $_autoClose = false;
+    protected $_fullWidth = false;
 
     /**
      * These fields will be returned in the "toArray" method
@@ -46,7 +47,8 @@ class KlearMatrix_Model_MatrixResponse
         'parentPk',
         'disableSave',
         'disableAddAnother',
-        'autoClose'
+        'autoClose',
+        'fullWidth'
     );
 
     protected $_arrayFields = array(
@@ -294,6 +296,12 @@ class KlearMatrix_Model_MatrixResponse
         return $this;
     }
 
+    public function setFullWidth($fullWidth)
+    {
+        $this->_fullWidth = (bool)$fullWidth;
+        return $this;
+    }
+
     protected function _getValueFromColumn($column, $result)
     {
         if ($column->isMultilang()) {
@@ -388,7 +396,8 @@ class KlearMatrix_Model_MatrixResponse
             ->setActionMessages($item->getActionMessages())
             ->setDisableAddAnother($item->getDisableAddAnother())
             ->setPreconfiguredFilters($item->getPreconfiguredFilters())
-            ->setFixedPositions($item->getFixedPositions());
+            ->setFixedPositions($item->getFixedPositions())
+            ->setFullWidth($item->getFullWidth());
 
     }
 

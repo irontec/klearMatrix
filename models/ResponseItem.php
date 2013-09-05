@@ -33,6 +33,9 @@ class KlearMatrix_Model_ResponseItem
     // Valores "forzados" desde configuración. condiciones "duras"
     protected $_forcedValues;
 
+    // Especifica si un filedset tiene la clase fullWidth (width: auto);
+    protected $_fullWidth;
+
     //Condición raw injectadas al where directamente
     protected $_rawCondition;
 
@@ -105,6 +108,7 @@ class KlearMatrix_Model_ResponseItem
         '_actionMessages' => array('actionMessages', false),
         // disableSave >> en EditController evitamos "salvar"
         '_disableSave' => array('disableSave', false),
+        '_fullWidth' => array('fullWidth', false),
         // disableAddAnother >> en NewController evitamos el botón de añadir otro.
         '_disableAddAnother' => array('disableAddAnother', false),
         '_useExplain' => array('useExplain', false),
@@ -338,6 +342,12 @@ class KlearMatrix_Model_ResponseItem
     {
         return $this->_disableSave;
     }
+
+    public function getFullWidth()
+    {
+        return $this->_fullWidth;
+    }
+
 
     public function getDisableAddAnother()
     {

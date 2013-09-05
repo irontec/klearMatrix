@@ -79,6 +79,12 @@ table.kMatrix td.options span.alertCount {
 .hidden {
     display:none;
 }
+
+.centered {
+    text-align: center;
+}
+
+
 table.kMatrix .multilangValue {
     display:none;
 
@@ -166,6 +172,10 @@ dl.multiLanguage dd.copied span.copied {
     padding:1em;
     width:50%;
     min-width:700px;
+}
+
+.klearMatrix_form fieldset.fullWidth {
+    width: auto;
 }
 
 .klearMatrix_form legend {
@@ -550,4 +560,8 @@ span.autocompleteCounter {
 	font-size:0.7em;
 	opacity:0.8;
 	margin-top: 0.8em;
+}
+
+a.option {
+	white-space: nowrap;
 }

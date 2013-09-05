@@ -97,7 +97,10 @@
                 e.preventDefault();
                 $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default", $(this).parent('tr')));
                 
-                $("a.option.default", $(this).parent('tr')).trigger("mouseup");
+                var $optionAnchor = $("a.option.default", $(this).parent('tr'));
+                var event = ($optionAnchor.is(".screen"))? "mouseup":"click";
+                $optionAnchor.trigger(event);
+                
             });
             
             $('a._fieldOption', panel).on('mouseenter',function(e) {

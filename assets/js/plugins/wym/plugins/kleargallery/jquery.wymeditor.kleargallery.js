@@ -42,7 +42,7 @@
                     title: 'Galería',
                     width: 460,
                     height: 350,
-                    template : "<span>Loading...</span>",
+                    template : "<div>Loading...</div>",
                     buttons : [
                         {
                             text: "Cerrar",

@@ -10,8 +10,10 @@ class KlearMatrix_Controller_Helper_HookedDataForScreen extends Zend_Controller_
     protected function _execHook($hookName, $args)
     {
         if ($this->_screen->getHook($hookName)) {
+
             $hook = $this->_screen->getHook($hookName);
-            return call_user_func_array(array($this->_helper->{$hook->helper},$hook->action), $args);
+            $helper = $this->getActionController()->getHelper($hook->helper);
+            return call_user_func_array(array($helper,$hook->action), $args);
         }
         return false;
     }

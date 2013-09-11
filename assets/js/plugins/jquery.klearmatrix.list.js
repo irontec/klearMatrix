@@ -41,7 +41,7 @@
 
             if ($("td.multilang",$container).length>0) {
 
-                var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Field available in multi-language", [__namespace__]));
+                var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Field available in multi-language"));
 
                 $("td.multilang",$container).each(function() {
                     $(this).prepend($mlSelector.clone().tooltip());

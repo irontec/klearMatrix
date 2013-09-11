@@ -20,14 +20,14 @@
         },
 
         _formValidationErrors : {
-            'customError' : $.translate('undefined error',[__namespace__]),
-            'patternMismatch' : $.translate('invalid pattern',[__namespace__]),
-            'rangeOverflow' : $.translate('range overflow',[__namespace__]),
-            'rangeUnderflow' : $.translate('range underflow',[__namespace__]),
-            'stepMismatch' : $.translate('step mismatch',[__namespace__]),
-            'tooLong' : $.translate('the value is too long',[__namespace__]),
-            'typeMismatch' : $.translate('type mismatched',[__namespace__]),
-            'valueMissing' : $.translate('this is a required field',[__namespace__])
+            'customError' : $.translate("undefined error"),
+            'patternMismatch' : $.translate("invalid pattern"),
+            'rangeOverflow' : $.translate("range overflow"),
+            'rangeUnderflow' : $.translate("range underflow"),
+            'stepMismatch' : $.translate("step mismatch"),
+            'tooLong' : $.translate("the value is too long"),
+            'typeMismatch' : $.translate("type mismatched"),
+            'valueMissing' : $.translate("this is a required field")
         },
 
         _init: function() {
@@ -224,14 +224,14 @@
                             $dialog.moduleDialog("option","buttons",
                                      [
                                           {
-                                            text: $.translate("Close", [__namespace__]),
+                                            text: $.translate("Close"),
                                             click: function() {
                                                 $(this).moduleDialog("close");
                                                 $self.klearModule("close");
                                             }
                                         },
                                         {
-                                            text: $.translate("Edit again", [__namespace__]),
+                                            text: $.translate("Edit again"),
                                             click: function() {
                                                 $(this).moduleDialog("close");
                                             }
@@ -340,11 +340,11 @@
                 $("select.multiselect",this.options.theForm).multiselect({
                     container: this.element.klearModule('getPanel'),
                     selectedList: 4,
-                    selectedText: $.translate("# of # selected", [__namespace__]),
-                    checkAllText: $.translate('Select all', [__namespace__]),
-                    uncheckAllText: $.translate('Unselect all', [__namespace__]),
-                    noneSelectedText: $.translate('Select an option', [__namespace__]),
-                    selectedText: $.translate('# selected', [__namespace__]),
+                    selectedText: $.translate("# of # selected"),
+                    checkAllText: $.translate("Select all"),
+                    uncheckAllText: $.translate("Unselect all"),
+                    noneSelectedText: $.translate("Select an option"),
+                    selectedText: $.translate("# selected"),
                     position: {
                           my: 'center',
                           at: 'center'
@@ -564,15 +564,15 @@
                             params: request.data,
                             multiple: false,
                             messages: {
-                                typeError: $.translate("{file} has invalid extension. Only {extensions} are allowed.",[__namespace__]),
-                                sizeError: $.translate("{file} is too large, maximum file size is {sizeLimit}.",[__namespace__]),
-                                minSizeError: $.translate("{file} is too small, minimum file size is {minSizeLimit}.",[__namespace__]),
-                                emptyError: $.translate("{file} is empty, please select files again without it.",[__namespace__]),
-                                onLeave: $.translate("The files are being uploaded, if you leave now the upload will be cancelled.",[__namespace__])
+                                typeError: $.translate("{file} has invalid extension. Only {extensions} are allowed."),
+                                sizeError: $.translate("{file} is too large, maximum file size is {sizeLimit}."),
+                                minSizeError: $.translate("{file} is too small, minimum file size is {minSizeLimit}."),
+                                emptyError: $.translate("{file} is empty, please select files again without it."),
+                                onLeave: $.translate("The files are being uploaded, if you leave now the upload will be cancelled.")
                             },
                             template: '<div class="qq-uploader">' +
                                 '<div class="qq-upload-drop-area"><span></span></div>' +
-                                '<div class="qq-upload-button ui-button ui-widget ui-state-default ui-corner-all"><span class="ui-icon ui-icon-folder-open inline"></span>'+$.translate("Upload File", [__namespace__])+'</div>' +
+                                '<div class="qq-upload-button ui-button ui-widget ui-state-default ui-corner-all"><span class="ui-icon ui-icon-folder-open inline"></span>'+$.translate("Upload File")+'</div>' +
                                 '<ul class="qq-upload-list"></ul>' +
                              '</div>',
                             onComplete : function(id, fileName, result) {
@@ -582,7 +582,7 @@
 
                                 if (result.error) {
                                     $list.empty();
-                                    $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR",[__namespace__])});
+                                    $(_self).klearModule("showDialogError", result.message, {title : $.translate("ERROR")});
                                     return;
                                 }
 
@@ -613,7 +613,7 @@
 
                                 if (typeof(message) == 'string') {
                                     $(".qq-upload-list",$(this.element)).html('');
-                                    $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR",[__namespace__])});
+                                    $(_self).klearModule("showDialogError", message, {title : $.translate("ERROR")});
                                 }
                             }
                     };
@@ -652,7 +652,7 @@
 
 
             //Mark required fields
-            var _required = $('<span title="' + $.translate("Campo obligatorio",[__namespace__]) + '" class="ui-icon inline ui-icon-heart"></span>');
+            var _required = $('<span title="' + $.translate("Campo obligatorio") + '" class="ui-icon inline ui-icon-heart"></span>');
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
             //Validate required select fields by regExp
@@ -714,21 +714,21 @@
 
                     self.element.klearModule("setAsChanged", function() {
                         self.element.klearModule('showDialog',
-                            $.translate("There is unsaved content.", [__namespace__]) +
+                            $.translate("There is unsaved content.") +
                             '<br />' +
-                            $.translate("Close the screen?", [__namespace__])
+                            $.translate("Close the screen?")
                             ,{
-                            title : $.translate("Attention!", [__namespace__]),
+                            title : $.translate("Attention!"),
                             buttons :
                                  [
                                       {
-                                        text: $.translate("Cancel", [__namespace__]),
+                                        text: $.translate("Cancel"),
                                         click: function() {
                                             $(this).moduleDialog("close");
                                         }
                                     },
                                     {
-                                        text: $.translate("Ignore changes and close", [__namespace__]),
+                                        text: $.translate("Ignore changes and close"),
                                         click: function() {
                                             self.element.klearModule("setAsUnChanged");
                                             self.element.klearModule("close");
@@ -877,7 +877,7 @@
             });
 
 
-            var _copied = $('<span title="' + $.translate("Campo auto-copiado",[__namespace__]) + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
+            var _copied = $('<span title="' + $.translate("Campo auto-copiado") + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
 
             $("dl.multiLanguage dd")
                 .on('isCopied',function() {

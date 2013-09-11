@@ -379,7 +379,7 @@
 
                         if (returnValue.length == 0) {
 
-                            return '<em>' + $.translate('There are not associated elements', [__namespace__]) + '</em>';
+                            return '<em>' + $.translate("There are not associated elements") + '</em>';
                         }
 
                         return returnValue.join(', ');

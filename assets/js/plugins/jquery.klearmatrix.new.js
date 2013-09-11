@@ -104,7 +104,7 @@
                     }
 
                     var _buttons = [{
-                        text: $.translate("Close", [__namespace__]),
+                        text: $.translate("Close"),
                         click: function() {
                             $(this).moduleDialog("close");
                             $self.klearModule("close");
@@ -114,7 +114,7 @@
                     if (addAnotherOption) {
                         _buttons.push(
                             {
-                                text: $.translate("Add another record", [__namespace__]),
+                                text: $.translate("Add another record"),
                                 click: function() {
                                     $self.klearModule("reDispatch");
                                 }

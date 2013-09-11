@@ -627,7 +627,7 @@
                 "buttons",
                  [
                     {
-                        text: $.translate("Close", [__namespace__]),
+                        text: $.translate("Close"),
                         click: function() {
                             $_dialog.moduleDialog("close");
                         }
@@ -661,7 +661,7 @@
             }
 
 
-            $_dialog.moduleDialog("option", "title", $.translate("Error", [__namespace__])  + _extraCode);
+            $_dialog.moduleDialog("option", "title", $.translate("Error")  + _extraCode);
             $_dialog.moduleDialog("updateContent", $message);
         }
 

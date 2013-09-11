@@ -60,7 +60,7 @@
 						$self.moduleDialog("option","buttons",
 								 [
 								  	{
-			    						text: $.translate("Close", [__namespace__]),
+			    						text: $.translate("Close"),
 			    						click: function() { $(this).moduleDialog("close"); }
 									}
 								]
@@ -83,11 +83,11 @@
 			$(this.element).moduleDialog("option","buttons",
 					 [
 					  	{
-    						text: $.translate("Cancel", [__namespace__]),
+    						text: $.translate("Cancel"),
     						click: function() { $(this).moduleDialog("close"); }
 						},
 					    {
-					        text: $.translate("Delete", [__namespace__]),
+					        text: $.translate("Delete"),
 					        click: function() {
 					        	self._doAction.apply(self,[this]);
 					        }

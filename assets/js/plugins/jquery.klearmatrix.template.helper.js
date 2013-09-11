@@ -594,7 +594,7 @@
             // Si el método es invocado con replaceParentPerItem, éste viene de un listado
             // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
             // siempre que no esé definido parentIden (el listado sea a su vez hijo de otro)
-            var parentValue = (replaceParentPerItem && !parentIden)?
+            var parentValue = (replaceParentPerItem)?
                                     this.cleanValue(defaultValue) :
                                     this.cleanValue(parentIden);
 

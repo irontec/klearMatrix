@@ -180,49 +180,56 @@ class KlearMatrix_Model_MatrixResponse
         $this->_paginator = $paginator;
     }
 
-    public function calculateParentData(KlearMatrix_Model_RouteDispatcher $router, $parentScreenName)
+    public function calculateParentData(KlearMatrix_Model_RouteDispatcher $router, $parentScreenName, $curScreenPK)
     {
         $item = $router->getCurrentItem();
+        $this->_parentScreen = $parentScreenName;
+
+        if (false === $this->_parentScreen) {
+            return;
+        }
 
         // Informamos a la respuesta de que campo es el "padre"
         $this->_parentItem = $item->getFilterField();
-        $this->_parentPk = $router->getParam('pk', false);
-        $this->_parentScreen = $parentScreenName;
 
-
-
-        if (false !== $this->_parentScreen) {
-            // Instanciamos pantalla
-            $parentScreen = new KlearMatrix_Model_Screen;
-            $parentScreen->setRouteDispatcher($router);
-            $parentScreen->setConfig($router->getConfig()->getScreenConfig($parentScreenName));
-            $parentMapperName = $parentScreen->getMapperName();
-
-            $parentColumns = $parentScreen->getVisibleColumns();
-            $defaultParentCol = $parentColumns->getDefaultCol();
-
-            // Recuperamos mapper, para recuperar datos principales (default value)
-            $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
+        if (is_null($curScreenPK)) { // List|New
+            $this->_parentPk = $router->getParam('pk', false);
+            if (false != $this->_parentPk) {
+                $this->_parentId = $this->_parentPk;
+            } else {
+                $this->_parentId = $router->getParam('parentId', false);
+            }
+        } else {
+            // Pantallas de elemento único instancia por $curScreenPK
+            $this->_parentPk = $curScreenPK;
             $this->_parentId = $router->getParam('parentId', false);
 
-            if (false === $this->_parentId) {
-                if (false !== $this->_parentPk) {
-                    $this->_parentId = $this->_parentPk;
-                } else {
-                    throw new Exception("No Parent id / pk found");
-                }
-
-            }
-
-
-            $this->_parentData = $parentMapper->find($this->_parentId);
-
-            if ($this->_parentData) {
-                $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-                $this->_parentIden = $this->_parentData->$getter();
-            }
-
         }
+
+        if (false === $this->_parentId) {
+            throw new Exception("No Parent id / pk found");
+        }
+
+        // Instanciamos pantalla
+        $parentScreen = new KlearMatrix_Model_Screen;
+        $parentScreen->setRouteDispatcher($router);
+        $parentScreen->setConfig($router->getConfig()->getScreenConfig($parentScreenName));
+        $parentMapperName = $parentScreen->getMapperName();
+
+        $parentColumns = $parentScreen->getVisibleColumns();
+        $defaultParentCol = $parentColumns->getDefaultCol();
+
+        // Recuperamos mapper, para recuperar datos principales (default value)
+        $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
+
+
+        $this->_parentData = $parentMapper->find($this->_parentId);
+
+        if ($this->_parentData) {
+            $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+            $this->_parentIden = $this->_parentData->$getter();
+        }
+
     } // FIN!
 
     public function getParentData()

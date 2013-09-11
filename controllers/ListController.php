@@ -89,12 +89,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         if ($this->_item->isFilteredScreen()) {
             //Si es un listado que viene de otro listado "heredado"
-            if ($this->getRequest()->getPost("parentScreen", false)) {
-                $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
-            } else {
+            $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
+            if (!$parentScreenName) {
                 $parentScreenName = $this->getRequest()->getPost("callerScreen", false);
             }
-            $data->calculateParentData($this->_mainRouter, $parentScreenName);
+            $data->calculateParentData($this->_mainRouter, $parentScreenName, NULL);
         }
 
         $data

@@ -652,7 +652,8 @@
 
 
             //Mark required fields
-            var _required = $('<span title="' + $.translate("Campo obligatorio") + '" class="ui-icon inline ui-icon-heart"></span>');
+            var _required = $('<span title="' + $.translate("Campo obligatorio") 
+            		+ '" class="ui-icon inline ui-icon-heart"></span>');
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
             //Validate required select fields by regExp
@@ -877,7 +878,8 @@
             });
 
 
-            var _copied = $('<span title="' + $.translate("Campo auto-copiado") + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
+            var _copied = $('<span title="' + $.translate("Campo auto-copiado") 
+            		+ '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
 
             $("dl.multiLanguage dd")
                 .on('isCopied',function() {

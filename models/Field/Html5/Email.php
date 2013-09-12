@@ -35,7 +35,7 @@ class KlearMatrix_Model_Field_Html5_Email extends KlearMatrix_Model_Field_Html5_
 
                     } else {
 
-                        throw new Klear_Exception_Default($translator->translate("Email no válido."));
+                        throw new Klear_Exception_Default($translator->translate("Email not valid."));
 
                     }
                 }

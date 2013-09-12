@@ -150,7 +150,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                     'Model not found for '. $this->_item->getMapperName() . ' >> PK(' .$this->_pk .')',
                     Zend_Log::ERR
                 );
-                throw new Zend_Exception("No se encuentra la columna solicitada.");
+                throw new Zend_Exception("Requested column not found.");
             }
 
             $this->_setFileFields();

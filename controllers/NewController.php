@@ -96,7 +96,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
-                'message' => $this->view->translate('Registro salvado correctamente.')
+                'message' => $this->view->translate('Record successfully saved.')
             );
         } catch (\Zend_Exception $exception) {
 
@@ -129,7 +129,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $model->save(false, $hasDependant);
             }
         } catch (\Zend_Exception $exception) {
-            throw new \Zend_Exception('Error salvando el registro');
+            throw new \Zend_Exception('Error saving record');
         }
     }
 

@@ -54,7 +54,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         if (!$model) {
             $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
-            Throw new Zend_Exception($this->view->translate('El registro no se encuentra almacenado.'));
+            Throw new Zend_Exception($this->view->translate('Record not found.'));
         }
 
         $columns = $this->_item->getVisibleColumns();
@@ -76,7 +76,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
-                'message' => $this->view->translate('Registro salvado correctamente.')
+                'message' => $this->view->translate('Record successfully saved.')
             );
         } catch (\Zend_Exception $exception) {
             $data = array(
@@ -109,9 +109,9 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             }
         } catch (\Zend_Exception $exception) {
             $this->_helper->log(
-                'Error salvando el registro: ' . $exception->getMessage()
+                'Error saving record: ' . $exception->getMessage()
             );
-            throw new \Zend_Exception($this->view->translate('Error salvando el registro'));
+            throw new \Zend_Exception($this->view->translate('Error saving record'));
         }
     }
 

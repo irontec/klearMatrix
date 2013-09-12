@@ -652,7 +652,7 @@
 
 
             //Mark required fields
-            var _required = $('<span title="' + $.translate("Campo obligatorio") 
+            var _required = $('<span title="' + $.translate("Required field") 
             		+ '" class="ui-icon inline ui-icon-heart"></span>');
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
@@ -878,7 +878,7 @@
             });
 
 
-            var _copied = $('<span title="' + $.translate("Campo auto-copiado") 
+            var _copied = $('<span title="' + $.translate("Auto-copied field") 
             		+ '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
 
             $("dl.multiLanguage dd")

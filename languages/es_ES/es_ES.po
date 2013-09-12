@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-11 13:42+0100\n"
-"PO-Revision-Date: 2013-09-11 13:42+0100\n"
+"POT-Creation-Date: 2013-09-12 19:04+0100\n"
+"PO-Revision-Date: 2013-09-12 19:04+0100\n"
 "Last-Translator: Lander Ontoria <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: en_ES\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: controllers/FileController.php:204 assets/js/klearMatrix.compiled.js:303
 #: assets/js/plugins/jquery.klearmatrix.delete.js:86
-#: assets/js/plugins/jquery.klearmatrix.edit.js:725
+#: assets/js/plugins/jquery.klearmatrix.edit.js:726
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -34,57 +34,57 @@ msgstr "Error preparando la descarga.<br />(%s)"
 
 #: controllers/DeleteController.php:57 controllers/DeleteController.php:91
 msgid "Record not found. Could not delete."
-msgstr ""
+msgstr "Elemento no encontrado. No es posible borrarlo."
 
 #: controllers/DeleteController.php:103
 msgid "Could not delete record: "
 msgstr "No se ha podido eliminar el registro:"
 
 #: controllers/DeleteController.php:118
-msgid "Registro eliminado correctamente"
-msgstr ""
+msgid "Record successfully deleted"
+msgstr "Registro eliminado correctamente"
 
 #: controllers/NewController.php:99 controllers/EditController.php:79
-msgid "Registro salvado correctamente."
-msgstr ""
+msgid "Record successfully saved."
+msgstr "Registro salvado correctamente."
 
 #: controllers/EditController.php:57
-msgid "El registro no se encuentra almacenado."
-msgstr ""
+msgid "Record not found."
+msgstr "El registro no se encuentra almacenado."
 
 #: controllers/EditController.php:114
-msgid "Error salvando el registro"
-msgstr ""
+msgid "Error saving record"
+msgstr "Error salvando el registro"
 
 #: controllers/EditController.php:131
 msgid "Element not found. Cannot edit."
-msgstr ""
+msgstr "Elemento no encontrado. No es posible editarlo."
 
 #: controllers/DashboardController.php:48
 msgid "(Aproximated values)"
 msgstr "(Valores aproximados)"
 
 #: models/Field/Html5/Url.php:17
-msgid "El campo no es una URL válida."
-msgstr ""
+msgid "Field is not a valid URL."
+msgstr "El campo no es una URL válida."
 
 #: models/Field/Html5/Email.php:38
-msgid "Email no válido."
-msgstr ""
+msgid "Email not valid."
+msgstr "Email no válido."
 
 #: models/Field/Select/Decorator/Autocomplete.php:69
 #, php-format
-msgid "%d items encontrados"
-msgstr ""
+msgid "%d items found"
+msgstr "%d items found"
 
 #: models/Field/Select/Decorator/Autocomplete.php:73
 #, php-format
-msgid "(mostrando %d)"
-msgstr ""
+msgid "(showing %d)"
+msgstr "(mostrando %d)"
 
 #: views/scripts/template/list.phtml:19
-msgid "Atajos de búsqueda"
-msgstr ""
+msgid "Search shortcuts"
+msgstr "Atajos de búsqueda"
 
 #: views/scripts/template/list.phtml:24
 msgid "Filter fields"
@@ -95,8 +95,8 @@ msgid "Returns records that satisfy any of filters"
 msgstr "Devuelve los registros que cumplan alguno de los valores"
 
 #: views/scripts/template/list.phtml:27
-msgid "Aplicar los filtros"
-msgstr ""
+msgid "Apply filters"
+msgstr "Aplicar filtros"
 
 #: views/scripts/template/list.phtml:73
 msgid "Add all filters"
@@ -111,12 +111,12 @@ msgid "Total: "
 msgstr "Total:"
 
 #: views/scripts/template/list.phtml:143
-msgid "Registros"
+msgid "Records"
 msgstr "Registros"
 
 #: views/scripts/template/list.phtml:145
-msgid "Registros por página:"
-msgstr ""
+msgid "Records per page:"
+msgstr "Registros por página:"
 
 #: views/scripts/template/new.phtml:19 views/scripts/template/new.phtml:84
 #: views/scripts/template/edit.phtml:20 views/scripts/template/edit.phtml:105
@@ -152,13 +152,13 @@ msgid "Not available"
 msgstr "No disponible"
 
 #: views/scripts/template/fields/password.phtml:1
-msgid "Modificar contraseña"
+msgid "Change password"
 msgstr "Modificar contraseña"
 
 #: views/scripts/template/fields/video.phtml:55
 #: views/scripts/template/fields/video.phtml:74
-msgid "Canal de"
-msgstr ""
+msgid "Channel:"
+msgstr "Canal"
 
 #: assets/js/klearMatrix.compiled.js:242
 #: assets/js/plugins/jquery.klearmatrix.module.js:664
@@ -292,33 +292,33 @@ msgstr "ERROR"
 
 #: assets/js/klearMatrix.compiled.js:300
 #: assets/js/plugins/jquery.klearmatrix.edit.js:655
-msgid "Campo obligatorio"
-msgstr "Campo obligatorio"
+msgid "Required field"
+msgstr "Este campo es obligatorio"
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:717
+#: assets/js/plugins/jquery.klearmatrix.edit.js:718
 msgid "There is unsaved content."
 msgstr "Hay contenido sin guardar."
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:719
+#: assets/js/plugins/jquery.klearmatrix.edit.js:720
 msgid "Close the screen?"
 msgstr "¿Cerrar la pantalla?"
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:721
+#: assets/js/plugins/jquery.klearmatrix.edit.js:722
 msgid "Attention!"
 msgstr "¡Atención!"
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:731
+#: assets/js/plugins/jquery.klearmatrix.edit.js:732
 msgid "Ignore changes and close"
 msgstr "Ignorar cambios y cerrar"
 
 #: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:880
-msgid "Campo auto-copiado"
-msgstr "Campo auto-copiada."
+#: assets/js/plugins/jquery.klearmatrix.edit.js:881
+msgid "Auto-copied field"
+msgstr "Campo auto-copiado"
 
 #: assets/js/klearMatrix.compiled.js:315
 #: assets/js/plugins/jquery.klearmatrix.new.js:117
@@ -341,15 +341,27 @@ msgstr "valor"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/autosave/plugin.min.js:1
 msgid "You have unsaved changes are you sure you want to navigate away?"
-msgstr ""
+msgstr "Tienes elementos no guardados ¿Seguir de todas formas?"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
 msgid "%Y-%m-%d"
-msgstr ""
+msgstr "%Y-%m-%d"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
 msgid "%H:%M:%S"
-msgstr ""
+msgstr "%H:%M:%S"
+
+#~ msgid "Modificar contraseña"
+#~ msgstr "Modificar contraseña"
+
+#~ msgid "Campo obligatorio"
+#~ msgstr "Campo obligatorio"
+
+#~ msgid "Campo auto-copiado"
+#~ msgstr "Campo auto-copiada."
+
+#~ msgid "Registros"
+#~ msgstr "Registros"
 
 #~ msgid "media_dlg."
 #~ msgstr "dialogo de media"

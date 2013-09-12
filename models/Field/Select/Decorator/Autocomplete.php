@@ -66,11 +66,11 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             );
         }
 
-        $this->_view->totalItems = $this->_view->translate("%d items encontrados", $totalItems);
+        $this->_view->totalItems = $this->_view->translate("%d items found", $totalItems);
 
         if (isset($limit) && !is_null($limit)) {
             $show = ($limit < $totalItems)? $limit : $totalItems;
-            $this->_view->totalItems .= ' ' . $this->_view->translate("(mostrando %d)", $show);
+            $this->_view->totalItems .= ' ' . $this->_view->translate("(showing %d)", $show);
         }
 
         $this->_view->results = $options;

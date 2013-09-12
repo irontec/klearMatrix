@@ -16,7 +16,7 @@ data-title="${info.text}"
 <form class="klearMatrixFilteringForm {{if (typeof searchFields == 'undefined') }} not-loaded {{/if}} ">
 {{if (preconfiguredFilters)}}
 <p class="preconfiguredFilters">
-<span class="ui-silk inline ui-silk-zoom-in"></span><?php echo $this->translate('Atajos de búsqueda'); ?>: {{each(idx,filter) preconfiguredFilters}}
+<span class="ui-silk inline ui-silk-zoom-in"></span><?php echo $this->translate('Search shortcuts'); ?>: {{each(idx,filter) preconfiguredFilters}}
     <button class="preconfigureFilters" data-field="${filter.field}" data-value="${filter.value}">${filter.title}</button>
 {{/each}}
 </p>
@@ -24,7 +24,7 @@ data-title="${info.text}"
 <p class="title"><span class="ui-silk inline ui-silk-zoom"></span><?php echo $this->translate('Filter fields'); ?></p>
 {{if (searchFields) }}
     <span class="applyFilters" title="<?php echo $this->translate('Returns records that satisfy any of filters'); ?>">
-        <?php echo $this->translate('Aplicar los filtros'); ?>
+        <?php echo $this->translate('Apply filters'); ?>
         <input type="checkbox" name="applyFilters"
         {{if (applySearchFilters) }}
             checked="checked"
@@ -140,9 +140,9 @@ data-title="${info.text}"
 <caption class="ui-state-active ui-priority-primary">
 ${$item.getTitle(title,false)}
 <span class="extraCaptionInfo">
-<?php echo $this->translate("Total: "); ?><strong>${total}</strong> <?php echo $this->translate('Registros'); ?>
+<?php echo $this->translate("Total: "); ?><strong>${total}</strong> <?php echo $this->translate('Records'); ?>
 {{if (paginator)}}
-<?php echo ' | ' . $this->translate('Registros por página:')?> <input value="${paginator.itemCountPerPage}" type="number" min="0" max="1000" />
+<?php echo ' | ' . $this->translate('Records per page:')?> <input value="${paginator.itemCountPerPage}" type="number" min="0" max="1000" />
 {{/if}}
 </span>
 </caption>

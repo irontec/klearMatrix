@@ -115,7 +115,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             $data['message'] = $this->_item->getMessage();
         } else {
             // Mensaje por defecto.
-            $data['message'] = $this->view->translate('Registro eliminado correctamente');
+            $data['message'] = $this->view->translate('Record successfully deleted');
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();

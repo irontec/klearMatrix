@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-11 13:43+0100\n"
-"PO-Revision-Date: 2013-09-11 13:43+0100\n"
+"POT-Creation-Date: 2013-09-12 19:07+0100\n"
+"PO-Revision-Date: 2013-09-12 19:10+0100\n"
 "Last-Translator: Lander Ontoria <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: en_ES\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: controllers/FileController.php:204 assets/js/klearMatrix.compiled.js:303
 #: assets/js/plugins/jquery.klearmatrix.delete.js:86
-#: assets/js/plugins/jquery.klearmatrix.edit.js:725
+#: assets/js/plugins/jquery.klearmatrix.edit.js:726
 msgid "Cancel"
 msgstr "Utzi"
 
@@ -41,20 +41,22 @@ msgid "Could not delete record: "
 msgstr "_eu_Could not delete record: "
 
 #: controllers/DeleteController.php:118
-msgid "Registro eliminado correctamente"
-msgstr "_eu_Registro eliminado correctamente"
+msgid "Record successfully deleted"
+msgstr ""
 
 #: controllers/NewController.php:99 controllers/EditController.php:79
-msgid "Registro salvado correctamente."
-msgstr "_eu_Registro salvado correctamente."
+msgid "Record successfully saved."
+msgstr ""
 
 #: controllers/EditController.php:57
-msgid "El registro no se encuentra almacenado."
-msgstr "_eu_El registro no se encuentra almacenado."
+#, fuzzy
+msgid "Record not found."
+msgstr "_eu_Record not found. Could not delete."
 
 #: controllers/EditController.php:114
-msgid "Error salvando el registro"
-msgstr "_eu_Error salvando el registro"
+#, fuzzy
+msgid "Error saving record"
+msgstr "Error salvando el registro"
 
 #: controllers/EditController.php:131
 msgid "Element not found. Cannot edit."
@@ -65,25 +67,25 @@ msgid "(Aproximated values)"
 msgstr "(Gutxi gorabeherako balioak)"
 
 #: models/Field/Html5/Url.php:17
-msgid "El campo no es una URL válida."
+msgid "Field is not a valid URL."
 msgstr ""
 
 #: models/Field/Html5/Email.php:38
-msgid "Email no válido."
+msgid "Email not valid."
 msgstr ""
 
 #: models/Field/Select/Decorator/Autocomplete.php:69
 #, php-format
-msgid "%d items encontrados"
+msgid "%d items found"
 msgstr ""
 
 #: models/Field/Select/Decorator/Autocomplete.php:73
 #, php-format
-msgid "(mostrando %d)"
+msgid "(showing %d)"
 msgstr ""
 
 #: views/scripts/template/list.phtml:19
-msgid "Atajos de búsqueda"
+msgid "Search shortcuts"
 msgstr ""
 
 #: views/scripts/template/list.phtml:24
@@ -95,8 +97,8 @@ msgid "Returns records that satisfy any of filters"
 msgstr "Edozein iragazki betetzen duten erregistroak itzultzen ditu"
 
 #: views/scripts/template/list.phtml:27
-msgid "Aplicar los filtros"
-msgstr ""
+msgid "Apply filters"
+msgstr "Iragazki guztiak gehitu"
 
 #: views/scripts/template/list.phtml:73
 msgid "Add all filters"
@@ -104,19 +106,19 @@ msgstr "Iragazki guztiak gehitu"
 
 #: views/scripts/template/list.phtml:123 views/scripts/template/list.phtml:267
 msgid "Export to CSV"
-msgstr "_eu_Export to CSV"
+msgstr "CSV moduan jaitsi"
 
 #: views/scripts/template/list.phtml:143
 msgid "Total: "
 msgstr "Guztira: "
 
 #: views/scripts/template/list.phtml:143
-msgid "Registros"
-msgstr "lerro"
+msgid "Records"
+msgstr ""
 
 #: views/scripts/template/list.phtml:145
-msgid "Registros por página:"
-msgstr "Lerro orriko: "
+msgid "Records per page:"
+msgstr ""
 
 #: views/scripts/template/new.phtml:19 views/scripts/template/new.phtml:84
 #: views/scripts/template/edit.phtml:20 views/scripts/template/edit.phtml:105
@@ -152,18 +154,18 @@ msgid "Not available"
 msgstr "Ez dago eskuragarri"
 
 #: views/scripts/template/fields/password.phtml:1
-msgid "Modificar contraseña"
-msgstr "_eu_Modificar contraseña"
+msgid "Change password"
+msgstr "Pasahitza aldatu"
 
 #: views/scripts/template/fields/video.phtml:55
 #: views/scripts/template/fields/video.phtml:74
-msgid "Canal de"
-msgstr "_eu_Canal de"
+msgid "Channel:"
+msgstr ""
 
 #: assets/js/klearMatrix.compiled.js:242
 #: assets/js/plugins/jquery.klearmatrix.module.js:664
 msgid "Error"
-msgstr "_eu_Error"
+msgstr "Errorea"
 
 #: assets/js/klearMatrix.compiled.js:254
 #: assets/js/plugins/jquery.klearmatrix.template.helper.js:382
@@ -286,37 +288,37 @@ msgstr "Fitxategia gehitu"
 #: assets/js/plugins/jquery.klearmatrix.edit.js:585
 #: assets/js/plugins/jquery.klearmatrix.edit.js:616
 msgid "ERROR"
-msgstr "_eu_ERROR"
+msgstr "ERROREA"
 
 #: assets/js/klearMatrix.compiled.js:300
 #: assets/js/plugins/jquery.klearmatrix.edit.js:655
-msgid "Campo obligatorio"
-msgstr "_eu_Campo obligatorio"
+msgid "Required field"
+msgstr "Derrigorrezko eremua"
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:717
+#: assets/js/plugins/jquery.klearmatrix.edit.js:718
 msgid "There is unsaved content."
 msgstr "Gorde ez diren edukiak daude."
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:719
+#: assets/js/plugins/jquery.klearmatrix.edit.js:720
 msgid "Close the screen?"
 msgstr "Pantaila itxi?"
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:721
+#: assets/js/plugins/jquery.klearmatrix.edit.js:722
 msgid "Attention!"
 msgstr "Adi!"
 
 #: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:731
+#: assets/js/plugins/jquery.klearmatrix.edit.js:732
 msgid "Ignore changes and close"
 msgstr "Ezikusi aldaketak eta itxi"
 
 #: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:880
-msgid "Campo auto-copiado"
-msgstr "_eu_Campo auto-copiado"
+#: assets/js/plugins/jquery.klearmatrix.edit.js:881
+msgid "Auto-copied field"
+msgstr ""
 
 #: assets/js/klearMatrix.compiled.js:315
 #: assets/js/plugins/jquery.klearmatrix.new.js:117
@@ -335,7 +337,7 @@ msgstr ""
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/editable_selects.js:19
 msgid "value"
-msgstr "_eu_value"
+msgstr "value"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/autosave/plugin.min.js:1
 msgid "You have unsaved changes are you sure you want to navigate away?"
@@ -348,6 +350,33 @@ msgstr ""
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
 msgid "%H:%M:%S"
 msgstr ""
+
+#~ msgid "Registro eliminado correctamente"
+#~ msgstr "_eu_Registro eliminado correctamente"
+
+#~ msgid "Registro salvado correctamente."
+#~ msgstr "_eu_Registro salvado correctamente."
+
+#~ msgid "El registro no se encuentra almacenado."
+#~ msgstr "_eu_El registro no se encuentra almacenado."
+
+#~ msgid "Registros"
+#~ msgstr "lerro"
+
+#~ msgid "Registros por página:"
+#~ msgstr "Lerro orriko: "
+
+#~ msgid "Modificar contraseña"
+#~ msgstr "_eu_Modificar contraseña"
+
+#~ msgid "Canal de"
+#~ msgstr "_eu_Canal de"
+
+#~ msgid "Campo obligatorio"
+#~ msgstr "_eu_Campo obligatorio"
+
+#~ msgid "Campo auto-copiado"
+#~ msgstr "_eu_Campo auto-copiado"
 
 #~ msgid "media_dlg."
 #~ msgstr "_eu_media_dlg."

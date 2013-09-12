@@ -953,70 +953,64 @@
         },
         
         _joinFields : function(label, fields) {
-        	var first = true;
             $container = this.element.klearModule("getPanel");
             $elements = [];
-        	for (var idx in fields) {
-        		var $field = $("label[rel="+fields[idx]+"]", $container)
-        						.parents(".container:eq(0)");
-        		if ($field.length != 1) {
-        			continue;
-        		}
-        		$elements.push($field);	
-        	}
-        	
-        	var widthPercent = Math.floor(100/$elements.length) * 0.9;
-        	var $prev = false;
-        	var curPrev = 1;
-        	var noOfItems = 0;
-        	var $superContainer = $("<fieldset />")
-        		.addClass("superContainer")
-        		.addClass("ui-widget-content")
-        		.addClass("ui-corner-all");
-        	
-        	if (false !== label) {
-        		$("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
-        	}
-        	
-        	$elements[0].before($superContainer);
-        	
-        	$.each($elements,function() {
-        		if ($prev.selector && ($(this).selector == $prev.selector)) {
-        			curPrev++;
-        		} else {
-        			noOfItems++;
-        			curPrev = 1;
-        		}
-        		
-        		$(this).addClass("containerFixed").data("numberWidth",curPrev);
-        		$(this).appendTo($superContainer);
-    			$prev = $(this);
-        	});
-        	
-        	var totalPainted = 0;
-        	$.each($elements,function() {
-        		if ($(this).data("repainted")) {
-        			return;
-        		}
-        		var curPercent = widthPercent * $(this).data("numberWidth");
-        		if (noOfItems < 3) {
-        			curPercent += 1;
-        		}
-        		$(this)
-        			.css({width: curPercent + '%'})
-        			.data("repainted", true);
-        	});
-        	
-        	
-        	// Elementos que necesiten ser "actualizados", despues de cambiar su contenedor
-        	// De momento sólo se ha detectado los multiselect (que deben resizearse).
-        	var toBerefreshedElements = ['select.multiselect'];
-        	$(toBerefreshedElements.join(','), $superContainer).trigger("postmanualchange");
-        	
+            for (var idx in fields) {
+                var $field = $("label[rel="+fields[idx]+"]", $container)
+                        .parents(".container:eq(0)");
+                if ($field.length != 1) {
+                    continue;
+                }
+                $elements.push($field);	
+            }
+            if ($elements.length == 0) {
+                return;
+            } 
+
+            var widthPercent = Math.floor(100/$elements.length) * 0.9;
+            var $prev = false;
+            var curPrev = 1;
+            var noOfItems = 0;
+            var $superContainer = $("<fieldset />")
+                .addClass("superContainer")
+                .addClass("ui-widget-content")
+                .addClass("ui-corner-all");
+            
+            if (false !== label) {
+                $("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
+            }
+            $elements[0].before($superContainer);
+            $.each($elements,function() {
+                if ($prev.selector && ($(this).selector == $prev.selector)) {
+                    curPrev++;
+                } else {
+                    noOfItems++;
+                    curPrev = 1;
+                }
+
+                $(this).addClass("containerFixed").data("numberWidth",curPrev);
+                $(this).appendTo($superContainer);
+                $prev = $(this);
+            });
+
+            var totalPainted = 0;
+            $.each($elements,function() {
+                if ($(this).data("repainted")) {
+                    return;
+                }
+                var curPercent = widthPercent * $(this).data("numberWidth");
+                if (noOfItems < 3) {
+                    curPercent += 1;
+                }
+                $(this)
+                    .css({width: curPercent + '%'})
+                    .data("repainted", true);
+            });
+            // Elementos que necesiten ser "actualizados", despues de cambiar su contenedor
+            // De momento sólo se ha detectado los multiselect (que deben resizearse).
+            var toBerefreshedElements = ['select.multiselect'];
+            $(toBerefreshedElements.join(','), $superContainer).trigger("postmanualchange");
         }
-        
     });
-
     $.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);
-
 })(jQuery);

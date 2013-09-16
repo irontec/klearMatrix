@@ -328,9 +328,10 @@ form.klearMatrix_form.autoclose-dialog {
 
 .klearMatrixFiltering,
 .klearMatrixCsv {
-    padding:.9em;
     display: inline-block;
-    width: 98%;
+    margin: 0 0 0.5% 0;
+    padding: 0.5%;
+    width: 99%;
 }
 
 .klearMatrixFiltering form.not-loaded .filterItem, .klearMatrixFiltering form.not-loaded .filteredFields{

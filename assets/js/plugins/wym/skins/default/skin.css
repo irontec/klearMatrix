@@ -43,7 +43,7 @@
 
 /*WYM_HTML*/
         .wym_skin_default .wym_html               { width: 98%;}
-        .wym_skin_default .wym_html textarea      { width: 100%; height: 200px; border: 1px solid gray; background: white;  }
+        .wym_skin_default .wym_html textarea      { width: 100%; height: 200px; border: 1px solid gray; background: white; font-size: 2em; }
 
 
 /*WYM_IFRAME*/

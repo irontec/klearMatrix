@@ -77,7 +77,7 @@
                 this.savedValues = {};
                 var _selfklear = this;
 
-                $("select.changed,input.changed,textarea.changed",self.options.theForm).each(function() {
+                $("select.changed,input.changed,textarea.changed",self.options.theForm).not(".ignoreManualChange").each(function() {
                     _selfklear.savedValues[$(this).attr("name")] = $(this).val();
                 });
 
@@ -263,7 +263,6 @@
                         _val = $(this).data('preload').toString();
                     }
                 }
-
                 var _hash = Crypto.MD5(_val);
                 $(this)
                     .data("savedValue",_hash)
@@ -798,12 +797,9 @@
                         var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
 
                         if (manual) {
-
                             field.show();
                             checkSuperContainer.show(field);
-
                         } else {
-
                             //Cuando mostramos un campo, lanzamos el visualFilter si tiene
                             //por si está relacionado con otro campo que debemos ocultar o mostrar
                             field.slideDown('normal', function(){
@@ -842,15 +838,15 @@
 
             }).trigger("manualchange.visualFilter",true);
 
-            $("select, input, textarea", this.options.theForm).on('manualchange', function(e) {
+            $("select, input, textarea", this.options.theForm).not(".ignoreManualChange").on('manualchange', function(e) {
                 if ($(this).data("target-for-change")) {
                     var _target = $(this).data("target-for-change");
                 } else {
                     var _target = $(this);
                 }
 
+                
                 var _val = $(this).val() ? $(this).val() : '';
-
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
                     _target.addClass("changed ui-state-highlight");
                     $(this).addClass("changed");

@@ -504,7 +504,7 @@ jQuery.fn.wymeditor = function (options) {
         htmlHtml: String() +
             '<div class="wym_html wym_section">' +
                 '<h2>{Source_Code}</h2>' +
-                '<textarea class="wym_html_val"></textarea>' +
+                '<textarea class="wym_html_val ignoreManualChange"></textarea>' +
             '</div>',
 
         boxSelector:        ".wym_box",

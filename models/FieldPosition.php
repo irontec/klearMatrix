@@ -24,6 +24,10 @@ class KlearMatrix_Model_FieldPosition
         $this->_label = Klear_Model_Gettext::gettextCheck($this->_label);
 
 
+        if (!isset($this->_config->getRaw()->fields)) {
+            throw new \Klear_Exception_Default('No config found for "fields"');
+        }
+
         foreach ($this->_config->getRaw()->fields as $field => $active) {
             $boolActive = (bool)$active;
             if ($boolActive) {

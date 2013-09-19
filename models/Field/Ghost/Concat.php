@@ -107,7 +107,6 @@ class KlearMatrix_Model_Field_Ghost_Concat extends KlearMatrix_Model_Field_Ghost
 
     public function getSearch($values, $searchOps, $model)
     {
-
         $searchOps; // Avoid PMD UnusedLocalVariable warning
         $model; // Avoid PMD UnusedLocalVariable warning
 
@@ -127,7 +126,7 @@ class KlearMatrix_Model_Field_Ghost_Concat extends KlearMatrix_Model_Field_Ghost
             foreach ($values as $value) {
                 $template = $field . $cont++;
                 if ($namedParams) {
-                    $auxCondition[] =  $field . ' like ' . $template;
+                    $auxCondition[] =  $field . ' like :' . $template;
                     $fieldValues[$template] = '%' . $value . '%';
                 } else {
                     $auxCondition[] = $field . ' like ?';

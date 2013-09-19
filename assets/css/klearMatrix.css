@@ -571,3 +571,15 @@ span.autocompleteCounter {
 a.option {
 	white-space: nowrap;
 }
+
+fieldset .containerFixed input, fieldset .containerFixed .selectboxit-container, fieldset .containerFixed .selectboxit-container .selectboxit {
+	width: 90%!important;
+}
+
+fieldset .containerFixed input:required {
+	width: 80%!important;
+}
+
+fieldset .containerFixed input.auto {
+    width: 45%!important;
+}

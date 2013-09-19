@@ -402,6 +402,7 @@ class KlearMatrix_Model_MatrixResponse
             ->setGeneralOptions($item->getScreenOptions())
             ->setActionMessages($item->getActionMessages())
             ->setDisableAddAnother($item->getDisableAddAnother())
+            ->setDisableSave($item->getDisableSave())
             ->setPreconfiguredFilters($item->getPreconfiguredFilters())
             ->setFixedPositions($item->getFixedPositions())
             ->setFullWidth($item->getFullWidth());

@@ -521,6 +521,11 @@ img.imgFilePreview {
     border:1px solid #333;
     padding:.5em;
 }
+img.imgFilePreviewList {
+    border:0;
+    margin-right:.5em;
+    vertical-align: text-bottom;
+}
 
 .filterItem span.infoShow {
 	cursor: pointer;

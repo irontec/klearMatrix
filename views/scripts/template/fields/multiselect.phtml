@@ -7,24 +7,55 @@
 
 {{else}}
 
+
+{{if (_decorators && _decorators.autocomplete)}}
+    <label for="${_elemName}_autocomplete" rel="inlineOptions">
+        Añadir valor seleccionable:
+    </label>
+    <input type="text" class="term" name="${_elemName}_autocomplete" value="" />
+
+    <label style="margin-top: 15px; ">Valores seleccionados:</label>
+    <ul class="selectedList">
+        <li>
+            <a class="remove" href="" style="margin-left:5px;">
+                <span class="ui-silk inline ui-silk-cross" style="cursor: pointer;"></span>
+            </a>
+            <span style="margin-left:10px;"></span>
+        </li>
+    </ul>
+{{/if}}
+
 <input type="hidden" name="${_elemName}[]" value="" />
 <select
-    class="multiselect"
+    style="display:none;"
     multiple
     name="${_elemName}[]"
     id="${_elemIden}"
+
+{{if (_decorators)}}
+    data-decorator="true"
+{{/if}}
+{{if (!_decorators || (_decorators &&!_decorators.autocomplete))}}
+    class="multiselect"
+{{/if}}
 
     {{each(idx,attrValue) _dataConfig.attributes}}
         ${idx}="${attrValue}"
     {{/each}}
 >
-{{each(idx,dataValue) _dataConfig.values}}
-        <option {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
+
+{{if (_decorators && _decorators.autocomplete)}}
+    {{each(pk,relatedId) _fieldValue.relStruct}}
+        <option selected="selected" value="${relatedId}">${relatedId}</option>
+    {{/each}}
+{{else}}
+    {{each(idx,dataValue) _dataConfig.values}}
+            <option
+            {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
                  selected="selected"
             {{/if}}
-
-        value="${dataValue.key}">${dataValue.item}</option>
-
-{{/each}}
+            value="${dataValue.key}">${dataValue.item}</option>
+    {{/each}}
+{{/if}}
 </select>
 {{/if}}

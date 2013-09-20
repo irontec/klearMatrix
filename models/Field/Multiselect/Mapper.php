@@ -10,6 +10,9 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     protected $_editableFields;
 
+
+    protected $_js = array();
+
     public function init()
     {
         $this->_parsedValues = new Klear_Model_ConfigParser;
@@ -22,6 +25,12 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         $dataMapperName = $this->_relatedMapper;
         $dataMapper = new $dataMapperName;
+
+        if ($this->_dynamicDataLoading() === true) {
+
+            //Nothing to do
+            return;
+        }
 
         $where = $this->_getFilterWhere();
         $order = $this->_getRelatedOrder();
@@ -46,6 +55,50 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 $this->_items[] = str_replace(array_keys($replace), $replace, $relatedFieldsTemplate);
             }
         }
+    }
+
+    /**
+     * return bool
+     */
+    protected function _dynamicDataLoading()
+    {
+        if (isset($this->_column->getKlearConfig()->getRaw()->decorators)) {
+            $selfClassName = get_class($this);
+            $classBasePath = substr($selfClassName, 0, strrpos($selfClassName, '_') + 1);
+            $decoratorClassBaseName = $classBasePath . 'Decorator_';
+
+            $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
+
+            foreach ($decorators as $decoratorName => $decorator) {
+
+                $decorator; //Avoid PMD UnusedLocalVariable warning
+                $decoratorClassName = $decoratorClassBaseName . ucfirst($decoratorName);
+
+                if (class_exists($decoratorClassName)
+                    && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')
+                    && $decoratorClassName::DYNAMIC_DATA_LOADING
+                ) {
+
+                    $this->_loadJsDependencies($decoratorName);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    protected function _loadJsDependencies($decoratorName)
+    {
+        $jsDependencies = array();
+        switch ($decoratorName) {
+            case 'autocomplete':
+                $jsDependencies[] = '/js/plugins/jquery.klearmatrix.multiselectautocomplete.js';
+                break;
+        }
+
+        $this->_js += $jsDependencies;
     }
 
     protected function _getFilterWhere()
@@ -308,8 +361,9 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     {
         $dataIds = array();
         // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
+        // Cuando el campo va acompañado de un decorator autocomplete no disponemos de las ids, damos fe
         foreach ($values as $value) {
-            if (in_array($value, $this->_keys)) {
+            if (is_null($this->_keys) && in_array($value, $this->_keys)) {
                 $dataIds[] = $value;
             }
         }

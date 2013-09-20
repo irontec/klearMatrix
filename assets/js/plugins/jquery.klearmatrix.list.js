@@ -36,7 +36,7 @@
             var _self = this;
 
             $container = $(this.element.klearModule("getPanel"));
-            
+
             $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
 
             if ($("td.multilang",$container).length>0) {
@@ -75,34 +75,33 @@
             return this;
         },
         _registerEvents : function() {
-
             var self = this.element;
             var _self = this;
             var panel = this.element.klearModule("getPanel");
-            
+
             var tr = $('table.kMatrix tr', panel);
-            
+
             $("td:not(:last-child)", tr).on('mouseenter mouseleave',function() {
-            
+
                 $("td:not(:last-child)", $(this).parent('tr')).toggleClass("ui-state-highlight");
-                
+
                 if ($("a.option.default", $(this).parent('tr')).length>0) {
                     $(this).parent('tr').toggleClass("pointer");
                     $("a.option.default", $(this).parent('tr')).toggleClass("ui-state-active");
                 }
-            
+
             }).on('mouseup',function(e) {
                 // Haciendo toda la tupla clickable para la default option
                 e.stopPropagation();
                 e.preventDefault();
                 $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default", $(this).parent('tr')));
-                
+
                 var $optionAnchor = $("a.option.default", $(this).parent('tr'));
                 var event = ($optionAnchor.is(".screen"))? "mouseup":"click";
                 $optionAnchor.trigger(event);
-                
+
             });
-            
+
             $('a._fieldOption', panel).on('mouseenter',function(e) {
                 if ($(this).data("relatedtab")) {
                     $(this).data("relatedtab").klearModule("highlightOn");
@@ -132,7 +131,7 @@
                     .klearModule("reDispatch");
 
             });
-            
+
             // Orden de columnas
             $("th:not(.notSortable)",panel).on("click",function(e) {
                 e.preventDefault();
@@ -194,6 +193,7 @@
                 var $_field = $("select[name=searchField]",$holder);
 
                 var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+
                 var fieldName = $_field.val();
 
                 _dispatchOptions.post = _dispatchOptions.post || {};
@@ -202,7 +202,6 @@
 
                 _dispatchOptions.post.searchFields[fieldName] = _dispatchOptions.post.searchFields[fieldName] || [];
                 _dispatchOptions.post.searchOps[fieldName] = _dispatchOptions.post.searchOps[fieldName] || [];
-
 
                 if (noNewValue !== true) {
 
@@ -245,6 +244,7 @@
             });
 
             $(".klearMatrixFiltering",panel).on('keydown','input.term',function(e) {
+
                 if (e.keyCode == 13) {
                     // Wait for select event to happed (autocomplete)
                     var $target = $(this);
@@ -265,7 +265,7 @@
 
                 $("span.addTerm",panel).trigger("click",true);
             });
-            
+
             $applyFilters.on('change',function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -290,14 +290,14 @@
                     .klearModule("reDispatch");
 
             });
-            
+
             $("button.preconfigureFilters", panel).button().on('click', function (e) {
-            	
-            	e.stopPropagation();
-            	e.preventDefault();
-            	var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
-                
-            	_dispatchOptions.post = _dispatchOptions.post || {};
+
+                e.stopPropagation();
+                e.preventDefault();
+                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+
+                _dispatchOptions.post = _dispatchOptions.post || {};
                 _dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
                 _dispatchOptions.post.searchOps = _dispatchOptions.post.searchOps || {};
 
@@ -305,58 +305,58 @@
                 var _newVal = $(this).data("value");
                 var _searchOp = 'eq';
                 if ($(this).data("ops")) {
-                	_searchOp = $(this).data("ops");
+                    _searchOp = $(this).data("ops");
                 }
 
                 _dispatchOptions.post.searchFields[fieldName] = _dispatchOptions.post.searchFields[fieldName] || [];
                 _dispatchOptions.post.searchOps[fieldName] = _dispatchOptions.post.searchOps[fieldName] || [];
-            	
+
                 _dispatchOptions.post.searchFields[fieldName].push(_newVal);
                 _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
-                
+
                 _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
                 _dispatchOptions.post.page = 1;
 
                 $(self)
                     .klearModule("option","dispatchOptions",_dispatchOptions)
                     .klearModule("reDispatch");
-                 
+
             });
-            
+
             //Ocultamos botones preconfigurados que estén en activo en este momento
             $("p.filteredFields span.field",panel).each(function() {
-            	
-            	var $spanValues = $("span.content", $(this));
-            	var fieldName = $(this).data("field");
 
-            	
-            	$("button.preconfigureFilters", panel).filter(function() {
-                	
-            		if (!$(this).data('field') ||
-                			$(this).data('field') != fieldName ||
-                				!$(this).data('value')) {
-                		return false;               		
-                	}
-                	
-                	var candidateValue = $(this).data('value');
-                	
-                	return $spanValues.filter(function() {
-                		return (candidateValue == $(this).data("value"));
-                	}).length > 0
-                	
+                var $spanValues = $("span.content", $(this));
+                var fieldName = $(this).data("field");
+
+
+                $("button.preconfigureFilters", panel).filter(function() {
+
+                    if (!$(this).data('field') ||
+                            $(this).data('field') != fieldName ||
+                                !$(this).data('value')) {
+                        return false;
+                    }
+
+                    var candidateValue = $(this).data('value');
+
+                    return $spanValues.filter(function() {
+                        return (candidateValue == $(this).data("value"));
+                    }).length > 0
+
                 }).button("disable");
-                	
+
             });
-            
-            
-            
+
+
+
             $(".klearMatrixFilteringForm",panel).form();
-            
+
             var currentPlugin = false;
             var originalSearchField = $(".klearMatrixFiltering input.term",panel).clone();
 
             $(".klearMatrixFiltering select[name=searchField]",panel).on('manualchange.searchValues',function(e, manual) {
-            	
+
                 var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns, $(this).val());
 
                 var availableValues = {};
@@ -401,7 +401,7 @@
                                 $('div.infoDiv').slideDown('fast');
                             }
                         });
-                    
+
                     $("<div>"+column.search.info+"</div>")
                         .attr("class","infoDiv hidden")
                         .prependTo($(".filterItem",$container));
@@ -456,25 +456,25 @@
 
                     break;
                 }
-               
+
                 if (manual !== true) {
-                	searchField.focus();
+                    searchField.focus();
                 }
-                
+
             }).trigger('manualchange.searchValues', true);
 
             var $filteredFields = $(".klearMatrixFiltering .filteredFields",panel);
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");
                 var target = ".filterItem";
-                
+
                 if ( $applyFilters.is(':checked') == false
                     && $filteredFields.find('.field').length > 0 ) {
-                    
+
                     target = ".filteredFields";
-                    
+
                 }
-                
+
                 if ($searchForm.hasClass("not-loaded")) {
                     $(target,$searchForm).slideDown(function() {
                         $searchForm.removeClass("not-loaded");
@@ -488,11 +488,11 @@
 
             if ( $applyFilters.is(':checked') == false
                     && $filteredFields.find('.field').length > 0 ) {
-                
+
                 $filteredFields.css('opacity','0.5');
                 $filteredFields.unbind('click');
                 $('.preconfiguredFilters, .filterItem', panel).hide();
-                
+
                 $(".klearMatrixFilteringForm:eq(0)",panel).addClass('not-loaded');
 
             }
@@ -513,7 +513,7 @@
                 $.extend(_tmpOptions, _dispatchOptions.post);
                 _tmpOptions['format'] = 'csv';
 
-                
+
                 var reqOpts = {
                         file: $(self).klearModule("option","file"),
                         type: 'screen',
@@ -521,13 +521,13 @@
                         post: _tmpOptions,
                         external: true
                     };
-                
-                
+
+
                 if (_dispatchOptions.pk!=undefined) {
-                	reqOpts.pk = _dispatchOptions.pk;
-                	reqOpts.screen = _dispatchOptions.screen;
+                    reqOpts.pk = _dispatchOptions.pk;
+                    reqOpts.screen = _dispatchOptions.screen;
                 }
-                
+
                 $.klear.request(reqOpts);
             });
 
@@ -537,7 +537,8 @@
 
             $("span.autocomplete", panel).each(function () {
 
-                if (! autocompleteEntities[$(this).data("mappername")] ) {
+                var identifier = $(self).klearModule("option","file") + "_" + $(this).data("fielddecorator");
+                if (! autocompleteEntities[identifier] ) {
 
                     var _post = $(this).data();
                     _post.value = new Array;
@@ -553,12 +554,12 @@
                         requestData['command'] = $(this).data('fielddecorator') + "_command";
                     }
 
-                    autocompleteEntities[$(this).data("mappername")] = requestData;
-                    autocompleteNodes[$(this).data("mappername")] = new Array;
+                    autocompleteEntities[identifier] = requestData;
+                    autocompleteNodes[identifier] = new Array;
                 }
 
-                autocompleteEntities[$(this).data("mappername")].post.value.push($(this).attr("data-value"));
-                autocompleteNodes[$(this).data("mappername")].push(this);
+                autocompleteEntities[identifier].post.value.push($(this).attr("data-value"));
+                autocompleteNodes[identifier].push(this);
             });
 
             $.each(autocompleteEntities, function (idx) {
@@ -570,26 +571,32 @@
                 _url += '&' + $.param(request.data);
 
                 $.getJSON( _url , function( data, status, xhr ) {
+                    $.each(nodes[idx], function () {
 
-                    $.each(data.results, function () {
+                        var currentNode = $(this);
+                        var currentNodeData = data.results[currentNode.attr("data-value")];
+                        if (!currentNodeData) {
+                            return;
+                        }
 
-                        var responseItem = this;
-
-                        $.each(nodes[idx], function () {
-
-                            if (responseItem.id == $(this).attr("data-value")) {
-
-                                $(this).replaceWith(responseItem.value)
+                        var results = new Array();
+                        if (Object.prototype.toString.call( currentNodeData ) === '[object Array]') {
+                            for (var key in currentNodeData) {
+                                results.push(currentNodeData[key].label);
                             }
-                        });
+                        } else {
+                            results.push(currentNodeData.label);
+                        }
+
+                        $(this).replaceWith(results.join(", "));
                     });
                 });
             });
-            
+
             return this;
         }
-        
-        
+
+
     });
 
     $.widget.bridge("klearMatrixList", $.klearmatrix.list);

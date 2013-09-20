@@ -20,9 +20,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     protected $_extraDataAttributesValues = array();
 
     protected $_js = array(
-        "/js/plugins/jquery.klearmatrix.select.js"
     );
-
 
     protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
     {
@@ -89,21 +87,35 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
             $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
 
-            foreach ($decorators as $key => $decorator) {
+            foreach ($decorators as $decoratorName => $decorator) {
+
                 $decorator; //Avoid PMD UnusedLocalVariable warning
-                $decoratorClassName = $decoratorClassBaseName . ucfirst($key);
+                $decoratorClassName = $decoratorClassBaseName . ucfirst($decoratorName);
 
                 if (class_exists($decoratorClassName)
                     && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')
                     && $decoratorClassName::DYNAMIC_DATA_LOADING
                 ) {
 
+                    $this->_loadJsDependencies($decoratorName);
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    protected function _loadJsDependencies($decoratorName)
+    {
+        $jsDependencies = array();
+        switch ($decoratorName) {
+            case 'autocomplete':
+                $jsDependencies[] = '/js/plugins/jquery.klearmatrix.selectautocomplete.js';
+                break;
+        }
+
+        $this->_js += $jsDependencies;
     }
 
     protected function _getFilterWhere()

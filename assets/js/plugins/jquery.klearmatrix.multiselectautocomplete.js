@@ -1,6 +1,5 @@
 (function load($) {
-
-    $.widget("klearmatrix.selectautocomplete", {
+    $.widget("klearmatrix.multiselectautocomplete", {
         widgetEventPrefix:"file",
         lastCounter : 0,
         options: {
@@ -13,21 +12,21 @@
         select: null,
         selected: null,
         value: null,
+        selectedList: null,
+        selectedListSkeleton: null,
 
         _setOption: function (name, value) {
-
             $.Widget.prototype._setOption.apply(this, arguments);
         },
 
         _create: function() {
-
             var self = this;
         },
 
         _init: function () {
 
             var context = this.element.klearModule("getPanel");
-
+            var _self = this;
             if (context.get(0).tagName.toLowerCase() == 'tr') {
 
                 //Estamos en un listado
@@ -39,11 +38,17 @@
 
             this.options.cache.context = context.parent();
             this.options.cache.element = this.options.cache.context.find("select");
+            this.options.cache.searchBox = this.options.cache.context.find("input.term");
+            this.options.cache.selectedList = this.options.cache.context.find("ul.selectedList");
+
+            this.options.cache.selectedListSkeleton = $(this.options.cache.selectedList.children().get(0)).clone(true);
+            this.options.cache.selectedList.children("li").remove();
 
             if (this.options.cache.element.length > 0) {
 
                 this._initSelectedValue();
                 this._initAutocomplete();
+                this._initCustomEvents();
 
             } else {
 
@@ -85,8 +90,21 @@
             });
         },
 
-        _postManualChange: function () {
+        _initCustomEvents: function () {
 
+            var _self = this;
+            this.options.cache.selectedList.on("click", "li a.remove", function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                _self._removeFromSelectedList($(this).parent());
+                return;
+            });
+        },
+
+
+        _postManualChange: function () {
             var recoveredValue = this.options.cache.element.data("recoveredValue");
             if (recoveredValue && (recoveredValue !== this.options.cache.element.val())) {
                 this._initSelectedValue();
@@ -94,8 +112,7 @@
         },
 
         _initSelectedValue: function () {
-
-            var preloadValue = this.options.cache.element.data("preload");
+            var preloadValue = this.options.cache.element.val();
             var recoveredValue = this.options.cache.element.data("recoveredValue");
 
             if (preloadValue || recoveredValue) {
@@ -103,67 +120,88 @@
                 var _self = this;
                 var value2load = recoveredValue || preloadValue;
 
-                if (this.options.cache.element.find("option[value"+ value2load +"]").length == 0) {
+                if (this.options.cache.element.find("option:selected").length > 0) {
 
-                   var targetUrl = this.options.cache.dummy.attr("href") + "&value=" + value2load;
+                   var targetUrl = this.options.cache.dummy.attr("href");
 
                    $.ajax({
                       url: targetUrl + "&reverse=true",
                       dataType: 'json',
+                      data: {
+                          'value':  value2load
+                      },
                       type: 'GET',
                       async: false,
+                      error: function (jqXHR, textStatus, errorThrown) {
+
+                        console.log("error", jqXHR);
+                      },
                       success: function(data) {
-                        _self.options.cache.element.children("[selected]").removeAttr("selected");
-                        var element = data.results[0];
-                        var option = $("<option>").attr("value", element.id )
-                                                  .attr("selected", "selected")
-                                                  .html(element.value);
 
-                        option.appendTo(_self.options.cache.element);
-                        _self.options.cache.element.val(element.id);
+                        var _parentContext = _self;
+                        $.each(data.results, function () {
+                            var record = this[0];
+                            var targetNode = _self.options.cache.element.children('[value='+ record['id'] +']');
 
-                        if (_self.input && _self.input.data("autocomplete")) {
-                            _self.input.val(element.value);
-                            _self.input.data("autocomplete")._trigger("change");
-                        }
+                            if (targetNode.length > 0) {
+                                targetNode.attr("selected", "selected");
+                                targetNode.html(record.label);
+                            } else {
+                                var newOption = $("<option>").attr("value", record.id )
+                                                             .attr("selected", "selected")
+                                                             .html(record.value);
+                                _parentContext.options.cache.element.append(newOption);
+                            }
 
-                        if (recoveredValue) {
-                            _self.options.cache.element.data("recoveredValue", null);
-                        }
-
-                        _self.options.cache.element.trigger("change");
+                            _parentContext._addToSelectedList(record.id, record.label);
+                        });
                       }
                    });
 
                 }
             }
         },
+        _addToSelectedList: function (id, label) {
+
+            if (this.options.cache.selectedList.find('li[data-value='+ id +']').length == 0) {
+
+                var newSelectedListElement = this.options.cache.selectedListSkeleton.clone();
+                newSelectedListElement.attr("data-value", id);
+                newSelectedListElement.children("span").html(label);
+                this.options.cache.selectedList.append(newSelectedListElement);
+            }
+
+            var targetOption = this.options.cache.element.find("option[value="+ id +"]");
+            if (targetOption.length == 0) {
+
+                //add option
+                var newOption = $("<option />");
+                newOption.attr("value", id);
+                newOption.attr("selected", "selected");
+                newOption.html(label);
+
+                this.options.cache.element.append(newOption);
+            } else {
+                targetOption.attr("selected", "selected")
+            }
+        },
+
+        _removeFromSelectedList: function (node) {
+            var nodeValue = node.attr("data-value");
+            node.remove();
+            this.options.cache.element.find("option[value="+nodeValue+"]").removeAttr("selected");
+        },
 
         _initAutocomplete: function () {
 
             var _self = this;
 
-            this.select = this.options.cache.element.hide(),
-            this.selected = this.select.children( ":selected" ),
-
-            this.value = this.selected.val() ? this.selected.text() : "",
-            this.wrapper = $("<span>").addClass( "ui-combobox" ).insertAfter( this.select );
-            this.wrapper.append('<span class="ui-icon inline ui-icon-script"></span>');
-
-            this.input = $( "<input>" )
-                .appendTo( this.wrapper )
-                .val( this.value )
-                .attr( "title", "" )
-                .addClass("ui-state-default ui-combobox-input ui-corner-all")
-                .addClass("ui-widget ui-widget-content ui-corner-left");
-
-            //Se le envía el target para el highlight y se bindea "postmanualchange"
-            this.select.data('target-for-change',this.select.next("span").children("input:eq(0)"));
+            this.select = this.options.cache.element; //.hide(),
             this.select.on('postmanualchange', function() {
                 _self._postManualChange();
             });
 
-           this._initUIsAutocomplete(this.input, this);
+            this._initUIsAutocomplete(this.options.cache.searchBox, this);
         },
 
         _initUIsAutocomplete: function (targetNode, context) {
@@ -181,46 +219,46 @@
                     $.getJSON( _self.options.cache.dummy.attr("href") , request, function( data, status, xhr ) {
 
                         _self.lastCounter = data.totalItems;
-                        response( data.results );
+                        response(
+                            $.map( data.results, function( item ) {
+                                return {
+                                    label: item[0].label,
+                                    value: item[0].label,
+                                    id: item[0].id
+                                };
+                            })
+                        );
                     });
                 },
-
                 select: function( event, ui ) {
 
-                    _self.options.cache.context.find("input.term").data("idItem", ui.item.id);
-                    var option = _self.options.cache.element.children("[value="+ ui.item.id +"]");
+                     _self.options.cache.context.find("input.term").data("idItem", ui.item.id);
+                    _self._addToSelectedList(ui.item.id, ui.item.label);
 
-                    if (! option.get(0)) {
-
-                        option = $("<option />")
-                                    .attr("value", ui.item.id )
-                                    .html(ui.item.value);
-
-                        option.appendTo(_self.options.cache.element);
-                    }
-
-                    option.get(0).selected = true;
-
-                    if(_self.select) {
+                    /*if(_self.select) {
                         _self.select.trigger('manualchange');
                     }
 
                     _self._trigger( "selected", event, {
                         item: option
-                    });
+                    });*/
                 },
                 open : function() {
+
                     if ($(".autocompleteCounter",$(this).parents("span:eq(0)")).length == 0) {
                         $(this).parents("span:eq(0)").append('<span class="autocompleteCounter"></span>');
                     }
+
                     var $counter = $(".autocompleteCounter",$(this).parents("span:eq(0)"));
                     $counter.html(_self.lastCounter).show();
-
                 },
                 close : function() {
+
                     $(".autocompleteCounter",$(this).parents("span:eq(0)")).fadeOut('fast');
+                    _self.options.cache.searchBox.val("");
                 },
                 change: function( event, ui ) {
+
                     if ( !ui.item ) {
                         return _self._removeIfInvalid( this );
                     }
@@ -247,7 +285,6 @@
         },
 
         _removeIfInvalid : function (element) {
-
                 var _self = this;
 
                 var value = $( element ).val(),
@@ -289,6 +326,6 @@
         },
     });
 
-    $.widget.bridge("klearmatrix.selectautocomplete");
+    $.widget.bridge("klearmatrix.multiselectautocomplete");
 
 })( jQuery );

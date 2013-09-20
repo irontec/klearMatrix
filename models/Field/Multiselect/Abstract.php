@@ -8,6 +8,7 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
     protected $_items;
     protected $_keys;
 
+    protected $_js = array();
 
     public function __construct(Zend_Config $config, KlearMatrix_Model_Column $column)
     {
@@ -82,6 +83,11 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
         }
 
         return new ArrayIterator($parentArray);
+    }
+
+    public function getExtraJavascript()
+    {
+        return $this->_js;
     }
 }
 

@@ -52,17 +52,23 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                 )
             );
 
-            $results = $mapper->fetchList($where, $order, $limit);
+            $records = $mapper->fetchList($where, $order, $limit);
+            $results = array();
+
+            foreach ($records as $record) {
+                $results[$record->getPrimaryKey()] = $record;
+            }
+
             $totalItems = $mapper->countByQuery($where);
         }
 
         $options = array();
         $labelGetter = 'get' . ucfirst($labelField);
-        foreach ($results as $tienda) {
-            $options[] = array(
-                'id' => $tienda->getPrimaryKey(),
-                'label' => $tienda->$labelGetter(),
-                'value' => $tienda->$labelGetter(),
+        foreach ($results as $record) {
+            $options[$record->getPrimaryKey()] = array(
+                'id' => $record->getPrimaryKey(),
+                'label' => $record->$labelGetter(),
+                'value' => $record->$labelGetter(),
             );
         }
 

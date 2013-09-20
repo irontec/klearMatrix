@@ -22,6 +22,10 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
         $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
         $this->_isSortable = false;
+        
+        if ($this->_adapter->getExtraJavascript()) {
+            $this->_js = $this->_adapter->getExtraJavascript();
+        }
     }
 
     /*

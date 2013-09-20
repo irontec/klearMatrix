@@ -363,7 +363,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
         // Cuando el campo va acompañado de un decorator autocomplete no disponemos de las ids, damos fe
         foreach ($values as $value) {
-            if (is_null($this->_keys) && in_array($value, $this->_keys)) {
+            if (is_null($this->_keys) || in_array($value, $this->_keys)) {
                 $dataIds[] = $value;
             }
         }

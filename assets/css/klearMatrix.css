@@ -583,3 +583,7 @@ fieldset .containerFixed input:required {
 fieldset .containerFixed input.auto {
     width: 45%!important;
 }
+
+fieldset .containerFixed span.ui-combobox {
+    width: 100%;
+}

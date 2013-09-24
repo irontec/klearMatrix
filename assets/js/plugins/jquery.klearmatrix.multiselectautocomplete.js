@@ -223,7 +223,7 @@
                             $.map( data.results, function( item ) {
                                 return {
                                     label: item[0].label,
-                                    value: item[0].label,
+                                    value: item[0].value,
                                     id: item[0].id
                                 };
                             })

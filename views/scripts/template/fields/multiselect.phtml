@@ -9,17 +9,16 @@
 
 
 {{if (_decorators && _decorators.autocomplete)}}
-    <label for="${_elemName}_autocomplete" rel="inlineOptions">
+    <label for="${_elemName}_autocomplete" rel="inlineOptions" class="autoCompleteLabel">
         Añadir valor seleccionable:
     </label>
     <input type="text" class="term" name="${_elemName}_autocomplete" value="" />
 
-    <label style="margin-top: 15px; ">Valores seleccionados:</label>
+    <label class="autoCompleteLabel">Valores seleccionados:</label>
     <ul class="selectedList">
         <li>
             <a class="remove" href="" style="margin-left:5px;">
-                <span class="ui-silk inline ui-silk-cross" style="cursor: pointer;"></span>
-            </a>
+                <span class="ui-silk inline ui-silk-delete" style="cursor: pointer;"></span></a>
             <span style="margin-left:10px;"></span>
         </li>
     </ul>

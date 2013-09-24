@@ -190,7 +190,7 @@ dl.multiLanguage dd.copied span.copied {
 
 .klearMatrix_form div.containerFixed {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 .klearMatrix_form fieldset.superContainer {
@@ -226,6 +226,12 @@ dl.multiLanguage dd.copied span.copied {
     display:block;
     font-size:0.7em;
     opacity:0.4;
+}
+
+.klearMatrix_form label.autoCompleteLabel {
+    font-size: .8em;
+    margin: 15px 0px 5px;
+    color: #555;
 }
 
 .klearMatrix_form textarea {

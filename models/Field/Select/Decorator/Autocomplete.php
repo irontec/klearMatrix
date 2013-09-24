@@ -131,7 +131,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $fieldName = $this->_commandConfiguration->fieldName;
     
         if (!is_object($fieldName)) {
-            return array($this->_labelField);
+            return isset($fieldName) ? array($fieldName) : array($this->_labelField);
         }
     
         $fieldConfig = new Klear_Model_ConfigParser();
@@ -144,7 +144,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $fieldName = $this->_commandConfiguration->fieldName;
     
         if (!is_object($fieldName)) {
-            return '%' . $this->_labelField . '%';
+            return isset($fieldName) ? '%' . $fieldName .'%' : '%' . $this->_labelField . '%';
         }
     
         $fieldConfig = new Klear_Model_ConfigParser();

@@ -46,7 +46,6 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         }
 
         $options = array();
-        $labelGetter = 'get' . ucfirst($this->_labelField);
         foreach ($this->_results as $key => $tupla) {
             $options[$key] = array();
             if (!is_array($tupla)) {
@@ -54,7 +53,6 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
             }
 
             foreach ($tupla as $record) {
-                
                 $replace = array();
                 foreach ($this->_fields as $fieldName) {
                     $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));
@@ -65,8 +63,8 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
                 
                 $options[$key][] = array(
                     'id' => $record->getPrimaryKey(),
-                    'label' => $templatedValue,
-                    'value' => $record->$labelGetter(),
+                    'value' => strip_tags($templatedValue),
+                    'label' => $templatedValue
                 );
             }
         }

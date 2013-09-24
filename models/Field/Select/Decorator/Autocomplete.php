@@ -45,11 +45,8 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         } else {
             $this->_run();
         }
-
-        
         
         $options = array();
-        $labelGetter = 'get' . ucfirst($this->_labelField);
         foreach ($this->_results as $record) {
             $replace = array();
             foreach ($this->_fields as $fieldName) {

@@ -14,6 +14,8 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
     protected $_model;
     protected $_pkField;
     protected $_labelField;
+    protected $_fields;
+    protected $_fieldsTemplate;
 
     protected $_limit;
     protected $_totalItems = 0;
@@ -35,6 +37,8 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         $this->_labelField = $this->_commandConfiguration->label;
         $this->_pkField = $this->_model->getPrimaryKeyName();
+        $this->_fields = $this->_getFields();
+        $this->_fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
 
         if ($this->_request->getParam("reverse")) {
             $this->_runReverse();
@@ -42,13 +46,23 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             $this->_run();
         }
 
+        
+        
         $options = array();
         $labelGetter = 'get' . ucfirst($this->_labelField);
         foreach ($this->_results as $record) {
+            $replace = array();
+            foreach ($this->_fields as $fieldName) {
+                $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));
+                $replace['%' . $fieldName . '%'] = $record->$getter();
+            }
+            
+            $templatedValue = str_replace(array_keys($replace), $replace, $this->_fieldsTemplate);
+            
             $options[$record->getPrimaryKey()] = array(
                 'id' => $record->getPrimaryKey(),
-                'label' => $record->$labelGetter(),
-                'value' => $record->$labelGetter(),
+                'value' => strip_tags($templatedValue),
+                'label' => $templatedValue,
             );
         }
 
@@ -89,11 +103,17 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             $condition = '(' . $this->_commandConfiguration->condition . ') and ';
         }
 
+        $query = array();
+        $params = array();
+        foreach ( $this->_fields as $field ) {
+            $query[] = $field . ' LIKE ?';
+            $params[] = '%' . $searchTerm . '%';
+        }
+
+        $query = '('. implode(" OR ", $query) .')';
         $where =  array(
-            $condition . $this->_labelField . ' like ?',
-            array(
-                '%' . $searchTerm . '%'
-            )
+                $condition . $query,
+                $params
         );
 
         $records = $this->_mapper->fetchList($where, $order, $this->_limit);
@@ -104,5 +124,31 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         }
 
         $this->_totalItems = $this->_mapper->countByQuery($where);
+    }
+    
+    protected function _getFields()
+    {
+        $fieldName = $this->_commandConfiguration->fieldName;
+    
+        if (!is_object($fieldName)) {
+            return array($this->_labelField);
+        }
+    
+        $fieldConfig = new Klear_Model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("fields");
+    }
+    
+    protected function _getFieldsTemplate()
+    {
+        $fieldName = $this->_commandConfiguration->fieldName;
+    
+        if (!is_object($fieldName)) {
+            return '%' . $this->_labelField . '%';
+        }
+    
+        $fieldConfig = new Klear_Model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("template");
     }
 }

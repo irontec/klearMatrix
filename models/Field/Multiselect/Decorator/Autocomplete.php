@@ -13,6 +13,8 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
     protected $_model;
     protected $_pkField;
     protected $_labelField;
+    protected $_fields;
+    protected $_fieldsTemplate;
 
     protected $_limit;
     protected $_totalItems = 0;
@@ -34,6 +36,8 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
 
         $this->_labelField = $this->_commandConfiguration->label;
         $this->_pkField = $this->_model->getPrimaryKeyName();
+        $this->_fields = $this->_getFields();
+        $this->_fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
 
         if ($this->_request->getParam("reverse")) {
             $this->_runReverse();
@@ -50,9 +54,18 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
             }
 
             foreach ($tupla as $record) {
+                
+                $replace = array();
+                foreach ($this->_fields as $fieldName) {
+                    $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));
+                    $replace['%' . $fieldName . '%'] = $record->$getter();
+                }
+                
+                $templatedValue = str_replace(array_keys($replace), $replace, $this->_fieldsTemplate);
+                
                 $options[$key][] = array(
                     'id' => $record->getPrimaryKey(),
-                    'label' => $record->$labelGetter(),
+                    'label' => $templatedValue,
                     'value' => $record->$labelGetter(),
                 );
             }
@@ -113,9 +126,11 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
 
             $query = array();
             $params = array();
-            foreach ($this->_model->getAvailableLangs() as $language) {
-                $query[] = $this->_labelField . '_' . $language . ' like ?';
-                $params[] = '%' . $searchTerm . '%';
+            foreach ( $this->_fields as $field ) {
+                foreach ($this->_model->getAvailableLangs() as $language) {
+                    $query[] = $field . '_' . $language . ' LIKE ?';
+                    $params[] = '%' . $searchTerm . '%';
+                }
             }
 
             $query = '('. implode(" OR ", $query) .')';
@@ -126,11 +141,17 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
 
         } else {
 
+            $query = array();
+            $params = array();
+            foreach ( $this->_fields as $field ) {
+                $query[] = $field . ' LIKE ?';
+                $params[] = '%' . $searchTerm . '%';
+            }
+
+            $query = '('. implode(" OR ", $query) .')';
             $where =  array(
-                $preCondition . $this->_labelField . ' like ?',
-                array(
-                    '%' . $searchTerm . '%'
-                )
+                    $preCondition . $query,
+                    $params
             );
         }
 
@@ -142,5 +163,31 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         }
 
         $this->_totalItems = $this->_mapper->countByQuery($where);
+    }
+    
+    protected function _getFields()
+    {
+        $fieldName = $this->_commandConfiguration->fieldName;
+    
+        if (!is_object($fieldName)) {
+            return array($this->_labelField);
+        }
+    
+        $fieldConfig = new Klear_Model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("fields");
+    }
+    
+    protected function _getFieldsTemplate()
+    {
+        $fieldName = $this->_commandConfiguration->fieldName;
+    
+        if (!is_object($fieldName)) {
+            return '%' . $this->_labelField . '%';
+        }
+    
+        $fieldConfig = new Klear_Model_ConfigParser();
+        $fieldConfig->setConfig($fieldName);
+        return $fieldConfig->getProperty("template");
     }
 }

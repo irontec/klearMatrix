@@ -115,7 +115,7 @@
         _resolveParentHolder : function(element) {
 
 
-            if ($(element).data("parentholderselector")) {
+            if ($(element).data("parentHolderSelector")) {
 
                 var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
                 if (_candidateParent.length > 0) {

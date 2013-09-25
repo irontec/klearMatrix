@@ -53,21 +53,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $hasDependant |= $column->isDependant();
         }
 
-        if ($this->_item->hasForcedValues()) {
-            foreach ($this->_item->getForcedValues() as $field => $value) {
-                try {
-                    $varName = $model->columnNameToVar($field);
-                    $model->{'set' . $varName}($value);
-                } catch (Exception $e) {
-                    // Nothing to do... condition not found in model... :S
-                    // Debemos morir??
-                }
-            }
-        }
-
         // Si la pantalla esta filtrada, debemos setearla en la "nueva"
         if ($this->_item->isFilteredScreen()) {
-
 
             $filteredField = $this->_item->getFilterField();
 

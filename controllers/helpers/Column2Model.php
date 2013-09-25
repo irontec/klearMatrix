@@ -29,8 +29,8 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
             return;
         }
 
+        $this->_setForcedValues($model, $column);
         $setter = $column->getSetterName();
-
         $value = $this->_retrieveValueForColumn($column, $model->getAvailableLangs());
 
         // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
@@ -60,6 +60,22 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         }
 
         $model->$setter($value);
+    }
+
+    protected function _setForcedValues($model, KlearMatrix_Model_Column $column)
+    {
+        $item = $column->getRouteDispatcher()->getCurrentItem();
+        if ($item->hasForcedValues()) {
+            foreach ($item->getForcedValues() as $field => $value) {
+                try {
+                    $varName = $model->columnNameToVar($field);
+                    $model->{'set' . $varName}($value);
+                } catch (Exception $e) {
+                    // Nothing to do... condition not found in model... :S
+                    // Debemos morir??
+                }
+            }
+        }
     }
 
 

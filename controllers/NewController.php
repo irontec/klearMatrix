@@ -45,14 +45,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $columns = $this->_item->getVisibleColumns();
         $hasDependant = false;
 
-        foreach ($columns as $column) {
-            $this->_helper->Column2Model($model, $column);
-
-            // Si una de las columnas tienen dependencias,
-            // el save deberá llevar "saveRecursive"
-            $hasDependant |= $column->isDependant();
-        }
-
         // Si la pantalla esta filtrada, debemos setearla en la "nueva"
         if ($this->_item->isFilteredScreen()) {
 
@@ -73,6 +65,14 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
             $filterFieldSetter = 'set' . $model->columnNameToVar($filteredField);
             $model->{$filterFieldSetter}($filteredValue);
+        }
+
+        foreach ($columns as $column) {
+            $this->_helper->Column2Model($model, $column);
+
+            // Si una de las columnas tienen dependencias,
+            // el save deberá llevar "saveRecursive"
+            $hasDependant |= $column->isDependant();
         }
 
         try {

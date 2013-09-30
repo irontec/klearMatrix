@@ -407,18 +407,16 @@
                         .prependTo($(".filterItem",$container));
                 }
 
-
                 switch(true) {
                     // un select!
                     case  (column.type == 'select'):
                     case  (column.type == 'multiselect'):
-
                         var _availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column);
 
                         var sourcedata = [];
                         $.each(_availableValues,function(i,val) {
                             sourcedata.push({label:val,id:i});
-                        })
+                        });
 
                         searchField.autocomplete({
                             minLength: 0,
@@ -537,7 +535,7 @@
 
             $("span.autocomplete", panel).each(function () {
 
-                var identifier = $(self).klearModule("option","file") + "_" + $(this).data("fielddecorator");
+                var identifier = $(self).klearModule("option","file") + "_" + $(this).data("command");
                 if (! autocompleteEntities[identifier] ) {
 
                     var _post = $(this).data();
@@ -569,7 +567,6 @@
 
                 var _url = request.action;
                 _url += '&' + $.param(request.data);
-
                 $.getJSON( _url , function( data, status, xhr ) {
                     $.each(nodes[idx], function () {
 
@@ -587,7 +584,6 @@
                         } else {
                             results.push(currentNodeData.label);
                         }
-
                         $(this).replaceWith(results.join(", "));
                     });
                 });

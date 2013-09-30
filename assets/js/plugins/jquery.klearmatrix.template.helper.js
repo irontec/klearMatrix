@@ -45,7 +45,7 @@
 
             // valor que devuelve el método si el valor es NULL
             var ifNullValue = '';
-            
+
             if (true !== isNew) {
 
                 if (typeof value != 'object' && !column.dirty) {
@@ -115,10 +115,10 @@
             };
 
             if (column.multilang) {
-                
+
                 var _mlList = $("<dl />");
                 _mlList.addClass("multiLanguage");
- 
+
                 for (var i in this.data.langs) {
 
                     var lang = this.data.langs[i];
@@ -138,7 +138,7 @@
                     };
 
                     var _node = $("<div />");
-                    
+
                     $.tmpl(this.getTemplateNameForType(column.type), _curFieldData, _templateHelpers).appendTo(_node);
 
                     var _data = {
@@ -148,15 +148,15 @@
                         _class : (lang == $.klear.language)? 'selected':''
                     };
 
-                    
+
                     if (lang == $.klear.language) {
-                    	$.tmpl('klearmatrixMultiLangField', _data).prependTo(_mlList);
+                        $.tmpl('klearmatrixMultiLangField', _data).prependTo(_mlList);
                     } else {
-                    	$.tmpl('klearmatrixMultiLangField', _data).appendTo(_mlList);
+                        $.tmpl('klearmatrixMultiLangField', _data).appendTo(_mlList);
                     }
                 }
-                
-                
+
+
                 _mlList.appendTo(node);
 
             } else {
@@ -214,7 +214,7 @@
 
             return response.wrap("<div></div>").parent().html();
         },
-        
+
         parseParentOptionCustomizationOpen : function(customOptions,config) {
             var response =  '';
             if (!customOptions) {
@@ -230,7 +230,7 @@
             response = ("<" + customOptions[config[config.type]].parentWrapper  + " class='" + customOptions[config[config.type]]['parentClass'] +"'>");
             return response;
         },
-        
+
         parseParentOptionCustomizationClose : function(customOptions,config) {
 
             var response =  '';
@@ -306,16 +306,41 @@
                     if (column.config.values['__className']) {
                         delete column.config.values['__className'];
                     }
+
                     var ret = {};
                     for (var index in column.config.values) {
                         ret[column.config.values[index].key] = column.config.values[index].item;
 
                         if ( (typeof idx != 'undefined') && column.config.values[index].key == idx) {
-                        	return column.config.values[index].item;
+                            return column.config.values[index].item;
                         }
                     }
+
                     // Multiselect bugs ahead!!
-                    if ( (typeof idx != 'undefined') && column.config.values[idx] ){
+                    if ((typeof idx != 'undefined') && (column.decorators && column.decorators.autocomplete)) {
+
+                        var dataValues = new Array();
+                        for (var indice in idx['relIndex']) {
+                            var _structIdx = idx['relIndex'][indice];
+                            dataValues.push(idx['relStruct'][_structIdx]['relatedId']);
+                        }
+
+                        var resp = $('<span class="autocomplete" />').attr({
+                            "data-value": dataValues.join(","),
+                            "data-reverse" : "true",
+                            "data-fielddecorator" : "autocomplete",
+                            "data-field": "multiselect"
+                        });
+
+                        for (var decoratorName in column.decorators) {
+                            for (var prop in column.decorators[decoratorName]) {
+                                resp.attr("data-" + prop, column.decorators[decoratorName][prop]);
+                            }
+                        }
+
+                        return $("<p>").append(resp).html();
+
+                    } else if ( (typeof idx != 'undefined') && column.config.values[idx] ){
                         return ret[idx];
                     } else {
                         return ret;
@@ -330,15 +355,15 @@
             }
         },
         getStringIndexFromColumn : function(row,column) {
-        	var ret = this.getIndexFromColumn(row, column);
-        	var $ret = $("<div />").html(ret);
-        	if ($("div.multilangValue", $ret).length > 0) {
-        		var $elem = $("div.multilangValue.selected", $ret);
-        		$("span",$elem).remove();
-        		return $elem.text();
-        	}
-        	
-        	return ret;
+            var ret = this.getIndexFromColumn(row, column);
+            var $ret = $("<div />").html(ret);
+            if ($("div.multilangValue", $ret).length > 0) {
+                var $elem = $("div.multilangValue.selected", $ret);
+                $("span",$elem).remove();
+                return $elem.text();
+            }
+
+            return ret;
         },
         getIndexFromColumn : function(values, column) {
 
@@ -362,15 +387,21 @@
 
                             return this.getValuesFromSelectColumn(column)[_curVal];
                         }
-                        
+
                         if (_curVal == null &&  this.getValuesFromSelectColumn(column)['__null__']) {
-                        	return this.getValuesFromSelectColumn(column)['__null__'];                        	
+                            return this.getValuesFromSelectColumn(column)['__null__'];
                         }
 
                         return '';
                         break;
 
                     case 'multiselect':
+
+                        if (column.decorators) {
+
+                            var fixedValues = this.getValuesFromSelectColumn(column, values[column.id]);
+                            return fixedValues;
+                        }
 
                         var fixedValues = this.getValuesFromSelectColumn(column);
                         var returnValue = [];
@@ -458,18 +489,18 @@
                         break;
 
                     case 'map':
-                        
+
                         var imgUrl = 'http://maps.googleapis.com/maps/api/staticmap?'
                             + 'center=%lat%,%lng%&zoom=%zoom%'
                             + '&size=%width%x%height%&sensor=false';
-                        
+
                         var markerUrl = '&markers=color:red%7C%lat%,%lng%';
-                        
-                        var printMarker = true; 
-                        
+
+                        var printMarker = true;
+
                         var lat = values[column.id]['lat'];
                         var lng = values[column.id]['lng']
-                        
+
                         if ( lat == null || lng == null ) {
                             lat = '0.0';
                             lng = '0.0';
@@ -478,18 +509,18 @@
                         } else {
                             imgUrl = imgUrl.replace(/%zoom%/g, values[column.id]['previewZoom']);
                         }
-                        
+
                         imgUrl = imgUrl.replace(/%lat%/g, lat);
                         imgUrl = imgUrl.replace(/%lng%/g, lng);
                         imgUrl = imgUrl.replace(/%width%/g, values[column.id]['previewWidth']);
                         imgUrl = imgUrl.replace(/%height%/g, values[column.id]['previewHeight']);
-                        
+
                         if ( printMarker ) {
                             markerUrl = markerUrl.replace(/%lat%/g, lat);
                             markerUrl = markerUrl.replace(/%lng%/g, lng);
                             imgUrl = imgUrl + markerUrl;
                         }
-                        
+
                         return '<img src="'+imgUrl+'" class="makeItBigger" />';
                         break;
 
@@ -523,7 +554,7 @@
                             return this.getMultiLangValue(values[column.id],this.data.langs,$.klear.language);
                         }
                         var ifNullValue = '';
-                        
+
                         if (column.dirty) {
                             if (this._checkNull(values[column.id])) {
                                 return ifNullValue;
@@ -552,7 +583,7 @@
         _parseDefaultValues : function(settings) {
 
             var title = settings.title;
-            
+
             if (typeof settings.title != 'string' || !title.match(/\%item\%|%parent%/)) {
                 return title;
             }
@@ -627,15 +658,15 @@
             });
         },
         getExternalData : function(externalData) {
-        	var _allowed = ['file','noiden','searchby','removescreen','title'];
-        	var _prefix = 'external';
-        	var _ret = '';
-        	for(var i=0;i<_allowed.length;i++) {
-        		if (externalData[_prefix+_allowed[i]]) {
-        			_ret += ' data-' + _prefix+_allowed[i]+ '=' +externalData[_prefix+_allowed[i]]+''; 
-        		}
-        	}
-        	return _ret;
+            var _allowed = ['file','noiden','searchby','removescreen','title'];
+            var _prefix = 'external';
+            var _ret = '';
+            for(var i=0;i<_allowed.length;i++) {
+                if (externalData[_prefix+_allowed[i]]) {
+                    _ret += ' data-' + _prefix+_allowed[i]+ '=' +externalData[_prefix+_allowed[i]]+'';
+                }
+            }
+            return _ret;
         },
 
         mustShowOptionColum : function(option, value) {

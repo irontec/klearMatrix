@@ -1,4 +1,4 @@
-(function load($, undefined) {
+;(function load($, undefined) {
 
     if (!$.klear.checkDeps([
                 '$.fn.wymeditor',
@@ -25,7 +25,7 @@
                 "wymPath" : true,
                 "logoHtml" : true,
                 "stylesheet": true,
-                "plugins" : true,
+                "plugins" : true
             };
 
             var editorOptions = {

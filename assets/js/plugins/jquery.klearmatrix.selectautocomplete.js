@@ -1,9 +1,9 @@
-(function load($) {
+;(function load($) {
     $.widget("klearmatrix.selectautocomplete", {
         widgetEventPrefix:"file",
         lastCounter : 0,
         options: {
-            cache: {}, // cache de nodos dom
+            cache: {} // cache de nodos dom
         },
 
         element : null,
@@ -289,7 +289,7 @@
 
             $.Widget.prototype.destroy.call( this );
             return this;
-        },
+        }
     });
 
     $.widget.bridge("klearmatrix.selectautocomplete");

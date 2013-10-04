@@ -18,7 +18,7 @@
  *   http://www.gnu.org/licenses/gpl.html
  *
 */
-(function($, undefined){
+;(function($, undefined){
 
 var multiselectID = 0;
 
@@ -523,8 +523,7 @@ $.widget("ech.multiselect", {
         if(flag) {
             // remember which elements this widget disabled (not pre-disabled)
             // elements, so that they can be restored if the widget is re-enabled.
-            inputs = inputs.filter(':enabled')
-                .data(key, true)
+            inputs = inputs.filter(':enabled').data(key, true);
         } else {
             inputs = inputs.filter(function() {
                 return $.data(this, key) === true;

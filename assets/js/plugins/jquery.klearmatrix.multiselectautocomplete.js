@@ -1,9 +1,9 @@
-(function load($) {
+;(function load($) {
     $.widget("klearmatrix.multiselectautocomplete", {
         widgetEventPrefix:"file",
         lastCounter : 0,
         options: {
-            cache: {}, // cache de nodos dom
+            cache: {} // cache de nodos dom
         },
 
         element : null,
@@ -182,7 +182,7 @@
 
                 this.options.cache.element.append(newOption);
             } else {
-                targetOption.attr("selected", "selected")
+                targetOption.attr("selected", "selected");
             }
         },
 
@@ -323,7 +323,7 @@
 
             $.Widget.prototype.destroy.call( this );
             return this;
-        },
+        }
     });
 
     $.widget.bridge("klearmatrix.multiselectautocomplete");

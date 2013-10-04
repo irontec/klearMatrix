@@ -22,20 +22,20 @@
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
             $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
-            
+
             var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixNew";
 
             var $appliedTemplate = this._loadTemplate(tplName);
 
             var $container = $(this.element.klearModule("getPanel"));
-            
+
             $container.append($appliedTemplate);
-            
+
             var self = this;
-            
+
             $container.one("focusin",function(e) {
                 self.element.klearModule("showOverlay");
-                
+
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -47,7 +47,7 @@
                     ._registerFieldsEvents()
                     ._registerMainActionEvent();
 
-                self.element.klearModule("hideOverlay")
+                self.element.klearModule("hideOverlay");
             });
 
             if ($container.is(":visible")) {
@@ -61,7 +61,7 @@
             var self = this;
             var $self = $(this.element);
 
-            var $dialog = $self.klearModule("getModuleDialog")
+            var $dialog = $self.klearModule("getModuleDialog");
             var postData = self.options.theForm.serializeArray();
 
             var addAnotherOption = !self.options.theForm.data("disableaddanother");

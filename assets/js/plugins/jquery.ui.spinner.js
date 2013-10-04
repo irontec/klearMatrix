@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2010 Brant Burnett
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
- (function($, undefined) {
+;(function($, undefined) {
 
 var
     // constants
@@ -292,7 +292,7 @@ $.widget('ui.spinner', {
                         case down:
                         case left:
                         case pageDown:
-                            buttons.removeClass(active)
+                            buttons.removeClass(active);
                             self._stopSpin();
                             inKeyDown = false;
                             return false;

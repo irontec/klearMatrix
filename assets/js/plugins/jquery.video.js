@@ -1,7 +1,7 @@
 // Info::
 //  http://www.tikku.com/jquery-jqtube-util#search_example_1
 
-(function load($) {
+;(function load($) {
 
     if (!$.klear.checkDeps(['window.jQTubeUtil'],load)) {
         return;
@@ -189,7 +189,9 @@
 
             if (! $img.get(0).complete) {
 
-                setTimeout(function () {_self._initChannelScroll(itemNum, $img, author)}, 300);
+                setTimeout(function () {
+                    _self._initChannelScroll(itemNum, $img, author);
+                }, 300);
             }
 
             if (itemNum * $img.width() > this.options.cache.feedContainner[author].width()) {
@@ -348,7 +350,7 @@
             // remove classes + data
             this.options.cache.wrapper.children("img").remove();
             this.options.cache.wrapper.children("iframe").remove();
-            this.options.cache.wrapper.append(code)
+            this.options.cache.wrapper.append(code);
         },
 
         destroy: function() {
@@ -356,7 +358,7 @@
             // remove classes + data
             $.Widget.prototype.destroy.call( this );
             return this;
-        },
+        }
     });
 
     $.widget.bridge("ui.video");

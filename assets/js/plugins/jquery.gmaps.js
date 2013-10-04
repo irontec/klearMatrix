@@ -1,4 +1,4 @@
-(function load($) {
+;(function load($) {
 
     $.widget("ui.gmaps", $.klearmatrix.module, {
         widgetEventPrefix:"gmaps",
@@ -10,7 +10,7 @@
             height: 450,
             width: 500,
             defaultLat : 43.262951899365135,
-            defaultLng : -2.9352541503906195,
+            defaultLng : -2.9352541503906195
         },
 
         imgUrl: '//maps.googleapis.com/maps/api/staticmap?center=%lat%,%lng%&zoom=%zoom%&size=%width%x%height%&sensor=false',
@@ -27,7 +27,7 @@
         _create: function() {
 
             this._loadCacheNodes();
-            
+
             if (this.readOnly == true) {
                 this._initMap();
             } else {
@@ -38,14 +38,14 @@
                     script.src = "//www.google.com/jsapi?sensor=false&language=es";
                     document.head.appendChild(script);
                 }
-    
+
                 (function lazyGoogle() {
-    
+
                     if (!window.google) {
                         setTimeout(lazyGoogle,450);
                         return;
                     }
-    
+
                     google.load("maps", "3", {
                         callback: function(){
                             self._initMap();
@@ -71,7 +71,7 @@
                 this.options.cache.canvas.remove();
                 this.readOnly = true;
             }
-            
+
             this.options.cache.canvas.css({width: this.options.width, height: this.options.height});
         },
 
@@ -79,10 +79,10 @@
             if (this.readOnly ==  true) {
                 var printMarker = true;
                 var img = this.options.cache.context.find('img.mapImg');
-                
+
                 var lat = this.options.cache.lat.val();
                 var lng = this.options.cache.lng.val();
-    
+
                 if (lat == '' || lng == '') {
                     printMarker = false;
                     lat = this.options.defaultLat;
@@ -91,65 +91,65 @@
                 } else {
                     this.imgUrl = this.imgUrl.replace(/%zoom%/g, this.options.zoom);
                 }
-                
+
                 this.imgUrl = this.imgUrl.replace(/%lat%/g, lat);
                 this.imgUrl = this.imgUrl.replace(/%lng%/g, lng);
                 this.imgUrl = this.imgUrl.replace(/%width%/g, this.options.width);
                 this.imgUrl = this.imgUrl.replace(/%height%/g, this.options.height);
-                
+
                 if ( printMarker ) {
                     this.markerUrl = this.markerUrl.replace(/%lat%/, lat);
                     this.markerUrl = this.markerUrl.replace(/%lng%/, lng);
                     this.imgUrl = this.imgUrl + this.markerUrl;
                 }
-                
+
                 img.attr('src', this.imgUrl);
-                
+
             } else {
-                
+
                 var self = this;
-    
+
                 this.geocoder = new google.maps.Geocoder();
-    
+
                 var lat = this.options.cache.lat.val();
                 var lng = this.options.cache.lng.val();
-    
+
                 if (lat == '' || lng == '') {
-    
+
                     lat = this.options.defaultLat;
                     lng = this.options.defaultLng;
                 }
-    
+
                 var latLng = new google.maps.LatLng(lat, lng);
-    
+
                 this.map = new google.maps.Map(this.options.cache.canvas[0], {
                     zoom: this.options.zoom,
                     center: latLng,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 });
-    
+
                 this.marker = new google.maps.Marker({
                     position: latLng,
                     title: 'Point A',
                     map: this.map,
                     draggable: this.options.draggable
                 });
-    
+
                 // Update current position info.
                 this._updateMarkerPosition(latLng);
-    
+
                 // Add dragging event listeners.
                 google.maps.event.addListener(this.marker, 'dragstart', function() {
-    
+
                     self._updateMarkerAddress('Calculando...');
                 });
-    
+
                 google.maps.event.addListener(this.marker, 'drag', function() {
                     self._updateMarkerPosition(self.marker.getPosition());
                 });
-    
+
                 google.maps.event.addListener(this.marker, 'dragend', function() {
-    
+
                     self._geocodePosition(self.marker.getPosition());
                     self.options.cache.adress.trigger('change');
                 });

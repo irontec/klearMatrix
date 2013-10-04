@@ -329,7 +329,6 @@
                 var $spanValues = $("span.content", $(this));
                 var fieldName = $(this).data("field");
 
-
                 $("button.preconfigureFilters", panel).filter(function() {
 
                     if (!$(this).data('field') ||
@@ -342,13 +341,11 @@
 
                     return $spanValues.filter(function() {
                         return (candidateValue == $(this).data("value"));
-                    }).length > 0
+                    }).length > 0;
 
                 }).button("disable");
 
             });
-
-
 
             $(".klearMatrixFilteringForm",panel).form();
 
@@ -530,8 +527,8 @@
             });
 
             //Autocompletes
-            var autocompleteNodes = {}
-            var autocompleteEntities = {}
+            var autocompleteNodes = {};
+            var autocompleteEntities = {};
 
             $("span.autocomplete", panel).each(function () {
 
@@ -591,8 +588,6 @@
 
             return this;
         }
-
-
     });
 
     $.widget.bridge("klearMatrixList", $.klearmatrix.list);

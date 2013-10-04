@@ -39,13 +39,13 @@
             var $appliedTemplate = this._loadTemplate(tplName);
 
             var $container = $(this.element.klearModule("getPanel"));
-            
+
             $container.append($appliedTemplate);
-            
+
             var self = this;
-            
+
             $container.one("focusin",function(e) {
-                self.element.klearModule("showOverlay")
+                self.element.klearModule("showOverlay");
                 e.preventDefault();
                 e.stopPropagation();
                 self._applyDecorators()
@@ -55,7 +55,7 @@
                     ._registerEvents()
                     ._registerFieldsEvents()
                     ._registerMainActionEvent();
-                self.element.klearModule("hideOverlay")
+                self.element.klearModule("hideOverlay");
             });
 
             if ($container.is(":visible")) {
@@ -385,9 +385,9 @@
                             if (target[pluginName]) {
                                 settings._contentTab = _self;
                                 if (target.data("basename")) {
-                                	target[pluginName](settings, self.options.data.columns[target.data("basename")].config);
+                                    target[pluginName](settings, self.options.data.columns[target.data("basename")].config);
                                 } else {
-                                	target[pluginName](settings);	
+                                    target[pluginName](settings);
                                 }
                             }
 
@@ -533,29 +533,29 @@
                     };
 
                     var request = $.klear.buildRequest(requestData);
-                    
-                    
-                    
-                    
+
+
+
+
                     // Capa que se pondrá por encima el control input:file (opacity=0)... la única manera de "deshabilitarlo" temporalmente
                     // TODO: testearlo en IE
                     var $buttonHidder = $("<div />")
-                    				.addClass('buttonHidder')
-                    				.css({position:'absolute',top:'0',left:'0',zIndex:'1000',width:'100%',height:'100%'});
-                    
-                    
+                                    .addClass('buttonHidder')
+                                    .css({position:'absolute',top:'0',left:'0',zIndex:'1000',width:'100%',height:'100%'});
+
+
                     // Objeto que encapsula métodos para habilitar/deshabilitar el botón de upload
                     var buttonAcc = {
-                		disable : function($context) {
-                			$(".qq-upload-button",$context).addClass("ui-state-disabled");
-                			$(".qq-upload-button",$context).append($buttonHidder);
-                			
-                		},
-                		enable : function($context) {
-                			$(".qq-upload-button",$context).removeClass("ui-state-disabled");
-                			$(".qq-upload-button .buttonHidder",$context).remove();
-                			
-                		}
+                        disable : function($context) {
+                            $(".qq-upload-button",$context).addClass("ui-state-disabled");
+                            $(".qq-upload-button",$context).append($buttonHidder);
+
+                        },
+                        enable : function($context) {
+                            $(".qq-upload-button",$context).removeClass("ui-state-disabled");
+                            $(".qq-upload-button .buttonHidder",$context).remove();
+
+                        }
                     };
                     var qqOptions = {
                             element: item[0],
@@ -576,7 +576,7 @@
                              '</div>',
                             onComplete : function(id, fileName, result) {
                                 $(_self).klearModule("unsetUploadInProgress", id);
-                            	buttonAcc.enable($(this._element));
+                                buttonAcc.enable($(this._element));
                                 var $list = $(".qq-upload-list",$(this._element));
 
                                 if (result.error) {
@@ -595,17 +595,17 @@
                                 $list.html('');
                             },
                             onSubmit: function (id, fileName) {
-                            	buttonAcc.disable($(this._element));
+                                buttonAcc.disable($(this._element));
                                 $(_self).klearModule("setUploadInProgress", id);
                                 return true;
                             },
 
                             onCancel: function(id, fileName){
-                            	buttonAcc.enable($(this._element));
-                            	$(_self).klearModule("unsetUploadInProgress", id);
+                                buttonAcc.enable($(this._element));
+                                $(_self).klearModule("unsetUploadInProgress", id);
                             },
                             onError: function(id, fileName, reason) {
-                            	buttonAcc.enable($(this._element));
+                                buttonAcc.enable($(this._element));
                                 $(_self).klearModule("unsetUploadInProgress", id);
                             },
                             showMessage : function(message) {
@@ -637,12 +637,12 @@
 
             $("input, textarea", this.options.theForm)
                 .autoResize({
-                	maxWidth : function() {
-                		return this.el.parent().width();
-                	}, 
+                    maxWidth : function() {
+                        return this.el.parent().width();
+                    },
                     onStartCheck: function() {
                         // El plugin se "come" el evento :S
-                    	$(this).trigger("manualchange");
+                        $(this).trigger("manualchange");
                     }
                 })
                 .trigger("paste")
@@ -651,8 +651,8 @@
 
 
             //Mark required fields
-            var _required = $('<span title="' + $.translate("Required field") 
-            		+ '" class="ui-icon inline ui-icon-heart"></span>');
+            var _required = $('<span title="' + $.translate("Required field")
+                    + '" class="ui-icon inline ui-icon-heart"></span>');
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
             //Validate required select fields by regExp
@@ -689,7 +689,7 @@
                     e.preventDefault();
                 });
             });
-            
+
 
             if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
                 for (var i in this.options.data.fixedPositions) {
@@ -707,8 +707,8 @@
             var self = this;
 
             $container = this.element.klearModule("getPanel");
-            
-            
+
+
             this.options.theForm.on('updateChangedState',function() {
                 if ($(".changed",$(this)).length > 0) {
 
@@ -752,18 +752,18 @@
             });
             // Comprobación para los contenedores de campos (fixedPositions)
             var checkSuperContainer = {
-            	_getFieldSet : function($field) {
-            		return $field.parents("fieldset.superContainer:eq(0)");
-            	},
-            	show : function($f) {
-            		this._getFieldSet($f).slideDown();
-            	},
-            	hide : function($f) {
-            		$fSet = this._getFieldSet($f);
-            		if ($(".container:visible",$fSet).length == 0) {
-            			$fSet.slideUp();
-            		}
-            	}
+                _getFieldSet : function($field) {
+                    return $field.parents("fieldset.superContainer:eq(0)");
+                },
+                show : function($f) {
+                    this._getFieldSet($f).slideDown();
+                },
+                hide : function($f) {
+                    $fSet = this._getFieldSet($f);
+                    if ($(".container:visible",$fSet).length == 0) {
+                        $fSet.slideUp();
+                    }
+                }
             };
             $(".visualFilter",$container).on('manualchange.visualFilter',function(e,manual) {
 
@@ -823,14 +823,14 @@
 
                         if (manual) {
                             field.hide(1,function() {
-                            	// Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
-                            	checkSuperContainer.hide($(this));
+                                // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
+                                checkSuperContainer.hide($(this));
                             });
                         } else {
 
                             //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
                             field.slideUp(function() {
-                            	checkSuperContainer.hide($(this));
+                                checkSuperContainer.hide($(this));
                             });
                         }
                     });
@@ -845,7 +845,7 @@
                     var _target = $(this);
                 }
 
-                
+
                 var _val = $(this).val() ? $(this).val() : '';
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
                     _target.addClass("changed ui-state-highlight");
@@ -874,8 +874,8 @@
             });
 
 
-            var _copied = $('<span title="' + $.translate("Auto-copied field") 
-            		+ '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
+            var _copied = $('<span title="' + $.translate("Auto-copied field")
+                    + '" class="ui-silk inline ui-silk-page-white-copy copied"></span>');
 
             $("dl.multiLanguage dd")
                 .on('isCopied',function() {
@@ -926,28 +926,28 @@
 
 
             // Gestión del autoClose
-            
+
             var $autoCloseCheckbox = $("input[name=autoclose]",$container);
             $autoCloseCheckbox.on('change',function(e) {
-            	// El cliente ha usado autoclose, guardamos su valor
-            	if (localStorage) {
-            		localStorage.setItem('klearmatrix.autoclose',$(this).is(":checked"));
-            	}
-            	$autoCloseCheckbox.not($(this)).trigger('toggleValue');
+                // El cliente ha usado autoclose, guardamos su valor
+                if (localStorage) {
+                    localStorage.setItem('klearmatrix.autoclose',$(this).is(":checked"));
+                }
+                $autoCloseCheckbox.not($(this)).trigger('toggleValue');
             });
-            
+
             // En la carga de la pantalla, comprobamos si existe la preferencia sobre autoclose
-            // Preferencia que se setea automáticamente si el usuario la utiliza 
-        	if (localStorage && localStorage.getItem('klearmatrix.autoclose') != null) {
-        		var savedVal = localStorage.getItem('klearmatrix.autoclose') == 'true';
-        		$autoCloseCheckbox.trigger('forceValue', savedVal);
-        	}
-            
-            
+            // Preferencia que se setea automáticamente si el usuario la utiliza
+            if (localStorage && localStorage.getItem('klearmatrix.autoclose') != null) {
+                var savedVal = localStorage.getItem('klearmatrix.autoclose') == 'true';
+                $autoCloseCheckbox.trigger('forceValue', savedVal);
+            }
+
+
             return this;
-                        
+
         },
-        
+
         _joinFields : function(label, fields) {
             $container = this.element.klearModule("getPanel");
             $elements = [];
@@ -957,11 +957,11 @@
                 if ($field.length != 1) {
                     continue;
                 }
-                $elements.push($field);	
+                $elements.push($field);
             }
             if ($elements.length == 0) {
                 return;
-            } 
+            }
 
             var widthPercent = Math.floor(100/$elements.length) * 0.9;
             var $prev = false;
@@ -971,7 +971,7 @@
                 .addClass("superContainer")
                 .addClass("ui-widget-content")
                 .addClass("ui-corner-all");
-            
+
             if (false !== label) {
                 $("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
             }

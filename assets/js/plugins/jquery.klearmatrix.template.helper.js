@@ -1,4 +1,4 @@
-(function ($) {
+;(function ($) {
 
     $.klearmatrix = $.klearmatrix || {};
     $.klearmatrix.template  = $.klearmatrix.template || {};
@@ -499,7 +499,7 @@
                         var printMarker = true;
 
                         var lat = values[column.id]['lat'];
-                        var lng = values[column.id]['lng']
+                        var lng = values[column.id]['lng'];
 
                         if ( lat == null || lng == null ) {
                             lat = '0.0';

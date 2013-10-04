@@ -1,10 +1,10 @@
-(function load($) {
+;(function load($) {
 
     $.widget("klearmatrix.filepreview", $.klearmatrix.module, {
         widgetEventPrefix:"file",
 
         options: {
-            cache: {},
+            cache: {}
         },
 
         _setOption: function (name, value) {
@@ -30,7 +30,6 @@
             var image = $("<img class=\"imgFilePreviewList\" />");
             image.attr("src", this.element.attr("href"));
             this.element.replaceWith(image);
-
         },
 
         destroy: function() {
@@ -38,7 +37,7 @@
             // remove classes + data
             $.Widget.prototype.destroy.call( this );
             return this;
-        },
+        }
     });
     $.widget.bridge("klearmatrix.filepreview");
 
@@ -50,7 +49,7 @@
             image.attr("src", this.element.attr("href"));
             this.element.replaceWith(image);
 
-        },
+        }
     });
     $.widget.bridge("klearmatrix.filelistpreview");
 

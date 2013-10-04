@@ -1,4 +1,4 @@
-(function load($, undefined) {
+;(function load($, undefined) {
     if (!$.klear.checkDeps(['$.fn.tinymce'], load)) {
         return;
     }
@@ -7,25 +7,25 @@
         options: {
         },
         _init : function(){
-            
+
             var $el = $(this.element);
-           
+
             $.extend(
-            		this.options, 
-            		this.options.settings //settings originales cogidos de column
-            		);
-            
+                    this.options,
+                    this.options.settings //settings originales cogidos de column
+                    );
+
             var options = this.options;
-            
+
             var _self = this;
-            
+
             var _contentChange = function(instance) {
-                var changed = !(instance.startContent == instance.getBody().innerHTML); 
+                var changed = !(instance.startContent == instance.getBody().innerHTML);
                 if (changed) {
                     $("#"+instance.editorId).trigger('manualchange');
                 }
             };
-            
+
             var tinySettings = {
                 onchange_callback : function(instance) {
                     _contentChange(instance);
@@ -40,14 +40,12 @@
                     return true;
                 },
                 init_instance_callback : function (instance) {
-                    
-                },
-               
+
+                }
             };
-            
+
             $.extend(tinySettings, options);
-            
-          
+
             $el.tinymce(tinySettings);
         }
     });

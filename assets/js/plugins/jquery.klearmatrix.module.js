@@ -69,7 +69,7 @@
         getData : function(value) {
 
             if (this.options.data[value]) {
-                return this.options.data[value]
+                return this.options.data[value];
             }
 
             return this.options.data;
@@ -464,7 +464,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                var external = data && data.external || false
+                var external = data && data.external || false;
 
                 var _container = self.klearModule("getContainer");
 

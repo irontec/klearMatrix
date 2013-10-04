@@ -18,13 +18,12 @@
         _init: function() {
 
             if (this.options.data.templateName) {
-            	var $appliedTemplate = this._loadTemplate(this.options.data.templateName);
-            	$(this.element.klearModule("getPanel")).append($appliedTemplate);
-            
-            	this._registerBaseEvents();
-             
+                var $appliedTemplate = this._loadTemplate(this.options.data.templateName);
+                $(this.element.klearModule("getPanel")).append($appliedTemplate);
+
+                this._registerBaseEvents();
             }
-        }    
+        }
     });
 
     $.widget.bridge("klearMatrixGenericScreen", $.klearmatrix.genericscreen);

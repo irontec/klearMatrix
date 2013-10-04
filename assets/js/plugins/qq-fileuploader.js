@@ -57,11 +57,11 @@ qq.getUniqueId = (function(){
 //
 // Browsers and platforms detection
 
-qq.ie       = function(){ return navigator.userAgent.indexOf('MSIE') != -1; }
-qq.safari   = function(){ return navigator.vendor != undefined && navigator.vendor.indexOf("Apple") != -1; }
-qq.chrome   = function(){ return navigator.vendor != undefined && navigator.vendor.indexOf('Google') != -1; }
-qq.firefox  = function(){ return (navigator.userAgent.indexOf('Mozilla') != -1 && navigator.vendor != undefined && navigator.vendor == ''); }
-qq.windows  = function(){ return navigator.platform == "Win32"; }
+qq.ie       = function(){ return navigator.userAgent.indexOf('MSIE') != -1; };
+qq.safari   = function(){ return navigator.vendor != undefined && navigator.vendor.indexOf("Apple") != -1; };
+qq.chrome   = function(){ return navigator.vendor != undefined && navigator.vendor.indexOf('Google') != -1; };
+qq.firefox  = function(){ return (navigator.userAgent.indexOf('Mozilla') != -1 && navigator.vendor != undefined && navigator.vendor == ''); };
+qq.windows  = function(){ return navigator.platform == "Win32"; };
 
 //
 // Events
@@ -74,8 +74,8 @@ qq.attach = function(element, type, fn){
         element.attachEvent('on' + type, fn);
     }
     return function() {
-        qq.detach(element, type, fn)
-    }
+        qq.detach(element, type, fn);
+    };
 };
 qq.detach = function(element, type, fn){
     if (element.removeEventListener){
@@ -578,7 +578,7 @@ qq.FileUploaderBasic.prototype = {
             catch (exception) {
                 self.log("Caught " + exception + " in callback: " + callback);
             }
-        }
+        };
 
         for (var prop in this._options) {
             if (/^on[A-Z]/.test(prop)) {
@@ -586,7 +586,7 @@ qq.FileUploaderBasic.prototype = {
                     var oldCallback = self._options[prop];
                     self._options[prop] = function() {
                         return safeCallback(oldCallback, arguments);
-                    }
+                    };
                 }());
             }
         }
@@ -861,13 +861,13 @@ qq.extend(qq.FileUploader.prototype, {
             qq.addClass(item, this._classes.success);
             if (this._classes.successIcon) {
                 this._find(item, 'finished').style.display = "inline-block";
-                qq.addClass(item, this._classes.successIcon)
+                qq.addClass(item, this._classes.successIcon);
             }
         } else {
             qq.addClass(item, this._classes.fail);
             if (this._classes.failIcon) {
                 this._find(item, 'finished').style.display = "inline-block";
-                qq.addClass(item, this._classes.failIcon)
+                qq.addClass(item, this._classes.failIcon);
             }
             this._controlFailureTextDisplay(item, result);
         }
@@ -1458,7 +1458,7 @@ qq.extend(qq.UploadHandlerForm.prototype, {
         // form.setAttribute('method', 'post');
         // form.setAttribute('enctype', 'multipart/form-data');
         // Because in this case file won't be attached to request
-        var protocol = this._options.demoMode ? "GET" : "POST"
+        var protocol = this._options.demoMode ? "GET" : "POST";
         var form = qq.toElement('<form method="' + protocol + '" enctype="multipart/form-data"></form>');
 
         var queryString = qq.obj2url(params, this._options.action);
@@ -1499,7 +1499,7 @@ qq.UploadHandlerXhr.isSupported = function(){
 };
 
 // @inherits qq.UploadHandlerAbstract
-qq.extend(qq.UploadHandlerXhr.prototype, qq.UploadHandlerAbstract.prototype)
+qq.extend(qq.UploadHandlerXhr.prototype, qq.UploadHandlerAbstract.prototype);
 
 qq.extend(qq.UploadHandlerXhr.prototype, {
     /**

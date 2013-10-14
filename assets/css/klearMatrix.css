@@ -578,18 +578,37 @@ a.option {
 	white-space: nowrap;
 }
 
+/********* CSS para la opción FixedPositions *********/
+
+/* Para todos los campos dentro del FixedPosition */
 fieldset .containerFixed input, fieldset .containerFixed .selectboxit-container, fieldset .containerFixed .selectboxit-container .selectboxit {
 	width: 90%!important;
 }
 
+/* Para el campo autocomplete */
+fieldset .containerFixed input.ui-autocomplete-input {
+	width: 85%!important;
+}
+
+/* Para el campo requerido */
 fieldset .containerFixed input:required {
 	width: 80%!important;
 }
 
+/* Para el campo numérico */
 fieldset .containerFixed input.auto {
     width: 45%!important;
 }
 
 fieldset .containerFixed span.ui-combobox {
     width: 100%;
+}
+
+fieldset .containerFixed a._fieldOption {
+    float: left;
+    margin: 8px 0 0 0;
+}
+
+fieldset .containerFixed a._fieldOption span {
+    margin-top: -3px;
 }

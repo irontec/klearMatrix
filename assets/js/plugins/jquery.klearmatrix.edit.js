@@ -85,8 +85,16 @@
 
             this.element.klearModule("option","PostDispatchMethod",function() {
                 if (!this.savedValues) return;
+                
+                /*
+                 * recargamos the form por que se pierde, ya que se borra el antiguo y no se
+                 * asigna de nuevo a la variable.
+                 */
+                
+                var theForm = $("form",$(self.element.klearModule("getPanel")));
+
                 $.each(this.savedValues,function(name,value) {
-                    $("[name='"+name+"']",self.options.theForm).val(value).data("recoveredValue", value).trigger("manualchange");
+                    $("[name='"+name+"']",theForm).val(value).data("recoveredValue", value).trigger("manualchange");
                 });
                 this.savedValues = {};
             });

@@ -20,7 +20,12 @@
 
         _init: function() {
 
-            this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
+        	
+        	
+        	this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
+        	
+        	$.console.info("["+__namespace__+"] _init" + this.options.data.title);
+        	
             $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 
             var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixNew";
@@ -34,6 +39,9 @@
             var self = this;
 
             $container.one("focusin",function(e) {
+            	
+            	$.console.info("["+__namespace__+"] focusin " + self.options.data.title);
+            	
                 self.element.klearModule("showOverlay");
 
                 e.preventDefault();
@@ -48,6 +56,11 @@
                     ._registerMainActionEvent();
 
                 self.element.klearModule("hideOverlay");
+                
+                
+                $(self.element).trigger('moduleInitReady');
+                
+                
             });
 
             if ($container.is(":visible")) {
@@ -58,6 +71,8 @@
 
         _doAction : function() {
 
+        	$.console.info("["+__namespace__+"] _doAction");
+        	
             var self = this;
             var $self = $(this.element);
 

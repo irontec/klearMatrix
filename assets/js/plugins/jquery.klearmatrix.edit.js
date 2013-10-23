@@ -6,6 +6,8 @@
 
     var __namespace__ = "klearmatrix.edit";
 
+    
+    
     $.widget("klearmatrix.edit", $.klearmatrix.module, {
         options: {
             data : null,
@@ -34,6 +36,8 @@
 
             this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
 
+            $.console.info("["+__namespace__+"] _init" + this.options.data.title);
+            
             var tplName = (this.options.data.mainTemplate) ? this.options.data.mainTemplate : "klearmatrixEdit";
 
             var $appliedTemplate = this._loadTemplate(tplName);
@@ -45,9 +49,14 @@
             var self = this;
 
             $container.one("focusin",function(e) {
+            	
+            	$.console.info("["+__namespace__+"] focusin " + self.options.data.title);
+            	
                 self.element.klearModule("showOverlay");
+                
                 e.preventDefault();
                 e.stopPropagation();
+                
                 self._applyDecorators()
                     ._registerReDispatchSavers()
                     ._initFormElements()
@@ -55,7 +64,11 @@
                     ._registerEvents()
                     ._registerFieldsEvents()
                     ._registerMainActionEvent();
+                
                 self.element.klearModule("hideOverlay");
+                
+                $(self.element).trigger('moduleInitReady');
+                
             });
 
             if ($container.is(":visible")) {
@@ -70,9 +83,15 @@
         },
 
         _registerReDispatchSavers : function() {
+        	
+        	$.console.info("["+__namespace__+"] _registerReDispatchSavers");
+        	
             var self = this;
 
             this.element.klearModule("option","PreDispatchMethod",function() {
+            	
+            	$.console.info("["+__namespace__+"] PreDispatchMethod exec");
+            	
                 // Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
                 this.savedValues = {};
                 var _selfklear = this;
@@ -80,23 +99,42 @@
                 $("select.changed,input.changed,textarea.changed",self.options.theForm).not(".ignoreManualChange").each(function() {
                     _selfklear.savedValues[$(this).attr("name")] = $(this).val();
                 });
+                
 
             });
-
+            
+            
             this.element.klearModule("option","PostDispatchMethod",function() {
+            
+            	$.console.info("["+__namespace__+"] PostDispatchMethod exec");
+            	
                 if (!this.savedValues) return;
                 
-                /*
-                 * recargamos the form por que se pierde, ya que se borra el antiguo y no se
-                 * asigna de nuevo a la variable.
-                 */
-                
-                var theForm = $("form",$(self.element.klearModule("getPanel")));
+                this.options.theForm = $("form",$(this.options.panel));
+            
+                var form = this.options.theForm;
 
                 $.each(this.savedValues,function(name,value) {
-                    $("[name='"+name+"']",theForm).val(value).data("recoveredValue", value).trigger("manualchange");
+                	
+                	var $el = $("[name='"+name+"']",form);
+                	
+                	$el.val(value).data("recoveredValue", value);
+                	$el.data('savedValue', (new Date()).toString());
+                	$el.data('recoveredValue',  (new Date()).toString());
+                	$el.trigger('manualchange');	
+                	
+                	
                 });
+                
                 this.savedValues = {};
+                
+//                if (!this.savedValues) return;
+//                $.each(this.savedValues,function(name,value) {
+//                    $("[name='"+name+"']",self.options.theForm).val(value).data("recoveredValue", value).trigger("manualchange");
+//                });
+//                this.savedValues = {};                
+
+                return this;
             });
 
             return this;
@@ -104,6 +142,8 @@
 
         _registerMainActionEvent : function() {
 
+        	$.console.info("["+__namespace__+"] _registerMainActionEvent");
+        	
             var self = this;
 
             this.options.theForm.on('submit',function(e) {
@@ -194,6 +234,8 @@
 
         _doAction : function() {
 
+        	$.console.info("["+__namespace__+"] _doAction");
+        	
             (function(self) {
                 var $self = $(self.element);
                 var $dialog = $self.klearModule("option","moduleDialog");
@@ -263,6 +305,8 @@
 
         _initSavedValueHashes : function() {
 
+        	$.console.info("["+__namespace__+"] _initSavedValueHashes");
+        	
             $("select,input,textarea",this.options.theForm).each(function() {
                 var _val = (null == $(this).val())? '':$(this).val();
 
@@ -335,6 +379,9 @@
 
         //TODO: Este método está creciendo demasiado. Revisar para que no acabe demasiado inflado
         _initFormElements : function() {
+        	
+        	$.console.info("["+__namespace__+"] _initFormElements");
+        	
             var self = this;
             var _self = this.element;
 
@@ -712,9 +759,11 @@
         //TODO: Este método está creciendo demasiado. Revisar para que no acabe demasiado inflado
         _registerEvents : function() {
 
+        	$.console.info("["+__namespace__+"] _registerEvents");
+        	
             var self = this;
 
-            $container = this.element.klearModule("getPanel");
+            var $container = this.element.klearModule("getPanel");
 
 
             this.options.theForm.on('updateChangedState',function() {
@@ -773,8 +822,10 @@
                     }
                 }
             };
-            $(".visualFilter",$container).on('manualchange.visualFilter',function(e,manual) {
+            $(".visualFilter", $container).on('manualchange.visualFilter',function(e,manual) {
 
+            	
+            	
                 //Si es manual y es un campo oculto no hacemos los filtros
                 //porque este campo oculto puede tener a su vez otros filtros
                 //y mostrar campos que no debería
@@ -865,8 +916,11 @@
 
                 self.options.theForm.trigger("updateChangedState");
                 $(this).trigger("postmanualchange");
+                
             });
 
+            
+            
             $("select",this.options.theForm).on("change", function() {
                 $(this).trigger("manualchange");
             });
@@ -957,8 +1011,11 @@
         },
 
         _joinFields : function(label, fields) {
-            $container = this.element.klearModule("getPanel");
-            $elements = [];
+        	
+        	$.console.info("["+__namespace__+"] _joinFields");
+        	
+        	var $container = this.element.klearModule("getPanel");
+            var $elements = [];
             for (var idx in fields) {
                 var $field = $("label[rel="+fields[idx]+"]", $container)
                         .parents(".container:eq(0)");

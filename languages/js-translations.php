@@ -28,11 +28,11 @@ return array (
   27 => 'The files are being uploaded, if you leave now the upload will be cancelled.',
   28 => 'Upload File',
   29 => 'ERROR',
-  31 => 'Campo obligatorio',
+  31 => 'Required field',
   32 => 'There is unsaved content.',
   33 => 'Close the screen?',
   34 => 'Attention!',
   36 => 'Ignore changes and close',
-  37 => 'Campo auto-copiado',
+  37 => 'Auto-copied field',
   38 => 'There are not associated elements',
 );

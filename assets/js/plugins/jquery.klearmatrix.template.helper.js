@@ -71,13 +71,11 @@
 
             // Tengo prisa...
             if (column.disabledOptions) {
-
                 if (column.disabledOptions['valuesCondition']) {
                     if (column.disabledOptions['valuesCondition'] == 'null') {
                         column.disabledOptions['valuesCondition'] = null;
                     }
-
-                    if (_value == column.disabledOptions['valuesCondition']) {
+                    if (value == column.disabledOptions['valuesCondition']) {
                         return column.disabledOptions['label'];
                     }
                 }

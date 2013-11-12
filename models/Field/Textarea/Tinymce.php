@@ -31,7 +31,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
     protected function _loadTemplateClass()
     {
         $this->_template = new KlearMatrix_Model_Field_Textarea_Tinymce_Template($this->_config);
-        
+
     }
 
     protected function _configureDefaults()
@@ -50,10 +50,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
 
         // Location of TinyMCE script
         $this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.min.js';
-        
-        
         $this->_settings = array_merge($this->_settings, $this->_template->getSettings());
-        
     }
 
     protected function _setPlugin()

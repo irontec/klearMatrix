@@ -7,10 +7,10 @@ production:
 
 #### Register plugins ####
 
-  plugins: "simple"
+  plugins: "basic"
 
   pluginsAlias:
-    simple: "advlist autolink lists anchor link image charmap preview code fullscreen media"
+    basic: "lists link fullscreen"
 
 #### Basic conf ####
 
@@ -21,18 +21,12 @@ production:
   toolbar_items_size: 'small'
   image_advtab: true
 
-
-### Performance conf ####
-  # entity_encoding: raw
-  # verify_html: false
-  # cleanup: false
-
 #### Menu bars ####
 
-  menubar: "tools table format view insert edit"
+  menubar: false
 
 #### Toolbars ####
-  toolbar1: "styleselect | undo redo | bold italic | alignjustify aligncenter alignright | bullist numlist outdent indent | link image media fullscreen preview"
+  toolbar1: "styleselect | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link fullscreen"
 #### Style formats ####
 
   style_formats:

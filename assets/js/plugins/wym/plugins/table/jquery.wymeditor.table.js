@@ -16,7 +16,9 @@
  * @param wym The WYMeditor instance to which the TableEditor should attach.
  * @class
  */
+alert("Wym2");
 function TableEditor(options, wym) {
+
     options = jQuery.extend({
         sMergeRowButtonHtml: String() +
             '<li class="wym_tools_merge_row">' +
@@ -132,6 +134,7 @@ TableEditor.prototype.bindEvents = function () {
 
     // Handle tool button click
     jQuery(wym._box).find(tableEditor._options.sMergeRowButtonSelector).click(function () {
+        console.log("editor");
         var sel = rangy.getIframeSelection(wym._iframe);
         tableEditor.mergeRow(sel);
         return false;
@@ -622,7 +625,7 @@ TableEditor.prototype.keyDown = function (evt) {
     var wym = WYMeditor.INSTANCES[this.title],
         tableEditor = wym.tableEditor;
 
-    if (evt.keyCode === WYMeditor.KEY.TAB) {
+    if (evt.which === WYMeditor.KEY.TAB) {
         return tableEditor.selectNextCell(wym.selected());
     }
 

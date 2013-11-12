@@ -26,7 +26,6 @@ class KlearMatrix_Model_Field_Textarea_Wym extends KlearMatrix_Model_Field_Texta
         $this->_js = array(
             "/js/plugins/wym/" . $this->_scriptName,
             "/js/plugins/wym/plugins/hovertools/jquery.wymeditor.hovertools.js",
-            "/js/plugins/wym/plugins/resizable/jquery.wymeditor.resizable.js",
             "/js/plugins/wym/plugins/fullscreen/jquery.wymeditor.fullscreen.js",
             "/js/plugins/jquery.klearmatrix.wym.js",
             "/js/plugins/wym/plugins/kleargallery/jquery.wymeditor.kleargallery.js",

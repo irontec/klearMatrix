@@ -2,7 +2,7 @@
 
     if (!$.klear.checkDeps([
                 '$.fn.wymeditor',
-                'WYMeditor.editor.prototype.resizable',
+                //'WYMeditor.editor.prototype.resizable',
                 'WYMeditor.editor.prototype.hovertools',
                 'WYMeditor.editor.prototype.fullscreen'],
                 load

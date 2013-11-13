@@ -3969,8 +3969,6 @@ WYMeditor.editor.prototype.update = function () {
     var html, hasChange;
 
     html = this.xhtml();
-
-    console.log(html);
     hasChange = jQuery(this._element).val() != html;
 
     if (hasChange) {
@@ -4883,7 +4881,6 @@ WYMeditor.WymClassMozilla.prototype._html = function (html) {
 };
 
 WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
-//    alert("4865");
     if (!this.selected()) {
         return false;
     }
@@ -5194,7 +5191,6 @@ WYMeditor.WymClassExplorer.prototype.initIframe = function (iframe) {
     A real fix would be greatly appreciated.
 */
 WYMeditor.WymClassExplorer.prototype.fixBluescreenOfDeath = function () {
-//    alert("5178");
     var position = jQuery(this._doc).find('p').eq(0).position();
     if (position !== null &&
         typeof position !== 'undefined' &&
@@ -5206,7 +5202,6 @@ WYMeditor.WymClassExplorer.prototype.fixBluescreenOfDeath = function () {
 
 
 WYMeditor.WymClassExplorer.prototype._exec = function (cmd, param) {
-//    alert("createLink ie");
     if (param) {
         this._doc.execCommand(cmd, false, param);
     } else {
@@ -5447,7 +5442,6 @@ WYMeditor.WymClassOpera.prototype.initIframe = function (iframe) {
 };
 
 WYMeditor.WymClassOpera.prototype._exec = function(cmd, param) {
-//    alert("5431");
     if (param) {
         this._doc.execCommand(cmd, false, param);
     }
@@ -5559,7 +5553,6 @@ WYMeditor.WymClassSafari.prototype.initIframe = function (iframe) {
 };
 
 WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
-//    alert("5543");
     if (!this.selected()) {
         return false;
     }
@@ -5731,7 +5724,6 @@ WYMeditor.WymClassSafari.prototype.keyup = function (evt) {
     ////////////////////////////////////////////////////////////////////
 
 WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
-//    alert("5716");
     if (!this.selected()) {
         return false;
     }
@@ -5753,8 +5745,6 @@ WYMeditor.WymClassMozilla.prototype._exec = function (cmd, param) {
 };
 
 WYMeditor.WymClassExplorer.prototype._exec = function (cmd, param) {
-//    alert("5738");
-//    console.log("selected", this.selected());
     if (param) {
         this._doc.execCommand(cmd, false, param);
     } else {
@@ -5774,7 +5764,6 @@ WYMeditor.WymClassMozilla.prototype.enableDesignMode = function () {
 };
 
 WYMeditor.WymClassOpera.prototype._exec = function(cmd, param) {
-//    alert("5758");
     if (param) {
         this._doc.execCommand(cmd, false, param);
     }
@@ -5785,7 +5774,6 @@ WYMeditor.WymClassOpera.prototype._exec = function(cmd, param) {
 };
 
 WYMeditor.WymClassSafari.prototype._exec = function (cmd, param) {
-//    alert("5769");
     if (!this.selected()) {
         return false;
     }

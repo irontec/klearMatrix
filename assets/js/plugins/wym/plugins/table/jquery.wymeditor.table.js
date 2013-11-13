@@ -134,7 +134,6 @@ TableEditor.prototype.bindEvents = function () {
 
     // Handle tool button click
     jQuery(wym._box).find(tableEditor._options.sMergeRowButtonSelector).click(function () {
-        console.log("editor");
         var sel = rangy.getIframeSelection(wym._iframe);
         tableEditor.mergeRow(sel);
         return false;

@@ -16,7 +16,6 @@
                     );
 
             var options = this.options;
-
             var _self = this;
 
             var _contentChange = function(instance) {
@@ -45,7 +44,6 @@
             };
 
             $.extend(tinySettings, options);
-
             $el.tinymce(tinySettings);
         }
     });

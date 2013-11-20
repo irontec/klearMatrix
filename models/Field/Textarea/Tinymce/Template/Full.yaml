@@ -7,7 +7,7 @@ production:
 
 #### Register plugins ####
 
-  plugins: "full"
+  plugins: "full kleargallery estilos"
 
   pluginsAlias:
     full:
@@ -15,7 +15,7 @@ production:
       advlist autolink lists link image charmap print preview hr anchor pagebreak
       searchreplace wordcount visualblocks visualchars code fullscreen
       insertdatetime media nonbreaking save table contextmenu directionality
-      emoticons template paste textcolor moxiemanager"
+      emoticons template paste textcolor moxiemanager "
 
 #### Basic conf ####
 
@@ -31,7 +31,7 @@ production:
   #menubar: false
 
 #### Toolbars ####
-  toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+  toolbar1: "insertfile undo redo | styleselect estilos | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image kleargallery"
   toolbar2: "print preview media | forecolor backcolor emoticons"
 #### Style formats ####
 

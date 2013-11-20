@@ -7,7 +7,7 @@ production:
 
 #### Register plugins ####
 
-  plugins: "simple"
+  plugins: "simple kleargallery"
 
   pluginsAlias:
     simple: "advlist autolink lists anchor link image charmap preview code fullscreen media"
@@ -32,7 +32,7 @@ production:
   menubar: "tools table format view insert edit"
 
 #### Toolbars ####
-  toolbar1: "styleselect | undo redo | bold italic | alignjustify aligncenter alignright | bullist numlist outdent indent | link image media fullscreen preview"
+  toolbar1: "styleselect | undo redo | bold italic | alignjustify aligncenter alignright | bullist numlist outdent indent | link image kleargallery media fullscreen preview"
 #### Style formats ####
 
   style_formats:
@@ -83,6 +83,7 @@ production:
         - title: 'figure'
           block: 'figure'
           wrapper: true
+
 
 #### Templates
 

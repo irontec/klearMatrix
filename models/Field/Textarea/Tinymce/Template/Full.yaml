@@ -28,11 +28,11 @@ production:
 
 #### Menu bars ####
 
-  #menubar: false
+  menubar: "tools edit insert  format table view"
 
 #### Toolbars ####
-  toolbar1: "insertfile undo redo | styleselect estilos | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image kleargallery"
-  toolbar2: "print preview media | forecolor backcolor emoticons"
+  toolbar1: "insertfile undo redo | styleselect estilos | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
+  toolbar2: "media image kleargallery | link forecolor backcolor emoticons | print preview "
 #### Style formats ####
 
   style_formats:

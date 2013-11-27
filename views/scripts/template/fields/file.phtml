@@ -40,6 +40,23 @@
                  data-external="true"
             {{/if}}
             >{{if (option.icon)}}<span class="ui-silk inline ${option.icon}"></span>{{/if}}</a>
+
+            {{if (option.autoSaveWhenDone)}}
+                <input
+                    type="checkbox"
+                    rel="${_elemName}_autosave"
+                />
+
+                <input
+                    type="hidden"
+                    id="${_elemIden}_autosave"
+                    name="${_elemName}_autosave"
+                    value="1"
+                    class="checkboxn autosave"
+                />
+
+                ${$.translate("Auto-guardar al finalizar de subir.")}
+            {{/if}}
         {{/if}}
     {{/each}}
 </span>

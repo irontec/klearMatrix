@@ -554,6 +554,8 @@
             }
 
             if ($(".qq-uploader",this.options.theForm).length>0) {
+                var uploadsInProgress = 0;
+                var autoSaveTimeoutId = null;
                 $(".qq-uploader",this.options.theForm).each(function() {
 
                     var _hiddenField = $("#" + $(this).attr("rel"));
@@ -631,6 +633,7 @@
                              '</div>',
                             onComplete : function(id, fileName, result) {
 
+                                uploadsInProgress--;
                                 $(_self).klearModule("unsetUploadInProgress", id);
                                 buttonAcc.enable($(this._element));
                                 var $list = $(".qq-upload-list",$(this._element));
@@ -650,23 +653,48 @@
                                     .trigger("manualchange");
                                 $list.html('');
 
-                                var autoSaveWhenDoneSwitcher = $(this._element).parent().find("input[type=hidden].autosave");
-                                if (autoSaveWhenDoneSwitcher.val() == 1 && $(_self).klearModule("getUploadInProgressNumber") == 0) {
-                                    $($(_self).klearModule('getPanel'))
-                                        .find("div.generalOptionsToolbar a.action:eq(0)")
-                                        .trigger("click");
+                                var autoSaveWhenDoneSwitcher = $(this._element).parent().find("input[type=checkbox]");
+                                if (autoSaveWhenDoneSwitcher.prop("checked")) {
+                                    this._options.autoSave.apply(this, [_self]);
+                                }
+                            },
+                            autoSaveTimeout: null,
+                            autoSave: function (context) {
+
+                                if (autoSaveTimeoutId && uploadsInProgress == 0) {
+                                    var currentTabForm = $($(context).klearModule("getPanel")).find("form");
+                                    currentTabForm.submit();
+                                    autoSaveTimeoutId = null;
+                                } else if (autoSaveTimeoutId == this._options.autoSaveTimeout) {
+                                    var self = this;
+                                    autoSaveTimeoutId = setTimeout(function () {  self._options.autoSave.apply(self, [context]); }, 1000);
+                                    this._options.autoSaveTimeout = autoSaveTimeoutId;
                                 }
                             },
                             onSubmit: function (id, fileName) {
+                                uploadsInProgress++;
                                 buttonAcc.disable($(this._element));
                                 $(_self).klearModule("setUploadInProgress", id);
                                 return true;
                             },
-                            onCancel: function(id, fileName){
+                            onCancel: function(id, fileName) {
+                                if (uploadsInProgress > 0) {
+                                    uploadsInProgress--;
+                                }
+
                                 buttonAcc.enable($(this._element));
                                 $(_self).klearModule("unsetUploadInProgress", id);
                             },
                             onError: function(id, fileName, reason) {
+
+                                if (uploadsInProgress > 0) {
+                                    uploadsInProgress--;
+                                }
+
+                                if (autoSaveTimeoutId) {
+                                    clearTimeout(autoSaveTimeoutId);
+                                }
+
                                 buttonAcc.enable($(this._element));
                                 $(_self).klearModule("unsetUploadInProgress", id);
                             },

@@ -664,7 +664,7 @@
                                 if (autoSaveTimeoutId && uploadsInProgress == 0) {
                                     var currentTabForm = $($(context).klearModule("getPanel")).find("form");
                                     currentTabForm.submit();
-                                    autoSaveTimeoutId = null;
+                                    this._options.autoSaveTimeout = autoSaveTimeoutId = null;
                                 } else if (autoSaveTimeoutId == this._options.autoSaveTimeout) {
                                     var self = this;
                                     autoSaveTimeoutId = setTimeout(function () {  self._options.autoSave.apply(self, [context]); }, 1000);

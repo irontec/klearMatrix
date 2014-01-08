@@ -1,0 +1,120 @@
+#http://www.tinymce.com/wiki.php/Configuration
+production: 
+
+#### Theme ####
+
+  theme: modern
+  
+#### Register plugins ####
+
+  plugins: |
+    "advlist autolink lists link image charmap print preview hr anchor pagebreak"
+    "wordcount visualblocks visualchars code fullscreen searchreplace"
+    "insertdatetime media nonbreaking save table contextmenu "
+    "emoticons template paste textcolor moxiemanager"
+  
+#### Basic conf ####
+
+  end_container_on_empty_block: true
+  force_p_newlines: true
+  resize: true
+  visualblocks_default_state: false
+  toolbar_items_size: 'small'
+  image_advtab: true
+
+#### Menu bars ####
+
+  menubar: false
+#  menubar: "tools table format view insert edit"
+
+#### Toolbars ####
+  
+  toolbar1: "bold italic | link unlink"
+   
+#### Style formats ####
+
+#  style_formats:
+#    - title: 'Headers' 
+#      items:
+#        - title: 'h1'
+#          block: 'h1'
+#        - title: 'h2'
+#          block: 'h2'
+#        - title: 'h2'
+#          block: 'h2'
+#        - title: 'h3'
+#          block: 'h3'
+#        - title: 'h4'
+#          block: 'h4'
+#        - title: 'h5'
+#          block: 'h5'
+#        - title: 'h6'
+#          block: 'h6'
+#    - title: 'Blocks'
+#      items:
+#        - title: 'p'
+#          block: 'p'
+#        - title: 'div'
+#          block: 'div'
+#        - title: 'pre'
+#          block: 'pre'
+#
+#    - title: 'Containers'
+#      items:
+#        - title: 'section'
+#          block: 'section'
+#          wrapper: true
+#          merge_siblings: false
+#        - title: 'article'
+#          block: 'article'
+#          wrapper: true
+#          merge_siblings: false
+#        - title: 'blockquote'
+#          block: 'blockquote'
+#          wrapper: true
+#        - title: 'hgroup'
+#          block: 'hgroup'
+#          wrapper: true
+#        - title: 'aside'
+#          block: 'aside'
+#          wrapper: true
+#        - title: 'figure'
+#          block: 'figure'
+#          wrapper: true
+
+#### Templates
+ 
+  templates:
+    - title: 'Some title 1'
+      description: 'Some desc 1'
+      content: '<p>{name}</p><p>asdgasdg</p><div><h2>asdg</h2><p><a href="http://google.com">asdg</a><p></div>' 
+
+#### Métodos para modificar templates.
+
+#
+#        removeButtons:
+#          - italic
+#        addButtons:
+#          method: prepend
+#          order: 0
+#          buttons:
+#            - media
+#            - "|"
+#            - print
+#        addBar:
+#          order: 1
+#          buttons:
+#            - media
+#            - del
+#            - ins
+#            - "|"
+#            - attribs
+#            - visualchars
+#            - nonbreaking  
+
+testing: 
+  _extends: production
+staging: 
+  _extends: production  
+development: 
+  _extends: production

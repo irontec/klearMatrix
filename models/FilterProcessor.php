@@ -14,6 +14,9 @@ class KlearMatrix_Model_FilterProcessor
     protected $_isPresetted = false;
     protected $_presettedFilters = array();
     
+    protected $_presettedApplied = false;
+    
+    
     public function setRequest(Zend_Controller_Request_Abstract $request)
     {
         $this->_request = $request;
@@ -90,6 +93,14 @@ class KlearMatrix_Model_FilterProcessor
         $this->_data->toggleApplySearchFilters($value);
     }
 
+    protected function _setAsPresettedToData()
+    {
+        if (false === $this->_data) {
+            return;
+        }
+    
+        $this->_data->setAsSearchPresetted();
+    }
 
     protected function _generate()
     {
@@ -128,6 +139,9 @@ class KlearMatrix_Model_FilterProcessor
             } else {
                 $this->_where = array('(' . implode(" and ", $expressions) . ')', $values);
             }
+        }
+        if ($this->_presettedApplied) {
+            $this->_setAsPresettedToData();
         }
 
         return true;
@@ -221,6 +235,7 @@ class KlearMatrix_Model_FilterProcessor
          */
         if (is_null($searchFields) && $this->_isPresetted) {
             
+            $this->_presettedApplied = true;
             foreach($this->_presettedFilters as $searchPreSetted) {
                 $field = $searchPreSetted->field;
                 $value = $searchPreSetted->value;

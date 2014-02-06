@@ -412,7 +412,7 @@ form.klearMatrix_form.autoclose-dialog {
     padding: .5em;
     margin: -.5em .3em 0 .3em;
 }
-.klearMatrixFiltering .filteredFields .field .ui-silk {
+.klearMatrixFiltering .filteredFields .field .ui-silk.removable {
     cursor:pointer;
 }
 

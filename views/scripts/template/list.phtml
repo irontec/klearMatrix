@@ -88,7 +88,11 @@ data-title="${info.text}"
 
             {{each(_valIdx,_val) searchValues}}
                 <span class="ui-widget-content ui-corner-all content" data-value="${_val}" data-op="${searchOps[field][_valIdx]}">
-                    <span data-idx="${_valIdx}" class="ui-silk inline ui-silk-cancel"></span>
+                {{if (searchPresetted)}}
+                    <span class="ui-silk inline ui-silk-lock-go"></span>
+                {{else}}
+                    <span data-idx="${_valIdx}" class="ui-silk inline ui-silk-cancel removable"></span>
+                {{/if}}
                     {{if (searchOps[field][_valIdx] == 'lt')}}
                         <strong>&lt;</strong>
                     {{/if}}
@@ -97,6 +101,7 @@ data-title="${info.text}"
                     {{/if}}
 
                     {{html $item.getValuesFromSelectColumn($item.getColumn(columns,field),_val)}}
+                
                 </span>
             {{/each}}
         </span>

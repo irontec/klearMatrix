@@ -30,11 +30,12 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
 
         $whereProccessor = new KlearMatrix_Model_FilterProcessor;
         $whereProccessor
-        ->setLogger($logger)
-        ->setModel($model)
-        ->setResponseData($responseData)
-        ->setRequest($request)
-        ->setColumnCollection($columns);
+            ->setLogger($logger)
+            ->setModel($model)
+            ->setResponseData($responseData)
+            ->setResponseItem($responseItem)
+            ->setRequest($request)
+            ->setColumnCollection($columns);
 
         if ($whereProccessor->isFilteredRequest()) {
             $where[] = $whereProccessor->getCondition();

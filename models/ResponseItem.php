@@ -64,6 +64,13 @@ class KlearMatrix_Model_ResponseItem
      */
     protected $_preconfiguredFilters = array();
 
+    
+    /*
+     * Filtros presetteados para pantallas ListController
+    */
+    protected $_presettedFilters = array();
+    
+    
     /*
      * Definir subarrays si el tag depende de subfijos en los nombres de campo,
      * en caso contrario indicar el tag como string
@@ -113,6 +120,7 @@ class KlearMatrix_Model_ResponseItem
         '_disableAddAnother' => array('disableAddAnother', false),
         '_useExplain' => array('useExplain', false),
         '_preconfiguredFilters' => array('preconfiguredFilters', false),
+        '_presettedFilters' => array('presettedFilters', false),
         '_fixedPositions' => array('fixedPositions', false),
     );
 
@@ -307,6 +315,11 @@ class KlearMatrix_Model_ResponseItem
     public function getPreconfiguredFilters()
     {
         return $this->_preconfiguredFilters;
+    }
+    
+    public function getPresettedFilters()
+    {
+        return $this->_presettedFilters;
     }
 
     public function getConfigAttribute($attribute)

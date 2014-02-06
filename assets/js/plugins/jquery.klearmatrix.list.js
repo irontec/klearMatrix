@@ -83,7 +83,7 @@
 
             $("td:not(:last-child)", tr).on('mouseenter mouseleave',function() {
 
-                $("td:not(:last-child)", $(this).parent('tr')).toggleClass("ui-state-highlight");
+                $("td:not(.options)", $(this).parent('tr')).toggleClass("ui-state-highlight");
 
                 if ($("a.option.default", $(this).parent('tr')).length>0) {
                     $(this).parent('tr').toggleClass("pointer");

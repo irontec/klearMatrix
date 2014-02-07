@@ -319,7 +319,34 @@ class KlearMatrix_Model_ResponseItem
     
     public function getPresettedFilters()
     {
-        return $this->_presettedFilters;
+        if (!$this->_presettedFilters instanceof \Zend_Config) {
+            return null;
+        }
+        
+        $presettedFilters = new \Zend_Config(array(), true);
+        
+        
+        foreach($this->_presettedFilters as $key => $presettedFilter) {
+            
+            $keys = array_keys($presettedFilter->toArray());
+            
+            if (in_array('active', $keys)) {
+                $isActive = (bool)$presettedFilter->active;
+                if (false === $isActive) {
+                    continue;
+                }
+            }
+            
+            $presettedFilters->$key = $presettedFilter;
+            
+        }
+        
+        
+        if (sizeof($presettedFilters) == 0) {
+            $presettedFilters = NULL;
+        }
+        
+        return $presettedFilters;
     }
 
     public function getConfigAttribute($attribute)

@@ -81,7 +81,7 @@
 
             var tr = $('table.kMatrix tr', panel);
 
-            $("td:not(:last-child)", tr).on('mouseenter mouseleave',function() {
+            $("td:not(.options)", tr).on('mouseenter mouseleave',function() {
 
                 $("td:not(.options)", $(this).parent('tr')).toggleClass("ui-state-highlight");
 

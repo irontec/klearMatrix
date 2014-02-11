@@ -11,7 +11,7 @@ production:
     "advlist autolink lists link image charmap print preview hr anchor pagebreak"
     "wordcount visualblocks visualchars code fullscreen searchreplace"
     "insertdatetime media nonbreaking save table contextmenu "
-    "emoticons template paste textcolor moxiemanager"
+    "emoticons template pasteword textcolor moxiemanager wordcount"
   
 #### Basic conf ####
 
@@ -21,7 +21,24 @@ production:
   visualblocks_default_state: false
   toolbar_items_size: 'small'
   image_advtab: true
-
+  
+  paste_auto_cleanup_on_paste : true
+  paste_create_paragraphs: false
+  paste_create_linebreaks: false
+  paste_remove_spans: true
+  paste_remove_styles: true
+  paste_remove_styles_if_webkit: true
+  paste_retain_style_properties: none
+  paste_strip_class_attributes: all
+  paste_text_sticky: true
+  paste_text_sticky_default: true
+  convert_urls: false
+  valid_elements : em/i,strong/b,ol,ul,li,br,p
+  force_br_newlines: false
+  force_p_newlines: false
+  forced_root_block: false
+  invalid_elements: font
+  
 #### Menu bars ####
 
   menubar: false
@@ -29,7 +46,7 @@ production:
 
 #### Toolbars ####
   
-  toolbar1: "bold italic underline | bullist numlist | styleselect | undo redo | link unlink code | fullscreen | visualblocks | cut copy paste | searchreplace"
+  toolbar1: "bold italic underline | bullist numlist | styleselect | undo redo | link unlink code | fullscreen | visualblocks | searchreplace | wordcount"
    
 #### Style formats ####
 
@@ -84,10 +101,10 @@ production:
 
 #### Templates
  
-  templates:
-    - title: 'Some title 1'
-      description: 'Some desc 1'
-      content: '<p>{name}</p><p>asdgasdg</p><div><h2>asdg</h2><p><a href="http://google.com">asdg</a><p></div>' 
+#  templates:
+#    - title: 'Some title 1'
+#      description: 'Some desc 1'
+#      content: '<p>{name}</p><p>asdgasdg</p><div><h2>asdg</h2><p><a href="http://google.com">asdg</a><p></div>' 
 
 #### Métodos para modificar templates.
 

@@ -37,7 +37,7 @@ data-title="${info.text}"
         <legend class="ui-widget-header ui-corner-all">${$item.getTitle($item.data.title,false)}</legend>
 
         {{each(colIdx,column) columns}}
-        <div class="container ui-widget-content ui-corner-all">
+        <div class="container ui-widget-content ui-corner-all {{if (column.properties && column.properties.expandable == true)}} expandable{{/if}}">
          {{if column.fieldInfo}}
                 <span
                     class="

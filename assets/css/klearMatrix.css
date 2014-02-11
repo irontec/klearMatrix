@@ -112,6 +112,18 @@ dl.multiLanguage {
     width: 100%;
 }
 
+dl.multiLanguage div.buttonWrapper {
+    float:right;
+    margin-right: 3.5em; 
+}
+
+dl.multiLanguage div.buttonWrapper label {
+    float: left;
+}
+dl.multiLanguage div.textAreaBox {
+    clear: both;
+}
+
 dl.multiLanguage dt {
     margin:0.5em 0.25em;
     width:12%;

@@ -750,6 +750,7 @@
 
             $("div.expandable", this.options.theForm).each(function() {
                 $(this).hide();
+                var speed = 150;
                 var expand = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-s"></span></button>';
                 var contract = '<button class="ui-state-default ui-corner-all right pointer"><span class="ui-icon ui-icon-circle-triangle-n"></span></button>';
 
@@ -761,14 +762,14 @@
                     .append(expand)
                     .after('<br />')
                     .on('click',function(){
-                        $(this).parent('div').slideToggle('slow',function(){
-                            $(this).prev('div.expandable').slideToggle('slow');
+                        $(this).parent('div').slideToggle(speed,function(){
+                            $(this).prev('div.expandable').slideToggle(speed);
                     });
                 });
 
                 $('label:first',$(this)).append(contract).after('<br />').on('click',function(){
-                    $(this).parent('div').slideToggle('slow',function(){
-                        $(this).next('div').slideToggle('slow');
+                    $(this).parent('div').slideToggle(speed,function(){
+                        $(this).next('div').slideToggle(speed);
                     });
                 });
 
@@ -788,6 +789,44 @@
                 }
             }
 
+            // Zona de control para campos textarea
+            // con el atributo CollapseLanguageBoxes
+            $("textarea[data-multilang]",this.options.theForm).each(function(obj){
+                if (!$(this).data('setting-collapse-language-boxes')) {
+                    return;
+                }
+                var id = $(this).attr('id') + 'Box';
+                var $parentDd = $(this).parent('dd').addClass(id);
+                var $label = $parentDd.prev('dt').addClass(id);
+                var $parentDl = $parentDd.parent('dl');
+
+                if ($parentDl.find('.buttonWrapper').length == 0) {
+                    var buttonId = Math.random().toString(36).substr(2);
+                    var $buttonWrapper = $("<div />")
+                        .addClass('buttonWrapper')
+                        .attr('id',buttonId);
+                    $buttonWrapper.prependTo($parentDl);
+                } else {
+                    var $buttonWrapper = $parentDl.find('.buttonWrapper');
+                    var buttonId = $buttonWrapper.attr('id');
+                }
+
+                $buttonWrapper.buttonset();
+                var input = $('<input/>')
+                    .attr('type', 'radio')
+                    .attr('id', id)
+                    .attr('name', buttonId);
+                if ($parentDd.hasClass("selected") === false) {
+                    $parentDd.hide();
+                    $label.hide();
+                } else {
+                    input.attr('checked','checked');
+                }
+                $buttonWrapper
+                    .append(input.after($('<label for="'+id+'" />').html($label.text())))
+                    .buttonset("refresh");
+
+            });
             return this;
         },
 
@@ -1040,6 +1079,14 @@
                 $autoCloseCheckbox.trigger('forceValue', savedVal);
             }
 
+            // Bindear el click de los botones para textarea de ML
+            $('.multiLanguage .buttonWrapper label', this.options.theForm).on('click', function(){
+                var $parentWrapper = $(this).parent('div').parent('dl');
+                var idMatch = $(this).attr('for');
+                $('dd:visible,dt:visible',$parentWrapper).fadeOut('fast', function(){
+                    $('dd.' + idMatch+',dt.'+idMatch, $parentWrapper).fadeIn('fast');
+                });
+            });
 
             return this;
 

@@ -580,7 +580,8 @@ span.autocompleteCounter {
 	margin-left: .5em;
 }
 
-.deleteable-item {
+.deleteable-item,
+.clonable-item {
 	font-size:0.7em;
 	opacity:0.8;
 	margin-top: 0.8em;

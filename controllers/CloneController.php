@@ -32,7 +32,7 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        
+
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
         $pk = $this->_mainRouter->getParam("pk");
@@ -55,21 +55,21 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         if ($this->_item->getDescription()) {
             $message = $this->_item->getDescription();
         } else {
-            $message = $this->view->translate('Seguro que quieres clonar esta entrada?');
+            $message = $this->view->translate('Do you want to clone this item?');
         }
         $message .= '<p class="clonable-item">'
-            . $this->view->translate('Título:')
+            . $this->view->translate('Title:')
             . '<strong>'.$name.'</strong> <em>(#'.$pk.')</em></p>';
 
         $data = array(
             'message' => $message,
-            'title' => $this->view->translate($this->_item->getTitle()),
+            'title' => $this->_item->getTitle(),
             'buttons' => array(
-                'Clonar' => array(
+                $this->view->translate('Clone') => array(
                     'recall' => true,
                     'params' => array('activate'=>true)
                 ),
-                'Cancelar' => array(
+                $this->view->translate('Cancelar') => array(
                     'recall' => false,
                 )
             )
@@ -115,11 +115,17 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
         $this->_helper->log('Model succesfully cloned for ' . $mapperName . ' > PK('.$pk.')');
 
+        if ($this->_item->getMessage()) {
+            $message = $this->_item->getMessage();
+        } else {
+            $message = $this->view->translate('Record successfully cloned');
+        }
+
         $data = array(
-                'message' => $this->view->translate('Record successfully cloned'),
+                'message' => $message,
                 'title' => $this->_item->getTitle(),
                 'buttons' =>  array(
-                    'Cerrar' => array(
+                    $this->view->translate('Close') => array(
                         'recall' => false,
                         'reloadParent' => true
                     )
@@ -133,5 +139,4 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }
-
 }

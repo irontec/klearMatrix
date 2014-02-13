@@ -8,10 +8,10 @@ production:
 #### Register plugins ####
 
   plugins: |
-    "advlist autolink lists link image charmap print preview hr anchor pagebreak"
-    "wordcount visualblocks visualchars code fullscreen searchreplace"
-    "insertdatetime media nonbreaking save table contextmenu "
-    "emoticons template pasteword textcolor moxiemanager wordcount"
+    advlist wordcount autolink lists link image charmap print preview hr anchor pagebreak
+    visualblocks visualchars code fullscreen searchreplace
+    insertdatetime media nonbreaking save table contextmenu
+    emoticons template pasteword textcolor moxiemanager
   
 #### Basic conf ####
 
@@ -21,6 +21,7 @@ production:
   visualblocks_default_state: false
   toolbar_items_size: 'small'
   image_advtab: true
+  wordcount: true
   
   paste_auto_cleanup_on_paste : true
   paste_create_paragraphs: false
@@ -38,6 +39,7 @@ production:
   force_p_newlines: false
   forced_root_block: false
   invalid_elements: font
+  
   
 #### Menu bars ####
 

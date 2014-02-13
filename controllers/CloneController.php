@@ -101,6 +101,21 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                 throw new Klear_Exception_Default($this->view->translate('Record not found. Could not clone.'));
             }
             $newObj = clone $obj;
+
+            // If object has related Files, they are cloned too
+            if ($files = $obj->getFileObjects()) {
+                foreach ($files as $columnName) {
+                    $fetcher = "fetch" . ucfirst($columnName);
+                    $putter = "put" . ucfirst($columnName);
+                    $tmpName = tempnam("/tmp", "CLONED");
+                    copy($obj->{$fetcher}()->getFilePath(), $tmpName);
+                    $newObj->{$putter}(
+                        $tmpName,
+                        $obj->{$fetcher}()->getBaseName()
+                    );
+                    unset($tmpName);
+                }
+            }
             $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
             if (!$newObj->save()) {
                 throw new Exception('Unknown error');

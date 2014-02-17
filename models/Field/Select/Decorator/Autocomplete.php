@@ -93,10 +93,24 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         if (isset($this->_commandConfiguration->order)) {
             $order = $this->_commandConfiguration->order;
+            if (strpos($order, ',')) {
+                $order = explode(',', $order);
+            }
         }
 
         $condition = '';
-        if (isset($this->_commandConfiguration->condition)) {
+        if (isset($this->_commandConfiguration->filterClass)) {
+            if (isset($this->_commandConfiguration->condition)) {
+                throw new Exception('Defined condition is not going to work because filterClass is set.', 100);
+            }
+            $filterClassName = $this->_commandConfiguration->filterClass;
+            $filter = new $filterClassName;
+            if ( !$filter instanceof KlearMatrix_Model_Field_Select_Filter_Interface ) {
+                throw new Exception('Filters must implement KlearMatrix_Model_Field_Select_Filter_Interface.');
+            }
+            $filter->setRouteDispatcher($this->_request->getParam("mainRouter"));
+            $condition = $filter->getCondition() . ' AND ';
+        } elseif (isset($this->_commandConfiguration->condition)) {
             $condition = '(' . $this->_commandConfiguration->condition . ') and ';
         }
 

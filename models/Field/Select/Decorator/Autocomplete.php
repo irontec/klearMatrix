@@ -45,7 +45,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         } else {
             $this->_run();
         }
-        
+
         $options = array();
         foreach ($this->_results as $record) {
             $replace = array();
@@ -53,10 +53,10 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                 $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));
                 $replace['%' . $fieldName . '%'] = $record->$getter();
             }
-            
+
             $templatedValue = str_replace(array_keys($replace), $replace, $this->_fieldsTemplate);
-            
-            $options[$record->getPrimaryKey()] = array(
+
+            $options["'".$record->getPrimaryKey()."'"] = array(
                 'id' => $record->getPrimaryKey(),
                 'value' => strip_tags($templatedValue),
                 'label' => $templatedValue,
@@ -122,28 +122,28 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         $this->_totalItems = $this->_mapper->countByQuery($where);
     }
-    
+
     protected function _getFields()
     {
         $fieldName = $this->_commandConfiguration->fieldName;
-    
+
         if (!is_object($fieldName)) {
             return isset($fieldName) ? array($fieldName) : array($this->_labelField);
         }
-    
+
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
         return $fieldConfig->getProperty("fields");
     }
-    
+
     protected function _getFieldsTemplate()
     {
         $fieldName = $this->_commandConfiguration->fieldName;
-    
+
         if (!is_object($fieldName)) {
             return isset($fieldName) ? '%' . $fieldName .'%' : '%' . $this->_labelField . '%';
         }
-    
+
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
         return $fieldConfig->getProperty("template");

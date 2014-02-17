@@ -568,7 +568,7 @@
                     $.each(nodes[idx], function () {
 
                         var currentNode = $(this);
-                        var currentNodeData = data.results[currentNode.attr("data-value")];
+                        var currentNodeData = data.results["'"+currentNode.attr("data-value")+"'"];
                         if (!currentNodeData) {
                             return;
                         }

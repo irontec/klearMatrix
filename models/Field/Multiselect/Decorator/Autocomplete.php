@@ -47,7 +47,7 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
 
         $options = array();
         foreach ($this->_results as $key => $tupla) {
-            $options[$key] = array();
+            $options["'".$key."'"] = array();
             if (!is_array($tupla)) {
                 $tupla = array($tupla);
             }
@@ -58,10 +58,10 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
                     $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));
                     $replace['%' . $fieldName . '%'] = $record->$getter();
                 }
-                
+
                 $templatedValue = str_replace(array_keys($replace), $replace, $this->_fieldsTemplate);
-                
-                $options[$key][] = array(
+
+                $options["'".$key."'"][] = array(
                     'id' => $record->getPrimaryKey(),
                     'value' => strip_tags($templatedValue),
                     'label' => $templatedValue
@@ -112,6 +112,9 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
 
         if (isset($this->_commandConfiguration->order)) {
             $order = $this->_commandConfiguration->order;
+            if (strpos($order, ',')) {
+                $order = explode(',', $order);
+            }
         }
 
         $preCondition = '';
@@ -162,28 +165,28 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
 
         $this->_totalItems = $this->_mapper->countByQuery($where);
     }
-    
+
     protected function _getFields()
     {
         $fieldName = $this->_commandConfiguration->fieldName;
-    
+
         if (!is_object($fieldName)) {
             return isset($fieldName) ? array($fieldName) : array($this->_labelField);
         }
-    
+
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
         return $fieldConfig->getProperty("fields");
     }
-    
+
     protected function _getFieldsTemplate()
     {
         $fieldName = $this->_commandConfiguration->fieldName;
-    
+
         if (!is_object($fieldName)) {
             return isset($fieldName) ? '%' . $fieldName .'%' : '%' . $this->_labelField . '%';
         }
-    
+
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
         return $fieldConfig->getProperty("template");

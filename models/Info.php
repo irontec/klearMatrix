@@ -4,7 +4,7 @@ class KlearMatrix_Model_Info
 
     protected $_config;
     protected $_fieldInfo = array(
-        'type' => 'tooltip',
+        'type' => 'box',
         'position' => 'left',
         'icon' => 'help',
         'text' => '',
@@ -16,7 +16,7 @@ class KlearMatrix_Model_Info
 
 
     /**
-     * Debemnos "engañar" a matrixResponse::toArray
+     * Debemos "engañar" a matrixResponse::toArray
      */
     public function count()
     {

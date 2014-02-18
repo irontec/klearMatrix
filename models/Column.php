@@ -463,6 +463,10 @@ class KlearMatrix_Model_Column
             if ($searchCondition) {
                 return $searchCondition;
             }
+            // Se devuelve un WHERE para que no machee nada, ya que si no se devuelve la condición
+            // generada desde 'getCustomSearchCondition' es que no hay resultados
+            // INFO: Lo que se returnea aquí se mete directamente en "WHERE (?)"
+            return "1 <> 1";
         }
 
         $searchFields = $this->_getSearchFields($langs);

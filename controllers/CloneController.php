@@ -69,7 +69,7 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                     'recall' => true,
                     'params' => array('activate'=>true)
                 ),
-                $this->view->translate('Cancelar') => array(
+                $this->view->translate('Cancel') => array(
                     'recall' => false,
                 )
             )

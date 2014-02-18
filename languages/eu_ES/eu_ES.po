@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-12 19:07+0100\n"
-"PO-Revision-Date: 2013-09-12 19:10+0100\n"
-"Last-Translator: Lander Ontoria <lander@irontec.com>\n"
+"POT-Creation-Date: 2014-02-18 11:53+0100\n"
+"PO-Revision-Date: 2014-02-18 11:53+0100\n"
+"Last-Translator: Lander Ontoria Gardeazabal <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: en_ES\n"
 "MIME-Version: 1.0\n"
@@ -17,9 +17,10 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: controllers/FileController.php:204 assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.delete.js:86
-#: assets/js/plugins/jquery.klearmatrix.edit.js:726
+#: controllers/FileController.php:204 controllers/CloneController.php:72
+#: assets/js/klearMatrix.compiled.js:309
+#: assets/js/plugins/jquery.klearmatrix.delete.js:85
+#: assets/js/plugins/jquery.klearmatrix.edit.js:856
 msgid "Cancel"
 msgstr "Utzi"
 
@@ -34,59 +35,94 @@ msgstr "Errorea jaitsiera prestatzen.<br />(%s)"
 
 #: controllers/DeleteController.php:57 controllers/DeleteController.php:91
 msgid "Record not found. Could not delete."
-msgstr "_eu_Record not found. Could not delete."
+msgstr "Ez da sarrerarik aurkitu. Ezin da ezabatu."
 
 #: controllers/DeleteController.php:103
 msgid "Could not delete record: "
-msgstr "_eu_Could not delete record: "
+msgstr "Ezin da sarrera ezabatu:"
 
 #: controllers/DeleteController.php:118
 msgid "Record successfully deleted"
-msgstr ""
+msgstr "Sarrera ezabatu da"
 
-#: controllers/NewController.php:99 controllers/EditController.php:79
+#: controllers/NewController.php:86 controllers/EditController.php:79
 msgid "Record successfully saved."
-msgstr ""
+msgstr "Sarrera gorde da."
 
 #: controllers/EditController.php:57
-#, fuzzy
 msgid "Record not found."
-msgstr "_eu_Record not found. Could not delete."
+msgstr "Ez da sarrerarik aurkitu."
 
 #: controllers/EditController.php:114
-#, fuzzy
 msgid "Error saving record"
-msgstr "Error salvando el registro"
+msgstr "Sarrera gordetzen errorea gertatu da"
 
 #: controllers/EditController.php:131
 msgid "Element not found. Cannot edit."
-msgstr "_eu_Element not found. Cannot edit."
+msgstr "Ez da sarrerarik aurkitu. Ezin da editatu."
 
 #: controllers/DashboardController.php:48
 msgid "(Aproximated values)"
 msgstr "(Gutxi gorabeherako balioak)"
 
-#: models/Field/Html5/Url.php:17
+#: controllers/CloneController.php:43 controllers/CloneController.php:101
+msgid "Record not found. Could not clone."
+msgstr "Ez da sarrerarik aurkitu. Ezin da bikoiztu."
+
+#: controllers/CloneController.php:58
+msgid "Do you want to clone this item?"
+msgstr "Erregistro hau bikoiztu?"
+
+#: controllers/CloneController.php:61
+msgid "Title:"
+msgstr "Tituloa:"
+
+#: controllers/CloneController.php:68
+msgid "Clone"
+msgstr "Bikoiztu"
+
+#: controllers/CloneController.php:128
+msgid "Could not clone record: "
+msgstr "Sarrera ezin da bikoiztu:"
+
+#: controllers/CloneController.php:136
+msgid "Record successfully cloned"
+msgstr "Sarrera bikoiztu da"
+
+#: controllers/CloneController.php:143 views/scripts/template/new.phtml:19
+#: views/scripts/template/new.phtml:84 views/scripts/template/edit.phtml:20
+#: views/scripts/template/edit.phtml:105 assets/js/klearMatrix.compiled.js:241
+#: assets/js/klearMatrix.compiled.js:288 assets/js/klearMatrix.compiled.js:322
+#: assets/js/plugins/jquery.klearmatrix.module.js:630
+#: assets/js/plugins/jquery.klearmatrix.delete.js:62
+#: assets/js/plugins/jquery.klearmatrix.new.js:122
+#: assets/js/plugins/jquery.klearmatrix.edit.js:277
+msgid "Close"
+msgstr "Itxi"
+
+#: models/Field/Html5/Url.php:20
 msgid "Field is not a valid URL."
-msgstr ""
+msgstr "Eremua ez da URL egokia"
 
 #: models/Field/Html5/Email.php:38
 msgid "Email not valid."
-msgstr ""
+msgstr "Emaila ez da egokia."
 
-#: models/Field/Select/Decorator/Autocomplete.php:69
+#: models/Field/Multiselect/Decorator/Autocomplete.php:72
+#: models/Field/Select/Decorator/Autocomplete.php:66
 #, php-format
 msgid "%d items found"
-msgstr ""
+msgstr "%d sarrera aurkitu dira"
 
-#: models/Field/Select/Decorator/Autocomplete.php:73
+#: models/Field/Multiselect/Decorator/Autocomplete.php:76
+#: models/Field/Select/Decorator/Autocomplete.php:70
 #, php-format
 msgid "(showing %d)"
-msgstr ""
+msgstr "(%d erakusten)"
 
 #: views/scripts/template/list.phtml:19
 msgid "Search shortcuts"
-msgstr ""
+msgstr "Bilaketa konbinazioak"
 
 #: views/scripts/template/list.phtml:24
 msgid "Filter fields"
@@ -104,32 +140,21 @@ msgstr "Iragazki guztiak gehitu"
 msgid "Add all filters"
 msgstr "Iragazki guztiak gehitu"
 
-#: views/scripts/template/list.phtml:123 views/scripts/template/list.phtml:267
+#: views/scripts/template/list.phtml:128 views/scripts/template/list.phtml:272
 msgid "Export to CSV"
 msgstr "CSV moduan jaitsi"
 
-#: views/scripts/template/list.phtml:143
+#: views/scripts/template/list.phtml:148
 msgid "Total: "
 msgstr "Guztira: "
 
-#: views/scripts/template/list.phtml:143
+#: views/scripts/template/list.phtml:148
 msgid "Records"
-msgstr ""
+msgstr "Sarrerak"
 
-#: views/scripts/template/list.phtml:145
+#: views/scripts/template/list.phtml:150
 msgid "Records per page:"
-msgstr ""
-
-#: views/scripts/template/new.phtml:19 views/scripts/template/new.phtml:84
-#: views/scripts/template/edit.phtml:20 views/scripts/template/edit.phtml:105
-#: assets/js/klearMatrix.compiled.js:241 assets/js/klearMatrix.compiled.js:285
-#: assets/js/klearMatrix.compiled.js:315
-#: assets/js/plugins/jquery.klearmatrix.module.js:630
-#: assets/js/plugins/jquery.klearmatrix.delete.js:63
-#: assets/js/plugins/jquery.klearmatrix.new.js:107
-#: assets/js/plugins/jquery.klearmatrix.edit.js:227
-msgid "Close"
-msgstr "Itxi"
+msgstr "Sarrera horrialdeko"
 
 #: views/scripts/template/new.phtml:20 views/scripts/template/new.phtml:85
 #: views/scripts/template/edit.phtml:22 views/scripts/template/edit.phtml:107
@@ -160,172 +185,172 @@ msgstr "Pasahitza aldatu"
 #: views/scripts/template/fields/video.phtml:55
 #: views/scripts/template/fields/video.phtml:74
 msgid "Channel:"
-msgstr ""
+msgstr "Kanala:"
 
 #: assets/js/klearMatrix.compiled.js:242
 #: assets/js/plugins/jquery.klearmatrix.module.js:664
 msgid "Error"
 msgstr "Errorea"
 
-#: assets/js/klearMatrix.compiled.js:254
-#: assets/js/plugins/jquery.klearmatrix.template.helper.js:382
+#: assets/js/klearMatrix.compiled.js:255
+#: assets/js/plugins/jquery.klearmatrix.template.helper.js:419
 msgid "There are not associated elements"
 msgstr "Ez daude loturiko elementuak"
 
-#: assets/js/klearMatrix.compiled.js:260
+#: assets/js/klearMatrix.compiled.js:262
 #: assets/js/plugins/jquery.klearmatrix.list.js:44
 msgid "Field available in multi-language"
 msgstr "Eremuak hainbat hizkuntzetan eskugai"
 
-#: assets/js/klearMatrix.compiled.js:278
-#: assets/js/plugins/jquery.klearmatrix.edit.js:23
-msgid "undefined error"
-msgstr "_eu_undefined error"
-
-#: assets/js/klearMatrix.compiled.js:278
-#: assets/js/plugins/jquery.klearmatrix.edit.js:24
-msgid "invalid pattern"
-msgstr "_eu_invalid pattern"
-
-#: assets/js/klearMatrix.compiled.js:278
+#: assets/js/klearMatrix.compiled.js:280
 #: assets/js/plugins/jquery.klearmatrix.edit.js:25
+msgid "undefined error"
+msgstr "Errore ezezaguna"
+
+#: assets/js/klearMatrix.compiled.js:280
+#: assets/js/plugins/jquery.klearmatrix.edit.js:26
+msgid "invalid pattern"
+msgstr "patroi ezegokia"
+
+#: assets/js/klearMatrix.compiled.js:280
+#: assets/js/plugins/jquery.klearmatrix.edit.js:27
 msgid "range overflow"
 msgstr "_eu_range overflow"
 
-#: assets/js/klearMatrix.compiled.js:278
-#: assets/js/plugins/jquery.klearmatrix.edit.js:26
+#: assets/js/klearMatrix.compiled.js:280
+#: assets/js/plugins/jquery.klearmatrix.edit.js:28
 msgid "range underflow"
 msgstr "_eu_range underflow"
 
-#: assets/js/klearMatrix.compiled.js:279
-#: assets/js/plugins/jquery.klearmatrix.edit.js:27
+#: assets/js/klearMatrix.compiled.js:281
+#: assets/js/plugins/jquery.klearmatrix.edit.js:29
 msgid "step mismatch"
 msgstr "_eu_step mismatch"
 
-#: assets/js/klearMatrix.compiled.js:279
-#: assets/js/plugins/jquery.klearmatrix.edit.js:28
+#: assets/js/klearMatrix.compiled.js:281
+#: assets/js/plugins/jquery.klearmatrix.edit.js:30
 msgid "the value is too long"
 msgstr "_eu_the value is too long"
 
-#: assets/js/klearMatrix.compiled.js:279
-#: assets/js/plugins/jquery.klearmatrix.edit.js:29
+#: assets/js/klearMatrix.compiled.js:281
+#: assets/js/plugins/jquery.klearmatrix.edit.js:31
 msgid "type mismatched"
 msgstr "_eu_type mismatched"
 
-#: assets/js/klearMatrix.compiled.js:279
-#: assets/js/plugins/jquery.klearmatrix.edit.js:30
+#: assets/js/klearMatrix.compiled.js:281
+#: assets/js/plugins/jquery.klearmatrix.edit.js:32
 msgid "this is a required field"
 msgstr "_eu_this is a required field"
 
-#: assets/js/klearMatrix.compiled.js:285
-#: assets/js/plugins/jquery.klearmatrix.edit.js:234
+#: assets/js/klearMatrix.compiled.js:288
+#: assets/js/plugins/jquery.klearmatrix.edit.js:284
 msgid "Edit again"
 msgstr "Berriro editatu"
 
-#: assets/js/klearMatrix.compiled.js:288
-#: assets/js/plugins/jquery.klearmatrix.edit.js:343
+#: assets/js/klearMatrix.compiled.js:292
+#: assets/js/plugins/jquery.klearmatrix.edit.js:397
 msgid "# of # selected"
 msgstr "# #-tik aukeratuta"
 
-#: assets/js/klearMatrix.compiled.js:288
-#: assets/js/plugins/jquery.klearmatrix.edit.js:344
+#: assets/js/klearMatrix.compiled.js:292
+#: assets/js/plugins/jquery.klearmatrix.edit.js:398
 msgid "Select all"
 msgstr "Danak aukeratu"
 
-#: assets/js/klearMatrix.compiled.js:288
-#: assets/js/plugins/jquery.klearmatrix.edit.js:345
+#: assets/js/klearMatrix.compiled.js:292
+#: assets/js/plugins/jquery.klearmatrix.edit.js:399
 msgid "Unselect all"
 msgstr "Danak desaukeratu"
 
-#: assets/js/klearMatrix.compiled.js:288
-#: assets/js/plugins/jquery.klearmatrix.edit.js:346
+#: assets/js/klearMatrix.compiled.js:292
+#: assets/js/plugins/jquery.klearmatrix.edit.js:400
 msgid "Select an option"
 msgstr "Aukeratu"
 
-#: assets/js/klearMatrix.compiled.js:289
-#: assets/js/plugins/jquery.klearmatrix.edit.js:347
+#: assets/js/klearMatrix.compiled.js:293
+#: assets/js/plugins/jquery.klearmatrix.edit.js:401
 msgid "# selected"
 msgstr "# aukeratuta"
 
-#: assets/js/klearMatrix.compiled.js:296
-#: assets/js/plugins/jquery.klearmatrix.edit.js:567
+#: assets/js/klearMatrix.compiled.js:300
+#: assets/js/plugins/jquery.klearmatrix.edit.js:623
 #, python-brace-format
 msgid "{file} has invalid extension. Only {extensions} are allowed."
 msgstr "_eu_{file} has invalid extension. Only {extensions} are allowed."
 
-#: assets/js/klearMatrix.compiled.js:296
-#: assets/js/plugins/jquery.klearmatrix.edit.js:568
+#: assets/js/klearMatrix.compiled.js:300
+#: assets/js/plugins/jquery.klearmatrix.edit.js:624
 #, python-brace-format
 msgid "{file} is too large, maximum file size is {sizeLimit}."
 msgstr "_eu_{file} is too large, maximum file size is {sizeLimit}."
 
-#: assets/js/klearMatrix.compiled.js:296
-#: assets/js/plugins/jquery.klearmatrix.edit.js:569
+#: assets/js/klearMatrix.compiled.js:300
+#: assets/js/plugins/jquery.klearmatrix.edit.js:625
 #, python-brace-format
 msgid "{file} is too small, minimum file size is {minSizeLimit}."
 msgstr "_eu_{file} is too small, minimum file size is {minSizeLimit}."
 
-#: assets/js/klearMatrix.compiled.js:296
-#: assets/js/plugins/jquery.klearmatrix.edit.js:570
+#: assets/js/klearMatrix.compiled.js:300
+#: assets/js/plugins/jquery.klearmatrix.edit.js:626
 #, python-brace-format
 msgid "{file} is empty, please select files again without it."
 msgstr "_eu_{file} is empty, please select files again without it."
 
-#: assets/js/klearMatrix.compiled.js:296
-#: assets/js/plugins/jquery.klearmatrix.edit.js:571
+#: assets/js/klearMatrix.compiled.js:300
+#: assets/js/plugins/jquery.klearmatrix.edit.js:627
 msgid ""
 "The files are being uploaded, if you leave now the upload will be cancelled."
 msgstr ""
 "_eu_The files are being uploaded, if you leave now the upload will be "
 "cancelled."
 
-#: assets/js/klearMatrix.compiled.js:297
-#: assets/js/plugins/jquery.klearmatrix.edit.js:575
+#: assets/js/klearMatrix.compiled.js:301
+#: assets/js/plugins/jquery.klearmatrix.edit.js:631
 msgid "Upload File"
 msgstr "Fitxategia gehitu"
 
-#: assets/js/klearMatrix.compiled.js:298 assets/js/klearMatrix.compiled.js:299
-#: assets/js/plugins/jquery.klearmatrix.edit.js:585
-#: assets/js/plugins/jquery.klearmatrix.edit.js:616
+#: assets/js/klearMatrix.compiled.js:302 assets/js/klearMatrix.compiled.js:304
+#: assets/js/plugins/jquery.klearmatrix.edit.js:643
+#: assets/js/plugins/jquery.klearmatrix.edit.js:705
 msgid "ERROR"
 msgstr "ERROREA"
 
-#: assets/js/klearMatrix.compiled.js:300
-#: assets/js/plugins/jquery.klearmatrix.edit.js:655
+#: assets/js/klearMatrix.compiled.js:305
+#: assets/js/plugins/jquery.klearmatrix.edit.js:744
 msgid "Required field"
 msgstr "Derrigorrezko eremua"
 
-#: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:718
+#: assets/js/klearMatrix.compiled.js:309
+#: assets/js/plugins/jquery.klearmatrix.edit.js:848
 msgid "There is unsaved content."
 msgstr "Gorde ez diren edukiak daude."
 
-#: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:720
+#: assets/js/klearMatrix.compiled.js:309
+#: assets/js/plugins/jquery.klearmatrix.edit.js:850
 msgid "Close the screen?"
 msgstr "Pantaila itxi?"
 
-#: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:722
+#: assets/js/klearMatrix.compiled.js:309
+#: assets/js/plugins/jquery.klearmatrix.edit.js:852
 msgid "Attention!"
 msgstr "Adi!"
 
-#: assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:732
+#: assets/js/klearMatrix.compiled.js:309
+#: assets/js/plugins/jquery.klearmatrix.edit.js:862
 msgid "Ignore changes and close"
 msgstr "Ezikusi aldaketak eta itxi"
 
-#: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:881
+#: assets/js/klearMatrix.compiled.js:314
+#: assets/js/plugins/jquery.klearmatrix.edit.js:1013
 msgid "Auto-copied field"
-msgstr ""
+msgstr "Eremu auto kopiatua"
 
-#: assets/js/klearMatrix.compiled.js:315
-#: assets/js/plugins/jquery.klearmatrix.new.js:117
+#: assets/js/klearMatrix.compiled.js:323
+#: assets/js/plugins/jquery.klearmatrix.new.js:132
 msgid "Add another record"
 msgstr "Beste erregistro bat gehitu"
 
-#: assets/js/plugins/jquery.klearmatrix.delete.js:90
+#: assets/js/plugins/jquery.klearmatrix.delete.js:89
 msgid "Delete"
 msgstr "Ezabatu"
 
@@ -342,14 +367,31 @@ msgstr "value"
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/autosave/plugin.min.js:1
 msgid "You have unsaved changes are you sure you want to navigate away?"
 msgstr ""
+"Gorderik gabeko aldaketak daukazuz, nabigatzen jarraitu nahi duzu ala ere?"
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/kleargallery/plugin.min.js:9
+msgid "Galería de imágenes"
+msgstr "Irudi galeria"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:35
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:51
 msgid "%Y-%m-%d"
-msgstr ""
+msgstr "%Y-%m-%d"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:35
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:51
 msgid "%H:%M:%S"
-msgstr ""
+msgstr "%H:%M:%S"
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:16
+msgid "Ningún estilo aplicable a este elemento"
+msgstr "Elementu honentzako ez dago estilorik"
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:56
+msgid "Aplicar estilos al elemento seleccionado"
+msgstr "Aukeratutako elementuari estiloak aplikatu"
 
 #~ msgid "Registro eliminado correctamente"
 #~ msgstr "_eu_Registro eliminado correctamente"

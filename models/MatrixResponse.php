@@ -472,7 +472,14 @@ class KlearMatrix_Model_MatrixResponse
             if ($this->_countArrayItemsForProperty($_fld) == 0) {
                 continue;
             }
-            $ret[$_fld] = $this->{'_' . $_fld}->toArray();
+            if (is_array($this->{'_' . $_fld})) {
+                $ret[$_fld] = $this->{'_' . $_fld};
+            } elseif (
+                $this->{'_' . $_fld} instanceof Zend_Config
+                || method_exists($this->{'_' . $_fld}, 'toArray')
+            ) {
+                $ret[$_fld] = $this->{'_' . $_fld}->toArray();
+            }
         }
         return $ret;
     }

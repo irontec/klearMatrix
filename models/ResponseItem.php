@@ -321,6 +321,14 @@ class KlearMatrix_Model_ResponseItem
 
     public function getPreconfiguredFilters()
     {
+        $aConf = $this->_preconfiguredFilters->toArray();
+        foreach ($aConf as $filterKey => $filterData) {
+            if ($filterData['title']) {
+                $title = Klear_Model_Gettext::gettextCheck($filterData['title']);
+                $aConf[$filterKey]['title'] = $title; 
+            }
+        }
+        $this->_preconfiguredFilters = $aConf;
         return $this->_preconfiguredFilters;
     }
     

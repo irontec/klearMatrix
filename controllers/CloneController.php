@@ -55,12 +55,22 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         if ($this->_item->getDescription()) {
             $message = $this->_item->getDescription();
         } else {
-            $message = $this->view->translate('Do you want to clone this item?');
+            $message = sprintf(
+            		$this->view->translate('Do you want to clone this %s?'), 
+            		$this->view->translate('item'));
         }
+        
+        
+        
         $message .= '<p class="clonable-item">'
             . $this->view->translate('Title:')
             . '<strong>'.$name.'</strong> <em>(#'.$pk.')</em></p>';
 
+        $title = $this->_item->getTitle();
+        if (empty($title)) {
+        	$title = sprintf($this->view->translate('Clone %s'), 
+        			$this->view->translate('record'));
+        }
         $data = array(
             'message' => $message,
             'title' => $this->_item->getTitle(),
@@ -108,13 +118,17 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                     $fetcher = "fetch" . ucfirst($columnName);
                     $putter = "put" . ucfirst($columnName);
                     if ($obj->{$fetcher}()->getFilePath()) {
-                        $tmpName = tempnam("/tmp", "CLONED");
-                        copy($obj->{$fetcher}()->getFilePath(), $tmpName);
-                        $newObj->{$putter}(
-                            $tmpName,
-                            $obj->{$fetcher}()->getBaseName()
-                        );
-                        unset($tmpName);
+                    	
+                    	if ($obj->{$fetcher}()->getFilePath()) {
+                    		$tmpName = tempnam("/tmp", "CLONED");
+                    		copy($obj->{$fetcher}()->getFilePath(), $tmpName);
+                    		$newObj->{$putter}(
+                    		$tmpName,
+                    		$obj->{$fetcher}()->getBaseName()
+                    		);
+                    		// Borramos le fichero temporal
+                    		unlink($tmpName);
+                    	}
                     }
                 }
             }
@@ -135,7 +149,8 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         if ($this->_item->getMessage()) {
             $message = $this->_item->getMessage();
         } else {
-            $message = $this->view->translate('Record successfully cloned');
+        	$message = sprintf($this->view->translate('%s successfully cloned'), 
+        			$this->view->translate('Record'));
         }
 
         $data = array(

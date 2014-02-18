@@ -47,6 +47,11 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
         if ($this->_item->getUseExplain()) {
             $data['title'] .= ' ' . $this->_helper->translate('(Aproximated values)');
         }
+        $sectionsBlackList = array();
+        if ($this->_item->getSectionsBlackList()) {
+            $sectionsBlackList = $this->_item->getSectionsBlackList();
+            $sectionsBlackList = $sectionsBlackList->toArray();
+        }
 
         $menuConfig = Zend_Controller_Front::getInstance()
                         ->getParam('bootstrap')
@@ -63,7 +68,7 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
             );
 
             foreach ($section as $subsection) {
-
+                
                 $file = $subsection->getMainFile();
 
                 $sectionConfig = new Klear_Model_SectionConfig;
@@ -71,6 +76,10 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 if (!$sectionConfig->isValid()) {
                     continue;
                     return;
+                }
+
+                if (in_array($file, $sectionsBlackList)) {
+                    continue;
                 }
 
                 // Nos devuelve el configurador del módulo concreto instanciado.
@@ -104,7 +113,10 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 }
             }
 
-            $data['sections'][] = $sectionTmp;
+            if (sizeof($sectionTmp['subsects'])>0) {
+                $data['sections'][] = $sectionTmp;
+            } 
+            
         }
 
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();

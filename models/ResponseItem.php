@@ -95,6 +95,8 @@ class KlearMatrix_Model_ResponseItem
     protected $_fieldInfo;
 
     protected $_useExplain = false;
+    
+    protected $_sectionsBlackList = array();
 
     //Configuraciones comunes para todos los tipos de ResponseItem
     protected $_configOptions = array(
@@ -119,6 +121,7 @@ class KlearMatrix_Model_ResponseItem
         // disableAddAnother >> en NewController evitamos el botón de añadir otro.
         '_disableAddAnother' => array('disableAddAnother', false),
         '_useExplain' => array('useExplain', false),
+        '_sectionsBlackList' => array('sectionsBlackList', false),
         '_preconfiguredFilters' => array('preconfiguredFilters', false),
         '_presettedFilters' => array('presettedFilters', false),
         '_fixedPositions' => array('fixedPositions', false),
@@ -296,6 +299,10 @@ class KlearMatrix_Model_ResponseItem
         return Klear_Model_Gettext::gettextCheck($this->_message);
     }
 
+    public function getSectionsBlackList()
+    {
+        return $this->_sectionsBlackList;
+    }
 
     public function getUseExplain()
     {

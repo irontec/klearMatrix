@@ -57,7 +57,7 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         } else {
             $message = sprintf(
             		$this->view->translate('Do you want to clone this %s?'), 
-            		$this->view->translate('item'));
+            		$this->view->translate('record'));
         }
         
         

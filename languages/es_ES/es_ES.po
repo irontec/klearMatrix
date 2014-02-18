@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-18 11:43+0100\n"
-"PO-Revision-Date: 2014-02-18 11:53+0100\n"
+"POT-Creation-Date: 2014-02-18 16:20+0100\n"
+"PO-Revision-Date: 2014-02-18 16:22+0100\n"
 "Last-Translator: Lander Ontoria Gardeazabal <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: en_ES\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: controllers/FileController.php:204 controllers/CloneController.php:72
+#: controllers/FileController.php:204 controllers/CloneController.php:82
 #: assets/js/klearMatrix.compiled.js:309
 #: assets/js/plugins/jquery.klearmatrix.delete.js:85
 #: assets/js/plugins/jquery.klearmatrix.edit.js:856
@@ -42,8 +42,9 @@ msgid "Could not delete record: "
 msgstr "No se ha podido eliminar el registro:"
 
 #: controllers/DeleteController.php:118
-msgid "Record successfully deleted"
-msgstr "Registro eliminado correctamente"
+#, php-format
+msgid "%s successfully deleted"
+msgstr "%s eliminado correctamente"
 
 #: controllers/NewController.php:86 controllers/EditController.php:79
 msgid "Record successfully saved."
@@ -65,31 +66,46 @@ msgstr "Elemento no encontrado. No es posible editarlo."
 msgid "(Aproximated values)"
 msgstr "(Valores aproximados)"
 
-#: controllers/CloneController.php:43 controllers/CloneController.php:101
+#: controllers/CloneController.php:43 controllers/CloneController.php:111
 msgid "Record not found. Could not clone."
 msgstr "Elemento no encontrado. No es posible clonarlo."
 
-#: controllers/CloneController.php:58
-msgid "Do you want to clone this item?"
-msgstr "¿Quiéres clonar este elemento?"
+#: controllers/CloneController.php:59
+#, php-format
+msgid "Do you want to clone this %s?"
+msgstr "¿Quiéres clonar este %s?"
 
-#: controllers/CloneController.php:61
+#: controllers/CloneController.php:60 controllers/CloneController.php:72
+msgid "record"
+msgstr "registro"
+
+#: controllers/CloneController.php:66
 msgid "Title:"
 msgstr "Título:"
 
-#: controllers/CloneController.php:68
+#: controllers/CloneController.php:71
+#, php-format
+msgid "Clone %s"
+msgstr "Clonar %s"
+
+#: controllers/CloneController.php:78
 msgid "Clone"
 msgstr "Clonar"
 
-#: controllers/CloneController.php:128
+#: controllers/CloneController.php:144
 msgid "Could not clone record: "
 msgstr "No se ha podido clonar el registro:"
 
-#: controllers/CloneController.php:136
-msgid "Record successfully cloned"
-msgstr "Registro clonado correctamente"
+#: controllers/CloneController.php:152
+#, php-format
+msgid "%s successfully cloned"
+msgstr "%s clonado correctamente"
 
-#: controllers/CloneController.php:143 views/scripts/template/new.phtml:19
+#: controllers/CloneController.php:153
+msgid "Record"
+msgstr "Registro"
+
+#: controllers/CloneController.php:160 views/scripts/template/new.phtml:19
 #: views/scripts/template/new.phtml:84 views/scripts/template/edit.phtml:20
 #: views/scripts/template/edit.phtml:105 assets/js/klearMatrix.compiled.js:241
 #: assets/js/klearMatrix.compiled.js:288 assets/js/klearMatrix.compiled.js:322

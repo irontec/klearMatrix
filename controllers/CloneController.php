@@ -107,13 +107,15 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                 foreach ($files as $columnName) {
                     $fetcher = "fetch" . ucfirst($columnName);
                     $putter = "put" . ucfirst($columnName);
-                    $tmpName = tempnam("/tmp", "CLONED");
-                    copy($obj->{$fetcher}()->getFilePath(), $tmpName);
-                    $newObj->{$putter}(
-                        $tmpName,
-                        $obj->{$fetcher}()->getBaseName()
-                    );
-                    unset($tmpName);
+                    if ($obj->{$fetcher}()->getFilePath()) {
+                        $tmpName = tempnam("/tmp", "CLONED");
+                        copy($obj->{$fetcher}()->getFilePath(), $tmpName);
+                        $newObj->{$putter}(
+                            $tmpName,
+                            $obj->{$fetcher}()->getBaseName()
+                        );
+                        unset($tmpName);
+                    }
                 }
             }
             $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);

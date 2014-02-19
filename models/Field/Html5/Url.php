@@ -26,11 +26,11 @@ class KlearMatrix_Model_Field_Html5_Url extends KlearMatrix_Model_Field_Html5_Ab
     public function filterValue($value)
     {
         if (!is_array($value)) {
-        	return $this->_validateUrl($value);
+            return $this->_validateUrl($value);
         }
 
         foreach ($value as $idx => $_val) {
-        	$value[$idx] = $this->_validateUrl($_val);
+            $value[$idx] = $this->_validateUrl($_val);
         }
 
         return $value;

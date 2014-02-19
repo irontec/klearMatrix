@@ -1,12 +1,15 @@
 {{if (_readonly)}}
+
+    ${inValues = 'false', ''}
     {{each(idx,dataValue) _dataConfig.values}}
         {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
-                 ${dataValue.item} /
+            {{if (inValues === 'true') && (idx > 0)}} / {{/if}}
+             ${dataValue.item}
+             ${inValues = 'true', ''}
         {{/if}}
     {{/each}}
 
 {{else}}
-
 
 {{if (_decorators && _decorators.autocomplete)}}
     <label for="${_elemName}_autocomplete" rel="inlineOptions" class="autoCompleteLabel">

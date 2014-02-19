@@ -625,3 +625,13 @@ fieldset .containerFixed a._fieldOption {
 fieldset .containerFixed a._fieldOption span {
     margin-top: -3px;
 }
+
+div.size-indicator {
+    font-weight: normal;
+    padding-top:0.2em;
+    font-size: 0.7em;
+}
+
+div.size-indicator span.zero{
+    font-weight: bold;
+}

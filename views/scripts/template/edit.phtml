@@ -55,7 +55,7 @@ data-title="${info.text}"
             <label rel="${id}" for="${id}${randIden}" {{if (column.expandable == true)}}class="pointer"{{/if}}>
 
             ${name}:
-
+            {{html $item.getSizeForField(row[id],column)}}
             </label>
 
             {{html $item.getEditDataForField(row[id],column)}}

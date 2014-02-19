@@ -35,7 +35,38 @@
 
             return $('<div/>').text(_value).html();
         },
-
+        _formatSizeUnits : function(bytes)
+        {
+            var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes == 0) return '<span class="zero">0 B</span>';
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return Math.round(bytes / Math.pow(1024, i), 2) + sizes[i];
+        },
+        getSizeForField : function(value, column) {
+            if (!column.properties.showsize) {
+                return '';
+            }
+            var _ret = '<div class="size-indicator">';
+            if (column.multilang) {
+                var first = true;
+                for (var i in this.data.langs) {
+                    var lang = this.data.langs[i];
+                    if (typeof value[lang] == 'string') {
+                        if (!first) {
+                            _ret += ' / ';
+                        }
+                        _ret += lang + ': ' + this._formatSizeUnits(unescape(encodeURIComponent(value[lang])).length);
+                    }
+                    if (first) {
+                        first = false;
+                    }
+                }
+            } else {
+               _ret += this._formatSizeUnits(unescape(encodeURIComponent(value)).length);
+            }
+            _ret += '</div>';
+            return _ret;
+        },
         getEditDataForField : function(value, column, isNew) {
 
             var extraConfig = column.config || false;

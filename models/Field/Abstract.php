@@ -74,7 +74,7 @@ abstract class KlearMatrix_Model_Field_Abstract
         $siteConfig = $bootstrap->getResource('modules')->offsetGet('klear')->getOption('siteConfig');
 
         $autoShowSizeOnExpandable = $siteConfig->getDefaultCustomConfiguration('autoShowSizeOnExpandableFields');
-        if ($autoShowSizeOnExpandable) {
+        if ($autoShowSizeOnExpandable && isset($this->_properties['expandable'])) {
             if ($this->_properties['expandable'] === true) {
                 $this->_properties['showsize'] = true;
             }

@@ -66,7 +66,8 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
         $title = $this->_item->getTitle();
         if (empty($title)) {
-            $title = sprintf($this->view->translate('Clone %s'),
+            $title = sprintf(
+                $this->view->translate('Clone %s'),
                 $this->view->translate('record')
             );
         }
@@ -120,7 +121,7 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                     $fetcher = "fetch" . ucfirst($columnName);
                     $putter = "put" . ucfirst($columnName);
                     if ($obj->{$fetcher}()->getFilePath()) {
-                            if ($obj->{$fetcher}()->getFilePath()) {
+                        if ($obj->{$fetcher}()->getFilePath()) {
                             $tmpName = tempnam("/tmp", "CLONED");
                             copy($obj->{$fetcher}()->getFilePath(), $tmpName);
                             $newObj->{$putter}(

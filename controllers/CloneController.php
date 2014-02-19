@@ -56,8 +56,9 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
             $message = $this->_item->getDescription();
         } else {
             $message = sprintf(
-            		$this->view->translate('Do you want to clone this %s?'), 
-            		$this->view->translate('record'));
+                $this->view->translate('Do you want to clone this %s?'), 
+            	$this->view->translate('record')
+            );
         }
         
         
@@ -68,8 +69,9 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
         $title = $this->_item->getTitle();
         if (empty($title)) {
-        	$title = sprintf($this->view->translate('Clone %s'), 
-        			$this->view->translate('record'));
+            $title = sprintf($this->view->translate('Clone %s'), 
+                $this->view->translate('record')
+            );
         }
         $data = array(
             'message' => $message,
@@ -108,7 +110,10 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                     'Error cloning model for ' . $mapperName . ' > PK('.$pk.')',
                     Zend_Log::ERR
                 );
-                throw new Klear_Exception_Default($this->view->translate('Record not found. Could not clone.'));
+                
+                throw new Klear_Exception_Default(
+                    $this->view->translate('Record not found. Could not clone.')
+                );
             }
             $newObj = clone $obj;
 
@@ -149,8 +154,10 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         if ($this->_item->getMessage()) {
             $message = $this->_item->getMessage();
         } else {
-        	$message = sprintf($this->view->translate('%s successfully cloned'), 
-        			$this->view->translate('Record'));
+        	$message = sprintf(
+                $this->view->translate('%s successfully cloned'), 
+                $this->view->translate('Record')
+            );
         }
 
         $data = array(

@@ -344,7 +344,7 @@ class KlearMatrix_Model_ResponseItem
         $presettedFilters = new \Zend_Config(array(), true);
         
         
-        foreach($this->_presettedFilters as $key => $presettedFilter) {
+        foreach ($this->_presettedFilters as $key => $presettedFilter) {
             
             $keys = array_keys($presettedFilter->toArray());
             

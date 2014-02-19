@@ -13,10 +13,10 @@ class KlearMatrix_Model_FilterProcessor
 
     protected $_isPresetted = false;
     protected $_presettedFilters = array();
-    
+
     protected $_presettedApplied = false;
-    
-    
+
+
     public function setRequest(Zend_Controller_Request_Abstract $request)
     {
         $this->_request = $request;
@@ -48,7 +48,7 @@ class KlearMatrix_Model_FilterProcessor
         $this->_data = $data;
         return $this;
     }
-    
+
     public function setResponseItem(KlearMatrix_Model_ResponseItem $item)
     {
         $this->_item = $item;
@@ -83,13 +83,13 @@ class KlearMatrix_Model_FilterProcessor
 
         $this->_data->addSearchAddModifier(true);
     }
-    
+
     protected function _toggleApplySearchFilters($value)
     {
         if (false === $this->_data) {
             return;
         }
-        
+
         $this->_data->toggleApplySearchFilters($value);
     }
 
@@ -98,7 +98,7 @@ class KlearMatrix_Model_FilterProcessor
         if (false === $this->_data) {
             return;
         }
-    
+
         $this->_data->setAsSearchPresetted();
     }
 
@@ -158,7 +158,7 @@ class KlearMatrix_Model_FilterProcessor
 
         $searchOps = $this->_getSearchOps();
 
-        
+
         $this->_log('Search arguments found for: ');
 
         foreach ($searchFields as $field => $values) {
@@ -178,10 +178,10 @@ class KlearMatrix_Model_FilterProcessor
     {
         $searchOps = $this->_request->getPost("searchOps");
         if (is_null($searchOps) && $this->_isPresetted) {
-            
+
             $searchOps = array();
-            foreach($this->_presettedFilters as $searchPreSetted) {
-                
+            foreach ($this->_presettedFilters as $searchPreSetted) {
+
                 $field = $searchPreSetted->field;
                 $value = $searchPreSetted->value;
                 if (isset($searchPreSetted->op)) {
@@ -189,43 +189,46 @@ class KlearMatrix_Model_FilterProcessor
                 } else {
                     $op = 'eq';
                 }
-                
-                    
+
+
                 if (!isset($searchFields[$field])) {
                     $searchOps[$field] = array();
                 }
-            
+
                 if (!$value instanceof Traversable) {
                     $value = array($value);
                 }
-                
+
                 if (!$op instanceof Traversable) {
                     $op = array($op);
                 }
-            
+
                 /*
                  * Por cada valor, deberá haber una "op"
                  */
                 $cur = 0;
-                foreach($value as $_val) {
+                foreach ($value as $_val) {
                     $curOp = 'eq';
                     if (is_array($op) && (isset($op[$cur]))) {
                             $curOp = $op[$cur];
                     } else {
-                        // Si no es array, entendemos que se ha especificado una única op, para el/los posibles valores.
-                        $curOp = $op;    
+                        /*
+                         * Si no es array, entendemos que se ha especificado
+                         * una única op, para el/los posibles valores.
+                         */
+                        $curOp = $op;
                     }
-                    
+
                     $searchOps[$field][] = $curOp;
                 }
-            
+
             }
-            
+
         }
         return $searchOps;
-        
+
     }
-    
+
     protected function _getSearchFields()
     {
 
@@ -234,38 +237,38 @@ class KlearMatrix_Model_FilterProcessor
          * Si no hay búsqueda, comprobamos que no existan presettedFilters
          */
         if (is_null($searchFields) && $this->_isPresetted) {
-            
+
             $this->_presettedApplied = true;
-            foreach($this->_presettedFilters as $searchPreSetted) {
+            foreach ($this->_presettedFilters as $searchPreSetted) {
                 $field = $searchPreSetted->field;
                 $value = $searchPreSetted->value;
-                
+
                 if (!isset($searchFields[$field])) {
                     $searchFields[$field] = array();
                 }
-                
+
                 if (!$value instanceof Traversable) {
                     $value = array($value);
                 }
-                
-                foreach($value as $_val) {
+
+                foreach ($value as $_val) {
                     $searchFields[$field][] = $_val;
                 }
-            
+
             }
         }
-        
+
         return $searchFields;
     }
-    
-    
-    
+
+
+
     protected function _getPostSearchFields()
     {
-            
+
         $searchFields = $this->_request->getPost("searchFields");
         if (is_array($searchFields)) {
-            
+
             foreach ($searchFields as $key => $val) {
 
                 if (empty($val)) {
@@ -277,10 +280,10 @@ class KlearMatrix_Model_FilterProcessor
                 $searchFields = null;
             }
         }
-        
+
         return $searchFields;
     }
-    
+
 
     public function isFilteredRequest()
     {
@@ -292,4 +295,3 @@ class KlearMatrix_Model_FilterProcessor
         return $this->_where;
     }
 }
-

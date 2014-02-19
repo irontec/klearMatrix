@@ -19,6 +19,7 @@ abstract class KlearMatrix_Model_Field_Abstract
             "nullIfEmpty",
             "maxLength",
             "expandable",
+            "showsize",
             "defaultValue" // Valor por defecto en caso de new
             );
 
@@ -59,11 +60,28 @@ abstract class KlearMatrix_Model_Field_Abstract
             $this->_parseErrorMessages();
         }
 
-        $this->_initSortable()
+        $this->_applyDefaultCutomConfiguration()
+             ->_initSortable()
              ->_initSearchable()
              ->_loadDecorators();
 
         $this->_init();
+    }
+
+    protected function _applyDefaultCutomConfiguration()
+    {
+        $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
+        $siteConfig = $bootstrap->getResource('modules')->offsetGet('klear')->getOption('siteConfig');
+
+        $autoShowSizeOnExpandable = $siteConfig->getDefaultCustomConfiguration('autoShowSizeOnExpandableFields');
+        if ($autoShowSizeOnExpandable) {
+            if ($this->_properties['expandable'] === true) {
+                $this->_properties['showsize'] = true;
+            }
+        }
+
+        return $this;
+
     }
 
     protected function _initSortable()

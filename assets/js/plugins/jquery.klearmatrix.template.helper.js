@@ -94,8 +94,7 @@
                 }
 
             } else {
-                if (column.properties && column.properties.defaultValue) {
-
+                if (column.properties && column.properties.defaultValue !== null) {
                     _value = column.properties.defaultValue;
                 }
             }

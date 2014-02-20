@@ -1088,6 +1088,20 @@
                 });
             });
 
+            $("textarea[maxlength]:not([data-plugin]), input[maxlength]", this.options.theForm).each(function(){
+                var remaining = $(this).attr('maxlength') - $(this).val().length;
+                if ($('p.countdown',$(this).parent()).length == 0) {
+                    $(this).parent().append($("<p class='countdown' />")
+                            .css({'padding':'0 1.5em', 'font-size':'.8em'})
+                            .text(remaining + ' ' + $.translate('characters remaining')));
+                } else {
+                    $('p.countdown:first', $(this).parent()).text(remaining + ' characters remaining');
+                }
+            }).on('input postmanualchange',function(){
+                var remaining = $(this).attr('maxlength') - $(this).val().length;
+                $('p.countdown:first', $(this).parent()).text(remaining + ' ' + $.translate('characters remaining'));
+            });
+
             return this;
 
         },

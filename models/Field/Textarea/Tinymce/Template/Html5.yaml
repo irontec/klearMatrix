@@ -34,7 +34,7 @@ production:
   paste_text_sticky: true
   paste_text_sticky_default: true
   convert_urls: false
-  valid_elements : em/i,strong/b,ol,ul,li,br,p,a[href|target|title|alt]
+  valid_elements : em/i,strong/b,ol,ul,li,br,p,a[href|target|title|alt],h1,h2,h3,h4,pre,section,article,blockquote,aside,figure,hgroup
   force_br_newlines: false
   force_p_newlines: false
   forced_root_block: false
@@ -59,16 +59,11 @@ production:
           block: 'h1'
         - title: 'h2'
           block: 'h2'
-        - title: 'h2'
-          block: 'h2'
         - title: 'h3'
           block: 'h3'
         - title: 'h4'
           block: 'h4'
-        - title: 'h5'
-          block: 'h5'
-        - title: 'h6'
-          block: 'h6'
+
     - title: 'Blocks'
       items:
         - title: 'p'
@@ -100,36 +95,6 @@ production:
         - title: 'figure'
           block: 'figure'
           wrapper: true
-
-#### Templates
- 
-#  templates:
-#    - title: 'Some title 1'
-#      description: 'Some desc 1'
-#      content: '<p>{name}</p><p>asdgasdg</p><div><h2>asdg</h2><p><a href="http://google.com">asdg</a><p></div>' 
-
-#### Métodos para modificar templates.
-
-#
-#        removeButtons:
-#          - italic
-#        addButtons:
-#          method: prepend
-#          order: 0
-#          buttons:
-#            - media
-#            - "|"
-#            - print
-#        addBar:
-#          order: 1
-#          buttons:
-#            - media
-#            - del
-#            - ins
-#            - "|"
-#            - attribs
-#            - visualchars
-#            - nonbreaking  
 
 testing: 
   _extends: production

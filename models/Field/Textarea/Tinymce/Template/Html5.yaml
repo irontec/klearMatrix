@@ -16,7 +16,6 @@ production:
 #### Basic conf ####
 
   end_container_on_empty_block: true
-  force_p_newlines: true
   resize: true
   visualblocks_default_state: false
   toolbar_items_size: 'small'
@@ -36,7 +35,7 @@ production:
   convert_urls: false
   valid_elements : em/i,strong/b,ol,ul,li,br,p,a[href|target|title|alt],h1,h2,h3,h4,pre,section,article,blockquote,aside,figure,hgroup
   force_br_newlines: false
-  force_p_newlines: false
+  force_p_newlines: true
   forced_root_block: false
   invalid_elements: font
   

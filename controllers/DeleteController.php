@@ -117,7 +117,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             // Mensaje por defecto.
             $data['message'] = sprintf(
                 $this->view->translate('%s successfully deleted'),
-                $this->view->trasnlate('Record')
+                $this->view->translate('Record')
             );
         }
 

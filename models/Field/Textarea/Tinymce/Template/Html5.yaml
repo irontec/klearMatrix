@@ -34,7 +34,7 @@ production:
   paste_text_sticky: true
   paste_text_sticky_default: true
   convert_urls: false
-  valid_elements : em/i,strong/b,ol,ul,li,br,p
+  valid_elements : em/i,strong/b,ol,ul,li,br,p,a[href|target|title|alt]
   force_br_newlines: false
   force_p_newlines: false
   forced_root_block: false

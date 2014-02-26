@@ -149,6 +149,13 @@ class KlearMatrix_Model_RouteDispatcher
         return $this->_dialog;
     }
 
+    public function loadDialog($dialogName)
+    {
+        $config = $this->_config->getDialogConfig($dialogName);
+        return $this->_initResponseItem(new KlearMatrix_Model_Dialog(), $dialogName, $config);
+    }
+
+
     public function getCurrentCommand()
     {
         if (null === $this->_command) {

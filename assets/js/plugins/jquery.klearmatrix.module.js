@@ -123,12 +123,12 @@
                 }
             }
 
-
+            var modulecheck;
             // Si es un módulo con parent
             if (this.options.moduleParent) {
-                var modulecheck = this.options.moduleParent;
+                modulecheck = this.options.moduleParent;
             } else {
-                var modulecheck = this.options.moduleName;
+                modulecheck = this.options.moduleName;
             }
 
             switch (modulecheck) {
@@ -191,10 +191,12 @@
             if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
                  $(".filePreview",_self.klearModule("getPanel")).each(function() {
 
+                	 var _post;
+                	 
                      if ($(this).data("filename")) {
-                         var _post = {filename:$(this).data("filename")};
+                         _post = {filename:$(this).data("filename")};
                      } else {
-                         var _post = {filename:$(this).parent("span:eq(0)").data("filename")};
+                         _post = {filename:$(this).parent("span:eq(0)").data("filename")};
                      }
                      var _validData = ['width','height','crop'];
                      var $self = $(this);
@@ -229,7 +231,12 @@
 
                 });
             }
-
+            
+            if ($(".fieldInfo-tooltip",_self.klearModule("getPanel")).length>0) {
+            	$(".fieldInfo-tooltip",_self.klearModule("getPanel")).tooltip({
+            		'content': function(){return $el.attr('data-title');}
+            	});
+            }
             return this;
         },
 
@@ -379,11 +386,11 @@
                 $.extend(_dispatchOptions['post'], _searchOps);
 
 
-
+                var tabTitle;
                 if (_menuLink.data("externaltitle")) {
-                    var tabTitle = _menuLink.data("externaltitle");
+                	tabTitle = _menuLink.data("externaltitle");
                 } else {
-                    var tabTitle = _menuLink.tooltip("close").attr("title");
+                    tabTitle = _menuLink.tooltip("close").attr("title");
                 }
 
                 if ($(this).hasClass("_fieldOption")) {

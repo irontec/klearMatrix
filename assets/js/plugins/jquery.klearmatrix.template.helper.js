@@ -624,6 +624,9 @@
             var idx = settings.idx;
             var values = settings.values;
 
+            var defaultValue = '',
+            	_firstValue = '';
+            
             if ($.isArray(values) && (values.length > 0) && (values[idx])) {
 
                 values = values[idx];
@@ -633,7 +636,7 @@
 
                 for(var i in columns) {
                     if (count === false) {
-                        var _firstValue = columns[i];
+                    	_firstValue = columns[i];
                         count = true;
                     }
 
@@ -657,21 +660,45 @@
                     }
                 }
 
-                var defaultValue = defaultValues.join(' ');
+                defaultValue = defaultValues.join(' ');
 
             } else {
-                var defaultValue = '';
+                defaultValue = '';
             }
+            
             // Si el método es invocado con replaceParentPerItem, éste viene de un listado
             // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
             // siempre que no esé definido parentIden (el listado sea a su vez hijo de otro)
+            
+            defaultValue = this.cleanValue(defaultValue);
             var parentValue = (replaceParentPerItem)?
                                     this.cleanValue(defaultValue) :
                                     this.cleanValue(parentIden);
-
-            var _r = title
-                    .replace(/\%parent\%/,parentValue)
-                    .replace(/\%item\%/,this.cleanValue(defaultValue));
+            
+            var res = [];
+            var _r = "";
+            if (res = title.match(/\[format\|(.*[\%parent\%|\%item\%].*)\]/)) {
+            	if (res.length == 2) {
+            		if (res[1].match(/\%parent%/)) {
+            			if (parentValue.trim()!="") {
+                			_r = title.replace(res[0], res[1].replace(/\%parent\%/,parentValue));
+                		} else {
+                			_r = title.replace(res[0], '');
+                		}	
+            		}
+            		if (res[1].match(/\%item%/)) {
+	            		if (defaultValue.trim()!="") {
+	            			_r = title.replace(res[0], res[1].replace(/\%item\%/,defaultValue));
+	            		} else {
+	            			_r = title.replace(res[0], '');
+	            		}
+            		}
+            	}
+            } else {
+            	_r = title
+            	.replace(/\%parent\%/, parentValue)
+            	.replace(/\%item\%/, defaultValue);
+            }                                    
             return _r;
 
         },

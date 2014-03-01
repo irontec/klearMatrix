@@ -784,8 +784,7 @@
 
             if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
                 for (var i in this.options.data.fixedPositions) {
-                    this._joinFields(this.options.data.fixedPositions[i].label || false,
-                        this.options.data.fixedPositions[i].fields);
+                    this._joinFields(this.options.data.fixedPositions[i]);
                 }
             }
 
@@ -1106,62 +1105,45 @@
 
         },
 
-        _joinFields : function(label, fields) {
+        _joinFields : function(fixedFields) {
+            
 
-            $.console.info("["+__namespace__+"] _joinFields");
+            var fields = fixedFields.fields;
 
+            
             var $container = this.element.klearModule("getPanel");
             var $elements = [];
             for (var idx in fields) {
-                var $field = $("label[rel="+fields[idx]+"]", $container)
+                var $field = $("label[rel="+fields[idx]['field']+"]", $container)
                         .parents(".container:eq(0)");
                 if ($field.length != 1) {
                     continue;
                 }
+                $field.data("numberWidth", fields[idx]['weight'])
                 $elements.push($field);
             }
             if ($elements.length == 0) {
                 return;
             }
-
-            var widthPercent = Math.floor(100/$elements.length) * 0.9;
-            var $prev = false;
-            var curPrev = 1;
-            var noOfItems = 0;
+            
+            var widthPercent = Math.floor(100/fixedFields.colsPerRow) * 0.9;
+            
             var $superContainer = $("<fieldset />")
                 .addClass("superContainer")
                 .addClass("ui-widget-content")
                 .addClass("ui-corner-all");
 
-            if (false !== label) {
-                $("<legend>" + label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
+            if (fixedFields.label) {
+                $("<legend>" + fixedFields.label + "</label>").addClass("ui-widget-content").addClass("ui-corner-all").appendTo($superContainer);
             }
             $elements[0].before($superContainer);
-            $.each($elements,function() {
-                if ($prev.selector && ($(this).selector == $prev.selector)) {
-                    curPrev++;
-                } else {
-                    noOfItems++;
-                    curPrev = 1;
-                }
 
-                $(this).addClass("containerFixed").data("numberWidth",curPrev);
-                $(this).appendTo($superContainer);
-                $prev = $(this);
-            });
-
-            var totalPainted = 0;
             $.each($elements,function() {
-                if ($(this).data("repainted")) {
-                    return;
-                }
+                $(this).addClass("containerFixed").appendTo($superContainer);
+                
                 var curPercent = widthPercent * $(this).data("numberWidth");
-                if (noOfItems < 3) {
-                    curPercent += 1;
-                }
-                $(this)
-                    .css({width: curPercent + '%'})
-                    .data("repainted", true);
+                
+                $(this).css({width: curPercent + '%'})
             });
             // Elementos que necesiten ser "actualizados", despues de cambiar su contenedor
             // De momento sólo se ha detectado los multiselect (que deben resizearse).

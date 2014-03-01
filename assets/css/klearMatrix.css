@@ -126,7 +126,7 @@ dl.multiLanguage div.textAreaBox {
 
 dl.multiLanguage dt {
     margin:0.5em 0.25em;
-    width:12%;
+    width:2em;
     clear: both;
     float:left;
     display:block;
@@ -197,6 +197,7 @@ dl.multiLanguage dd.copied span.copied {
 .klearMatrix_form p,
 .klearMatrix_form div.container {
     padding:.8em;
+    padding-rigth:0;
     margin:.3em 0;
 }
 

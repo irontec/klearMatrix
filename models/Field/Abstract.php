@@ -19,7 +19,7 @@ abstract class KlearMatrix_Model_Field_Abstract
             "nullIfEmpty",
             "maxLength",
             "expandable",
-            "showsize",
+            "showSize",
             "defaultValue" // Valor por defecto en caso de new
             );
 
@@ -76,7 +76,7 @@ abstract class KlearMatrix_Model_Field_Abstract
         $autoShowSizeOnExpandable = $siteConfig->getDefaultCustomConfiguration('autoShowSizeOnExpandableFields');
         if ($autoShowSizeOnExpandable && isset($this->_properties['expandable'])) {
             if ($this->_properties['expandable'] === true) {
-                $this->_properties['showsize'] = true;
+                $this->_properties['showSize'] = true;
             }
         }
 

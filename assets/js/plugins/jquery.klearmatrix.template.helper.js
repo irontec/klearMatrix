@@ -43,7 +43,7 @@
             return Math.round(bytes / Math.pow(1024, i), 2) + sizes[i];
         },
         getSizeForField : function(value, column) {
-            if (column.properties && !column.properties.showsize) {
+            if (column.properties && !column.properties.showSize) {
                 return '';
             }
             

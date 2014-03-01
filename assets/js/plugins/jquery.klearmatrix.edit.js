@@ -310,11 +310,10 @@
             $("select,input,textarea",this.options.theForm).each(function() {
                 var _val = (null == $(this).val())? '':$(this).val();
 
-                if ($(this).val() == '__NULL__') {
-                    if ( $(this).data('preload') != '' ) {
-                        _val = $(this).data('preload').toString();
-                    }
+                if ( $(this).data('preload') && $(this).data('preload') != '' ) {
+                    _val = $(this).data('preload').toString();
                 }
+                
                 var _hash = Crypto.MD5(_val);
                 $(this)
                     .data("savedValue",_hash)

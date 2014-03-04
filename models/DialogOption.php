@@ -25,6 +25,7 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
             'title' => $this->getTitle(),
             'defaultOption' => $this->isDefault(),
             'label' => $this->_label,
+            'labelOnEdit' => $this->_labelOnEdit,
             'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
             'showOnlyOnNull' => $this->_showOnlyOnNull
         );

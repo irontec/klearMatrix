@@ -79,6 +79,7 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
             'screen' => $this->_name,
             'title' => $this->getTitle(),
             'label' => $this->_label,
+            'labelOnEdit' => $this->_labelOnEdit,
             'defaultOption' => $this->isDefault(),
             'multiInstance' => $this->_multiInstance,
             'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,

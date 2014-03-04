@@ -27,7 +27,7 @@ data-title="${info.text}"
         {{each generalOptions}}
             <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
             <span class="ui-silk inline ${icon}"></span>
-            {{if (label) }}
+            {{if (label || labelOnEdit) }}
                 ${$item.getTitle(title,idx,true)}
             {{/if}}
             </a>
@@ -110,9 +110,11 @@ data-title="${info.text}"
 
     {{if (generalOptions.length>0) }}
         {{each generalOptions}}
+            {{html $item.parseParentOptionCustomizationOpen(row._optionCustomization, $value) }}
+
             <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
             <span class="ui-silk inline ${icon}"></span>
-            {{if (label) }}
+            {{if (label || labelOnEdit) }}
                 ${$item.getTitle(title,idx,true)}
             {{/if}}
             </a>

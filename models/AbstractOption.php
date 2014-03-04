@@ -5,7 +5,7 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_class;
     protected $_title;
     protected $_default = false;
-    protected $_noLabel = true;
+    protected $_label = true;
 
     protected $_name;
 
@@ -16,12 +16,15 @@ abstract class KlearMatrix_Model_AbstractOption
 
     public function setConfig(Zend_Config $config)
     {
+
+
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
         $this->_title = $this->_config->getProperty("title");
         $this->_class = $this->_config->getProperty("class");
         $this->_label = (bool)$this->_config->getProperty("label");
+        $this->_labelOnEdit = (bool)$this->_config->getProperty("labelOnEdit");
         $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
         $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
 

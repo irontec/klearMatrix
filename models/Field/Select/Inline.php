@@ -9,8 +9,13 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
     {
         $parsedValues = new Klear_Model_ConfigParser;
         $parsedValues->setConfig($this->_config->getProperty('values'));
+        $excludeKeys = $this->_getExcludeKeys();
 
-        foreach ($this->_config->getProperty('values') as $key=>$value) {
+        foreach ($this->_config->getProperty('values') as $key => $value) {
+
+            if (is_array($excludeKeys) && in_array($key, $excludeKeys)) {
+                continue;
+            }
 
             $value = $parsedValues->getProperty((string)$key);
 
@@ -47,6 +52,20 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
             $this->_keys = array_keys($values);
             $this->_items = array_values($values);
         }
+    }
+
+    protected function _getExcludeKeys()
+    {
+        $filterClassName = $this->_config->getProperty('filterClass');
+        if ($filterClassName) {
+            $filter = new $filterClassName;
+            if ( !$filter instanceof KlearMatrix_Model_Field_Select_Filter_Interface ) {
+                throw new Exception('Filters must implement KlearMatrix_Model_Field_Select_Filter_Interface.');
+            }
+            $filter->setRouteDispatcher($this->_column->getRouteDispatcher());
+            return $filter->getCondition();
+        }
+        return null;
     }
 
     protected function _orderValues()

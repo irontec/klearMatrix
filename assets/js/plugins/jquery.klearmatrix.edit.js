@@ -1086,7 +1086,7 @@
                 });
             });
 
-            $("textarea[maxlength]:not([data-plugin]), input[maxlength]", this.options.theForm).each(function(){
+            $("textarea[maxlength]:not([data-plugin]), input[maxlength]:not([data-plugin])", this.options.theForm).each(function(){
                 var remaining = $(this).attr('maxlength') - $(this).val().length;
                 if ($('p.countdown',$(this).parent()).length == 0) {
                     $(this).parent().append($("<p class='countdown' />")

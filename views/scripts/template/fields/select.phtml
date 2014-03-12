@@ -48,8 +48,7 @@
 >
 
 {{each(idx,dataValue) _dataConfig.values}}
-    <option{{if (_fieldValue && dataValue.key == _fieldValue)}} selected="selected"{{/if}}
-
+    <option ${$item.drawSelected(dataValue.key, _fieldValue)}
     {{if (dataValue.data)}}
         {{each(extraDataLabel, extraDataVal) dataValue.data}}
             data-${extraDataLabel}="${extraDataVal}"

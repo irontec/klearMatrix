@@ -140,12 +140,25 @@
                         return "-"+s.toLowerCase();
                     });
                     return  attribute;
+                }, 
+                
+                drawSelected : function(attribute, value) {
+                    
+                    var value = $("<div>" + value +"</div>").text();
+                    
+                    if (attribute == value) {
+                        return 'selected="selected"';
+                    } else {
+                        return '';
+                    }
                 }
+
             };
 
             if (column.multilang) {
 
                 var _mlList = $("<dl />");
+
                 _mlList.addClass("multiLanguage");
 
                 for (var i in this.data.langs) {
@@ -729,6 +742,7 @@
 
             return true;
         }
+        
     };
 
 })(jQuery);

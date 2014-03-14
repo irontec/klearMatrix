@@ -1,88 +1,86 @@
 {{if (_readonly)}}
 
     {{if (_fieldValue.address)}} {{html _fieldValue.address}} {{/if}}
-    
+
     <div class="mapCanvas" data-type="readOnly"></div>
     <img src="" class="mapImg auto gmaps" data-plugin="gmaps"/>
-    <input type="hidden" class="auto gmaps" 
+    <input type="hidden" class="auto gmaps"
     {{if (_properties.zoom)}}
     data-setting-zoom="${_properties.zoom}"
     {{/if}}
-    
+
     {{if (_properties.height)}}
     data-setting-height="${_properties.height}"
     {{/if}}
-    
+
     {{if (_properties.width)}}
     data-setting-width="${_properties.width}"
     {{/if}}
-    
+
     {{if (_properties.defaultLat !== false ) }}
     data-setting-default-lat="${_properties.defaultLat}"
     {{/if}}
-    
+
     {{if (_properties.defaultLng !== false )}}
     data-setting-default-lng="${_properties.defaultLng}"
     {{/if}}
-    
+
     data-plugin="gmaps" />
-    
+
 {{else}}
 
     <input
     type="text" class="auto gmaps"
     {{if (_fieldValue.address)}} value="${_fieldValue.address}" {{/if}} data-plugin="gmaps"
-    
+
     {{if (_properties.zoom)}}
     data-setting-zoom="${_properties.zoom}"
     {{/if}}
-    
+
     {{if (_properties.height)}}
     data-setting-height="${_properties.height}"
     {{/if}}
-    
+
     {{if (_properties.width)}}
     data-setting-width="${_properties.width}"
     {{/if}}
-    
-    
+
+
     {{if (_properties.defaultLat !== false)}}
     data-setting-default-lat="${_properties.defaultLat}"
     {{/if}}
-    
+
     {{if (_properties.defaultLng !== false)}}
     data-setting-default-lng="${_properties.defaultLng}"
     {{/if}}
-    
+
     {{if (_properties.required)}}
     required=""
     {{/if}}
-    
+
     {{if (_properties.placeholder)}}
     placeholder="${_properties.placeholder}"
     {{/if}}
-    
+
     {{if (_properties.pattern)}}
     pattern="${_properties.pattern}"
     {{/if}}
-    
+
     {{if (_errors)}}
     {{each(eIndex,error) _errors}}
     data-${eIndex}="${error}"
     {{/each}}
     {{/if}}
-    
+
     {{if (_multilang)}}
     data-multilang="${_locale}"
     {{/if}}
-    
+
     {{each(idx,attrValue) _dataConfig.attributes}}
         ${idx}="${attrValue}"
     {{/each}}
-    
+
     />
-    <input type="button" value="Ir" />
-    
     <div class="mapCanvas"></div>
 
 {{/if}}

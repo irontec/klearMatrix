@@ -19,6 +19,7 @@
         geocoder: null,
         map: null,
         marker: null,
+        greenPin: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
 
         _setOption: function (name, value) {
 
@@ -146,6 +147,7 @@
 
                 google.maps.event.addListener(this.marker, 'drag', function() {
                     self._updateMarkerPosition(self.marker.getPosition());
+                    self.map.setCenter(marker.getPosition());
                 });
 
                 google.maps.event.addListener(this.marker, 'dragend', function() {
@@ -153,6 +155,32 @@
                     self._geocodePosition(self.marker.getPosition());
                     self.options.cache.adress.trigger('change');
                 });
+
+                // Show new marker on Map Move
+                var $currentMap = this.map;
+                google.maps.event.addListener($currentMap, 'dragend', (function($currentMap){
+                    return function() {
+                        var center = $currentMap.getCenter();
+                        self.marker.setMap(null);
+                        var marker = new google.maps.Marker({
+                            position: center,
+                            map: $currentMap,
+                            icon: self.greenPin,
+                            draggable: true
+                        });
+                        $currentMap.setCenter(center);
+                        $currentMap.marker = marker;
+                        self.marker = marker;
+                        google.maps.event.addListener(marker, 'dragend', (function(marker){
+                            return function() {
+                                marker.setIcon();
+                                self._updateMarkerPosition(marker.getPosition());
+                                self._geocodePosition(marker.getPosition());
+                                self.options.cache.adress.trigger('change');
+                            }
+                        })(marker));
+                    }
+                })($currentMap));
             }
         },
 
@@ -160,10 +188,12 @@
 
             var self = this;
 
-            this.options.cache.context.find("input[type=button]").click(function () {
-
-                $(this).blur();
-                self._geocode(self.options.cache.dummy.val());
+            this.options.cache.context.find("input[data-plugin=gmaps]").keyup(function(e){
+                if(e.keyCode == 13)
+                {
+                    $(this).blur();
+                    self._geocode(self.options.cache.dummy.val());
+                }
             });
 
             this.options.cache.adress.on('change', function(){

@@ -120,7 +120,7 @@
                 var _self = this;
                 var value2load = recoveredValue || preloadValue;
 
-                if (this.options.cache.element.find("option:selected").length > 0) {
+                if (value2load) {
 
                    var targetUrl = this.options.cache.dummy.attr("href");
 
@@ -139,9 +139,10 @@
                       success: function(data) {
 
                         var _parentContext = _self;
+                        _parentContext._cleanSelectedList();
                         $.each(data.results, function () {
                             var record = this[0];
-                            var targetNode = _self.options.cache.element.children('[value='+ record['id'] +']');
+                            var targetNode = _parentContext.options.cache.element.children('[value='+ record['id'] +']');
 
                             if (targetNode.length > 0) {
                                 targetNode.attr("selected", "selected");
@@ -184,12 +185,19 @@
             } else {
                 targetOption.attr("selected", "selected");
             }
+            this.options.cache.element.addClass('changed');
         },
 
         _removeFromSelectedList: function (node) {
             var nodeValue = node.attr("data-value");
             node.remove();
             this.options.cache.element.find("option[value="+nodeValue+"]").removeAttr("selected");
+            this.options.cache.element.addClass('changed');
+        },
+
+        _cleanSelectedList: function() {
+            this.options.cache.element.find('option').remove();
+            this.options.cache.selectedList.find('li').remove();
         },
 
         _initAutocomplete: function () {

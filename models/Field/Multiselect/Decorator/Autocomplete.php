@@ -79,104 +79,6 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         $this->_view->results = $options;
     }
 
-    protected function _runReverse()
-    {
-        $lastResults = null;
-        $itemIds = array();
-
-        foreach ($this->_request->getParam("value") as $value) {
-
-            if (empty($value)) continue;
-
-            $where = $this->_pkField . ' in (' . $value . ')';
-
-            $this->_results[$value] = $lastResults = $this->_mapper->fetchList($where);
-            foreach ($lastResults as $record) {
-                $itemIds[] = $record->getPrimaryKey();
-            }
-        }
-
-        $this->_totalItems = count(array_unique($itemIds));
-    }
-
-    protected function _run()
-    {
-        $searchTerm = $this->_request->getParam("term");
-
-        $this->_limit = null;
-        $order = null;
-
-        if (isset($this->_commandConfiguration->limit)) {
-            $this->_limit = intval($this->_commandConfiguration->limit);
-        }
-
-        if (isset($this->_commandConfiguration->order)) {
-            $order = $this->_commandConfiguration->order;
-            if (strpos($order, ',')) {
-                $order = explode(',', $order);
-            }
-        }
-
-        $preCondition = '';
-        if (isset($this->_commandConfiguration->filterClass)) {
-            if (isset($this->_commandConfiguration->condition)) {
-                throw new Exception('Defined condition is not going to work because filterClass is set.', 100);
-            }
-            $filterClassName = $this->_commandConfiguration->filterClass;
-            $filter = new $filterClassName;
-            if ( !$filter instanceof KlearMatrix_Model_Field_Select_Filter_Interface ) {
-                throw new Exception('Filters must implement KlearMatrix_Model_Field_Select_Filter_Interface.');
-            }
-            $filter->setRouteDispatcher($this->_request->getParam("mainRouter"));
-            $preCondition = $filter->getCondition() . ' AND ';
-        } elseif (isset($this->_commandConfiguration->condition)) {
-            $preCondition = '(' . $this->_commandConfiguration->condition . ') and ';
-        }
-
-        $multiLangColumns = array_keys($this->_model->getMultiLangColumnsList());
-        if (in_array($this->_labelField, $multiLangColumns)) {
-
-            $query = array();
-            $params = array();
-            foreach ( $this->_fields as $field ) {
-                foreach ($this->_model->getAvailableLangs() as $language) {
-                    $query[] = $field . '_' . $language . ' LIKE ?';
-                    $params[] = '%' . $searchTerm . '%';
-                }
-            }
-
-            $query = '('. implode(" OR ", $query) .')';
-            $where =  array(
-                $preCondition . $query,
-                $params
-            );
-
-        } else {
-
-            $query = array();
-            $params = array();
-            foreach ( $this->_fields as $field ) {
-                $query[] = $field . ' LIKE ?';
-                $params[] = '%' . $searchTerm . '%';
-            }
-
-            $query = '('. implode(" OR ", $query) .')';
-            $where =  array(
-                    $preCondition . $query,
-                    $params
-            );
-        }
-
-        $records = $this->_mapper->fetchList($where, $order, $this->_limit);
-        $this->_results = array();
-
-        foreach ($records as $record) {
-            $this->_results[$record->getPrimaryKey()] = $record;
-        }
-
-        $this->_totalItems = $this->_mapper->countByQuery($where);
-    }
-
     protected function _getFields()
     {
         $fieldName = $this->_commandConfiguration->fieldName;
@@ -201,5 +103,108 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
         return $fieldConfig->getProperty("template");
+    }
+
+    protected function _runReverse()
+    {
+        $itemIds = array();
+
+        foreach ($this->_request->getParam("value") as $value) {
+
+            if (empty($value)) continue;
+
+            $where = $this->_pkField . ' IN (' . $value . ')';
+
+            $lastResults = $this->_mapper->fetchList($where);
+            foreach ($lastResults as $record) {
+                $itemIds[] = $record->getPrimaryKey();
+            }
+            $this->_results[$value] = $lastResults;
+        }
+
+        $this->_totalItems = count(array_unique($itemIds));
+    }
+
+    protected function _run()
+    {
+        $this->_limit = $this->_getLimit();
+        $order = $this->_getOrder();
+        $preCondition = $this->_getPrecondition();
+
+        $multiLangColumns = array_keys($this->_model->getMultiLangColumnsList());
+
+        $queryConditions = array();
+        $queryParams = array();
+        $isMultilang = in_array($this->_labelField, $multiLangColumns);
+        foreach ($this->_fields as $field) {
+            $this->_addQueryConditions($field, $isMultilang, $queryConditions, $queryParams);
+        }
+        $query = '('. implode(" OR ", $queryConditions) .')';
+        $where =  array(
+            $preCondition . $query,
+            $queryParams
+        );
+
+        $records = $this->_mapper->fetchList($where, $order, $this->_limit);
+        $this->_results = array();
+
+        foreach ($records as $record) {
+            $this->_results[$record->getPrimaryKey()] = $record;
+        }
+
+        $this->_totalItems = $this->_mapper->countByQuery($where);
+    }
+
+    protected function _addQueryConditions($field, $isMultilang = false, &$query, &$params)
+    {
+        $searchTerm = $this->_request->getParam("term");
+        if ($isMultilang) {
+            foreach ($this->_model->getAvailableLangs() as $language) {
+                $query[] = $field . '_' . $language . ' LIKE ?';
+                $params[] = '%' . $searchTerm . '%';
+            }
+        } else {
+            $query[] = $field . ' LIKE ?';
+            $params[] = '%' . $searchTerm . '%';
+        }
+    }
+
+    protected function _getLimit()
+    {
+        if (isset($this->_commandConfiguration->limit)) {
+            return intval($this->_commandConfiguration->limit);
+        }
+        return null;
+    }
+
+    protected function _getOrder()
+    {
+        if (isset($this->_commandConfiguration->order)) {
+            $order = $this->_commandConfiguration->order;
+            if (strpos($order, ',')) {
+                $order = explode(',', $order);
+            }
+        }
+        return null;
+    }
+
+    protected function _getPrecondition()
+    {
+        $preCondition = '';
+        if (isset($this->_commandConfiguration->filterClass)) {
+            if (isset($this->_commandConfiguration->condition)) {
+                throw new Exception('Defined condition is not going to work because filterClass is set.', 100);
+            }
+            $filterClassName = $this->_commandConfiguration->filterClass;
+            $filter = new $filterClassName;
+            if ( !$filter instanceof KlearMatrix_Model_Field_Select_Filter_Interface ) {
+                throw new Exception('Filters must implement KlearMatrix_Model_Field_Select_Filter_Interface.');
+            }
+            $filter->setRouteDispatcher($this->_request->getParam("mainRouter"));
+            $preCondition = $filter->getCondition() . ' AND ';
+        } elseif (isset($this->_commandConfiguration->condition)) {
+            $preCondition = '(' . $this->_commandConfiguration->condition . ') AND ';
+        }
+        return $preCondition;
     }
 }

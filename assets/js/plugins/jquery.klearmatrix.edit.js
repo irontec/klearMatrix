@@ -1,5 +1,4 @@
 ;(function load($) {
-
     if (!$.klear.checkDeps(['$.klearmatrix.module','$.ui.form','$.fn.autoResize','$.fn.h5Validate','Crypto'],load)) {
         return;
     }
@@ -100,7 +99,6 @@
                     _selfklear.savedValues[$(this).attr("name")] = $(this).val();
                 });
 
-
             });
 
 
@@ -117,12 +115,10 @@
                 $.each(this.savedValues,function(name,value) {
 
                     var $el = $("[name='"+name+"']",form);
-
-                    $el.val(value).data("recoveredValue", value);
+                    $el.val(value);
+                    $el.data("recoveredValue", value);
                     $el.data('savedValue', (new Date()).toString());
-                    $el.data('recoveredValue',  (new Date()).toString());
                     $el.trigger('manualchange');
-
 
                 });
 
@@ -313,7 +309,7 @@
                 if ( $(this).data('preload') && $(this).data('preload') != '' ) {
                     _val = $(this).data('preload').toString();
                 }
-                
+
                 var _hash = Crypto.MD5(_val);
                 $(this)
                     .data("savedValue",_hash)
@@ -1105,11 +1101,11 @@
         },
 
         _joinFields : function(fixedFields) {
-            
+
 
             var fields = fixedFields.fields;
 
-            
+
             var $container = this.element.klearModule("getPanel");
             var $elements = [];
             for (var idx in fields) {
@@ -1124,9 +1120,9 @@
             if ($elements.length == 0) {
                 return;
             }
-            
+
             var widthPercent = Math.floor(100/fixedFields.colsPerRow) * 0.9;
-            
+
             var $superContainer = $("<fieldset />")
                 .addClass("superContainer")
                 .addClass("ui-widget-content")
@@ -1139,9 +1135,9 @@
 
             $.each($elements,function() {
                 $(this).addClass("containerFixed").appendTo($superContainer);
-                
+
                 var curPercent = widthPercent * $(this).data("numberWidth");
-                
+
                 $(this).css({width: curPercent + '%'})
             });
             // Elementos que necesiten ser "actualizados", despues de cambiar su contenedor

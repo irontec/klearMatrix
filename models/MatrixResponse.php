@@ -199,6 +199,12 @@ class KlearMatrix_Model_MatrixResponse
             } else {
                 $this->_parentId = $router->getParam('parentId', false);
             }
+
+            if (false === $this->_parentId) {
+                throw new Exception("No Parent id / pk found");
+            }
+
+
         } else {
             // Pantallas de elemento único instancia por $curScreenPK
             $this->_parentPk = $curScreenPK;
@@ -206,9 +212,6 @@ class KlearMatrix_Model_MatrixResponse
 
         }
 
-        if (false === $this->_parentId) {
-            throw new Exception("No Parent id / pk found");
-        }
 
         // Instanciamos pantalla
         $parentScreen = new KlearMatrix_Model_Screen;
@@ -223,12 +226,17 @@ class KlearMatrix_Model_MatrixResponse
         $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
 
 
-        $this->_parentData = $parentMapper->find($this->_parentId);
+        $pk = $this->_parentId;
+        if (false == $this->_parentId) {
+            $pk = $this->_parentPk;
+        }
+        $this->_parentData = $parentMapper->find($pk);
 
         if ($this->_parentData) {
             $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
             $this->_parentIden = $this->_parentData->$getter();
         }
+
 
     } // FIN!
 
@@ -275,7 +283,7 @@ class KlearMatrix_Model_MatrixResponse
         $this->_searchFields[$field] = $values;
         $this->_searchOps[$field] = $ops;
     }
-    
+
     public function setAsSearchPresetted()
     {
         $this->_searchPresetted = true;

@@ -136,6 +136,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
         if (false !== $parentScreenName) {
             $data->calculateParentData($this->_mainRouter, $parentScreenName, NULL);
+        } else {
+            $parentScreenName = $this->getRequest()->getPost("callerScreen", false);
+            if (false !== $parentScreenName && $this->getRequest()->getParam("pk")) {
+                $data->calculateParentData($this->_mainRouter, $parentScreenName, $this->getRequest()->getParam("pk"));
+            }
         }
 
         $data->parseItemAttrs($this->_item);

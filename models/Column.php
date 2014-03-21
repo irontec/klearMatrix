@@ -508,10 +508,10 @@ class KlearMatrix_Model_Column
                 if ($this->_isMapperSelect()) {
 
                     if ($this->namedParamsAreSupported()) {
-                        $comparisons[] = $searchField . ' = ' . $template;
+                        $comparisons[] = "`" .$searchField . '` = ' . $template;
                         $fieldValues[$template] = intval($_val);
                     } else {
-                        $comparisons[] = $searchField . ' = ?';
+                        $comparisons[] = "`" .$searchField . '` = ?';
                         $fieldValues[] = intval($_val);
                     }
 
@@ -519,10 +519,10 @@ class KlearMatrix_Model_Column
 
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
                     if ($this->namedParamsAreSupported()) {
-                        $comparisons[] =  $searchField . $searchOperator . ' ' . $template;
+                        $comparisons[] =  "`" . $searchField . "`" . $searchOperator . ' ' . $template;
                         $fieldValues[$template] = '%' . $_val . '%';
                     } else {
-                        $comparisons[] = $searchField . $searchOperator . ' ?';
+                        $comparisons[] = "`" . $searchField . "`" . $searchOperator . ' ?';
                         $fieldValues[] = '%' . $_val . '%';
                     }
                 }

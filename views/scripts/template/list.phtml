@@ -35,9 +35,9 @@ data-title="${info.text}"
     <p class="filterItem">
     <span class="searchOption">
         <select name="searchOption">
-            <option value="lt">menor</option>
-            <option value="eq">igual</option>
-            <option value="gt">mayor</option>
+            <option value="lt"><?php echo $this->translate('less than'); ?></option>
+            <option value="eq"><?php echo $this->translate('equals'); ?></option>
+            <option value="gt"><?php echo $this->translate('greater than'); ?></option>
         </select>
     </span>
     <input type="text" class="term">
@@ -77,7 +77,7 @@ data-title="${info.text}"
         {{/if}}
         />
     </span>
-    
+
     <p class="filteredFields">
     {{each(field,searchValues) searchFields}}
 
@@ -101,7 +101,7 @@ data-title="${info.text}"
                     {{/if}}
 
                     {{html $item.getValuesFromSelectColumn($item.getColumn(columns,field),_val)}}
-                
+
                 </span>
             {{/each}}
         </span>

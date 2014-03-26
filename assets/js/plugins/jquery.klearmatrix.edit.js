@@ -306,10 +306,6 @@
             $("select,input,textarea",this.options.theForm).each(function() {
                 var _val = (null == $(this).val())? '':$(this).val();
 
-                if ( $(this).data('preload') && $(this).data('preload') != '' ) {
-                    _val = $(this).data('preload').toString();
-                }
-
                 var _hash = Crypto.MD5(_val);
                 $(this)
                     .data("savedValue",_hash)
@@ -833,10 +829,11 @@
 
             var $container = this.element.klearModule("getPanel");
 
-
+            // Se le llama al modificar el estado de un elemento/campo
             this.options.theForm.on('updateChangedState',function() {
                 if ($(".changed",$(this)).length > 0) {
 
+                    // Si hay elementos marcar pestaña como changed
                     self.element.klearModule("setAsChanged", function() {
                         self.element.klearModule('showDialog',
                             $.translate("There is unsaved content.") +
@@ -866,6 +863,7 @@
                     });
 
                 } else {
+                    // Si hay elementos marcar pestaña como unchanged
                     self.element.klearModule("setAsUnChanged");
                 }
             });

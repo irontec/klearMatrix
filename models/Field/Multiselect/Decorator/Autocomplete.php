@@ -155,7 +155,7 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         $this->_totalItems = $this->_mapper->countByQuery($where);
     }
 
-    protected function _addQueryConditions($field, $isMultilang = false, &$query, &$params)
+    protected function _addQueryConditions($field, $isMultilang, &$query, &$params)
     {
         $searchTerm = $this->_request->getParam("term");
         if ($isMultilang) {
@@ -177,15 +177,23 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         return null;
     }
 
+    /**
+     * Gets order value. Arrays or strings are accepted as order parameters
+     * If order is string with more than one element separated with comas
+     * it transforms the string to array.
+     * @return string|array
+     */
     protected function _getOrder()
     {
+        $order = null;
         if (isset($this->_commandConfiguration->order)) {
             $order = $this->_commandConfiguration->order;
-            if (strpos($order, ',')) {
+            if (is_string($order) && strpos($order, ',')) {
                 $order = explode(',', $order);
+                $order = array_map('trim', $order);
             }
         }
-        return null;
+        return $order;
     }
 
     protected function _getPrecondition()

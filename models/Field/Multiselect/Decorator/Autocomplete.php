@@ -188,9 +188,11 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         $order = null;
         if (isset($this->_commandConfiguration->order)) {
             $order = $this->_commandConfiguration->order;
-            if (is_string($order) && strpos($order, ',')) {
+            if (is_string($order)) {
                 $order = explode(',', $order);
-                $order = array_map('trim', $order);
+                return array_map('trim', $order);
+            } elseif ($order instanceof \Zend_Config) {
+                return $order->toArray();
             }
         }
         return $order;

@@ -305,7 +305,15 @@
 
             $("select,input,textarea",this.options.theForm).each(function() {
                 var _val = (null == $(this).val())? '':$(this).val();
+                
 
+                // Si el campo no tiene valor setteado
+                // Y tiene el data-preload, el valor se cargará con un decorator
+                // Una vez el campo tenga val(), lo cogeremos directamente.
+                if ($(this).val() == null && $(this).data('preload') && $(this).data('preload') != '' ) {
+                    _val = $(this).data('preload').toString();
+                }
+                
                 var _hash = Crypto.MD5(_val);
                 $(this)
                     .data("savedValue",_hash)
@@ -970,13 +978,18 @@
                     var _target = $(this);
                 }
 
-
+                    
                 var _val = $(this).val() ? $(this).val() : '';
+                
+                
                 if ($(this).data("savedValue") != Crypto.MD5(_val)) {
                     _target.addClass("changed ui-state-highlight");
+                    _target.removeClass("ui-state-default");
                     $(this).addClass("changed");
+                    
                 } else {
                     _target.removeClass("changed ui-state-highlight");
+                    _target.addClass("ui-state-default");                    
                     $(this).removeClass("changed");
                 }
 

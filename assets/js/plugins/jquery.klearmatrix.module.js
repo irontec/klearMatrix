@@ -299,6 +299,7 @@
                             this.dropdown.addClass(cssClasses2Keep);
                         });
                     }
+                    $(this).trigger("blur.selectBoxIt");
                 })
                 .each(function() {
                     $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));

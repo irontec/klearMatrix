@@ -1,11 +1,10 @@
+{{if (description)}}
+    <p>${description}</p>
+{{else}}
+    <p><?php echo $this->translate('Do you want delete this record?'); ?></p>
+{{/if}}
 
 {{each(idx,row) values}}
-    {{if (description)}}
-        <p>${description}</p>
-    {{else}}
-        <p><?php echo $this->translate('Do you want delete this record?'); ?></p>
-    {{/if}}
-
     <p class="deleteable-item" data-id="${$item.getIndex(row,pk)}">
     {{each(colIdx,column) columns}}
         {{if (column['default'])}}
@@ -15,6 +14,7 @@
     {{/each}}
         <em>(#${$item.getIndex(row,pk)})</em>
     </p>
+{{/each}}
     <form class="klearMatrix_form autoclose-dialog">
     <span class="action autoClose ">
         <span>
@@ -22,4 +22,3 @@
         </span>
     </span>
     </form>
-{{/each}}

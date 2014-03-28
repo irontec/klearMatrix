@@ -81,11 +81,11 @@
 
             var tr = $('table.kMatrix tr', panel);
 
-            $("td:not(.options)", tr).on('mouseenter mouseleave',function() {
+            $("td", tr).on('mouseenter mouseleave',function() {
 
                 $("td:not(.options)", $(this).parent('tr')).toggleClass("ui-state-highlight");
 
-                if ($("a.option.default", $(this).parent('tr')).length>0) {
+                if (!$(this).is(".options") && $("a.option.default", $(this).parent('tr')).length>0) {
                     $(this).parent('tr').toggleClass("pointer");
                     $("a.option.default", $(this).parent('tr')).toggleClass("ui-state-active");
                 }
@@ -94,6 +94,22 @@
                 // Haciendo toda la tupla clickable para la default option
                 e.stopPropagation();
                 e.preventDefault();
+                
+                if ($(this).is(".options")) {
+                    return;
+                }
+                
+                if ($(this).hasClass("multiItem")) {
+                    var $chkBox = $("input:checkbox",$(this));
+                    $chkBox.prop('checked', !($chkBox.is(':checked')));
+                    return;
+                }
+                // Modificador SHIFT + MultiItem => toggle checkbox
+                if (e.shiftKey && $("td.multiItem",$(this).parent("tr")).length > 0) {
+                    $("td.multiItem",$(this).parent("tr")).trigger("mouseup");
+                    return;
+                }
+                
                 $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default", $(this).parent('tr')));
 
                 var $optionAnchor = $("a.option.default", $(this).parent('tr'));
@@ -155,12 +171,45 @@
                     .klearModule("option","dispatchOptions",_dispatchOptions)
                     .klearModule("reDispatch");
             }).css("cursor","pointer");
-
+            
+            $("th.multiItem", panel).on("mouseup",function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var $chkBox = $("input:checkbox",$(this));
+                var targetValue = !($chkBox.is(':checked'));
+                $(".multiItem input:checkbox", panel).prop('checked', targetValue);
+                return;
+            }).css("cursor","pointer");
+            
+            $(".multiItem input:checkbox", panel).on("click",function(e) {
+                e.preventDefault();
+            });
+            
             $("th:not(.notSortable) span.filter",panel).on("click",function(e) {
                 e.stopPropagation();
                 e.preventDefault();
             });
 
+            $("th.multiItem", panel).on('refreshButtons',function(e) {
+                var numberOfChecks = $("td.multiItem input:checked", panel).length;
+                var disabled = (numberOfChecks == 0);
+                $("a._generalOption[data-multiitem]").each(function() {
+                    $(this).button("option", "disabled", disabled);
+                    if (numberOfChecks > 0) {
+                        $("sup",$(this)).html('('+numberOfChecks+')');
+                    } else {
+                        $("sup",$(this)).html('');
+                    }
+                });
+            });
+            
+            $(".multiItem", panel).on('mouseup',function() {
+                $("th.multiItem", panel).trigger('refreshButtons'); 
+            });
+            
+            $("th.multiItem", panel).trigger('refreshButtons');
+            
+            
             $("span.mlTag",panel).on("click",function(e) {
                 e.preventDefault();
                 e.stopPropagation();

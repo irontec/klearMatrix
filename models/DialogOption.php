@@ -18,17 +18,12 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
 
     public function toArray()
     {
-        $ret = array(
-            'icon' => $this->_class,
-            'type' => 'dialog',
-            'dialog' => $this->_name,
-            'title' => $this->getTitle(),
-            'defaultOption' => $this->isDefault(),
-            'label' => $this->_label,
-            'labelOnEdit' => $this->_labelOnEdit,
-            'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
-            'showOnlyOnNull' => $this->_showOnlyOnNull
-        );
+        $ret = $this->_prepareArray();
+
+        $ret['dialog'] = $this->_name;
+        $ret['type'] = 'dialog';
+
+       // $ret = $this->_removeFalse($ret);
 
         if ($this->isDefault()) {
             $ret['defaultOption'] = true;

@@ -209,7 +209,14 @@
             return node.html();
 
         },
-
+        isMultiItemSelectableList : function(generalOptions) {
+            for (var i in generalOptions) {
+                if (generalOptions[i].multiItem) {
+                    return true;
+                }
+            }
+            return false;
+        },
         getColumnName : function(columns, columnId) {
 
             for(var idx in columns) {

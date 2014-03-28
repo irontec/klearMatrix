@@ -37,8 +37,12 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $pk = $this->_mainRouter->getParam("pk");
 
-        $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
-
+        if (is_array($pk)) {
+            $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > various PK('.implode(",", $pk).')');
+        } else {
+            $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
+            $pk = array($pk);
+        }
         $cols = $this->_item->getVisibleColumns();
 
         $defaultCol = $cols->getDefaultCol();
@@ -52,12 +56,15 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 
-        $obj = $mapper->find($pk);
-        if (!$obj) {
+
+        $baseModel = $this->_item->getObjectInstance();
+        $result = $mapper->fetchList($baseModel->getPrimaryKeyName() . ' in ('.implode(',', $pk).')');
+
+        if (sizeof($result) != sizeof($pk)) {
             throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
         }
 
-        $data->setResults($obj);
+        $data->setResults($result);
         $data->fixResults($this->_item);
         $data->parseItemAttrs($this->_item);
 
@@ -78,12 +85,19 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $pk = $this->_mainRouter->getParam("pk");
 
-        $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > PK('.$pk.')');
 
+        if (is_array($pk)) {
+            $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > various PK('.implode(',',$pk).')');
+        } else {
+            $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > PK('.$pk.')');
+            $pk = array($pk);
+        }
 
-        $obj = $mapper->find($pk);
+        $baseModel = $this->_item->getObjectInstance();
+        $results = $mapper->fetchList($baseModel->getPrimaryKeyName() . ' in ('.implode(',', $pk).')');
+
         try {
-            if (!$obj) {
+            if (!is_array($results) || sizeof($results) == 0) {
                 $this->_helper->log(
                     'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
                     Zend_Log::ERR
@@ -91,19 +105,21 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
                 throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
             }
 
-            if (!$obj->delete()) {
-                throw new Exception('Unknown error');
+            foreach($results as $obj) {
+                if (!$obj->delete()) {
+                    throw new Exception('Unknown error');
+                }
             }
 
         } catch (Exception $e) {
             $this->_helper->log(
-                'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
+                'Error deleting model for ' . $mapperName . ' > PK('.$obj->getPrimaryKey().')',
                 Zend_Log::ERR
             );
             throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
         }
 
-        $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.$pk.')');
+        $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.implode(',',$pk).')');
 
         $data = array(
             'error' => false,
@@ -112,11 +128,12 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         );
 
         if ($this->_item->getMessage()) {
-            $data['message'] = $this->_item->getMessage();
+            $data['message'] = str_replace("%total%", sizeof($results), $this->_item->getMessage());
         } else {
             // Mensaje por defecto.
             $data['message'] = sprintf(
-                $this->view->translate('%s successfully deleted'),
+                $this->view->translate('(%d) %s successfully deleted'),
+                sizeof($results),
                 $this->view->translate('Record')
             );
         }

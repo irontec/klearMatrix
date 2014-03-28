@@ -6,6 +6,10 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_title;
     protected $_default = false;
     protected $_label = true;
+    protected $_labelOnEdit = true;
+    protected $_labelOnList = true;
+
+    protected $_multiItem = false;
 
     protected $_name;
 
@@ -25,6 +29,10 @@ abstract class KlearMatrix_Model_AbstractOption
         $this->_class = $this->_config->getProperty("class");
         $this->_label = (bool)$this->_config->getProperty("label");
         $this->_labelOnEdit = (bool)$this->_config->getProperty("labelOnEdit");
+        $this->_labelOnList = (bool)$this->_config->getProperty("labelOnList");
+
+        $this->_multiItem = (bool)$this->_config->getProperty("multiItem");
+
         $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
         $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
 
@@ -172,6 +180,37 @@ abstract class KlearMatrix_Model_AbstractOption
     public function isDefault()
     {
         return true === $this->_default;
+    }
+
+    protected function _removeFalse($ret)
+    {
+        foreach($ret as $idx => $value) {
+            if (false === $value) {
+                unset($ret[$idx]);
+            }
+        }
+        return $ret;
+
+    }
+
+    /**
+     * Valores Comunes a todas las opciones
+     * @return multitype:boolean string NULL
+     */
+    protected function _prepareArray()
+    {
+        return array(
+                'icon' => $this->_class,
+                'title' => $this->getTitle(),
+                'label' => $this->_label,
+                'labelOnEdit' => $this->_labelOnEdit,
+                'labelOnList' => $this->_labelOnList,
+                'defaultOption' => $this->isDefault(),
+                'multiItem' => $this->_multiItem,
+                'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
+                'showOnlyOnNull' => $this->_showOnlyOnNull
+        );
+
     }
 
     abstract public function toArray();

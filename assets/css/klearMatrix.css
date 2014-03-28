@@ -41,6 +41,11 @@ table.kMatrix td {
     text-overflow: ellipsis;
 }
 
+table.kMatrix th.multiItem, table.kMatrix td.multiItem {
+    width:1em;
+    text-align: center;
+}
+
 table.kMatrix td.options {
 }
 

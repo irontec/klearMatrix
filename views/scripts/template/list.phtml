@@ -153,7 +153,10 @@ ${$item.getTitle(title,false)}
 </caption>
 
 <tr>
-   {{each(idx,column) columns}}
+    {{if (($item.isMultiItemSelectableList(generalOptions))) }}
+        <th class="ui-widget-header multiItem notSortable"><input type="checkbox" /></th>
+    {{/if}}
+    {{each(idx,column) columns}}
             <th data-field="${column.id}" class="ui-widget-header{{if (type == '_option') ||  !(column.sortable)}} notSortable{{/if}}">
             <span class="title">${column.name}</span>
             {{if (column.sortable)}}
@@ -170,12 +173,15 @@ ${$item.getTitle(title,false)}
                 {{/if}}
             {{/if}}
             </th>
-   {{/each}}
+    {{/each}}
 </tr>
 
 {{each(idx,row) values}}
 <tr data-id="${$item.getIndex(row,pk)}">
-   {{each columns}}
+    {{if (($item.isMultiItemSelectableList(generalOptions))) }}
+        <td class="ui-widget-content multiItem"><input type="checkbox" data-id="${$item.getIndex(row,pk)}" /></td>
+    {{/if}}
+    {{each columns}}
        {{if (type != '_option') }}
             <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">
 
@@ -259,11 +265,12 @@ ${$item.getTitle(title,false)}
     {{if (optionsPlacement == 'both' || optionsPlacement == 'bottom')}}
         <div class="generalOptionsToolbar{{if ($item.data.paginator)}} bottomToolbar{{/if}}">
         {{each generalOptions}}
-            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}}>
+            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (multiItem)}} data-multiitem='true'{{/if}} >
             <span class="ui-silk inline ${icon}"></span>
-            {{if (label) }}
+            {{if (label || labelOnList) }}
                 ${$item.getTitle(title,false)}
             {{/if}}
+            {{if (multiItem)}}<sup></sup>{{/if}}
             </a>
         {{/each}}
 

@@ -73,18 +73,14 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
 
     public function toArray()
     {
-        $ret = array(
-            'icon' => $this->_class,
-            'type' => 'screen',
-            'screen' => $this->_name,
-            'title' => $this->getTitle(),
-            'label' => $this->_label,
-            'labelOnEdit' => $this->_labelOnEdit,
-            'defaultOption' => $this->isDefault(),
-            'multiInstance' => $this->_multiInstance,
-            'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
-            'showOnlyOnNull' => $this->_showOnlyOnNull
-        );
+
+        $ret = $this->_prepareArray();
+
+        $ret['screen'] = $this->_name;
+        $ret['type'] = 'screen';
+        $ret['multiInstance'] = $this->_multiInstance;
+
+
 
         if (!is_null($this->_externalConfig)) {
             $ret['externalOption'] = true;

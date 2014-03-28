@@ -114,7 +114,10 @@
 
         _resolveParentHolder : function(element) {
 
-
+            if ($(element).data("multiitem")) {
+                return $("td.multiItem input:checked");
+            }
+            
             if ($(element).data("parentHolderSelector")) {
 
                 var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
@@ -330,7 +333,6 @@
 
                 var _parentHolder = _self._resolveParentHolder(this);
 
-
                 if (!_menuLink.data("externalnoiden")) {
 
                     if (_menuLink.data("multiinstance")) {
@@ -478,6 +480,15 @@
 
                 var _parentHolder = _self._resolveParentHolder(this);
 
+                var curPK = _parentHolder.data("id");
+                
+                if ($(_parentHolder).length > 1) {
+                    curPK = [];    
+                    $(_parentHolder).each(function() {
+                       curPK.push($(this).data("id")); 
+                    });
+                }
+                
                 var $caller = $(this);
 
                 $(self).klearModule("showDialog",
@@ -516,7 +527,7 @@
                             file: self.klearModule("option", "file"),
                             type: 'dialog',
                             dialog : $_dialog.data("dialogName"),
-                            pk : _parentHolder.data("id"),
+                            pk : curPK,
                             post: _postData,
                             external: external
                         },

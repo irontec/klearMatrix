@@ -20,7 +20,11 @@
             var $refParent = $(this.options.parent);
             var $self = $(this.element);
             var self = this;
-            var _ids = $(".deleteable-item",$(moduleDialogCaller)).data("id");
+            
+            var _ids = [];
+            $(".deleteable-item",$(moduleDialogCaller)).each(function() {
+                _ids.push($(this).data("id"));
+            });
 
             $self
                 .moduleDialog("setAsLoading")
@@ -42,13 +46,18 @@
                             //TO-DO: FOK OFF
                         } else {
                             if (!$.isArray(data.pk)) data.pk = [data.pk];
-
+                            var lastInterval = null;
+                            
                             $.each(data.pk,function(idx,_pk) {
                                 $("tr[data-id='"+_pk+"']",$refParent.klearModule("getPanel")).slideUp(function() {
                                     $(this).remove();
+                                    clearTimeout(lastInterval);
+                                    lastInterval = setTimeout(function() {
+                                        $("th.multiItem", $refParent.klearModule("getPanel")).trigger('refreshButtons');
+                                    },400);
                                 });
                             });
-
+                            
                             if (self.mustBeClosed) {
                                 $self.moduleDialog("close");
                             }

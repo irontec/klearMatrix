@@ -265,7 +265,10 @@ ${$item.getTitle(title,false)}
     {{if (optionsPlacement == 'both' || optionsPlacement == 'bottom')}}
         <div class="generalOptionsToolbar{{if ($item.data.paginator)}} bottomToolbar{{/if}}">
         {{each generalOptions}}
-            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (multiItem)}} data-multiitem='true'{{/if}} >
+            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}"
+            {{if (shortcut)}} data-shortcut="${shortcut}" {{/if}}
+            {{if (multiInstance)}} data-multiinstance='true'{{/if}}
+            {{if (multiItem)}} data-multiitem='true'{{/if}} >
             <span class="ui-silk inline ${icon}"></span>
             {{if (label || labelOnList) }}
                 ${$item.getTitle(title,false)}

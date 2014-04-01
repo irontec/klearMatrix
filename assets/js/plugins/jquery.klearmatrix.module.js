@@ -462,14 +462,20 @@
                 // Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
                 e.preventDefault();
                 e.stopPropagation();
+            }).filter("[data-shortcut]").each(function() {
+                var $option = $(this);
+                var keyCode = $(this).data("shortcut").toUpperCase().charCodeAt(0);
+                self.klearModule("registerShortcut",keyCode,function() {
+                    $option.trigger("mouseup.screenOption");
+                });
             });
 
             /*
              * Capturar opciones de diálogo.
              */
             $('a.option.dialog', this.element.klearModule("getPanel"))
-                .off('click.dialogOptions')
-                .on('click.dialogOptions', function(e, data) {
+                .off('click.dialogOption')
+                .on('click.dialogOption', function(e, data) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -546,12 +552,21 @@
 
 
             })
-                .off('mouseup.dialogOptions')
-                .on('mouseup.dialogOptions', function(e) {
+            .off('mouseup.dialogOption')
+            .on('mouseup.dialogOption', function(e) {
                 // Paramos el evento mouseup, para no llegar al tr
                 e.preventDefault();
                 e.stopPropagation();
+            })
+            .filter("[data-shortcut]").each(function() {
+                var $option = $(this);
+                var keyCode = $(this).data("shortcut").toUpperCase().charCodeAt(0);
+                self.klearModule("registerShortcut",keyCode,function() {
+                    $option.trigger("click.dialogOption");
+                });
             });
+           
+            
 
             /*
              * Capturar opciones de command (Siempre request externo -- no callback available!
@@ -559,8 +574,8 @@
              */
 
             $('a.option.command', this.element.klearModule("getPanel"))
-                .off('click.commandAction')
-                .on('click.commandAction', function(e, data) {
+                .off('click.commandOption')
+                .on('click.commandOption', function(e, data) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -605,6 +620,12 @@
                         }
                 );
 
+            }).filter("[data-shortcut]").each(function() {
+                var $option = $(this);
+                var keyCode = $(this).data("shortcut").toUpperCase().charCodeAt(0);
+                self.klearModule("registerShortcut",keyCode,function() {
+                    $option.trigger("click.commandOption");
+                });
             });
 
 

@@ -9,6 +9,8 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_labelOnEdit = true;
     protected $_labelOnList = true;
 
+    protected $_shortcut = true;
+
     protected $_multiItem = false;
 
     protected $_name;
@@ -27,6 +29,7 @@ abstract class KlearMatrix_Model_AbstractOption
 
         $this->_title = $this->_config->getProperty("title");
         $this->_class = $this->_config->getProperty("class");
+        $this->_shortcut = substr($this->_config->getProperty("shortcutOption"),0,1);
         $this->_label = (bool)$this->_config->getProperty("label");
         $this->_labelOnEdit = (bool)$this->_config->getProperty("labelOnEdit");
         $this->_labelOnList = (bool)$this->_config->getProperty("labelOnList");
@@ -203,6 +206,7 @@ abstract class KlearMatrix_Model_AbstractOption
                 'icon' => $this->_class,
                 'title' => $this->getTitle(),
                 'label' => $this->_label,
+                'shortcut' => $this->_shortcut,
                 'labelOnEdit' => $this->_labelOnEdit,
                 'labelOnList' => $this->_labelOnList,
                 'defaultOption' => $this->isDefault(),

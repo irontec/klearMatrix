@@ -1,0 +1,41 @@
+Para actualizar tinyMCE
+=======================
+
+Nos descargamos el master de git
+git clone https://github.com/tinymce/tinymce.git
+
+(Tenemos que tener instalado node con nvm o similar...)
+
+Instalamos "jake" (una especie de "grunt" especifico)
+npm install -g jake
+
+
+Desde la carpeta raiz de tinyMce ejecutamos:
+
+//para instalar las dependencias)
+$ npm i
+
+// Compilamos las fuentes
+$ jake
+
+// unimos el theme y los plugins en tinymce.full.min.js
+// Se reduce considerablemente el número de peticiones
+$ jake minify bundle[themes:modern,plugins:*]
+
+// finalmente copiamos los ficheros en el directorio de klear para su commit correspondiente:
+cp js/tinymce/jquery.tinymce.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/jquery.tinymce.min.js 
+cp js/tinymce/tinymce.full.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js 
+cp js/tinymce/tinymce.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js 
+cp -a js/tinymce/plugins/* /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/plugins/
+rm -rf /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/plugins/*/plugin.js
+cp -a js/tinymce/skins/*css /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/
+cp -a js/tinymce/skins/lightgray/*css /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/lightgray/
+cp js/tinymce/skins/lightgray/fonts/* /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/lightgray/fonts/
+cp js/tinymce/skins/lightgray/img/* /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/lightgray/img/
+cp js/tinymce/themes/modern/* /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/themes/modern/
+
+
+(Pendiente actualizar la carpeta /lang)
+
+
+

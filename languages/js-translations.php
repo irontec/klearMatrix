@@ -34,5 +34,6 @@ return array (
   34 => 'Attention!',
   36 => 'Ignore changes and close',
   37 => 'Auto-copied field',
-  38 => 'There are not associated elements',
+  38 => 'characters remaining',
+  40 => 'There are not associated elements',
 );

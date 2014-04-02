@@ -193,7 +193,7 @@
             $("th.multiItem", panel).on('refreshButtons',function(e) {
                 var numberOfChecks = $("td.multiItem input:checked", panel).length;
                 var disabled = (numberOfChecks == 0);
-                $("a._generalOption[data-multiitem]").each(function() {
+                $("a._generalOption[data-multiitem]", panel).each(function() {
                     $(this).button("option", "disabled", disabled);
                     if (numberOfChecks > 0) {
                         $("sup",$(this)).html('('+numberOfChecks+')');
@@ -201,6 +201,8 @@
                         $("sup",$(this)).html('');
                     }
                 });
+                var headChecked = (numberOfChecks == $("td.multiItem input:checkbox", panel).length);
+                $("th.multiItem input:checkbox", panel).prop('checked', headChecked);
             });
             
             $(".multiItem", panel).on('mouseup',function() {

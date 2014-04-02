@@ -185,6 +185,7 @@ ${$item.getTitle(title,false)}
        {{if (type != '_option') }}
             <td class="ui-widget-content{{if ($value['default'])}} default{{/if}} {{if ($value.multilang)}} multilang{{/if}}">
 
+                {{html $item.getPrefix($value)}}
                 {{html $item.getIndexFromColumn(row,$value)}}
 
                 {{if ($value.decorators)}}
@@ -202,6 +203,7 @@ ${$item.getTitle(title,false)}
 
                     {{/each}}
                 {{/if}}
+                {{html $item.getSufix($value)}}
 
                 {{if ($value.options)}}
                     {{each $value.options}}

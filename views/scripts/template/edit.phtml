@@ -58,8 +58,9 @@ data-title="${info.text}"
             {{html $item.getSizeForField(row[id],column)}}
             </label>
 
+            {{html $item.getPrefix(column)}}
             {{html $item.getEditDataForField(row[id],column)}}
-
+            {{html $item.getSufix(column)}}
             {{if (column.options)}}
                 {{each column.options}}
 

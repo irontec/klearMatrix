@@ -403,6 +403,19 @@
                 return false;
             }
         },
+        _getProperty : function(column, property) {
+            if (!column.properties || !column.properties[property]) {
+                return '';
+            }
+            
+            return column.properties[property];
+        },
+        getPrefix : function(column) {
+            return this._getProperty(column, 'prefix');
+        },
+        getSufix : function(column) {
+            return this._getProperty(column, 'sufix');
+        },
         getStringIndexFromColumn : function(row,column) {
             var ret = this.getIndexFromColumn(row, column);
             var $ret = $("<div />").html(ret);
@@ -421,7 +434,7 @@
                 return '';
 
             } else {
-
+                
                 switch(column.type){
 
                     case 'select':

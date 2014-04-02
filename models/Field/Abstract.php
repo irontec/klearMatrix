@@ -23,6 +23,11 @@ abstract class KlearMatrix_Model_Field_Abstract
             "defaultValue" // Valor por defecto en caso de new
             );
 
+    protected $_propertyMultiLang = array(
+            "prefix",
+            "sufix"
+    );
+
     protected $_properties = array();
 
     /*valid error index */
@@ -53,8 +58,15 @@ abstract class KlearMatrix_Model_Field_Abstract
         if (is_object($this->_config)) {
 
             foreach ($this->_propertyMaster as $property) {
-
                 $this->_properties[$property] = $this->_config->getProperty($property);
+            }
+
+            foreach ($this->_propertyMultiLang as $property) {
+                $value = $this->_config->getProperty($property);
+                if ($value === false) {
+                    continue;
+                }
+                $this->_properties[$property] = Klear_Model_Gettext::gettextCheck($value);
             }
 
             $this->_parseErrorMessages();

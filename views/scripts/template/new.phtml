@@ -50,7 +50,10 @@ data-title="${info.text}"
                 ></span>
             {{/if}}
             <label rel="${id}" for="${id}${randIden}">${name}:</label>
-           {{html $item.getEditDataForField(false,column,true)}}
+            {{html $item.getPrefix(column)}}
+            {{html $item.getEditDataForField(false,column,true)}}
+            {{html $item.getSufix(column)}}
+
            {{if (column.options)}}
                 {{each column.options}}
                 <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"

@@ -587,10 +587,16 @@ span.autocompleteCounter {
 }
 
 .deleteable-item,
+.updateable-item,
 .clonable-item {
 	font-size:0.7em;
 	opacity:0.8;
 	margin-top: 0.8em;
+}
+
+.updateable-control {
+    margin-top: 1em;
+    text-align: center;
 }
 
 a.option {

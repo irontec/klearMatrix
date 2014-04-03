@@ -107,6 +107,12 @@
                 // Modificador SHIFT + MultiItem => toggle checkbox
                 if (e.shiftKey && $("td.multiItem",$(this).parent("tr")).length > 0) {
                     $("td.multiItem",$(this).parent("tr")).trigger("mouseup");
+                    // Pequeño hack para deseleccionar el texto.
+                    if ( document.selection ) {
+                        document.selection.empty();
+                    } else if ( window.getSelection ) {
+                        window.getSelection().removeAllRanges();
+                    }
                     return;
                 }
                 

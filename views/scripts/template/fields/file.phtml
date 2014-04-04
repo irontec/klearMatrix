@@ -14,7 +14,12 @@
 >
     {{if (!_dataConfig.options['hiddenName'])}}
         ${_fieldValue.name}
+        {{if (_dataConfig.options['showFileSize'])}}
+            <em>(${$item.formatSizeForFile(_fieldValue)})</em>
+        {{/if}}
     {{/if}}
+
+
 {{else}}
 >
     <?php echo $this->translate('Not available'); ?>

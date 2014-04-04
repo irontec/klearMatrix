@@ -132,7 +132,7 @@
             };
 
             var node = $("<div />");
-
+            var self = this;
             var _templateHelpers = {
                 dataParser: function (attribute, value) {
 
@@ -151,7 +151,13 @@
                     } else {
                         return '';
                     }
-                }
+                },
+                formatSizeForFile : function(file) {
+                    if (file.size) {
+                        return self._formatSizeUnits(parseInt(file.size));
+                    }
+                    return "";
+                },
 
             };
 

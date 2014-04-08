@@ -11431,10 +11431,10 @@ define("tinymce/dom/Serializer", [
 					node = node.cloneNode(true);
 				}
 
+				if (node.ownerDocument.defaultView) {
 				// Nodes needs to be attached to something in WebKit/Opera
 				// This fix will make DOM ranges and make Sizzle happy!
-				impl = node.ownerDocument.implementation;
-				if (node.ownerDocument.defaultView) {
+					impl = node.ownerDocument.implementation;
 					if (impl.createHTMLDocument) {
 						// Create an empty HTML document
 						doc = impl.createHTMLDocument("");

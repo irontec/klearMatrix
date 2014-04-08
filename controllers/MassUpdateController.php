@@ -96,11 +96,9 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
 
         if (is_array($pk)) {
-            $this->_helper->log('Mass Update for mapper (not executed):' 
-                    . $mapperName . ' > various PK('.implode(",", $pk).')');
+            $this->_helper->log('Mass Update for mapper (not executed):' . $mapperName . ' > various PK('.implode(",", $pk).')');
         } else {
-            $this->_helper->log('Mass Update for mapper (not executed):' 
-                    . $mapperName . ' > PK('.$pk.')');
+            $this->_helper->log('Mass Update for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
             $pk = array($pk);
         }
 
@@ -138,8 +136,8 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $message .= '</p>';
 
         foreach ($this->_results as $item) {
-            $message .= '<p class="updateable-item">' 
-                    . $item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
+            $message .= '<p class="updateable-item">'  . 
+                $item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
         }
 
         $message .= '<p class="updateable-control">' . $editableContent . '</p>';
@@ -193,9 +191,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
             $total++;
         }
 
-        $this->_helper->log($total 
-                . ' models succesfully update > PK('. implode(',', $pks). ') > ' 
-                . $this->_column->getPublicName() . ' >> ' . $value);
+        $this->_helper->log($total . ' models succesfully update > PK('. implode(',', $pks). ') > ' . $this->_column->getPublicName() . ' >> ' . $value);
 
         if ($this->_item->getMessage()) {
             $message = $this->_item->getMessage();

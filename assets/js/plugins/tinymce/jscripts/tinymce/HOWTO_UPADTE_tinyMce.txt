@@ -23,6 +23,7 @@ $ jake
 $ jake minify bundle[themes:modern,plugins:*]
 
 // finalmente copiamos los ficheros en el directorio de klear para su commit correspondiente:
+cp js/tinymce/tinymce.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js
 cp js/tinymce/jquery.tinymce.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/jquery.tinymce.min.js 
 cp js/tinymce/tinymce.full.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js 
 cp js/tinymce/tinymce.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js 

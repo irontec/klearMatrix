@@ -11433,9 +11433,8 @@ define("tinymce/dom/Serializer", [
 
 				// Nodes needs to be attached to something in WebKit/Opera
 				// This fix will make DOM ranges and make Sizzle happy!
-                                // IRONTEC: if extra para evitar errores aleatorios en firefox al interactuar con selectBoxIt :?
-        			if (node.ownerDocument.defaultView) {
-					impl = node.ownerDocument.implementation;
+				impl = node.ownerDocument.implementation;
+				if (node.ownerDocument.defaultView) {
 					if (impl.createHTMLDocument) {
 						// Create an empty HTML document
 						doc = impl.createHTMLDocument("");
@@ -11450,7 +11449,7 @@ define("tinymce/dom/Serializer", [
 							node = doc.body.firstChild;
 						} else {
 							node = doc.body;
-						}		
+						}	
 
 						// set the new document in DOMUtils so createElement etc works
 						oldDoc = dom.doc;

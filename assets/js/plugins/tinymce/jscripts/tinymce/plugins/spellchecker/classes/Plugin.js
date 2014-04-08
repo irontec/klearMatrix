@@ -70,7 +70,6 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 		function isEmpty(obj) {
 			/*jshint unused:false*/
-			/*eslint no-unused-vars:0 */
 			for (var name in obj) {
 				return false;
 			}
@@ -235,8 +234,6 @@ define("tinymce/spellcheckerplugin/Plugin", [
 
 			var spellCheckCallback = settings.spellchecker_callback || defaultSpellcheckCallback;
 			spellCheckCallback("spellcheck", words, doneCallback);
-
-			editor.focus();
 		}
 
 		function checkIfFinished() {

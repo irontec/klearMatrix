@@ -142,20 +142,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			return true;
 		}
 
-		// Convert toolbar array to multiple options
-		if (tinymce.isArray(settings.toolbar)) {
-			// Empty toolbar array is the same as a disabled toolbar
-			if (settings.toolbar.length === 0) {
-				return;
-			}
-
-			tinymce.each(settings.toolbar, function(toolbar, i) {
-				settings["toolbar" + (i + 1)] = toolbar;
-			});
-
-			delete settings.toolbar;
-		}
-
 		// Generate toolbar<n>
 		for (var i = 1; i < 10; i++) {
 			if (!addToolbar(settings["toolbar" + i])) {
@@ -163,21 +149,12 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			}
 		}
 
-		// Generate toolbar or default toolbar unless it's disabled
-		if (!toolbars.length && settings.toolbar !== false) {
+		// Generate toolbar or default toolbar
+		if (!toolbars.length) {
 			addToolbar(settings.toolbar || defaultToolbar);
 		}
 
-		if (toolbars.length) {
-			return {
-				type: 'panel',
-				layout: 'stack',
-				classes: "toolbar-grp",
-				ariaRoot: true,
-				ariaRemember: true,
-				items: toolbars
-			};
-		}
+		return toolbars;
 	}
 
 	/**
@@ -299,7 +276,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			var item = panel.find(type)[0];
 
 			if (item) {
-				item.focus(true);
+				item.focus();
 			}
 		}
 
@@ -414,7 +391,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
 				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
-				role: 'application',
 				classes: 'tinymce tinymce-inline',
 				layout: 'flex',
 				direction: 'column',
@@ -425,7 +401,9 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-					createToolbars()
+					settings.toolbar === false ? null : {
+						type: 'panel', layout: 'stack', classes: "toolbar-grp", items: createToolbars()
+					}
 				]
 			});
 
@@ -494,14 +472,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		// Basic UI layout
 		panel = self.panel = Factory.create({
 			type: 'panel',
-			role: 'application',
 			classes: 'tinymce',
 			style: 'visibility: hidden',
 			layout: 'stack',
 			border: 1,
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				createToolbars(),
+				settings.toolbar === false ? null : {type: 'panel', layout: 'stack', classes: "toolbar-grp", items: createToolbars()},
 				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
 			]
 		});
@@ -532,7 +509,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
-			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
+			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
 				{type: 'elementpath'},
 				resizeHandleCtrl
 			]});

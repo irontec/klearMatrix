@@ -12,10 +12,8 @@
  * This class contains logic for getting HTML contents out of the clipboard.
  *
  * We need to make a lot of ugly hacks to get the contents out of the clipboard since
- * the W3C Clipboard API is broken in all browsers that have it: Gecko/WebKit/Blink.
- * We might rewrite this the way those API:s stabilize. Browsers doesn't handle pasting
- * from applications like Word the same way as it does when pasting into a contentEditable area
- * so we need to do lots of extra work to try to get to this clipboard data.
+ * the W3C Clipboard API is broken in all browsers: Gecko/WebKit/Blink. We might rewrite
+ * this the way those API:s stabilize.
  *
  * Current implementation steps:
  *  1. On keydown with paste keys Ctrl+V or Shift+Insert create
@@ -107,19 +105,17 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
-		 * Creates a paste bin element as close as possible to the current caret location and places the focus inside that element
-		 * so that when the real paste event occurs the contents gets inserted into this element
-		 * instead of the current editor selection element.
+		 * Creates a paste bin element and moves the selection into that element. It will also move the element offscreen
+		 * so that resize handles doesn't get produced on IE or Drag handles or Firefox.
 		 */
 		function createPasteBin() {
 			var dom = editor.dom, body = editor.getBody();
 			var viewport = editor.dom.getViewPort(editor.getWin()), scrollTop = viewport.y, top = 20;
-			var scrollContainer;
 
 			lastRng = editor.selection.getRng();
 
 			if (editor.inline) {
-				scrollContainer = editor.selection.getScrollContainer();
+				var scrollContainer = editor.selection.getScrollContainer();
 
 				if (scrollContainer) {
 					scrollTop = scrollContainer.scrollTop;
@@ -130,25 +126,8 @@ define("tinymce/pasteplugin/Clipboard", [
 			// We want the paste bin to be as close to the caret as possible to avoid scrolling
 			if (lastRng.getClientRects) {
 				var rects = lastRng.getClientRects();
-
 				if (rects.length) {
-					// Client rects gets us closes to the actual
-					// caret location in for example a wrapped paragraph block
 					top = scrollTop + (rects[0].top - dom.getPos(body).y);
-				} else {
-					top = scrollTop;
-
-					// Check if we can find a closer location by checking the range element
-					var container = lastRng.startContainer;
-					if (container) {
-						if (container.nodeType == 3 && container.parentNode != body) {
-							container = container.parentNode;
-						}
-
-						if (container.nodeType == 1) {
-							top = dom.getPos(container, scrollContainer || body).y;
-						}
-					}
 				}
 			}
 
@@ -237,11 +216,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			var data = {};
 
 			if (dataTransfer && dataTransfer.types) {
-				// Use old WebKit API
-				var legacyText = dataTransfer.getData('Text');
-				if (legacyText && legacyText.length > 0) {
-					data['text/plain'] = legacyText;
-				}
+				data['text/plain'] = dataTransfer.getData('Text');
 
 				for (var i = 0; i < dataTransfer.types.length; i++) {
 					var contentType = dataTransfer.types[i];
@@ -263,65 +238,19 @@ define("tinymce/pasteplugin/Clipboard", [
 			return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
 		}
 
-		/**
-		 * Checks if the clipboard contains image data if it does it will take that data
-		 * and convert it into a data url image and paste that image at the caret location.
-		 *
-		 * @param  {ClipboardEvent} e Paste event object.
-		 * @param  {Object} clipboardContent Collection of clipboard contents.
-		 * @return {Boolean} true/false if the image data was found or not.
-		 */
-		function pasteImageData(e, clipboardContent) {
-			function pasteImage(item) {
-				if (items[i].type == 'image/png') {
-					var reader = new FileReader();
-
-					reader.onload = function() {
-						pasteHtml('<img src="' + reader.result + '">');
-					};
-
-					reader.readAsDataURL(item.getAsFile());
-
-					return true;
-				}
-			}
-
-			// If paste data images are disabled or there is HTML or plain text
-			// contents then proceed with the normal paste process
-			if (!editor.settings.paste_data_images || "text/html" in clipboardContent || "text/plain" in clipboardContent) {
-				return;
-			}
-
-			if (e.clipboardData) {
-				var items = e.clipboardData.items;
-
-				if (items) {
-					for (var i = 0; i < items.length; i++) {
-						if (pasteImage(items[i])) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-
 		function getCaretRangeFromEvent(e) {
 			var doc = editor.getDoc(), rng;
 
 			if (doc.caretPositionFromPoint) {
-				var point = doc.caretPositionFromPoint(e.clientX, e.clientY);
+				var point = doc.caretPositionFromPoint(e.pageX, e.pageY);
 				rng = doc.createRange();
 				rng.setStart(point.offsetNode, point.offset);
 				rng.collapse(true);
 			} else if (doc.caretRangeFromPoint) {
-				rng = doc.caretRangeFromPoint(e.clientX, e.clientY);
+				rng = doc.caretRangeFromPoint(e.pageX, e.pageY);
 			}
 
 			return rng;
-		}
-
-		function hasContentType(clipboardContent, mimeType) {
-			return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
 		}
 
 		function registerEventHandlers() {
@@ -362,11 +291,6 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 
-				if (pasteImageData(e, clipboardContent)) {
-					removePasteBin();
-					return;
-				}
-
 				// Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
 				if (!isKeyBoardPaste) {
 					e.preventDefault();
@@ -394,11 +318,6 @@ define("tinymce/pasteplugin/Clipboard", [
 
 					removePasteBin();
 
-					// Always use pastebin HTML if it's available since it contains Word contents
-					if (!plainTextMode && isKeyBoardPaste && html && html != pasteBinDefaultContent) {
-						clipboardContent['text/html'] = html;
-					}
-
 					if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
 						html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
 
@@ -409,11 +328,6 @@ define("tinymce/pasteplugin/Clipboard", [
 
 							return;
 						}
-					}
-
-					// Force plain text mode if we only got a text/plain content type
-					if (!hasContentType(clipboardContent, 'text/html') && hasContentType(clipboardContent, 'text/plain')) {
-						plainTextMode = true;
 					}
 
 					if (plainTextMode) {

@@ -38,9 +38,11 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $pk = $this->_mainRouter->getParam("pk");
 
         if (is_array($pk)) {
-            $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > various PK('.implode(",", $pk).')');
+            $this->_helper->log('Delete for mapper (not executed):'
+                     . $mapperName . ' > various PK('.implode(",", $pk).')');
         } else {
-            $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
+            $this->_helper->log('Delete for mapper (not executed):'
+                     . $mapperName . ' > PK('.$pk.')');
             $pk = array($pk);
         }
         $cols = $this->_item->getVisibleColumns();
@@ -87,9 +89,11 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
 
         if (is_array($pk)) {
-            $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > various PK('.implode(',',$pk).')');
+            $this->_helper->log('Delete::delete action for mapper:'
+                     . $mapperName . ' > various PK('.implode(',', $pk).')');
         } else {
-            $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > PK('.$pk.')');
+            $this->_helper->log('Delete::delete action for mapper:'
+                     . $mapperName . ' > PK('.$pk.')');
             $pk = array($pk);
         }
 
@@ -105,7 +109,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
                 throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
             }
 
-            foreach($results as $obj) {
+            foreach ($results as $obj) {
                 if (!$obj->delete()) {
                     throw new Exception('Unknown error');
                 }
@@ -119,7 +123,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
         }
 
-        $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.implode(',',$pk).')');
+        $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.implode(',', $pk).')');
 
         $data = array(
             'error' => false,

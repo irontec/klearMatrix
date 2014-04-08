@@ -62,7 +62,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
         $data = '';
         $data .= '<select name="updateable">';
-        foreach($adapterConfig['values'] as $val) {
+        foreach ($adapterConfig['values'] as $val) {
             $data .= '<option value="'.$val['key'].'">'.$val['item']."</option>";
         }
         $data .= '</select>';
@@ -81,7 +81,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
         $adapterConfig = $fieldConfig->getConfig();
 
-        foreach($adapterConfig['values'] as $val) {
+        foreach ($adapterConfig['values'] as $val) {
             if ($val['key'] == $value) return $value;
         }
         throw new \Exception("valid value not found!");
@@ -96,9 +96,11 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
 
         if (is_array($pk)) {
-            $this->_helper->log('Mass Update for mapper (not executed):' . $mapperName . ' > various PK('.implode(",", $pk).')');
+            $this->_helper->log('Mass Update for mapper (not executed):' 
+                    . $mapperName . ' > various PK('.implode(",", $pk).')');
         } else {
-            $this->_helper->log('Mass Update for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
+            $this->_helper->log('Mass Update for mapper (not executed):' 
+                    . $mapperName . ' > PK('.$pk.')');
             $pk = array($pk);
         }
 
@@ -135,8 +137,9 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         }
         $message .= '</p>';
 
-        foreach($this->_results as $item) {
-            $message .= '<p class="updateable-item">'.$item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
+        foreach ($this->_results as $item) {
+            $message .= '<p class="updateable-item">' 
+                    . $item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
         }
 
         $message .= '<p class="updateable-control">' . $editableContent . '</p>';
@@ -183,18 +186,20 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
         $total = 0;
         $pks = array();
-        foreach($this->_results as $entity) {
+        foreach ($this->_results as $entity) {
             $pks[] = $entity->getPrimaryKey();
             $entity->{$setter}($value)->save();
 
             $total++;
         }
 
-        $this->_helper->log( $total . ' models succesfully update > PK('. implode(',',$pks). ') > ' .$this->_column->getPublicName() . ' >> ' . $value);
+        $this->_helper->log($total 
+                . ' models succesfully update > PK('. implode(',', $pks). ') > ' 
+                . $this->_column->getPublicName() . ' >> ' . $value);
 
         if ($this->_item->getMessage()) {
             $message = $this->_item->getMessage();
-            $message = str_replace('%total%',$total, $message);
+            $message = str_replace('%total%', $total, $message);
 
         } else {
             $message = sprintf(

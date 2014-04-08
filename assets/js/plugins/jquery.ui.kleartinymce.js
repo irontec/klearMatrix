@@ -9,14 +9,13 @@
         _init : function(){
 
             var $el = $(this.element);
-
+            
             $.extend(
                     this.options,
                     this.options.settings //settings originales cogidos de column
                     );
 
             var options = this.options;
-            var _self = this;
 
             var _contentChange = function(instance) {
                 var changed = !(instance.startContent == instance.getBody().innerHTML);

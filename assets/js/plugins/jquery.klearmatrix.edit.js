@@ -330,11 +330,10 @@
                     focusin: false,
                     change: false,
                     keyup: false,
-                    allValidSelectors: 'input.hiddenFile, :input:visible:not(:button):not(:disabled):not(.novalidate), \
+                    allValidSelectors: 'input.hiddenFile, :input:visible:not(:button):not(:disabled):not(.novalidate):not(.ui-autocomplete-input), \
                                         select[required]:not(:disabled):not(.novalidate)'
                 })
                 .on('validated',function(formElement,validation) {
-
                     var _inputContainer = $(formElement.target).parents("div:eq(0)");
 
                     if (true === validation.valid) {
@@ -350,7 +349,12 @@
                     for (errorType in self._formValidationErrors) {
                         if (validation[errorType] === true) {
 
+                            if ($(formElement.target).data("errorTypeMap")) {
+                                errorType = $(formElement.target).data("errorTypeMap")[errorType] || errorType; 
+                            }
+                            
                             var _dataIndex = errorType.toLowerCase();
+                            
                             if ($(formElement.target).data(_dataIndex)) {
                                 errorCollection.push($(formElement.target).data(_dataIndex));
                             } else {
@@ -358,21 +362,16 @@
                             }
                         }
                     }
-
                     if (errorCollection.length > 0) {
                         if (!$(".klearFieldError",_inputContainer).is("span")) {
-                            _errorTemplate.clone().prependTo(_inputContainer);
+                            _inputContainer.prepend(_errorTemplate.clone());
                         }
                         $(".klearFieldError .content",_inputContainer).html(errorCollection.join('<br />'));
-
                     } else {
-
-                        $(".klearFieldError",_inputContainer).slideUp(function() {
+                        $(".klearFieldError",_inputContainer).fadeOut(function() {
                             $(this).remove();
                         });
-
                     }
-
                 });
         },
 
@@ -745,7 +744,10 @@
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
             //Validate required select fields by regExp
-            $("select[required]",this.options.theForm).not("[pattern]").attr("pattern", "[^__NULL__].{0,}");
+            // We also map error types, so we get the correct error on the field
+            $("select[required]",this.options.theForm).not("[pattern]")
+                .attr("pattern", "[^__NULL__].{0,}")
+                .data("errorTypeMap",{'patternMismatch': 'valueMissing'});
 
             $("div.expandable", this.options.theForm).each(function() {
                 $(this).hide();
@@ -892,6 +894,7 @@
                 hide : function($f) {
                     $fSet = this._getFieldSet($f);
                     if ($(".container:visible",$fSet).length == 0) {
+                        console.log("hijo de puta +?");
                         $fSet.slideUp();
                     }
                 }

@@ -24,7 +24,6 @@
         },
 
         _init: function () {
-
             var context = this.element.klearModule("getPanel");
             if (context.get(0).tagName.toLowerCase() == 'tr') {
 
@@ -146,7 +145,7 @@
 
             this.value = this.selected.val() ? this.selected.text() : "",
             this.wrapper = $("<span>").addClass( "ui-combobox" ).insertAfter( this.select );
-            this.wrapper.append('<span class="ui-icon inline ui-icon-script"></span>');
+            this.wrapper.before('<span class="ui-icon inline ui-icon-script"></span>');
 
             this.input = $( "<input>" )
                 .appendTo( this.wrapper )
@@ -194,7 +193,6 @@
                     var option = _self.options.cache.element.children("[value="+ ui.item.id +"]");
 
                     if (! option.get(0)) {
-
                         option = $("<option />")
                                     .attr("value", ui.item.id )
                                     .html(ui.item.value);
@@ -220,8 +218,11 @@
                     $counter.html(_self.lastCounter).show();
 
                 },
-                close : function() {
+                close : function(event, ui) {
                     $(".autocompleteCounter",$(this).parents("span:eq(0)")).fadeOut('fast');
+                    if ( !ui.item ) {
+                        return _self._removeIfInvalid( this );
+                    }
                 },
                 change: function( event, ui ) {
 
@@ -256,7 +257,6 @@
                 var value = $( element ).val(),
                     matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( value ) + "$", "i" ),
                     valid = false;
-
                 this.select.children( "option" ).each(function() {
                     if ( $( this ).text().match( matcher ) ) {
                         this.selected = valid = true;
@@ -271,7 +271,7 @@
                         .attr( "title", value + " didn't match any item" )
                         .tooltip( "open" );
 
-                    this.select.val( "" );
+                    this.select.val('').find("option").remove();
                     setTimeout(function() {
                         _self.input.tooltip( "close" ).attr( "title", "" );
                     }, 2500 );

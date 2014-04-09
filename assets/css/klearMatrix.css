@@ -626,6 +626,7 @@ fieldset .containerFixed input.auto {
 }
 
 fieldset .containerFixed span.ui-combobox {
+    display: inline;
     width: 100%;
 }
 

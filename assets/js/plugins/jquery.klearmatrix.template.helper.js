@@ -157,7 +157,7 @@
                         return self._formatSizeUnits(parseInt(file.size));
                     }
                     return "";
-                },
+                }
 
             };
 

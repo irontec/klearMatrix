@@ -23,7 +23,7 @@ class KlearMatrix_Model_Field_Checkbox extends KlearMatrix_Model_Field_Abstract
         $values = array();
         foreach ($this->_config->getRaw()->source->values as $key => $val) {
             $values[$key] = array(
-            	'key' => $key, 
+                'key' => $key, 
                 'item' => Klear_Model_Gettext::gettextCheck($val->title)
             );
         }

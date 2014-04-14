@@ -344,6 +344,11 @@ abstract class KlearMatrix_Model_Field_Abstract
         $field = new $fieldClassName($column);
         return $field;
     }
+    
+    public function isMassUpdateable()
+    {
+        return false;
+    }
 }
 
 //EOF

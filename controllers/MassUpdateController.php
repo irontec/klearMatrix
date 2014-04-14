@@ -42,6 +42,15 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $this->_item = $this->_mainRouter->getCurrentItem();
     }
 
+    protected function _isFieldMassUpdateable($fieldConfig)
+    {
+        if (
+            !$fieldConfig->isMassUpdateable()
+        ) {
+            throw new Exception("Mass Update is only compatible with KlearMatrix_Model_Field_Select and KlearMatrix_Model_Field_Checkbox");
+        }
+    }
+    
 
     /**
      * TODO: Devolver solo la estructura de column (toArray),
@@ -54,12 +63,11 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
     protected function _getEditableContent()
     {
         $fieldConfig = $this->_column->getFieldConfig();
-        if (!$fieldConfig instanceof KlearMatrix_Model_Field_Select) {
-            throw new Exception("Mass Update is only compatible with KlearMatrix_Model_Field_Select");
-        }
-
+        
+        $this->_isFieldMassUpdateable($fieldConfig);
+        
         $adapterConfig = $fieldConfig->getConfig();
-
+        
         $data = '';
         $data .= '<select name="updateable">';
         foreach ($adapterConfig['values'] as $val) {
@@ -75,9 +83,8 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $value = $this->getRequest()->getParam("updateable");
 
         $fieldConfig = $this->_column->getFieldConfig();
-        if (!$fieldConfig instanceof KlearMatrix_Model_Field_Select) {
-            throw new Exception("Mass Update is only compatible with KlearMatrix_Model_Field_Select");
-        }
+        
+        $this->_isFieldMassUpdateable($fieldConfig);
 
         $adapterConfig = $fieldConfig->getConfig();
 

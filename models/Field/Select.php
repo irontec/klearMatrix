@@ -36,6 +36,11 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
 
         return $this->_column->getDbFieldName();
     }
+    
+    public function isMassUpdateable()
+    {
+        return true;
+    }
 }
 
 //EOF

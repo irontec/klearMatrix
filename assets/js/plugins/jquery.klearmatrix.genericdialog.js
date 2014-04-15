@@ -84,7 +84,7 @@
         _init: function() {
 
             var self = this;
-
+            
             $(this.element).moduleDialog("setAsLoading");
             $(this.element).moduleDialog("option", "buttons", this._getButtons());
             $(this.element).moduleDialog("updateContent",this._getDialogContent(),function() {
@@ -115,6 +115,7 @@
                         $(parent).css("overflow",$(parent).data("prevOverflow"));
                     }
                 });
+                self._registerBaseEvents();
             });
 
             $(this.element).moduleDialog("updateTitle", this._getTitle());

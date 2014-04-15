@@ -317,13 +317,19 @@
                 e.stopPropagation();
 
                 var _menuLink = $(this);
+                
+                if (_self.options.parent) {
+                    self = _self.options.parent;
+                }
                 var _container = self.klearModule("getContainer");
 
                 var _file = self.klearModule("option", "file");
+                
                 if (_menuLink.data("externalfile")) {
                     _file= _menuLink.data("externalfile");
                 }
 
+                
                 var _screen = _menuLink.data("screen");
 
                 var _iden = "#tabs-" + _file;
@@ -482,6 +488,10 @@
 
                 var external = data && data.external || false;
 
+                if (_self.options.parent) {
+                    self = _self.options.parent;
+                }
+                
                 var _container = self.klearModule("getContainer");
 
                 var _parentHolder = _self._resolveParentHolder(this);
@@ -583,6 +593,10 @@
                 var external = data && data.external || false;
                 external = $(this).data("external")? true: external;
 
+                if (_self.options.parent) {
+                    self = _self.options.parent;
+                }
+                
                 var _container = self.klearModule("getContainer");
 
                 var _parentHolder = _self._resolveParentHolder(this);
@@ -602,9 +616,11 @@
                     $.extend(_postData, data.params);
                 }
 
+                var _file = $(self).klearModule("option", "file");
+
                 $.klear.request(
                         {
-                            file: self.klearModule("option", "file"),
+                            file: _file,
                             type: 'command',
                             command : $(this).data("command"),
                             pk : _parentHolder.data("id"),

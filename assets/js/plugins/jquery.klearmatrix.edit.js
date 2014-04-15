@@ -894,7 +894,6 @@
                 hide : function($f) {
                     $fSet = this._getFieldSet($f);
                     if ($(".container:visible",$fSet).length == 0) {
-                        console.log("hijo de puta +?");
                         $fSet.slideUp();
                     }
                 }

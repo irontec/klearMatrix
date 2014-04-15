@@ -168,20 +168,28 @@
 
                     var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
 
+                    var _targetCommand = '';
+                    if (! $(this).data('command')) {
+                        _targetCommand = $(this).data('fielddecorator') + "_command";
+                        $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command");
+                    } else {
+                        _targetCommand = $(this).data('command'); 
+                    }
+                    
                     var requestData = {
                             file: _self.klearModule("option","file"),
                             pk: $(this).parents(parentSelector).data("id"),
                             type : 'command',
                             post: _post,
-                            command : $(this).data('fielddecorator') + "_command"
+                            command : _targetCommand
                     };
-
+                    
                     var request = $.klear.buildRequest(requestData);
 
                     var _url = request.action; //encodeURI()
                      _url += '&' + $.param(request.data);
 
-                    $(this).attr("href", _url).html($(this).data("fielddecoratort"));
+                     $(this).attr("href", _url).html($(this).data("fielddecoratort"));
 
                     if ($.fn["klearmatrix."+ $(this).data('field') + $(this).data('fielddecorator')]) {
 

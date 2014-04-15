@@ -602,7 +602,7 @@
                     };
 
                     if (! $(this).data('command')) {
-
+                        $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command"); 
                         requestData['command'] = $(this).data('fielddecorator') + "_command";
                     }
 

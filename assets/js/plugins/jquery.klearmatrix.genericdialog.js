@@ -90,7 +90,7 @@
             $(this.element).moduleDialog("updateContent",this._getDialogContent(),function() {
 
                 var $context = $(this.element).moduleDialog("getContext");
-                $("select",$context).selectBoxIt({
+                $("select",$context).not('.notSelectBoxIt').selectBoxIt({
                     theme: "jqueryui",
                     autoWidth: false,
                     viewport: $($(this.element).moduleDialog("option", "klearPosition"))

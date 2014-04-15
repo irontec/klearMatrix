@@ -266,6 +266,12 @@
             });
 
             var $viewPort = $(this.element.klearModule("getPanel"));
+            // Se trata de un dialogo!
+            if (this.options.parent) {
+                var $viewPort = $($(this.options.parent).klearModule("getPanel"));
+            }
+
+            
 
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
                 .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
@@ -311,6 +317,35 @@
                         });
                     }
                     $(this).trigger("blur.selectBoxIt");
+                })
+                .on('open', function() {
+                    // Fix sólo para dialogos!
+                    if (!_self.options.parent) {
+                        return;
+                    }
+                    var $_parents = $(this).parents("div").toArray();
+                    while (parent = $_parents.shift()) {
+                        if ($(parent).hasClass("ui-tabs-panel")) {
+                            break;
+                        }
+                        $(parent)
+                            .data("prevOverflow", $(parent).css("overflow"))
+                            .css("overflow","visible");
+                    }
+                        
+                }).on('close', function() {
+                    // Fix sólo para dialogos!
+                    if (!_self.options.parent) {
+                        return;
+                    }
+
+                    var $_parents = $(this).parents("div").toArray();
+                    while (parent = $_parents.shift()) {
+                        if (!$(parent).data("prevOverflow")) {
+                            break;
+                        }
+                        $(parent).css("overflow",$(parent).data("prevOverflow"));
+                    }
                 })
                 .each(function() {
                     $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));

@@ -88,33 +88,6 @@
             $(this.element).moduleDialog("setAsLoading");
             $(this.element).moduleDialog("option", "buttons", this._getButtons());
             $(this.element).moduleDialog("updateContent",this._getDialogContent(),function() {
-
-                var $context = $(this.element).moduleDialog("getContext");
-                $("select",$context).not('.notSelectBoxIt').selectBoxIt({
-                    theme: "jqueryui",
-                    autoWidth: false,
-                    viewport: $($(this.element).moduleDialog("option", "klearPosition"))
-                }).on('open', function() {
-                    var $_parents = $(this).parents("div").toArray();
-                    while (parent = $_parents.shift()) {
-                        if ($(parent).hasClass("ui-tabs-panel")) {
-                            break;
-                        }
-                        $(parent)
-                            .data("prevOverflow", $(parent).css("overflow"))
-                            .css("overflow","visible");
-                    }
-                        
-                }).on('close', function() {
-                    var $_parents = $(this).parents("div").toArray();
-                    
-                    while (parent = $_parents.shift()) {
-                        if (!$(parent).data("prevOverflow")) {
-                            break;
-                        }
-                        $(parent).css("overflow",$(parent).data("prevOverflow"));
-                    }
-                });
                 self._registerBaseEvents();
             });
 

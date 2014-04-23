@@ -72,7 +72,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         }
         $data .= ' >';
         foreach ($adapterConfig['values'] as $val) {
-        	$data .= '<option value="'.$val['key'].'">'.$val['item']."</option>";
+            $data .= '<option value="'.$val['key'].'">'.$val['item']."</option>";
         }
         $data .= '</select>';
         return $data;
@@ -101,7 +101,9 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
             return $aValidVals;
         } else {
             foreach ($adapterConfig['values'] as $val) {
-            	if ($val['key'] == $value) return $value;
+                if ($val['key'] == $value) {
+                    return $value;
+                }
             }    
         }
         throw new \Exception("valid value not found!");
@@ -160,14 +162,14 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $showLimit = 4;
         foreach ($this->_results as $item) {
             if (++$counter>$showLimit) {
-            	break;
+                break;
             }
             $message .= '<p class="updateable-item">'  . 
                 $item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
             
         }
         $totalEls = count($this->_results);
-        if ($totalEls>$showLimit){
+        if ($totalEls>$showLimit) {
             $countEls = $totalEls-$showLimit;
             $message .= ' <p class="updateable-item"> ' .
                     sprintf($this->view->translate('and %s more'), $countEls) .
@@ -243,40 +245,40 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
             $pks = array();
             
             foreach ($this->_results as $entity) {
-            	$pks[] = $entity->getPrimaryKey();
+                $pks[] = $entity->getPrimaryKey();
 
-            	$entityRels = $entity->{'get' . $this->_column->getDbFieldName()}();
-            	
-            	$aIds = array();
-            	
-            	$newEntityRels = array();
-            	
-            	foreach ($entityRels as $entityRel) {
-            	    $entityRelPK = $entityRel->{'get' . $relationProperty}()->getPrimaryKey();
-            		$aIds[] = $entityRelPK;
-            		
-            		if (in_array($entityRelPK, $value)) {
-            		    $newEntityRels[] = $entityRel;
-            		}
-            		
-            	}
-            	
-            	foreach ($value as $val) {
-            		if (in_array($val, $aIds)) {
-            			continue;
-            		}
-            		$relModel = new $relationModel;
-            		//TODO cambiar este setter que no mola nada
-            		$relModel->{'set' . $relationProperty . 'Id'}($val);
-            		$newEntityRels[] = $relModel;
-            	}
-            	
-            	
-            	$entity->{'set' . $this->_column->getDbFieldName()}($newEntityRels, true);
-            	
-            	$entity->saveRecursive();
-            	
-            	$total++;
+                $entityRels = $entity->{'get' . $this->_column->getDbFieldName()}();
+                
+                $aIds = array();
+                
+                $newEntityRels = array();
+                
+                foreach ($entityRels as $entityRel) {
+                    $entityRelPK = $entityRel->{'get' . $relationProperty}()->getPrimaryKey();
+                    $aIds[] = $entityRelPK;
+                    
+                    if (in_array($entityRelPK, $value)) {
+                        $newEntityRels[] = $entityRel;
+                    }
+                    
+                }
+                
+                foreach ($value as $val) {
+                    if (in_array($val, $aIds)) {
+                        continue;
+                    }
+                    $relModel = new $relationModel;
+                    //TODO cambiar este setter que no mola nada
+                    $relModel->{'set' . $relationProperty . 'Id'}($val);
+                    $newEntityRels[] = $relModel;
+                }
+                
+                
+                $entity->{'set' . $this->_column->getDbFieldName()}($newEntityRels, true);
+                
+                $entity->saveRecursive();
+                
+                $total++;
             }
             
         } else {

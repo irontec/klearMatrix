@@ -57,7 +57,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
     public function isMassUpdateable()
     {
-    	return true;
+        return true;
     }
 
     public function getCustomSearchCondition($values, $searchOps)

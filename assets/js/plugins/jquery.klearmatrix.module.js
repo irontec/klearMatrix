@@ -271,6 +271,23 @@
                 var $viewPort = $($(this.options.parent).klearModule("getPanel"));
             }
 
+
+            if ($('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).length > 0) {
+            	$('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).multiselect({
+                    container: $viewPort,
+                    selectedList: 4,
+                    selectedText: $.translate("# of # selected"),
+                    checkAllText: $.translate("Select all"),
+                    uncheckAllText: $.translate("Unselect all"),
+                    noneSelectedText: $.translate("Select an option"),
+                    selectedText: $.translate("# selected"),
+                    position: {
+                          my: 'center',
+                          at: 'center'
+                     }
+                }).multiselectfilter();
+            }
+            
             
 
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)

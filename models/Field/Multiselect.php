@@ -55,12 +55,20 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         return $this->_adapter->filterValue($value, $model->$getter());
     }
 
+    public function isMassUpdateable()
+    {
+    	return true;
+    }
 
     public function getCustomSearchCondition($values, $searchOps)
     {
         return $this->_adapter->getCustomSearchCondition($values, $searchOps);
     }
 
+    public function getAdapter()
+    {
+        return $this->_adapter;
+    }
 }
 
 //EOF

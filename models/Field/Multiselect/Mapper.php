@@ -432,4 +432,20 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         return $originalModel->getPrimaryKeyName() . ' in (' . implode(',', $returnIds). ')';
     }
+    
+    public function getRelationMapper()
+    {
+        return $this->_relationMapper;
+    }
+    
+    public function getRelationProperty()
+    {
+        return $this->_relationProperty;
+    }
+    
+    public function getRelatedMapper()
+    {
+        return $this->_relatedMapper;
+    }
+    
 }

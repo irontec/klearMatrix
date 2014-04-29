@@ -50,7 +50,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
 
         // Location of TinyMCE script
         // We load tinymce.full.min (most of plugins + templete in the bundle)
-        //$this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.min.js';
+        //$this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.dev.js';
         if (APPLICATION_ENV == 'development') {
             $this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.js';
         } else {

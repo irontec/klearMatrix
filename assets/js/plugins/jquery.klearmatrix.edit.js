@@ -388,6 +388,13 @@
 
             this._initSavedValueHashes();
 
+
+            if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
+                for (var i in this.options.data.fixedPositions) {
+                    this._joinFields(this.options.data.fixedPositions[i]);
+                }
+            }
+
             if ($("select.multiselect",this.options.theForm).length > 0) {
                 $("select.multiselect",this.options.theForm).multiselect({
                     container: this.element.klearModule('getPanel'),
@@ -781,13 +788,6 @@
                     e.preventDefault();
                 });
             });
-
-
-            if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
-                for (var i in this.options.data.fixedPositions) {
-                    this._joinFields(this.options.data.fixedPositions[i]);
-                }
-            }
 
             // Zona de control para campos textarea
             // con el atributo CollapseLanguageBoxes

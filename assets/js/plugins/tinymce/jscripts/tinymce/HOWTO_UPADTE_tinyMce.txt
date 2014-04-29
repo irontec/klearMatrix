@@ -28,7 +28,7 @@ cp js/tinymce/jquery.tinymce.min.js /opt/klear-development/modules/klearMatrix/a
 cp js/tinymce/tinymce.full.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js 
 cp js/tinymce/tinymce.min.js /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js 
 cp -a js/tinymce/plugins/* /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/plugins/
-rm -rf /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/plugins/*/plugin.js
+
 cp -a js/tinymce/skins/*css /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/
 cp -a js/tinymce/skins/lightgray/*css /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/lightgray/
 cp js/tinymce/skins/lightgray/fonts/* /opt/klear-development/modules/klearMatrix/assets/js/plugins/tinymce/jscripts/tinymce/skins/lightgray/fonts/

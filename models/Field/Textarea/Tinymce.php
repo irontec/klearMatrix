@@ -54,7 +54,7 @@ class KlearMatrix_Model_Field_Textarea_Tinymce extends KlearMatrix_Model_Field_T
         if (APPLICATION_ENV == 'development') {
             $this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.js';
         } else {
-            $this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.full.min.js';
+            $this->_settings['script_url'] = $this->_jsPluginPath . '/tinymce.min.js';
         }
         $this->_settings = array_merge($this->_settings, $this->_template->getSettings());
     }

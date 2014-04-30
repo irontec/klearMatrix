@@ -64,13 +64,13 @@ class KlearMatrix_Model_ResponseItem
      */
     protected $_preconfiguredFilters = array();
 
-    
+
     /*
      * Filtros presetteados para pantallas ListController
     */
     protected $_presettedFilters = array();
-    
-    
+
+
     /*
      * Definir subarrays si el tag depende de subfijos en los nombres de campo,
      * en caso contrario indicar el tag como string
@@ -95,7 +95,7 @@ class KlearMatrix_Model_ResponseItem
     protected $_fieldInfo;
 
     protected $_useExplain = false;
-    
+
     protected $_sectionsBlackList = array();
 
     //Configuraciones comunes para todos los tipos de ResponseItem
@@ -328,42 +328,42 @@ class KlearMatrix_Model_ResponseItem
         foreach ($aConf as $filterKey => $filterData) {
             if ($filterData['title']) {
                 $title = Klear_Model_Gettext::gettextCheck($filterData['title']);
-                $aConf[$filterKey]['title'] = $title; 
+                $aConf[$filterKey]['title'] = $title;
             }
         }
         $this->_preconfiguredFilters = $aConf;
         return $this->_preconfiguredFilters;
     }
-    
+
     public function getPresettedFilters()
     {
         if (!$this->_presettedFilters instanceof \Zend_Config) {
             return null;
         }
-        
+
         $presettedFilters = new \Zend_Config(array(), true);
-        
-        
+
+
         foreach ($this->_presettedFilters as $key => $presettedFilter) {
-            
+
             $keys = array_keys($presettedFilter->toArray());
-            
+
             if (in_array('active', $keys)) {
                 $isActive = (bool)$presettedFilter->active;
                 if (false === $isActive) {
                     continue;
                 }
             }
-            
+
             $presettedFilters->$key = $presettedFilter;
-            
+
         }
-        
-        
+
+
         if (sizeof($presettedFilters) == 0) {
             $presettedFilters = NULL;
         }
-        
+
         return $presettedFilters;
     }
 
@@ -1081,6 +1081,13 @@ class KlearMatrix_Model_ResponseItem
         return $this->_getItemFieldsOptionsConfig('dialog', $parent);
     }
 
+    public function getCommandsFieldsOptionsConfig()
+    {
+        $parent = $this->_visibleColumns->getOptionColumn()->getKlearConfig();
+
+        return $this->_getItemFieldsOptionsConfig('command', $parent);
+    }
+
     /**
      * @return KlearMatrix_Model_OptionCollection
      */
@@ -1223,6 +1230,10 @@ class KlearMatrix_Model_ResponseItem
 
             case 'screen':
                 $property = 'screens';
+                break;
+
+            case 'command':
+                $property = 'commands';
                 break;
 
             default:

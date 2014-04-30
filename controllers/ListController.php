@@ -310,6 +310,21 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $fieldOptions->addOption($dialogOption);
         }
 
+        foreach ($this->_item->getCommandsFieldsOptionsConfig() as $command) {
+
+            $commandOption = new KlearMatrix_Model_CommandOption;
+            $commandOption->setName($command);
+
+            if ($command === $defaultOption) {
+
+                $commandOption->setAsDefault();
+                $defaultOption = false;
+            }
+
+            $commandOption->setConfig($this->_mainRouter->getConfig()->getCommandConfig($command));
+            $fieldOptions->addOption($commandOption);
+        }
+
         return $fieldOptions;
     }
 

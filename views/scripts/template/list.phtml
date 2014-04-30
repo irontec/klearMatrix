@@ -244,7 +244,10 @@ ${$item.getTitle(title,false)}
 						data-externalid='${$item.getIndex(row,pk)}'
 						${$item.getExternalData($value)}
 				 {{/if}}
-                >
+                 {{if ($value.external === true)}}
+						data-external='true'
+				 {{/if}}
+				 >
                     <span class="ui-silk inline ${icon}"></span>
                     {{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}
                 </a>

@@ -47,7 +47,7 @@ production:
 
 #### Toolbars ####
   
-  toolbar1: "bold italic underline | bullist numlist indent outdent | styleselect | undo redo | link unlink code | fullscreen | visualblocks | searchreplace | wordcount"
+  toolbar1: "bold italic underline | bullist numlist indent outdent | styleselect | undo redo | fullscreen | visualblocks | searchreplace | wordcount"
    
 #### Style formats ####
 

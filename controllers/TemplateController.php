@@ -16,7 +16,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
             "textarea",
             "video",
             "map",
-            "html5"
+            "html5",
     );
 
     public function init()
@@ -36,6 +36,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
             "klearmatrixEdit" => "edit",
             "klearmatrixNew" => "new",
             "klearmatrixPaginator" => "paginator",
+            "klearmatrixOption" => "option",
             "klearmatrixDelete" => "delete",
             "klearmatrixDashboard" => "dashboard"
         );
@@ -86,7 +87,11 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
     public function dashboardAction()
     {
     }
-
+    
+    public function optionAction()
+    {
+    }
+    
 
     public function multilangAction()
     {

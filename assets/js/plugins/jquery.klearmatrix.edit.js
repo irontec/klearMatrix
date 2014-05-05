@@ -772,21 +772,21 @@
                     .on('click',function(){
                         $(this).parent('div').slideToggle(speed,function(){
                             $(this).prev('div.expandable').slideToggle(speed);
+                        });
                     });
-                });
 
-                $('label:first',$(this)).append(contract).after('<br />').on('click',function(){
-                    $(this).parent('div').slideToggle(speed,function(){
-                        $(this).next('div').slideToggle(speed);
+                    $('label:first',$(this)).append(contract).after('<br />').on('click',function(){
+                        $(this).parent('div').slideToggle(speed,function(){
+                            $(this).next('div').slideToggle(speed);
+                        });
                     });
-                });
 
-                $(this).find('button').on('click',function(e){
-                    e.preventDefault();
-                });
-                $(this).next('div').find('button').on('click',function(e){
-                    e.preventDefault();
-                });
+                    $(this).find('button').on('click',function(e){
+                        e.preventDefault();
+                    });
+                    $(this).next('div').find('button').on('click',function(e){
+                        e.preventDefault();
+                    });
             });
 
             // Zona de control para campos textarea

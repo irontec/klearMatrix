@@ -648,3 +648,28 @@ div.size-indicator {
 div.size-indicator span.zero{
     font-weight: bold;
 }
+
+ul.ghostList {
+	height: 200px;
+    max-height: 200px;
+    width: 300px;
+    overflow: hidden;
+}
+div.ghostListCounter {
+	margin: 0.5em 0;
+}
+div.ghostListCounter span.ui-icon {
+	float:left;
+}
+table.kMatrix div.ghostListCounter {
+	display: none;
+}
+
+table.kMatrix ul.ghostList {
+	border:0;
+	width:auto;
+}
+
+ul.ghostList:hover {
+    overflow: auto;
+}

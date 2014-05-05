@@ -1,0 +1,10 @@
+<a class="${classes} option ${type}" href=""
+    data-${type}="${optionIndex}"
+    title="${optionTitle}"
+    {{if (shortcut)}} data-shortcut="${shortcut}" {{/if}}
+    {{if (multiInstance)}} data-multiinstance='true'{{/if}}
+    {{if (external)}} data-external="true" ${externalData}{{/if}}
+    {{if (multiItem)}} data-multiitem="true"{{/if}}
+    {{if (parentHolderSelector)}} data-parent-holder-selector="${parentHolderSelector}"{{/if}}
+>
+<span class="ui-silk inline ${icon}"></span>{{if (mustShowLabel) }} ${buttonLabel}{{/if}}{{if (multiItem)}}<sup></sup>{{/if}}</a>

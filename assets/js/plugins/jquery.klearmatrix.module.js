@@ -118,12 +118,18 @@
                 return $("td.multiItem input:checked");
             }
             
+            
             if ($(element).data("parentHolderSelector")) {
 
+                
                 var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
+                
+                console.log("CANDIDATING", $(element).data("parentHolderSelector"), _candidateParent);
+                
                 if (_candidateParent.length > 0) {
                     return _candidateParent;
                 }
+                
             }
 
             var modulecheck;
@@ -248,6 +254,9 @@
             		'content': function(){return $el.attr('data-title');}
             	});
             }
+            
+            this._doGhostList();
+            
             return this;
         },
 
@@ -264,7 +273,9 @@
 
                 self.klearModule("close");
             });
-
+            
+            this._resolveAutoOption();
+            
             var $viewPort = $(this.element.klearModule("getPanel"));
             // Se trata de un dialogo!
             if (this.options.parent) {
@@ -779,7 +790,65 @@
 
             $_dialog.moduleDialog("option", "title", $.translate("Error")  + _extraCode);
             $_dialog.moduleDialog("updateContent", $message);
+        },
+        
+        _resolveAutoOption : function() {
+            var $container = $(this.element).klearModule("getContainer");
+            $("span.autoOption",$container).each(function() {
+                var dataValues = $(this).data();
+                $(this).replaceWith($.klearmatrix.template.helper.option2HTML(dataValues, 'Field'));
+            });
+        },
+        _doGhostList : function() {
+            var $container = $(this.element).klearModule("getContainer");
+
+            $("ul.ghostList", $container).each(function() {
+                
+                $optionHolder = $(this).next(".ghostListOptions");
+                $optionHolder.hide();
+                $futureOptions = $(".opClone",$(this));
+                
+                $("a",$optionHolder).each(function() {
+                    var link = false;
+                    if ($(this).hasClass("screen")) {
+                        link = $(this).data("screen");
+                    } else if ($(this).hasClass("dialog")) {
+                        link = $(this).data("dialog");
+                    } else if ($(this).hasClass("command")) {
+                        link = $(this).data("command");
+                    }
+                    
+                    if (!link) return;
+                    
+                    var optString = $("<div />").append($(this)).html();
+                    
+                    $futureOptions.filter("[data-link='"+link+"']").replaceWith(optString);
+                    
+                });
+            });
+            
+            $(".ghostListCounter input",$container)
+            .on('doSum',function() {
+                var $parent = $(this).parent();
+                
+                $("span.counter", $parent).html($parent.next("ul.ghostList").find("li:visible").length);
+            })
+            .off('keyup.ghostfilter')
+            .on('keyup.ghostfilter',function() {
+                var $items =  $(this).parent().next("ul.ghostList").find("li");
+                $items.show();
+                if ($(this).val() == "") {
+                    $(this).trigger("doSum");
+                    return;
+                }
+                $items.not(":contains("+$(this).val()+")").hide();
+                $(this).trigger("doSum");
+                
+            })
+            .trigger('keyup.ghostfilter');
+
         }
+        
 
     });
 

@@ -25,12 +25,7 @@ data-title="${info.text}"
 
     {{if (generalOptions.length>0) }}
         {{each generalOptions}}
-            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}" {{if (multiInstance)}} data-multiinstance='true'{{/if}} {{if (external)}} data-externalfile='${file}'{{/if}}>
-            <span class="ui-silk inline ${icon}"></span>
-            {{if (label || labelOnEdit) }}
-                ${$item.getTitle(title,idx,true)}
-            {{/if}}
-            </a>
+            {{html $item.option2HTML($value,"Edit", idx, false) }}
         {{/each}}
     {{/if}}
     </div>
@@ -63,24 +58,7 @@ data-title="${info.text}"
             {{html $item.getSufix(column)}}
             {{if (column.options)}}
                 {{each column.options}}
-
-                    {{if (
-                        (showOnlyOnNotNull == false && showOnlyOnNull == false) ||
-                        (showOnlyOnNotNull == true && row[id]) ||
-                        (showOnlyOnNull == true && !row[id])
-                    )}}
-                        <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
-                        href=""
-                        data-${type}="${$item.getIndex($value,type)}"
-                        title="${$item.getTitle(title,idx,true)}"
-                        {{if ($value.externalOption)}}
-                            data-externalid='${row[id]}'
-                            data-externalname='${id}'
-                            ${$item.getExternalData($value)}
-                        {{/if}}
-                        >
-                        <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
-                     {{/if}}
+                    {{html $item.option2HTML($value,"Edit", idx, row[id]) }}
                 {{/each}}
             {{/if}}
 
@@ -112,17 +90,7 @@ data-title="${info.text}"
     {{if (generalOptions.length>0) }}
         {{each generalOptions}}
             {{html $item.parseParentOptionCustomizationOpen(row._optionCustomization, $value) }}
-
-            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"
-            {{if (shortcut)}} data-shortcut="${shortcut}" {{/if}}
-            {{if (multiInstance)}} data-multiinstance='true'{{/if}}
-            {{if (external)}} data-externalfile='${file}'{{/if}}
-            >
-            <span class="ui-silk inline ${icon}"></span>
-            {{if (label || labelOnEdit) }}
-                ${$item.getTitle(title,idx,true)}
-            {{/if}}
-            </a>
+            {{html $item.option2HTML($value,"Edit", idx, false) }}
         {{/each}}
     {{/if}}
     </div>

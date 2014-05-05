@@ -647,6 +647,12 @@
         getPaginatorTemplate : function() {
             return $.template['klearmatrixPaginator'];
         },
+        
+        getOptionTemplateName : function() {
+            return 'klearmatrixOption';
+        },
+        
+        
 
         _parseDefaultValues : function(settings) {
 
@@ -742,6 +748,7 @@
 
         },
         getTitle : function(title,idx,replaceParentPerItem) {
+            
             return this._parseDefaultValues({
                     title: title,
                     replaceParentPerItem : replaceParentPerItem,
@@ -763,7 +770,113 @@
             }
             return _ret;
         },
-
+        option2HTML : function(option, from, idx, fieldValue)
+        {
+            
+            var mainTitle = '',
+                classes = [],
+                entity = false,
+                curId = false;
+            
+            
+            if (idx !== false && (option.showOnlyOnNotNull || option.showOnlyOnNull)) {
+                
+                if (fieldValue && option.showOnlyOnNull) {
+                    return '';
+                }
+                
+                if (!fieldValue && option.showOnlyOnNotNull) {
+                    return '';
+                }
+                
+            }
+                
+            
+            var _node = $("<div />");
+            
+            var mustShowLabel = option.label || false;
+            
+            // Es una entidad concreta (con índice "idx" en data.values
+            if (idx) {
+                entity = this.data.values[idx];
+                curId = entity[this.data.pk];
+            }
+            
+            var externalData = false;
+            if (option.externalOption && entity && fieldValue) {
+                var externalData = ' data-externalid="'+fieldValue+'"';
+                externalData += ' ' + this.getExternalData(option);
+            }
+            
+            if (option.external && option.file) {
+                externalData = 'data-externalfile="'+option.file+'"';
+            }
+            
+            switch(from) {
+                
+                case "List":
+                    if (idx === false) {
+                        classes.push('_generalOption');
+                        mainTitle = this.getTitle(option.title, false);
+                        mustShowLabel = mustShowLabel || option.labelOnList;
+                    } else {
+                        classes.push('_fieldOption inherit ui-state-nojump');
+                        mainTitle = this.getTitle(option.title, idx, true);
+                    }
+                break;
+                case "Edit":
+                    mustShowLabel = mustShowLabel || option.labelOnEdit;
+                    mainTitle = this.getTitle(option.title, idx, true);
+                    
+                    if (fieldValue) {
+                        classes.push('_fieldOption inherit ui-state-nojump');
+                    } else {
+                        classes.push('_generalOption');
+                    }
+                break;
+                case "Field":
+                    mainTitle = option.title;
+                    // Forzamos multiItem a false
+                    option.multiItem = false;
+                    classes.push('_fieldOption inherit ui-state-nojump');
+                break;
+                
+            }
+            
+            var buttonLabel = mainTitle;
+            
+            if (option.defaultOption) {
+                classes.push('default');
+            }
+            
+            var optionData = {
+                    classes : classes.join(' '),
+                    type : option.type,
+                    icon: option.icon,
+                    optionIndex : this.getIndex(option, option.type),
+                    optionTitle : mainTitle,
+                    shortcut: option.shortcut  || false,
+                    multiInstance: option.multiInstance || false,
+                    external: option.external || false,
+                    externalData : externalData,
+                    multiItem: option.multiItem || false,
+                    mustShowLabel: mustShowLabel,
+                    parentHolderSelector: option.parentHolderSelector || false,
+                    buttonLabel: buttonLabel
+                    
+            };
+            
+//            if (option.externalOption === true) {
+//                optionData.externalData = 'data-externalid="' + idx${$item.getIndex(row,pk)}'
+//                ${$item.getExternalData($value)}
+//         {{/if}}
+            
+            
+            $.tmpl(this.getOptionTemplateName(), optionData).appendTo(_node);
+            return _node.html();
+            
+            
+        },
         mustShowOptionColum : function(option, value) {
 
             return true;

@@ -115,17 +115,7 @@ data-title="${info.text}"
     {{if (optionsPlacement == 'both' || optionsPlacement == 'top')}}
         <div class="generalOptionsToolbar{{if ($item.data.paginator)}} topToolbar{{/if}}">
         {{each generalOptions}}
-            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}"
-            title="${$item.getTitle(title,false)}"
-            {{if (shortcut)}} data-shortcut="${shortcut}" {{/if}}
-            {{if (multiInstance)}} data-multiinstance='true'{{/if}}
-            {{if (multiItem)}} data-multiitem='true'{{/if}} >
-            <span class="ui-silk inline ${icon}"></span>
-            {{if (label || labelOnList) }}
-                ${$item.getTitle(title,false)}
-            {{/if}}
-            {{if (multiItem)}}<sup></sup>{{/if}}
-            </a>
+            {{html $item.option2HTML($value,"List", false, false) }}
         {{/each}}
 
         {{if ($item.data.csv)}}
@@ -212,25 +202,7 @@ ${$item.getTitle(title,false)}
 
                 {{if ($value.options)}}
                     {{each $value.options}}
-
-                        {{if (
-                            ($value.externalOption) &&
-                            ( (showOnlyOnNotNull == false && showOnlyOnNull == false) ||
-                              (showOnlyOnNotNull == true && row[id]) ||
-                              (showOnlyOnNull == true && !row[id])
-                             )
-                        )}}
-                            <a class="_fieldOption inherit option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump"
-                            href=""
-                            data-${type}="${$item.getIndex($value,type)}"
-                            title="${$item.getTitle(title,idx,true)}"
-                            {{if ($value.externalOption === true)}}
-                                data-externalid='${row[id]}'
-								${$item.getExternalData($value)}
-                            {{/if}}
-                            >
-                            <span class="ui-silk inline ${icon}"></span>{{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}</a>
-                         {{/if}}
+                        {{html $item.option2HTML($value,"List", idx, row[id]) }}
                     {{/each}}
                 {{/if}}
 
@@ -239,18 +211,7 @@ ${$item.getTitle(title,false)}
             <td class="ui-widget-content options">
             {{each fieldOptions}}
                 {{html $item.parseParentOptionCustomizationOpen(row._optionCustomization, $value) }}
-                <a class="_fieldOption option ${type} {{if (defaultOption)}}default{{/if}} ui-state-nojump" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,idx,true)}"
-                 {{if ($value.externalOption === true)}}
-						data-externalid='${$item.getIndex(row,pk)}'
-						${$item.getExternalData($value)}
-				 {{/if}}
-                 {{if ($value.external === true)}}
-						data-external='true'
-				 {{/if}}
-				 >
-                    <span class="ui-silk inline ${icon}"></span>
-                    {{if (label) }}${$item.getTitle(title,idx,true)}{{/if}}
-                </a>
+                {{html $item.option2HTML($value,"List", idx, row[pk]) }}
                 {{html $item.parseOptionCustomization(row._optionCustomization, $value) }}
                 {{html $item.parseParentOptionCustomizationClose(row._optionCustomization, $value) }}
             {{/each}}
@@ -275,16 +236,7 @@ ${$item.getTitle(title,false)}
     {{if (optionsPlacement == 'both' || optionsPlacement == 'bottom')}}
         <div class="generalOptionsToolbar{{if ($item.data.paginator)}} bottomToolbar{{/if}}">
         {{each generalOptions}}
-            <a class="_generalOption option ${type}" href="" data-${type}="${$item.getIndex($value,type)}" title="${$item.getTitle(title,false)}"
-            {{if (shortcut)}} data-shortcut="${shortcut}" {{/if}}
-            {{if (multiInstance)}} data-multiinstance='true'{{/if}}
-            {{if (multiItem)}} data-multiitem='true'{{/if}} >
-            <span class="ui-silk inline ${icon}"></span>
-            {{if (label || labelOnList) }}
-                ${$item.getTitle(title,false)}
-            {{/if}}
-            {{if (multiItem)}}<sup></sup>{{/if}}
-            </a>
+            {{html $item.option2HTML($value,"List", false) }}
         {{/each}}
 
         {{if ($item.data.csv)}}

@@ -18,6 +18,8 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_showOnlyOnNotNull = false;
     protected $_showOnlyOnNull = false;
 
+    protected $_parentHolderSelector = false;
+    
     protected $_parentOptionCustomizers = array();
 
     public function setConfig(Zend_Config $config)
@@ -38,7 +40,11 @@ abstract class KlearMatrix_Model_AbstractOption
 
         $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
         $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
-
+        
+        // Propiedad que indica al lanzador de la acción desde donde coger el ID (enviado al request)
+        // No tiene nada que ver con parentOptionCustomizer
+        $this->_parentHolderSelector = $this->_config->getProperty("parentHolderSelector");
+        
         $this->_loadParentOptionCustomizers($this->_config->getProperty("parentOptionCustomizer"));
 
         $this->_init();
@@ -197,25 +203,51 @@ abstract class KlearMatrix_Model_AbstractOption
     }
 
     /**
+     * Especifica a la opción, en que "tag" buscar el contenedor de si id (data-id)
+     * @param unknown_type $selector
+     */
+    public function setParentHolderSelector($selector)
+    {
+        $this->_parentHolderSelector = $selector;
+    }
+    
+    /**
      * Valores Comunes a todas las opciones
      * @return multitype:boolean string NULL
      */
     protected function _prepareArray()
     {
-        return array(
+        
+        $ret = array(
                 'icon' => $this->_class,
                 'title' => $this->getTitle(),
-                'label' => $this->_label,
-                'shortcut' => $this->_shortcut,
-                'labelOnEdit' => $this->_labelOnEdit,
-                'labelOnList' => $this->_labelOnList,
-                'defaultOption' => $this->isDefault(),
-                'multiItem' => $this->_multiItem,
-                'showOnlyOnNotNull' => $this->_showOnlyOnNotNull,
-                'showOnlyOnNull' => $this->_showOnlyOnNull
+                'defaultOption' => $this->isDefault()
         );
+        
+        $attribs = array('label', 'shortcut', 'labelOnEdit','labelOnList','multiItem','showOnlyOnNotNull','showOnlyOnNull','label','shortcut','labelOnEdit','labelOnList','multiItem','showOnlyOnNotNull','showOnlyOnNull','parentHolderSelector');
+
+        foreach ($attribs as $attribute) {
+            $prop = '_' . $attribute;
+            if ($this->{$prop}) {
+                $ret[$attribute] = $this->{$prop};
+            }
+        }
+        
+        return $ret;
 
     }
 
     abstract public function toArray();
+    
+    public function toAutoOption()
+    {
+        $ret = '<span class="autoOption" ';
+        foreach($this->toArray() as $prop => $value) {
+            $prop = ltrim(strtolower(preg_replace('/[A-Z]/', '-$0', $prop)), '-');
+            $ret .= 'data-' . $prop . '="' . $value.'" ';
+        }
+        
+        $ret .= '></span>';
+        return $ret;
+    }
 }

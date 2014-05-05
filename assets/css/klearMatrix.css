@@ -650,7 +650,7 @@ div.size-indicator span.zero{
 }
 
 ul.ghostList {
-	height: 200px;
+	height: 150px;
     max-height: 200px;
     width: 300px;
     overflow: hidden;
@@ -668,6 +668,7 @@ table.kMatrix div.ghostListCounter {
 table.kMatrix ul.ghostList {
 	border:0;
 	width:auto;
+	height: auto;
 }
 
 ul.ghostList:hover {

@@ -118,13 +118,10 @@
                 return $("td.multiItem input:checked");
             }
             
-            
             if ($(element).data("parentHolderSelector")) {
 
                 
                 var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
-                
-                console.log("CANDIDATING", $(element).data("parentHolderSelector"), _candidateParent);
                 
                 if (_candidateParent.length > 0) {
                     return _candidateParent;
@@ -254,9 +251,7 @@
             		'content': function(){return $el.attr('data-title');}
             	});
             }
-            
-            this._doGhostList();
-            
+
             return this;
         },
 
@@ -275,6 +270,7 @@
             });
             
             this._resolveAutoOption();
+            this._doGhostList();
             
             var $viewPort = $(this.element.klearModule("getPanel"));
             // Se trata de un dialogo!
@@ -550,6 +546,7 @@
             /*
              * Capturar opciones de diálogo.
              */
+            
             $('a.option.dialog', this.element.klearModule("getPanel"))
                 .off('click.dialogOption')
                 .on('click.dialogOption', function(e, data) {
@@ -566,7 +563,7 @@
                 var _container = self.klearModule("getContainer");
 
                 var _parentHolder = _self._resolveParentHolder(this);
-
+                
                 var curPK = _parentHolder.data("id");
                 
                 if ($(_parentHolder).length > 1) {

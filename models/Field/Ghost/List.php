@@ -7,10 +7,10 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     protected $_templateFields = array();
 
     protected $_searchedValues;
-    
+
     protected $_extraDataAttributes = array();
     protected $_extraDataAttributesValues = array();
-    
+
     protected $_items = array();
     protected $_keys = array();
 
@@ -49,69 +49,69 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     	}
     	return null;
     }
-    
+
     protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
     {
-    
+
     	$model = $dataMapper->loadModel(false);
     	$retAttrs = array();
     	foreach ($extraConfig as $label => $field) {
     		if (!$varName = $model->columnNameToVar($field)) {
     			continue;
     		}
-    
+
     		$retAttrs[$label] = 'get' . ucfirst($varName);
     	}
     	return $retAttrs;
     }
-    
+
     protected function _setValuesForExtraAttributes($model, $key)
     {
     	if (sizeof($this->_extraDataAttributes) == 0) {
     		return;
     	}
-    
+
     	$ret = array();
     	foreach ($this->_extraDataAttributes as $label => $getter) {
     		$ret[$label] = $model->$getter();
     	}
-    
+
     	$this->_extraDataAttributesValues[$key] = $ret;
     }
-    
+
     protected function _getFields()
     {
     	$fieldName = $this->_config->getProperty('config')->fieldName;
-    
+
     	if (!is_object($fieldName)) {
     		return array($fieldName);
     	}
-    
+
     	$fieldConfig = new Klear_Model_ConfigParser();
     	$fieldConfig->setConfig($fieldName);
     	return $fieldConfig->getProperty("fields");
     }
-    
+
     protected function _getFieldsTemplate()
     {
     	$fieldName = $this->_config->getProperty('config')->fieldName;
-    
+
     	if (!is_object($fieldName)) {
     		return '%' . $fieldName . '%';
     	}
-    
+
     	$fieldConfig = new Klear_Model_ConfigParser();
     	$fieldConfig->setConfig($fieldName);
     	return $fieldConfig->getProperty("template");
     }
-    
+
     protected function _getItemValue($dataModel)
     {
     	$customValueMethod = $this->_config->getProperty('config')->customValueMethod;
     	if ($customValueMethod) {
     		return $dataModel->$customValueMethod();
     	}
-    
+
     	$fields = $this->_getFields();
     	$fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
     	$replace = array();
@@ -119,26 +119,26 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     		$getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
     		$replace['%' . $fieldName . '%'] = $dataModel->$getter();
     	}
-    
+
     	return str_replace(array_keys($replace), $replace, $fieldsTemplate);
     }
-    
+
     protected function _setOptions($results)
     {
         $this->_keys = array();
         $this->_items = array();
-        
+
         if ($results) {
             foreach ($results as $dataModel) {
                 $this->_keys[] = $dataModel->getPrimaryKey();
                 $this->_items[] = $this->_getItemValue($dataModel);
-    
+
                 $this->_setValuesForExtraAttributes($dataModel, $dataModel->getPrimaryKey());
-    
+
             }
         }
     }
-    
+
     public function init()
     {
         if (!$this->_parentField) {
@@ -151,18 +151,18 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     public function getValue($model)
     {
         $mainModel = $this->_parentField->getColumn()->getModel();
-        
+
         $mapperName = $this->_config->getProperty("config")->mapperName;
         $dataMapper = new $mapperName;
-        
+
         if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
-        
+
         	$extraAttrs = $this->_config->getProperty('config')->extraDataAttributes;
         	$this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs, $dataMapper);
         }
-        
+
         $whereParts = array();
-        
+
         if (isset($this->_config->getProperty('config')->filterField)) {
             $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getPrimaryKey()."')";
         }
@@ -170,20 +170,20 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         if ($filterWhere = $this->_getFilterWhere() && trim($filterWhere)!="") {
             $whereParts[] = $filterWhere;
         }
-        
+
         $where = implode(" and ", $whereParts);
 
         $order = $this->_config->getProperty('config')->order;
         $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
-        
-        
+
+
         $options = $this->_parseOptions();
-        
-        
-        
+
+
+
         $ulParts = array();
-        
+
         foreach ($this->_items as $i=>$item) {
             $id = $this->_keys[$i];
             $li = '<li data-id="' . $id . '">';
@@ -195,7 +195,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             $li .= '</li>';
             $ulParts[] = $li;
         }
-        
+
         $ret  = '<div class="ghostListCounter">';
         $ret .= '<span class="ui-icon ui-icon-search"></span>';
         $ret .= '<input type="text" /> (<span class="counter"></span> items)</div>';
@@ -211,26 +211,26 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         return $ret;
     }
 
-    
+
     protected function _parseOptions()
     {
         $fieldOptions = new KlearMatrix_Model_OptionCollection();
         if (!isset($this->_config->getProperty('config')->options)) {
             return array();
         }
-        
+
         $this->_parseOptionSection($fieldOptions,'screen');
         $this->_parseOptionSection($fieldOptions,'dialog');
         $this->_parseOptionSection($fieldOptions,'command');
-        
+
         return $fieldOptions;
     }
-    
+
     protected function _parseOptionSection($fieldOptions, $itemName) {
-        
+
         $mainRouter = $this->_parentField->getColumn()->getRouteDispatcher();
         $options = $this->_config->getProperty('config')->options;
-        
+
         $collection = strtolower($itemName) . 's';
         $getter = 'get' . ucfirst($itemName) . 'Config';
         $className = 'KlearMatrix_Model_' . ucfirst($itemName) . 'Option';
@@ -243,14 +243,14 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             if (false === $enabled) {
                 continue;
             }
-            
+
             $itemOption = new $className;
             $itemOption->setName($item);
             $itemOption->setConfig($mainRouter->getConfig()->$getter($item));
             $fieldOptions->addOption($itemOption);
         }
     }
-    
+
 
     public function getSearch($values, $searchOps, $model)
     {

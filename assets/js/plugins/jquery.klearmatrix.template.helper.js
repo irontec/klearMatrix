@@ -208,10 +208,8 @@
                 _mlList.appendTo(node);
 
             } else {
-
                 $.tmpl(this.getTemplateNameForType(column.type), fieldData, _templateHelpers).appendTo(node);
             }
-
             return node.html();
 
         },
@@ -273,12 +271,10 @@
         parseParentOptionCustomizationOpen : function(customOptions,config) {
             var response =  '';
             if (!customOptions) {
-
                 return response;
             }
 
             if (typeof(customOptions[config[config.type]]) == "undefined") {
-
                 return response;
             }
 
@@ -820,6 +816,7 @@
                         mainTitle = this.getTitle(option.title, false);
                         mustShowLabel = mustShowLabel || option.labelOnList;
                     } else {
+                        option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
                         mainTitle = this.getTitle(option.title, idx, true);
                     }
@@ -866,15 +863,8 @@
                     
             };
             
-//            if (option.externalOption === true) {
-//                optionData.externalData = 'data-externalid="' + idx${$item.getIndex(row,pk)}'
-//                ${$item.getExternalData($value)}
-//         {{/if}}
-            
-            
             $.tmpl(this.getOptionTemplateName(), optionData).appendTo(_node);
             return _node.html();
-            
             
         },
         mustShowOptionColum : function(option, value) {

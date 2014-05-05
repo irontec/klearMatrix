@@ -116,7 +116,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $model->save(false, $hasDependant);
             }
         } catch (\Zend_Exception $exception) {
-            throw new \Zend_Exception('Error saving record');
+            throw new \Zend_Exception('Error saving record ('.$exception->getMessage().')');
         }
     }
 

@@ -49,7 +49,14 @@
                             var lastInterval = null;
                             
                             $.each(data.pk,function(idx,_pk) {
-                                $("tr[data-id='"+_pk+"']",$refParent.klearModule("getPanel")).slideUp(function() {
+                                
+                                if ($(self.options.caller).data("parentHolderSelector")) {
+                                    var item = self._resolveParentHolder($(self.options.caller));
+                                } else {
+                                    var item = "tr[data-id='"+_pk+"']"; 
+                                }
+                                
+                                $(item,$refParent.klearModule("getPanel")).slideUp(function() {
                                     $(this).remove();
                                     clearTimeout(lastInterval);
                                     lastInterval = setTimeout(function() {

@@ -46,20 +46,27 @@
                             //TO-DO: FOK OFF
                         } else {
                             if (!$.isArray(data.pk)) data.pk = [data.pk];
-                            var lastInterval = null;
+                            var lastInterval, callback = null;
                             
                             $.each(data.pk,function(idx,_pk) {
                                 
                                 if ($(self.options.caller).data("parentHolderSelector")) {
-                                    var item = self._resolveParentHolder($(self.options.caller));
+                                    
+                                    var $caller = $(self.options.caller);
+                                    var item = self._resolveParentHolder($caller);
+                                    
+                                    var callback = function() {
+                                        $caller.parents("ul:eq(0)").parent().find(".ghostListCounter input").trigger("doSum");
+                                    };
                                 } else {
-                                    var item = "tr[data-id='"+_pk+"']"; 
+                                    var item = "tr[data-id='"+_pk+"']";
                                 }
                                 
                                 $(item,$refParent.klearModule("getPanel")).slideUp(function() {
+                                    if (typeof callback == 'function') callback();
                                     $(this).remove();
                                     clearTimeout(lastInterval);
-                                    lastInterval = setTimeout(function() {
+                                    lastInterval = setTimeout(function(){
                                         $("th.multiItem", $refParent.klearModule("getPanel")).trigger('refreshButtons');
                                     },400);
                                 });

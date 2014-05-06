@@ -411,51 +411,6 @@
                 }).multiselectfilter();
             }
 
-            if ($("input.auto, textarea.auto",this.options.theForm).length > 0) {
-                $("input.auto, textarea.auto",this.options.theForm).each(function() {
-                    if ($(this).data("plugin")) {
-
-                        var pluginSettings = {};
-
-                        $.each($(this).data(),function(idx, value) {
-                            if (idx.match(/setting-*/)) {
-
-                                idx = idx.replace('setting', '');
-                                idx = idx.charAt(0).toLowerCase() + idx.substr(1); //lcfirst
-                                if (!pluginSettings) {
-                                    pluginSettings = {};
-                                }
-
-                                pluginSettings[idx] = value;
-                            }
-                        });
-
-
-                        (function lazyPluginLoad(target, pluginName, settings) {
-                            if (!$.fn[pluginName]) {
-                                this.count++;
-                                if (this.count > 20) {
-                                    return;
-                                }
-                                setTimeout(function() {
-                                    lazyPluginLoad(target, pluginName, settings);
-                                },50);
-                            }
-
-                            if (target[pluginName]) {
-                                settings._contentTab = _self;
-                                if (target.data("basename")) {
-                                    target[pluginName](settings, self.options.data.columns[target.data("basename")].config);
-                                } else {
-                                    target[pluginName](settings);
-                                }
-                            }
-
-                        })($(this), $(this).data("plugin"), pluginSettings);
-                    }
-                });
-            }
-
             if ($(".jmedia",this.options.theForm).length>0) {
                 $(".jmedia",this.options.theForm).each(function() {
 

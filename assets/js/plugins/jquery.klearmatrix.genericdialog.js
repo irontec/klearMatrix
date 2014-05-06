@@ -89,6 +89,7 @@
             $(this.element).moduleDialog("option", "buttons", this._getButtons());
             $(this.element).moduleDialog("updateContent",this._getDialogContent(),function() {
                 self._registerBaseEvents();
+                self._registerFieldsEvents();
             });
 
             $(this.element).moduleDialog("updateTitle", this._getTitle());

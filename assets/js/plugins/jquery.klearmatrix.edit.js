@@ -844,10 +844,12 @@
                     return $field.parents("fieldset.superContainer:eq(0)");
                 },
                 show : function($f) {
+                    return;
                     this._getFieldSet($f).slideDown();
                 },
                 hide : function($f) {
                     $fSet = this._getFieldSet($f);
+                    return;
                     if ($(".container:visible",$fSet).length == 0) {
                         $fSet.slideUp();
                     }
@@ -868,11 +870,8 @@
                 }
 
                 if ($(this).is("input:hidden")) {
-
                     var curOption = $(this);
-
                 } else {
-
                     var curOption = $("option[value="+$(this).val()+"]",$(this));
                 }
 
@@ -880,11 +879,23 @@
                     return;
                 }
 
+                var _resolveFieldFromName = function(val, $parent) {
+                    var fName = $.trim(val);
+                    if (fName == '') return false;
+                    
+                    // Es un campo vacío para fixedPosition
+                    if (fName.match(/^__empty/)) {
+                        return $("div[data-empty="+fName+"]", $parent) || false;
+                    } else {
+                        return  $("label[rel='"+fName+"']:eq(0)",$parent).parents("div:eq(0)") || false;
+                    }
+                
+                }
+        
                 if (curOption.data("show")) {
                     $.each(curOption.data("show").split(","),function(i,val) {
-                        var fName = $.trim(val);
-                        if (fName == '') return;
-                        var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
+                        var field = _resolveFieldFromName(val, self.options.theForm);
+                        if (!field) return;
 
                         if (manual) {
                             field.show();
@@ -895,7 +906,7 @@
                             field.slideDown('normal', function(){
                                 $(".visualFilter", field).trigger("manualchange.visualFilter",true);
                                 checkSuperContainer.show(field);
-                            }).addClass("ui-state-highlight");
+                            }).not("div[data-empty]").addClass("ui-state-highlight");
 
                             setTimeout(function() {
                                 field.removeClass('ui-state-highlight');
@@ -905,12 +916,8 @@
                 }
                 if (curOption.data("hide")) {
                     $.each(curOption.data("hide").split(","),function(i,val) {
-
-                        var fName = $.trim(val);
-                        if (fName == '') return;
-
-                        var field = $("label[rel='"+fName+"']:eq(0)",self.options.theForm).parents("div:eq(0)");
-
+                        var field = _resolveFieldFromName(val, self.options.theForm);
+                        if (!field) return;
                         if (manual) {
                             field.hide(1,function() {
                                 // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
@@ -946,7 +953,7 @@
                     
                 } else {
                     _target.removeClass("changed ui-state-highlight");
-                    _target.addClass("ui-state-default");                    
+                    _target.addClass("ui-state-default");
                     $(this).removeClass("changed");
                 }
 
@@ -1077,11 +1084,16 @@
             var $container = this.element.klearModule("getPanel");
             var $elements = [];
             for (var idx in fields) {
-                var $field = $("label[rel="+fields[idx]['field']+"]", $container)
+                if (fields[idx]['field'].match(/^__empty/)) {
+                    $field = $("<div class='container ui-widget-content' data-empty='"+fields[idx]['field']+"' />");
+                } else {
+                    var $field = $("label[rel="+fields[idx]['field']+"]", $container)
                         .parents(".container:eq(0)");
-                if ($field.length != 1) {
-                    continue;
+                    if ($field.length != 1) {
+                        continue;
+                    }
                 }
+                
                 $field.data("numberWidth", fields[idx]['weight'])
                 $elements.push($field);
             }

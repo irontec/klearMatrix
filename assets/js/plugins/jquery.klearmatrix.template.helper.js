@@ -824,7 +824,7 @@
                 case "Edit":
                     mustShowLabel = mustShowLabel || option.labelOnEdit;
                     mainTitle = this.getTitle(option.title, idx, true);
-                    
+                    option.multiItem = false;
                     if (fieldValue) {
                         classes.push('_fieldOption inherit ui-state-nojump');
                     } else {

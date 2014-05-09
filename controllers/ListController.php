@@ -146,7 +146,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $jsonResponse->addTemplate("/template/paginator", "klearmatrixPaginator");
         $jsonResponse->addTemplate("/template/option", "klearmatrixOption");
-        
+
         $jsonResponse->addTemplate("/template/list/type/" . $this->_item->getType(), "klearmatrixList");
         $jsonResponse->addTemplate($cols->getMultiLangTemplateArray("/template/", 'list'), "klearmatrixMultiLangList");
 

@@ -76,14 +76,25 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         try {
+
             $this->_save($model, $hasDependant);
             $this->_helper->log(
                 'model created succesfully for ' . $mapperName
             );
+
+            $optsString = "";
+            if ($this->_item->hasEntityPostSaveOptions()) {
+                $fieldOpts = $this->_getFieldOptions();
+                foreach($fieldOpts as $opt) {
+                    $optsString.= "<span data-id='".$model->getPrimaryKey()."'>".$opt->toAutoOption()."</span>";
+                }
+            }
+
+            //TODO mejoprar viusazlcion de otsastrn
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
-                'message' => $this->view->translate('Record successfully saved.')
+                'message' => $this->view->translate('Record successfully saved.') . $optsString
             );
         } catch (\Zend_Exception $exception) {
 
@@ -102,6 +113,23 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
+    protected function _getFieldOptions()
+    {
+
+        $fieldOptions = new KlearMatrix_Model_OptionCollection();
+
+        foreach ($this->_item->getScreenEntityPostSaveOptionsConfig() as $screen) {
+
+            $screenOption = new KlearMatrix_Model_ScreenOption;
+            $screenOption->setName($screen);
+            $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($screen));
+            $screenOption->setFrom("entityPostSaveDialog");
+            $screenOption->setParentHolderSelector('span');
+            $fieldOptions->addOption($screenOption);
+        }
+
+        return $fieldOptions;
+    }
 
     protected function _save($model, $hasDependant)
     {

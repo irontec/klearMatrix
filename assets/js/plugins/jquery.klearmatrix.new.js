@@ -100,6 +100,7 @@
                 },
                 function(data) {
 
+                	
                     if (data.error) {
                         //TO-DO: FOK OFF
                         // Mostrar errores desde arriba
@@ -117,6 +118,8 @@
                             return
                         }
                     }
+                    
+                    
 
                     var _buttons = [{
                         text: $.translate("Close"),
@@ -126,6 +129,8 @@
                         }
                     }];
 
+                    
+                    
                     if (addAnotherOption) {
                         _buttons.push(
                             {
@@ -147,7 +152,10 @@
                     });
 
                     $dialog.moduleDialog("option","buttons",_buttons);
-                    $dialog.moduleDialog("updateContent",data.message);
+                    $dialog.moduleDialog("updateContent",data.message,function() {
+                        self._registerBaseEvents();
+                        self._registerFieldsEvents();
+                    });
 
                     var triggerData = {'data': data, 'postData': postData};
                     $self.trigger('postMainActionHook', triggerData);

@@ -1063,6 +1063,11 @@ class KlearMatrix_Model_ResponseItem
         return ($this->_config->exists("fields->options"));
     }
 
+    public function hasEntityPostSaveOptions()
+    {
+        return ($this->_config->exists("entityPostSaveOptions"));
+    }
+
     /**
      * Devuelve un array de objetos FieldOption (opciones por campo),
      * a partir de las columnas de tipo Option del ColWrapper
@@ -1087,6 +1092,16 @@ class KlearMatrix_Model_ResponseItem
 
         return $this->_getItemFieldsOptionsConfig('command', $parent);
     }
+
+    public function getScreenEntityPostSaveOptionsConfig()
+    {
+        $config = $this->_config->getProperty('entityPostSaveOptions');
+        $parent = new Klear_Model_ConfigParser;
+        $parent->setConfig($config);
+
+        return $this->_getItemFieldsOptionsConfig('screen', $parent);
+    }
+
 
     /**
      * @return KlearMatrix_Model_OptionCollection
@@ -1235,7 +1250,9 @@ class KlearMatrix_Model_ResponseItem
             case 'command':
                 $property = 'commands';
                 break;
-
+            case 'entityPostSaveOptions':
+                $property = 'entityPostSaveOptions';
+                break;
             default:
                 Throw new Zend_Exception("Undefined Option Type");
                 break;

@@ -814,15 +814,16 @@
                     if (idx === false) {
                         classes.push('_generalOption');
                         mainTitle = this.getTitle(option.title, false);
-                        mustShowLabel = mustShowLabel || option.labelOnList;
                     } else {
                         option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
                         mainTitle = this.getTitle(option.title, idx, true);
                     }
+                    mustShowLabel = mustShowLabel || option.labelOnList;
                 break;
                 case "Edit":
-                    mustShowLabel = mustShowLabel || option.labelOnEdit;
+
+                	mustShowLabel = mustShowLabel || option.labelOnEdit;
                     mainTitle = this.getTitle(option.title, idx, true);
                     option.multiItem = false;
                     if (fieldValue) {
@@ -835,12 +836,15 @@
                     mainTitle = option.title;
                     // Forzamos multiItem a false
                     option.multiItem = false;
+                    if (option.from && option.from=="entityPostSaveDialog") {
+                    	mustShowLabel = mustShowLabel || option.labelOnEntityPostSave;	
+                    }
                     classes.push('_fieldOption inherit ui-state-nojump');
                 break;
                 
             }
             
-            var buttonLabel = mainTitle;
+            var buttonLabel = mustShowLabel;
             
             if (option.defaultOption) {
                 classes.push('default');

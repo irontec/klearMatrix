@@ -86,7 +86,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             if ($this->_item->hasEntityPostSaveOptions()) {
                 $listLI = array();
                 $fieldOpts = $this->_getFieldOptions();
-                foreach($fieldOpts as $opt) {
+                foreach ($fieldOpts as $opt) {
                     $listLI[] = "<li><span data-id='".$model->getPrimaryKey()."'>".$opt->toAutoOption()."</span></li>";
                 }
                 if (count($listLI)>0) {

@@ -190,10 +190,11 @@ class KlearMatrix_Model_FilterProcessor
                     $op = 'eq';
                 }
 
-
-                if (!isset($searchFields[$field])) {
-                    $searchOps[$field] = array();
-                }
+                $searchOps[$field] = array();
+// $searchFields ? no viene de ningún lado ¿?
+//                 if (!isset($searchFields[$field])) {
+//                     $searchOps[$field] = array();
+//                 }
 
                 if (!$value instanceof Traversable) {
                     $value = array($value);
@@ -207,7 +208,8 @@ class KlearMatrix_Model_FilterProcessor
                  * Por cada valor, deberá haber una "op"
                  */
                 $cur = 0;
-                foreach ($value as $_val) {
+                $valueCount = count($value);
+                for ($i=0;$i<$valueCount;$i++) {
                     $curOp = 'eq';
                     if (is_array($op) && (isset($op[$cur]))) {
                             $curOp = $op[$cur];

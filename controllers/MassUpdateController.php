@@ -50,7 +50,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
             throw new Exception("Mass Update is only compatible with KlearMatrix_Model_Field_Select and KlearMatrix_Model_Field_Checkbox");
         }
     }
-    
+
 
     /**
      * TODO: Devolver solo la estructura de column (toArray),
@@ -83,11 +83,11 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $value = $this->getRequest()->getParam("updateable");
 
         $fieldConfig = $this->_column->getFieldConfig();
-        
+
         $this->_isFieldMassUpdateable($fieldConfig);
 
         $adapterConfig = $fieldConfig->getConfig();
-        
+
         if ($fieldConfig instanceof KlearMatrix_Model_Field_Multiselect) {
             $aValidVals = array();
             if (!is_array($value)) {
@@ -95,7 +95,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
             }
             foreach ($adapterConfig['values'] as $val) {
                 if (in_array($val['key'], $value)) {
-                    $aValidVals[] = $val['key']; 
+                    $aValidVals[] = $val['key'];
                 }
             }
             return $aValidVals;
@@ -104,7 +104,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
                 if ($val['key'] == $value) {
                     return $value;
                 }
-            }    
+            }
         }
         throw new \Exception("valid value not found!");
     }
@@ -135,7 +135,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $fieldConfig = $this->_column->getFieldConfig();
 
         $this->_results = $mapper->fetchList($baseModel->getPrimaryKeyName() . ' in ('.implode(',', $pk).')');
-        
+
 
         if (sizeof($this->_results) != sizeof($pk)) {
             throw new Klear_Exception_Default($this->view->translate('Record not found. Could not Mass Update.'));
@@ -164,9 +164,9 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
             if (++$counter>$showLimit) {
                 break;
             }
-            $message .= '<p class="updateable-item">'  . 
+            $message .= '<p class="updateable-item">'  .
                 $item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
-            
+
         }
         $totalEls = count($this->_results);
         if ($totalEls>$showLimit) {
@@ -208,14 +208,14 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $jsonResponse->setPlugin('klearMatrixGenericDialog');
 
         $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.klearmatrix.genericdialog.js");
-        
+
         if ($fieldConfig instanceof KlearMatrix_Model_Field_Multiselect) {
             $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.multiselect.filter.js");
             $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.multiselect.js");
             $jsonResponse->addCssFile("/../klearMatrix/css/jquery.multiselect.css");
             $jsonResponse->addCssFile("/../klearMatrix/css/jquery.multiselect.filter.css");
         }
-        
+
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }
@@ -227,42 +227,41 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
         $value = $this->_getValueToUpdate();
 
         $fieldConfig = $this->_column->getFieldConfig();
-        
 
-        
+
+
         if ($fieldConfig instanceof KlearMatrix_Model_Field_Multiselect) {
-            
-            $adapter = $fieldConfig->getAdapter(); 
-            
+
+            $adapter = $fieldConfig->getAdapter();
+
             $relationMapperName = $adapter->getRelationMapper();
             $relationProperty = $adapter->getRelationProperty();
-            $relatedMapperName = $adapter->getRelatedMapper();
-            
+
             $relationMapper = new $relationMapperName;
             $relationModel = $relationMapper->loadModel(null);
-            
+
             $total = 0;
             $pks = array();
-            
+
             foreach ($this->_results as $entity) {
                 $pks[] = $entity->getPrimaryKey();
 
                 $entityRels = $entity->{'get' . $this->_column->getDbFieldName()}();
-                
+
                 $aIds = array();
-                
+
                 $newEntityRels = array();
-                
+
                 foreach ($entityRels as $entityRel) {
                     $entityRelPK = $entityRel->{'get' . $relationProperty}()->getPrimaryKey();
                     $aIds[] = $entityRelPK;
-                    
+
                     if (in_array($entityRelPK, $value)) {
                         $newEntityRels[] = $entityRel;
                     }
-                    
+
                 }
-                
+
                 foreach ($value as $val) {
                     if (in_array($val, $aIds)) {
                         continue;
@@ -272,33 +271,33 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
                     $relModel->{'set' . $relationProperty . 'Id'}($val);
                     $newEntityRels[] = $relModel;
                 }
-                
-                
+
+
                 $entity->{'set' . $this->_column->getDbFieldName()}($newEntityRels, true);
-                
+
                 $entity->saveRecursive();
-                
+
                 $total++;
             }
-            
+
         } else {
-            
-            
+
+
             $total = 0;
             $pks = array();
             foreach ($this->_results as $entity) {
                 $pks[] = $entity->getPrimaryKey();
                 $entity->{$setter}($value)->save();
-    
+
                 $total++;
             }
 
             $this->_helper->log($total . ' models succesfully update > PK('. implode(',', $pks). ') > ' . $this->_column->getPublicName() . ' >> ' . $value);
         }
 
-        
-        
-        
+
+
+
 
         if ($this->_item->getMessage()) {
             $message = $this->_item->getMessage();

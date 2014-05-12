@@ -442,7 +442,7 @@ abstract class KlearMatrix_Model_AbstractOption
     public function toAutoOption()
     {
         $ret = '<span class="autoOption" ';
-        foreach($this->toArray() as $prop => $value) {
+        foreach ($this->toArray() as $prop => $value) {
             $prop = ltrim(strtolower(preg_replace('/[A-Z]/', '-$0', $prop)), '-');
             $ret .= 'data-' . $prop . '="' . $value.'" ';
         }

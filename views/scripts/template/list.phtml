@@ -17,7 +17,7 @@ data-title="${info.text}"
 {{if (preconfiguredFilters)}}
 <p class="preconfiguredFilters">
 <span class="ui-silk inline ui-silk-zoom-in"></span><?php echo $this->translate('Search shortcuts'); ?>: {{each(idx,filter) preconfiguredFilters}}
-    <button class="preconfigureFilters" data-field="${filter.field}" data-value="${filter.value}">${filter.title}</button>
+    <button class="preconfigureFilters tooltip" data-field="${filter.field}" data-value="${filter.value}" data-title="${filter.description}" >${filter.title}</button>
 {{/each}}
 </p>
 {{/if}}

@@ -251,6 +251,12 @@
             		'content': function(){return $el.attr('data-title');}
             	});
             }
+            
+            if ($(".tooltip",_self.klearModule("getPanel")).length>0) {
+            	$(".tooltip",_self.klearModule("getPanel")).tooltip({
+            		'content': function(){return $(this).attr('data-title');}
+            	});
+            }
 
             if ($("input.auto, textarea.auto",_self.klearModule("getPanel")).length > 0) {
                 $("input.auto, textarea.auto",_self.klearModule("getPanel")).each(function() {

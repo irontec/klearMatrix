@@ -330,6 +330,10 @@ class KlearMatrix_Model_ResponseItem
                 $title = Klear_Model_Gettext::gettextCheck($filterData['title']);
                 $aConf[$filterKey]['title'] = $title;
             }
+            if (isset($filterData['description'])) {
+                $descr = Klear_Model_Gettext::gettextCheck($filterData['description']);
+                $aConf[$filterKey]['description'] = $descr;
+            }
         }
         $this->_preconfiguredFilters = $aConf;
         return $this->_preconfiguredFilters;

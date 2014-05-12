@@ -715,7 +715,13 @@
                                     this.cleanValue(defaultValue) :
                                     this.cleanValue(parentIden);
             
-            var res = [];
+            return this.buildTitleString(title, defaultValue, parentValue);
+
+        },
+        buildTitleString: function(title, defaultValue, parentValue) {
+        	defaultValue = defaultValue || "";
+        	parentValue = parentValue || "";
+        	var res = [];
             var _r = "";
             if (res = title.match(/\[format\|(.*[\%parent\%|\%item\%].*)\]/)) {
             	if (res.length == 2) {
@@ -739,8 +745,7 @@
                    .replace(/\%parent\%/, parentValue)
                    .replace(/\%item\%/, defaultValue);
             }
-            return _r;
-
+            return _r;        	
         },
         getTitle : function(title,idx,replaceParentPerItem) {
             
@@ -903,7 +908,7 @@
                     type : option.type,
                     icon: option.icon,
                     optionIndex : this.getIndex(option, option.type),
-                    optionTitle : mainTitle,
+                    optionTitle : this.buildTitleString(mainTitle),
                     shortcut: option.shortcut  || false,
                     multiInstance: option.multiInstance || false,
                     external: option.external || false,
@@ -911,7 +916,7 @@
                     multiItem: option.multiItem || false,
                     mustShowLabel: mustShowLabel,
                     parentHolderSelector: option.parentHolderSelector || false,
-                    buttonLabel: buttonLabel
+                    buttonLabel: this.buildTitleString(buttonLabel)
             };
 
             $.tmpl(this.getOptionTemplateName(), optionData).appendTo(_node);

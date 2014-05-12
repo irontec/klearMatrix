@@ -844,12 +844,10 @@
                     return $field.parents("fieldset.superContainer:eq(0)");
                 },
                 show : function($f) {
-                    return;
                     this._getFieldSet($f).slideDown();
                 },
                 hide : function($f) {
                     $fSet = this._getFieldSet($f);
-                    return;
                     if ($(".container:visible",$fSet).length == 0) {
                         $fSet.slideUp();
                     }

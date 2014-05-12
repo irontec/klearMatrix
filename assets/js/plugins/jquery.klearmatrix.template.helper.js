@@ -664,7 +664,6 @@
             var columns = settings.columns;
             var idx = settings.idx;
             var values = settings.values;
-
             var defaultValue = '',
             	_firstValue = '';
             
@@ -736,10 +735,10 @@
             		}
             	}
             } else {
-            	_r = title
-            	.replace(/\%parent\%/, parentValue)
-            	.replace(/\%item\%/, defaultValue);
-            }                                    
+                _r = title
+                   .replace(/\%parent\%/, parentValue)
+                   .replace(/\%item\%/, defaultValue);
+            }
             return _r;
 
         },
@@ -770,6 +769,7 @@
         {
             
             var mainTitle = '',
+                buttonLabel = false,
                 classes = [],
                 entity = false,
                 curId = false;
@@ -788,12 +788,14 @@
             }
                 
             
+            
             var _node = $("<div />");
             
-            var mustShowLabel = option.label || false;
+            var mustShowLabel = option.label? true:false;
+            
             
             // Es una entidad concreta (con índice "idx" en data.values
-            if (idx) {
+            if (idx && this.data && this.data.values) {
                 entity = this.data.values[idx];
                 curId = entity[this.data.pk];
             }
@@ -813,19 +815,49 @@
                 case "List":
                     if (idx === false) {
                         classes.push('_generalOption');
-                        mainTitle = this.getTitle(option.title, false);
-                        mustShowLabel = mustShowLabel || option.labelOnList;
+                        mainTitle = this.getTitle(option.title, false, false);
+                        
+                        if (mustShowLabel && typeof option.label == 'string') {
+                            buttonLabel = this.getTitle(option.label, false,false);
+                        }
+                        
+                        if (option.labelOnList) {
+                            if (typeof option.labelOnList == 'string') {
+                                buttonLabel = this.getTitle(option.labelOnList, false);
+                            }
+                            mustShowLabel = true;
+                        }
+                        
+                        
+                        
                     } else {
+                        
                         option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
                         mainTitle = this.getTitle(option.title, idx, true);
+                        
+                        if (mustShowLabel && typeof option.label == 'string') {
+                            buttonLabel = this.getTitle(option.label, idx, true);
+                        }
+                        
                     }
                     
                 break;
                 case "Edit":
-
-                	mustShowLabel = mustShowLabel || option.labelOnEdit;
+                    
                     mainTitle = this.getTitle(option.title, idx, true);
+                    
+                    if (mustShowLabel && typeof option.label == 'string') {
+                        buttonLabel = this.getTitle(option.label, idx, true);
+                    }
+                    
+                    if (option.labelOnEdit) {
+                        if (typeof option.labelOnEdit == 'string') {
+                            buttonLabel = this.getTitle(option.labelOnEdit, false);
+                        }
+                        mustShowLabel = true;
+                    } 
+                    
                     option.multiItem = false;
                     if (fieldValue) {
                         classes.push('_fieldOption inherit ui-state-nojump');
@@ -834,18 +866,33 @@
                     }
                 break;
                 case "Field":
+                    // TODO: cargar this con valores necesarios, en casa de querer invocar getTitle
                     mainTitle = option.title;
                     // Forzamos multiItem a false
                     option.multiItem = false;
-                    if (option.from && option.from=="entityPostSaveDialog") {
-                    	mustShowLabel = mustShowLabel || option.labelOnEntityPostSave;	
+                    
+                    if (mustShowLabel && typeof option.label == 'string') {
+                        buttonLabel = option.label;
                     }
+                    
+                    if (option.from && option.from == "entityPostSaveDialog") {
+                        
+                        if (option.labelOnEntityPostSave) {
+                            if (typeof option.labelOnEntityPostSave == 'string') {
+                                buttonLabel = option.labelOnEntityPostSave;
+                            }
+                            mustShowLabel = true;
+                        }
+                    }
+                    
                     classes.push('_fieldOption inherit ui-state-nojump');
                 break;
                 
             }
             
-            var buttonLabel = mustShowLabel;
+            if (false === buttonLabel) {
+                buttonLabel = mainTitle;
+            }
             
             if (option.defaultOption) {
                 classes.push('default');
@@ -865,15 +912,12 @@
                     mustShowLabel: mustShowLabel,
                     parentHolderSelector: option.parentHolderSelector || false,
                     buttonLabel: buttonLabel
-                    
             };
-            
+
             $.tmpl(this.getOptionTemplateName(), optionData).appendTo(_node);
             return _node.html();
-            
         },
         mustShowOptionColum : function(option, value) {
-
             return true;
         }
         

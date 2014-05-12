@@ -676,6 +676,11 @@ table.kMatrix ul.ghostList {
 	height: auto;
 }
 
+fieldset .containerFixed ul.ghostList {
+    width: auto;
+}
+
 ul.ghostList:hover {
     overflow: auto;
 }
+

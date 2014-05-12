@@ -635,6 +635,11 @@ fieldset .containerFixed a._fieldOption {
     margin: 8px 0 0 0;
 }
 
+fieldset .containerFixed ul.ghostList a._fieldOption {
+    float: none;
+}
+
+
 fieldset .containerFixed a._fieldOption span {
     margin-top: -3px;
 }

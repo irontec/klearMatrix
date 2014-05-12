@@ -77,20 +77,19 @@ abstract class KlearMatrix_Model_AbstractOption
 
     protected function _parseLabelConfig($value)
     {
-        switch (gettype($value)) {
-            case 'NULL':
-        	case 'string':
-        	    return Klear_Model_Gettext::gettextCheck($value);
-        	    break;
-    	    case 'boolean':
-	        default:
-	            if (true===$value) {
-	                return $this->getTitle();
-	            } else {
-	                return false;
-	            }
-    	        break;
+
+        $filteredValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if (is_null($filteredValue)) {
+            return Klear_Model_Gettext::gettextCheck($value);
         }
+
+        if ($filteredValue === true) {
+            return $this->getTitle();
+        } else {
+            return false;
+        }
+
     }
 
     public function getConfig()
@@ -428,7 +427,7 @@ abstract class KlearMatrix_Model_AbstractOption
 
         foreach ($this->_attribs as $attribute) {
             $prop = '_' . $attribute;
-            if ($this->{$prop}) {
+            if (!is_null($this->{$prop})) {
                 $ret[$attribute] = $this->{$prop};
             }
         }

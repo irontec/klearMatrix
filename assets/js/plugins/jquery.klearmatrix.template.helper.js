@@ -814,12 +814,13 @@
                     if (idx === false) {
                         classes.push('_generalOption');
                         mainTitle = this.getTitle(option.title, false);
+                        mustShowLabel = mustShowLabel || option.labelOnList;
                     } else {
                         option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
                         mainTitle = this.getTitle(option.title, idx, true);
                     }
-                    mustShowLabel = mustShowLabel || option.labelOnList;
+                    
                 break;
                 case "Edit":
 

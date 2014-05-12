@@ -76,6 +76,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         try {
+            
 
             $this->_save($model, $hasDependant);
             $this->_helper->log(
@@ -119,7 +120,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $fieldOptions = new KlearMatrix_Model_OptionCollection();
 
         foreach ($this->_item->getScreenEntityPostSaveOptionsConfig() as $screen) {
-
             $screenOption = new KlearMatrix_Model_ScreenOption;
             $screenOption->setName($screen);
             $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($screen));
@@ -127,7 +127,21 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $screenOption->setParentHolderSelector('span');
             $fieldOptions->addOption($screenOption);
         }
-
+        
+        
+        foreach ($this->_item->getDialogEntityPostSaveOptionsConfig() as $dialog) {
+            $dialogOption = new KlearMatrix_Model_DialogOption();
+            $dialogOption->setName($dialog);
+            
+            $config = $this->_mainRouter->getConfig()->getDialogConfig($dialog);
+            
+            $dialogOption->setConfig($config);
+            
+            $dialogOption->setParentHolderSelector('span');
+            $fieldOptions->addOption($dialogOption);
+            
+            
+        }
         return $fieldOptions;
     }
 

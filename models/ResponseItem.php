@@ -1101,6 +1101,15 @@ class KlearMatrix_Model_ResponseItem
 
         return $this->_getItemFieldsOptionsConfig('screen', $parent);
     }
+    
+    public function getDialogEntityPostSaveOptionsConfig()
+    {
+        $config = $this->_config->getProperty('entityPostSaveOptions');
+        $parent = new Klear_Model_ConfigParser;
+        $parent->setConfig($config);
+
+        return $this->_getItemFieldsOptionsConfig('dialog', $parent);
+    }
 
 
     /**

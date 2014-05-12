@@ -684,3 +684,15 @@ ul.ghostList:hover {
     overflow: auto;
 }
 
+.entityPostSaveOptionsListUL {
+    list-style: none;
+    margin: 10px 0 0px 0;
+    padding: 5px 0 5px 5px;
+}
+
+.entityPostSaveOptionsListUL li{
+    display: inline;
+	margin: 0 7px 0 0;
+	padding: 2px;
+}
+

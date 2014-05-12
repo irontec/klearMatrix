@@ -76,7 +76,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         try {
-            
 
             $this->_save($model, $hasDependant);
             $this->_helper->log(
@@ -85,13 +84,18 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
             $optsString = "";
             if ($this->_item->hasEntityPostSaveOptions()) {
+                $listLI = array();
                 $fieldOpts = $this->_getFieldOptions();
                 foreach($fieldOpts as $opt) {
-                    $optsString.= "<span data-id='".$model->getPrimaryKey()."'>".$opt->toAutoOption()."</span>";
+                    $listLI[] = "<li><span data-id='".$model->getPrimaryKey()."'>".$opt->toAutoOption()."</span></li>";
+                }
+                if (count($listLI)>0) {
+                    $listUL = '<ul class="entityPostSaveOptionsListUL ui-state-highlight ui-corner-all">';
+                    $listUL.= implode("\n", $listLI) . '</ul>';
+                    $optsString = $listUL;
                 }
             }
 
-            //TODO mejoprar viusazlcion de otsastrn
             $data = array(
                 'error' => false,
                 'pk' => $model->getPrimaryKey(),
@@ -127,21 +131,17 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $screenOption->setParentHolderSelector('span');
             $fieldOptions->addOption($screenOption);
         }
-        
-        
+
         foreach ($this->_item->getDialogEntityPostSaveOptionsConfig() as $dialog) {
             $dialogOption = new KlearMatrix_Model_DialogOption();
             $dialogOption->setName($dialog);
-            
             $config = $this->_mainRouter->getConfig()->getDialogConfig($dialog);
-            
             $dialogOption->setConfig($config);
-            
+            $screenOption->setFrom("entityPostSaveDialog");
             $dialogOption->setParentHolderSelector('span');
             $fieldOptions->addOption($dialogOption);
-            
-            
         }
+
         return $fieldOptions;
     }
 

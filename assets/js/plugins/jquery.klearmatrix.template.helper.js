@@ -852,13 +852,14 @@
                     
                     mainTitle = this.getTitle(option.title, idx, true);
                     
+                    
                     if (mustShowLabel && typeof option.label == 'string') {
                         buttonLabel = this.getTitle(option.label, idx, true);
                     }
                     
                     if (option.labelOnEdit) {
                         if (typeof option.labelOnEdit == 'string') {
-                            buttonLabel = this.getTitle(option.labelOnEdit, false);
+                            buttonLabel = this.getTitle(option.labelOnEdit, idx, true);
                         }
                         mustShowLabel = true;
                     } 

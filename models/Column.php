@@ -415,6 +415,27 @@ class KlearMatrix_Model_Column
     }
 
 
+    protected function _parseCommandOptions()
+    {
+        if (!$this->_config->getProperty("options")->commands) {
+            return;
+        }
+
+        foreach ($this->_config->getProperty("options")->commands as $_command => $enabled) {
+
+            if (!(bool)$enabled) {
+                continue;
+            }
+
+            $commandOption = new KlearMatrix_Model_CommandOption;
+            $commandOption->setName($_command);
+            $commandOption->setConfig($this->_routeDispatcher->getConfig()->getCommandConfig($_command));
+
+            $this->_options->addOption($commandOption);
+        }
+    }
+
+
     public function _parseColumnOptions()
     {
 
@@ -423,7 +444,7 @@ class KlearMatrix_Model_Column
 
             $this->_parseScreenOptions();
             $this->_parseDialogOptions();
-            //TO-DO : Opciones de dialogo para campos??? El no va a más!!! LOCURA!!
+            $this->_parseCommandOptions();
         }
     }
 

@@ -1105,7 +1105,7 @@ class KlearMatrix_Model_ResponseItem
 
         return $this->_getItemFieldsOptionsConfig('screen', $parent);
     }
-    
+
     public function getDialogEntityPostSaveOptionsConfig()
     {
         $config = $this->_config->getProperty('entityPostSaveOptions');
@@ -1154,6 +1154,16 @@ class KlearMatrix_Model_ResponseItem
             $dialogOption->setName($_dialog);
             $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
             $generalOptions->addOption($dialogOption);
+        }
+
+        $options = $this->_getItemFieldsOptionsConfig('command', $parent);
+
+        foreach ($options as $_command) {
+
+            $commandOption = new KlearMatrix_Model_CommandOption;
+            $commandOption->setName($_command);
+            $commandOption->setConfig($this->_routeDispatcher->getConfig()->getCommandConfig($_command));
+            $generalOptions->addOption($commandOption);
         }
 
         return $generalOptions;

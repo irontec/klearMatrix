@@ -35,6 +35,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     public function saveAction()
     {
+
+
         $mapperName = $this->_item->getMapperName();
 
         $model = $this->_item->getObjectInstance();
@@ -77,20 +79,23 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         try {
 
+//             $model->setNameEs('asdg');
+//             $model->setNameEu('asdg');
+
             $this->_save($model, $hasDependant);
             $this->_helper->log(
                 'model created succesfully for ' . $mapperName
             );
 
             $optsString = "";
-            if ($this->_item->hasEntityPostSaveOptions()) {
+            if ($this->_item->hasPostActionOptions()) {
                 $listLI = array();
                 $fieldOpts = $this->_getFieldOptions();
                 foreach ($fieldOpts as $opt) {
                     $listLI[] = "<li><span data-id='".$model->getPrimaryKey()."'>".$opt->toAutoOption()."</span></li>";
                 }
                 if (count($listLI)>0) {
-                    $listUL = '<ul class="entityPostSaveOptionsListUL ui-state-highlight ui-corner-all">';
+                    $listUL = '<ul class="postActionOptionsListUL ui-state-highlight ui-corner-all">';
                     $listUL.= implode("\n", $listLI) . '</ul>';
                     $optsString = $listUL;
                 }
@@ -120,28 +125,20 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
     protected function _getFieldOptions()
     {
-
-        $fieldOptions = new KlearMatrix_Model_OptionCollection();
-
-        foreach ($this->_item->getScreenEntityPostSaveOptionsConfig() as $screen) {
-            $screenOption = new KlearMatrix_Model_ScreenOption;
-            $screenOption->setName($screen);
-            $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($screen));
-            $screenOption->setFrom("entityPostSaveDialog");
-            $screenOption->setParentHolderSelector('span');
-            $fieldOptions->addOption($screenOption);
-        }
-
-        foreach ($this->_item->getDialogEntityPostSaveOptionsConfig() as $dialog) {
-            $dialogOption = new KlearMatrix_Model_DialogOption();
-            $dialogOption->setName($dialog);
-            $config = $this->_mainRouter->getConfig()->getDialogConfig($dialog);
-            $dialogOption->setConfig($config);
-            $screenOption->setFrom("entityPostSaveDialog");
-            $dialogOption->setParentHolderSelector('span');
-            $fieldOptions->addOption($dialogOption);
-        }
-
+        $KlearMatrixOptionLoader = new KlearMatrix_Model_Option_Loader();
+        $config = $this->_item->getConfig()->getProperty('postActionOptions');
+        $parent = new Klear_Model_ConfigParser;
+        $parent->setConfig($config);
+        $KlearMatrixOptionLoader->setMainConfig($this->_mainRouter->getConfig());
+        $KlearMatrixOptionLoader->setParentConfig($parent);
+        $KlearMatrixOptionLoader->setExtraParamsFunction(
+                function ($option)
+                {
+                    $option->setFrom("postActionOptions");
+                    $option->setParentHolderSelector('span');
+                }
+        );
+        $fieldOptions = $KlearMatrixOptionLoader->getFieldOptions();
         return $fieldOptions;
     }
 

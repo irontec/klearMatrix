@@ -13,7 +13,7 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
     protected $_mainRouterOriginalParams = null;
 
     /**
-     * @var KlearMatrix_Model_AbstractOption
+     * @var KlearMatrix_Model_Option_Abstract
      */
     protected $_option = null;
 
@@ -47,7 +47,7 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
 
     abstract protected function _init(Zend_Config $configuration);
 
-    public function setOption (KlearMatrix_Model_AbstractOption $option)
+    public function setOption (KlearMatrix_Model_Option_Abstract $option)
     {
         $this->_option = $option;
     }

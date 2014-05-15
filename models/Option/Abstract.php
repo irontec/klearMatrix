@@ -1,5 +1,5 @@
 <?php
-abstract class KlearMatrix_Model_AbstractOption
+abstract class KlearMatrix_Model_Option_Abstract
 {
     protected $_config;
     protected $_class;
@@ -9,7 +9,7 @@ abstract class KlearMatrix_Model_AbstractOption
     protected $_label = true;
     protected $_labelOnEdit = true;
     protected $_labelOnList = true;
-    protected $_labelOnEntityPostSave = true;
+    protected $_labelOnPostAction = true;
 
     protected $_from = "auto";
 
@@ -26,6 +26,8 @@ abstract class KlearMatrix_Model_AbstractOption
 
     protected $_parentOptionCustomizers = array();
 
+    protected $_skip = false;
+
     /**
      * List of attributes
      * @var array
@@ -34,7 +36,7 @@ abstract class KlearMatrix_Model_AbstractOption
             'label',
             'labelOnEdit',
             'labelOnList',
-            'labelOnEntityPostSave',
+            'labelOnPostAction',
             'shortcut',
             'multiItem',
             'showOnlyOnNotNull',
@@ -58,7 +60,7 @@ abstract class KlearMatrix_Model_AbstractOption
         $this->_setLabel($this->_config->getProperty("label"));
         $this->_setLabelOnEdit($this->_config->getProperty("labelOnEdit"));
         $this->_setLabelOnList($this->_config->getProperty("labelOnList"));
-        $this->_setLabelOnEntityPostSave($this->_config->getProperty("labelOnEntityPostSave"));
+        $this->_setLabelOnPostAction($this->_config->getProperty("labelOnPostAction"));
 
         $this->_shortcut = substr($this->_config->getProperty("shortcutOption"), 0, 1);
 
@@ -224,7 +226,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $title
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setTitle($title)
     {
@@ -235,7 +237,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $class
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setClass($class)
     {
@@ -246,7 +248,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $shortcut
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setShortcut($shortcut)
     {
@@ -257,7 +259,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $label
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     protected function _setLabel($label)
     {
@@ -268,7 +270,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $labelOnEdit
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     protected function _setLabelOnEdit($labelOnEdit)
     {
@@ -279,7 +281,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $labelOnList
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     protected function _setLabelOnList($labelOnList)
     {
@@ -289,19 +291,19 @@ abstract class KlearMatrix_Model_AbstractOption
 
     /**
      *
-     * @param unknown $labelOnEntityPostSave
-     * @return KlearMatrix_Model_AbstractOption
+     * @param unknown $labelOnPostAction
+     * @return KlearMatrix_Model_Option_Abstract
      */
-    protected function _setLabelOnEntityPostSave($labelOnEntityPostSave)
+    protected function _setLabelOnPostAction($labelOnPostAction)
     {
-        $this->_labelOnEntityPostSave = $this->_parseLabelConfig($labelOnEntityPostSave);
+        $this->_labelOnPostAction = $this->_parseLabelConfig($labelOnPostAction);
         return $this;
     }
 
     /**
      *
      * @param unknown $label
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setLabel($label)
     {
@@ -312,7 +314,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $labelOnEdit
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setLabelOnEdit($labelOnEdit)
     {
@@ -323,7 +325,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $labelOnList
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setLabelOnList($labelOnList)
     {
@@ -333,12 +335,12 @@ abstract class KlearMatrix_Model_AbstractOption
 
     /**
      *
-     * @param unknown $labelOnEntityPostSave
-     * @return KlearMatrix_Model_AbstractOption
+     * @param unknown $labelOnPostAction
+     * @return KlearMatrix_Model_Option_Abstract
      */
-    public function setLabelOnEntityPostSave($labelOnEntityPostSave)
+    public function setLabelOnPostAction($labelOnPostAction)
     {
-        $this->_setLabelOnEntityPostSave($labelOnEntityPostSave);
+        $this->_setLabelOnPostAction($labelOnPostAction);
         return $this;
     }
 
@@ -350,7 +352,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $multiItem
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setMultiItem($multiItem)
     {
@@ -361,7 +363,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $showOnlyOnNotNull
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setShowOnlyOnNotNull($showOnlyOnNotNull)
     {
@@ -372,7 +374,7 @@ abstract class KlearMatrix_Model_AbstractOption
     /**
      *
      * @param unknown $showOnlyOnNull
-     * @return KlearMatrix_Model_AbstractOption
+     * @return KlearMatrix_Model_Option_Abstract
      */
     public function setShowOnlyOnNull($showOnlyOnNull)
     {
@@ -448,5 +450,15 @@ abstract class KlearMatrix_Model_AbstractOption
         }
         $ret .= '></span>';
         return $ret;
+    }
+
+    public function skip($value)
+    {
+        $this->_skip = $value;
+    }
+
+    public function getIsSkipped()
+    {
+        return $this->_skip==true;
     }
 }

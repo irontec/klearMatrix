@@ -215,7 +215,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
     protected function _parseOptions()
     {
-        $fieldOptions = new KlearMatrix_Model_OptionCollection();
+        $fieldOptions = new KlearMatrix_Model_Option_Collection();
         if (!isset($this->_config->getProperty('config')->options)) {
             return array();
         }
@@ -235,7 +235,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
         $collection = strtolower($itemName) . 's';
         $getter = 'get' . ucfirst($itemName) . 'Config';
-        $className = 'KlearMatrix_Model_' . ucfirst($itemName) . 'Option';
+        $className = 'KlearMatrix_Model_Option_'  . ucfirst($itemName);
 
         if (!isset($options->$collection)) {
             return;

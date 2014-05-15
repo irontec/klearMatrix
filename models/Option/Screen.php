@@ -5,7 +5,7 @@
 * @author jabi
 *
 */
-class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
+class KlearMatrix_Model_Option_Screen extends KlearMatrix_Model_Option_Abstract
 {
     // La opción es abrible en multi-instancia?
     protected $_multiInstance = false;
@@ -47,7 +47,6 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
         "removescreen",
         "title");
 
-
     protected function _init()
     {
         $this->_type = 'screen';
@@ -71,6 +70,8 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
         return $this->_type;
     }
 
+
+
     public function toArray()
     {
 
@@ -79,6 +80,8 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
         $ret['screen'] = $this->_name;
         $ret['type'] = 'screen';
         $ret['multiInstance'] = $this->_multiInstance;
+
+
 
         if (!is_null($this->_externalConfig)) {
             $ret['externalOption'] = true;

@@ -383,86 +383,28 @@ class KlearMatrix_Model_Column
 
     }
 
-    protected function _parseScreenOptions()
-    {
-        if (!$this->_config->getProperty("options")->screens) {
-            return;
-        }
-
-        foreach ($this->_config->getProperty("options")->screens  as $_screen => $enabled) {
-            if (!(bool)$enabled) {
-                continue;
-            }
-
-            $screenOption = new KlearMatrix_Model_ScreenOption;
-            $screenOption->setName($_screen);
-            $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
-
-            if ($this->_optionMustBeAdded($screenOption)) {
-                $this->_options->addOption($screenOption);
-            }
-        }
-    }
-
-    // TODO: Sacar esta comprobación de aquí, parece que el propio $screenOption podría saber si debe añadirse o no
-    protected function _optionMustBeAdded(KlearMatrix_Model_ScreenOption $screenOption)
-    {
-        return !$this->_routeDispatcher->getCurrentItem()->isFilteredScreen()
-                || !$screenOption->getFilterField()
-                || ($screenOption->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField());
-    }
-
-    protected function _parseDialogOptions()
-    {
-        if (!$this->_config->getProperty("options")->dialogs) {
-            return;
-        }
-
-        foreach ($this->_config->getProperty("options")->dialogs  as $_dialog => $enabled) {
-
-            if (!(bool)$enabled) {
-                continue;
-            }
-
-            $dialogOption = new KlearMatrix_Model_DialogOption;
-            $dialogOption->setName($_dialog);
-            $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
-
-            $this->_options->addOption($dialogOption);
-        }
-    }
-
-
-    protected function _parseCommandOptions()
-    {
-        if (!$this->_config->getProperty("options")->commands) {
-            return;
-        }
-
-        foreach ($this->_config->getProperty("options")->commands as $_command => $enabled) {
-
-            if (!(bool)$enabled) {
-                continue;
-            }
-
-            $commandOption = new KlearMatrix_Model_CommandOption;
-            $commandOption->setName($_command);
-            $commandOption->setConfig($this->_routeDispatcher->getConfig()->getCommandConfig($_command));
-
-            $this->_options->addOption($commandOption);
-        }
-    }
-
-
     public function _parseColumnOptions()
     {
 
         if ($this->_config->getProperty("options")) {
-            $this->_options  = new KlearMatrix_Model_OptionCollection();
 
-            $this->_parseScreenOptions();
-            $this->_parseDialogOptions();
-            $this->_parseCommandOptions();
+            $KlearMatrixOptionLoader = new KlearMatrix_Model_Option_Loader();
+            $parent = new Klear_Model_ConfigParser();
+            $parent->setConfig($this->_config->getRaw()->options);
+            $KlearMatrixOptionLoader->setMainConfig($this->_routeDispatcher->getConfig());
+            $KlearMatrixOptionLoader->setParentConfig($parent);
+            $KlearMatrixOptionLoader->registerConditionalFunction(
+                    'screen',
+                    function ($option)
+                    {
+                        $mustBeAdded = !$this->_routeDispatcher->getCurrentItem()->isFilteredScreen()
+                        || !$option->getFilterField()
+                        || ($option->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField());
+                        $option->skip(!$mustBeAdded);
+                    }
+            );
+            $this->_options = $KlearMatrixOptionLoader->getFieldOptions();
+
         }
     }
 

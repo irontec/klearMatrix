@@ -1,14 +1,10 @@
 <?php
 
-/**
-* @author jabi
-*
-*/
-class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
+class KlearMatrix_Model_Option_Link extends KlearMatrix_Model_Option_Abstract
 {
     protected function _init()
     {
-        $this->_type = 'dialog';
+        $this->_type = 'link';
     }
 
     public function getType()
@@ -20,13 +16,17 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
     {
         $ret = $this->_prepareArray();
 
-        $ret['dialog'] = $this->_name;
-        $ret['type'] = 'dialog';
+        $ret['link'] = $this->_name;
+        $ret['type'] = 'link';
+
+        //LANDER
+        $ret['url'] = 'link';
 
         if ($this->isDefault()) {
             $ret['defaultOption'] = true;
         }
 
         return $ret;
+
     }
 }

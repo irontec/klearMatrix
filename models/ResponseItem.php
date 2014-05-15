@@ -1067,104 +1067,40 @@ class KlearMatrix_Model_ResponseItem
         return ($this->_config->exists("fields->options"));
     }
 
-    public function hasEntityPostSaveOptions()
+    public function hasPostActionOptions()
     {
-        return ($this->_config->exists("entityPostSaveOptions"));
+        return ($this->_config->exists("postActionOptions"));
     }
 
     /**
      * Devuelve un array de objetos FieldOption (opciones por campo),
      * a partir de las columnas de tipo Option del ColWrapper
      */
-    public function getScreenFieldsOptionsConfig()
+    public function getParentConfig()
     {
         $parent = $this->_visibleColumns->getOptionColumn()->getKlearConfig();
-
-        return $this->_getItemFieldsOptionsConfig('screen', $parent);
+        return $parent;
     }
-
-    public function getDialogsFieldsOptionsConfig()
-    {
-        $parent = $this->_visibleColumns->getOptionColumn()->getKlearConfig();
-
-        return $this->_getItemFieldsOptionsConfig('dialog', $parent);
-    }
-
-    public function getCommandsFieldsOptionsConfig()
-    {
-        $parent = $this->_visibleColumns->getOptionColumn()->getKlearConfig();
-
-        return $this->_getItemFieldsOptionsConfig('command', $parent);
-    }
-
-    public function getScreenEntityPostSaveOptionsConfig()
-    {
-        $config = $this->_config->getProperty('entityPostSaveOptions');
-        $parent = new Klear_Model_ConfigParser;
-        $parent->setConfig($config);
-
-        return $this->_getItemFieldsOptionsConfig('screen', $parent);
-    }
-
-    public function getDialogEntityPostSaveOptionsConfig()
-    {
-        $config = $this->_config->getProperty('entityPostSaveOptions');
-        $parent = new Klear_Model_ConfigParser;
-        $parent->setConfig($config);
-
-        return $this->_getItemFieldsOptionsConfig('dialog', $parent);
-    }
-
 
     /**
-     * @return KlearMatrix_Model_OptionCollection
+     * @return KlearMatrix_Model_Option_Collection
      */
     public function getScreenOptions()
     {
-        $generalOptions = new KlearMatrix_Model_OptionCollection();
+        $KlearMatrixOptionLoader = new KlearMatrix_Model_Option_Loader();
 
         if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {
-
-            return $generalOptions;
+            return $KlearMatrixOptionLoader->getFieldOptions();
         }
 
         $parent = new Klear_Model_ConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
-
         if ($parent->getProperty("placement")) {
             $generalOptions->setPlacement($parent->getProperty("placement"));
         }
-
-
-        $options = $this->_getItemFieldsOptionsConfig('screen', $parent);
-
-        foreach ($options as $_screen) {
-
-            $screenOption = new KlearMatrix_Model_ScreenOption;
-            $screenOption->setName($_screen);
-            $screenOption->setConfig($this->_routeDispatcher->getConfig()->getScreenConfig($_screen));
-            $generalOptions->addOption($screenOption);
-        }
-
-        $options = $this->_getItemFieldsOptionsConfig('dialog', $parent);
-
-        foreach ($options as $_dialog) {
-
-            $dialogOption = new KlearMatrix_Model_DialogOption;
-            $dialogOption->setName($_dialog);
-            $dialogOption->setConfig($this->_routeDispatcher->getConfig()->getDialogConfig($_dialog));
-            $generalOptions->addOption($dialogOption);
-        }
-
-        $options = $this->_getItemFieldsOptionsConfig('command', $parent);
-
-        foreach ($options as $_command) {
-
-            $commandOption = new KlearMatrix_Model_CommandOption;
-            $commandOption->setName($_command);
-            $commandOption->setConfig($this->_routeDispatcher->getConfig()->getCommandConfig($_command));
-            $generalOptions->addOption($commandOption);
-        }
+        $KlearMatrixOptionLoader->setMainConfig($this->_routeDispatcher->getConfig());
+        $KlearMatrixOptionLoader->setParentConfig($parent);
+        $generalOptions = $KlearMatrixOptionLoader->getFieldOptions();
 
         return $generalOptions;
     }
@@ -1212,10 +1148,8 @@ class KlearMatrix_Model_ResponseItem
             || ($this->_config->getRaw()->options == '')) {
             return array();
         }
-
         $parent = new Klear_Model_ConfigParser();
         $parent->setConfig($this->_config->getRaw()->options);
-
         return $this->_getItemFieldsOptionsConfig('dialog', $parent);
     }
 
@@ -1259,42 +1193,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function _getItemFieldsOptionsConfig($type, $parent)
     {
-        $retArray = array();
-
-        switch($type) {
-            case 'dialog':
-                $property = 'dialogs';
-                break;
-
-            case 'screen':
-                $property = 'screens';
-                break;
-
-            case 'command':
-                $property = 'commands';
-                break;
-            case 'entityPostSaveOptions':
-                $property = 'entityPostSaveOptions';
-                break;
-            default:
-                Throw new Zend_Exception("Undefined Option Type");
-                break;
-        }
-
-        $_items = $parent->getProperty($property);
-
-        if (!$_items) {
-            return array();
-        }
-
-        foreach ($_items  as $_item=> $_enabled) {
-            if (!(bool)$_enabled) {
-                continue;
-            }
-            $retArray[] = $_item;
-        }
-
-        return $retArray;
+        return KlearMatrix_Model_Option_Loader::getFieldsOptionsConfig($type, $parent);
     }
 
     /**

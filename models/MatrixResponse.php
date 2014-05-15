@@ -138,9 +138,9 @@ class KlearMatrix_Model_MatrixResponse
 
     /**
      * Opciones "generales" de pantalla
-     * @param KlearMatrix_Model_OptionCollection $screenOptsWrapper
+     * @param KlearMatrix_Model_Option_Collection $screenOptsWrapper
      */
-    public function setGeneralOptions(KlearMatrix_Model_OptionCollection $generalOptsWrapper)
+    public function setGeneralOptions(KlearMatrix_Model_Option_Collection $generalOptsWrapper)
     {
         $this->_generalOptions = $generalOptsWrapper;
         return $this;
@@ -149,9 +149,9 @@ class KlearMatrix_Model_MatrixResponse
 
     /**
      * Opciones por fila
-     * @param KlearMatrix_Model_OptionCollection $fieldOptsWrapper
+     * @param KlearMatrix_Model_Option_Collection $fieldOptsWrapper
      */
-    public function setFieldOptions(KlearMatrix_Model_OptionCollection $fieldOptsWrapper)
+    public function setFieldOptions(KlearMatrix_Model_Option_Collection $fieldOptsWrapper)
     {
         $this->_fieldOptions = $fieldOptsWrapper;
         return $this;

@@ -280,52 +280,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     protected function _getFieldOptions($cols)
     {
         $defaultOption = $cols->getOptionColumn()->getDefaultOption();
-        $fieldOptions = new KlearMatrix_Model_OptionCollection();
 
-        foreach ($this->_item->getScreenFieldsOptionsConfig() as $screen) {
-
-            $screenOption = new KlearMatrix_Model_ScreenOption;
-            $screenOption->setName($screen);
-
-            if ($screen === $defaultOption) {
-
-                $screenOption->setAsDefault();
-                $defaultOption = false;
-            }
-
-            $screenOption->setConfig($this->_mainRouter->getConfig()->getScreenConfig($screen));
-            $fieldOptions->addOption($screenOption);
-        }
-
-        foreach ($this->_item->getDialogsFieldsOptionsConfig() as $dialog) {
-
-            $dialogOption = new KlearMatrix_Model_DialogOption;
-            $dialogOption->setName($dialog);
-
-            if ($dialog === $defaultOption) {
-
-                $dialogOption->setAsDefault();
-                $defaultOption = false;
-            }
-
-            $dialogOption->setConfig($this->_mainRouter->getConfig()->getDialogConfig($dialog));
-            $fieldOptions->addOption($dialogOption);
-        }
-
-        foreach ($this->_item->getCommandsFieldsOptionsConfig() as $command) {
-
-            $commandOption = new KlearMatrix_Model_CommandOption;
-            $commandOption->setName($command);
-
-            if ($command === $defaultOption) {
-
-                $commandOption->setAsDefault();
-                $defaultOption = false;
-            }
-
-            $commandOption->setConfig($this->_mainRouter->getConfig()->getCommandConfig($command));
-            $fieldOptions->addOption($commandOption);
-        }
+        $KlearMatrixOptionLoader = new KlearMatrix_Model_Option_Loader();
+        $KlearMatrixOptionLoader->setDefaultOption($defaultOption);
+        $KlearMatrixOptionLoader->setMainConfig($this->_mainRouter->getConfig());
+        $KlearMatrixOptionLoader->setParentConfig($this->_item->getParentConfig());
+        $fieldOptions = $KlearMatrixOptionLoader->getFieldOptions();
 
         return $fieldOptions;
     }

@@ -743,6 +743,8 @@
         option2HTML : function(option, from, idx, fieldValue)
         {
 
+        	console.log(option, from, idx, fieldValue);
+        	
             var mainTitle = '',
                 buttonLabel = false,
                 classes = [],
@@ -839,11 +841,11 @@
                         buttonLabel = option.label;
                     }
 
-                    if (option.from && option.from == "entityPostSaveDialog") {
+                    if (option.from && option.from == "postActionOptions") {
 
-                        if (option.labelOnEntityPostSave) {
-                            if (typeof option.labelOnEntityPostSave == 'string') {
-                                buttonLabel = option.labelOnEntityPostSave;
+                        if (option.labelOnPostAction) {
+                            if (typeof option.labelOnPostAction == 'string') {
+                                buttonLabel = option.labelOnPostAction;
                             }
                             mustShowLabel = true;
                         }

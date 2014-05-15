@@ -110,36 +110,33 @@ class KlearMatrix_Model_MainConfig
         return $this->_getDefaultItem("command");
     }
 
+    protected function _getOptionConfig($type, $identifier)
+    {
+
+        if (!$this->_config->exists($type . "->" . $identifier)) {
+            Throw new Zend_Exception("Configuration for selected option [".$identifier.", type: ".$type."] not found");
+        }
+        return $this->_config->getRaw()->{$type}->{$identifier};
+    }
 
     public function getScreenConfig($screen)
     {
-
-        if (!$this->_config->exists("screens->" . $screen)) {
-            Throw new Zend_Exception("Configuration for selected screen [".$screen."] not found");
-        }
-
-        return $this->_config->getRaw()->screens->{$screen};
+        return $this->_getOptionConfig('screens', $screen);
     }
-
 
     public function getDialogConfig($dialog)
     {
-
-        if (!$this->_config->exists("dialogs->" . $dialog)) {
-            Throw new Zend_Exception("Configuration for selected dialog not found");
-        }
-
-        return $this->_config->getRaw()->dialogs->{$dialog};
+        return $this->_getOptionConfig('dialogs', $dialog);
     }
 
     public function getCommandConfig($command)
     {
+        return $this->_getOptionConfig('commands', $command);
+    }
 
-        if (!$this->_config->exists("commands->" . $command)) {
-            Throw new Zend_Exception("Configuration for selected command not found");
-        }
-
-        return $this->_config->getRaw()->commands->{$command};
+    public function getLinkConfig($link)
+    {
+        return $this->_getOptionConfig('links', $link);
     }
 
     protected function _parseSelectedConfig()

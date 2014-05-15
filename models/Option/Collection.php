@@ -1,6 +1,6 @@
 <?php
 
-class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
+class KlearMatrix_Model_Option_Collection implements \IteratorAggregate
 {
     const DEFAULT_PLACEMENT = 'bottom';
 
@@ -20,7 +20,7 @@ class KlearMatrix_Model_OptionCollection implements \IteratorAggregate
         return sizeof($this->_opts);
     }
 
-    public function addOption(KlearMatrix_Model_AbstractOption $opt)
+    public function addOption(KlearMatrix_Model_Option_Abstract $opt)
     {
         $this->_opts[] = $opt;
 

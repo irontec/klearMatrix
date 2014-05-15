@@ -133,12 +133,6 @@ class KlearMatrix_Model_RouteDispatcher
         return $this->_screen;
     }
 
-    public function loadScreen($screenName)
-    {
-        $config = $this->_config->getScreenConfig($screenName);
-        return $this->_initResponseItem(new KlearMatrix_Model_Screen(), $screenName, $config);
-    }
-
     public function getCurrentDialog()
     {
         if (null === $this->_dialog) {
@@ -149,12 +143,17 @@ class KlearMatrix_Model_RouteDispatcher
         return $this->_dialog;
     }
 
+    public function loadScreen($screenName)
+    {
+        $config = $this->_config->getScreenConfig($screenName);
+        return $this->_initResponseItem(new KlearMatrix_Model_Screen(), $screenName, $config);
+    }
+
     public function loadDialog($dialogName)
     {
         $config = $this->_config->getDialogConfig($dialogName);
         return $this->_initResponseItem(new KlearMatrix_Model_Dialog(), $dialogName, $config);
     }
-
 
     public function getCurrentCommand()
     {

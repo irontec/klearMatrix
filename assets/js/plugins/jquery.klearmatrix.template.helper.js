@@ -20,12 +20,10 @@
         cleanValue : function(_value, ifNull, pattern) {
 
             if (typeof ifNull == 'undefined') {
-
                 ifNull = '';
             }
 
             if (pattern && !ifNull.match(pattern)) {
-
                 ifNull = '';
             }
 
@@ -35,8 +33,7 @@
 
             return $('<div/>').text(_value).html();
         },
-        _formatSizeUnits : function(bytes)
-        {
+        _formatSizeUnits : function(bytes) {
             var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
             if (bytes == 0) return '<span class="zero">0 B</span>';
             var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
@@ -46,7 +43,7 @@
             if (!column.properties || column.properties && !column.properties.showSize) {
                 return '';
             }
-            
+
             var _ret = '<div class="size-indicator">';
             if (column.multilang) {
                 var first = true;
@@ -135,22 +132,17 @@
             var self = this;
             var _templateHelpers = {
                 dataParser: function (attribute, value) {
-
                     attribute = attribute.charAt(0).toLowerCase() + attribute.substr(1).replace(/[A-Z]/g,function(s) {
                         return "-"+s.toLowerCase();
                     });
                     return  attribute;
-                }, 
-                
+                },
                 drawSelected : function(attribute, value) {
-                    
-                    var value = $("<div>" + value +"</div>").text();
-                    
-                    if (attribute == value) {
+                    var text = $("<div>" + value +"</div>").text();
+                    if (attribute == text) {
                         return 'selected="selected"';
-                    } else {
-                        return '';
                     }
+                    return '';
                 },
                 formatSizeForFile : function(file) {
                     if (file.size) {
@@ -164,7 +156,6 @@
             if (column.multilang) {
 
                 var _mlList = $("<dl />");
-
                 _mlList.addClass("multiLanguage");
 
                 for (var i in this.data.langs) {
@@ -186,7 +177,6 @@
                     };
 
                     var _node = $("<div />");
-
                     $.tmpl(this.getTemplateNameForType(column.type), _curFieldData, _templateHelpers).appendTo(_node);
 
                     var _data = {
@@ -196,7 +186,6 @@
                         _class : (lang == $.klear.language)? 'selected':''
                     };
 
-
                     if (lang == $.klear.language) {
                         $.tmpl('klearmatrixMultiLangField', _data).prependTo(_mlList);
                     } else {
@@ -204,14 +193,12 @@
                     }
                 }
 
-
                 _mlList.appendTo(node);
 
             } else {
                 $.tmpl(this.getTemplateNameForType(column.type), fieldData, _templateHelpers).appendTo(node);
             }
             return node.html();
-
         },
         isMultiItemSelectableList : function(generalOptions) {
             for (var i in generalOptions) {
@@ -229,9 +216,7 @@
                 }
             }
             return false;
-
         },
-
         getColumn : function(columns, columnId) {
 
             for (var idx in columns) {
@@ -239,25 +224,22 @@
                     return columns[idx];
                 }
             }
-
             return false;
         },
-
         getIndex : function(values,idx) {
-            if (!values[idx]) return 'error';
+            if (!values[idx]) {
+                return 'error';
+            }
             return values[idx];
         },
-
         parseOptionCustomization : function(customOptions,config) {
 
             var response =  '';
             if (!customOptions) {
-
                 return response;
             }
 
             if (typeof(customOptions[config[config.type]]) == "undefined") {
-
                 return response;
             }
 
@@ -267,7 +249,6 @@
 
             return response.wrap("<div></div>").parent().html();
         },
-
         parseParentOptionCustomizationOpen : function(customOptions,config) {
             var response =  '';
             if (!customOptions) {
@@ -281,24 +262,21 @@
             response = ("<" + customOptions[config[config.type]].parentWrapper  + " class='" + customOptions[config[config.type]]['parentClass'] +"'>");
             return response;
         },
-
         parseParentOptionCustomizationClose : function(customOptions,config) {
 
             var response =  '';
-            if (!customOptions) {
 
+            if (!customOptions) {
                 return response;
             }
 
             if (typeof(customOptions[config[config.type]]) == "undefined") {
-
                 return response;
             }
 
             response = ("</" + customOptions[config[config.type]].parentWrapper  + " >");
             return response;
         },
-
         getMultiLangValue : function(value,langs,defaultLang) {
             var retItem = $("<div />");
             for (var i in langs) {
@@ -313,7 +291,6 @@
 
             return retItem.html();
         },
-
         getValuesFromSelectColumn : function(column, idx) {
 
             switch (column.type){
@@ -409,7 +386,7 @@
             if (!column.properties || !column.properties[property]) {
                 return '';
             }
-            
+
             return column.properties[property];
         },
         getPrefix : function(column) {
@@ -436,7 +413,7 @@
                 return '';
 
             } else {
-                
+
                 switch(column.type){
 
                     case 'select':
@@ -462,7 +439,6 @@
                     case 'multiselect':
 
                         if (column.decorators) {
-
                             var fixedValues = this.getValuesFromSelectColumn(column, values[column.id]);
                             return fixedValues;
                         }
@@ -475,13 +451,11 @@
                             var relId = values[column.id]['relStruct'][i]['relatedId'];
 
                             if (fixedValues[relId]) {
-
                                 returnValue.push(fixedValues[relId]);
                             }
                         }
 
                         if (returnValue.length == 0) {
-
                             return '<em>' + $.translate("There are not associated elements") + '</em>';
                         }
 
@@ -525,9 +499,7 @@
                                     }
                                     extra += '</a>';
                                 }
-
                             }
-
                         }
 
                         if (column.config.options.hiddenName) {
@@ -614,9 +586,9 @@
                         }
 
                         if (column.multilang) {
-
                             return this.getMultiLangValue(values[column.id],this.data.langs,$.klear.language);
                         }
+
                         var ifNullValue = '';
 
                         if (column.dirty) {
@@ -643,12 +615,10 @@
         getPaginatorTemplate : function() {
             return $.template['klearmatrixPaginator'];
         },
-        
+
         getOptionTemplateName : function() {
             return 'klearmatrixOption';
         },
-        
-        
 
         _parseDefaultValues : function(settings) {
 
@@ -665,8 +635,8 @@
             var idx = settings.idx;
             var values = settings.values;
             var defaultValue = '',
-            	_firstValue = '';
-            
+                _firstValue = '';
+
             if ($.isArray(values) && (values.length > 0) && (values[idx])) {
 
                 values = values[idx];
@@ -676,7 +646,7 @@
 
                 for(var i in columns) {
                     if (count === false) {
-                    	_firstValue = columns[i];
+                        _firstValue = columns[i];
                         count = true;
                     }
 
@@ -705,50 +675,50 @@
             } else {
                 defaultValue = '';
             }
-            
+
             // Si el método es invocado con replaceParentPerItem, éste viene de un listado
             // Las opciones cogen el title|label de su destino; en este caso, el parent será el item
             // siempre que no esé definido parentIden (el listado sea a su vez hijo de otro)
-            
+
             defaultValue = this.cleanValue(defaultValue);
             var parentValue = (replaceParentPerItem)?
                                     this.cleanValue(defaultValue) :
                                     this.cleanValue(parentIden);
-            
+
             return this.buildTitleString(title, defaultValue, parentValue);
 
         },
         buildTitleString: function(title, defaultValue, parentValue) {
-        	defaultValue = defaultValue || "";
-        	parentValue = parentValue || "";
-        	var res = [];
+            defaultValue = defaultValue || "";
+            parentValue = parentValue || "";
+            var res = [];
             var _r = "";
             if (res = title.match(/\[format\|(.*[\%parent\%|\%item\%].*)\]/)) {
-            	if (res.length == 2) {
-            		if (res[1].match(/\%parent%/)) {
-            			if (parentValue.trim()!="") {
-                			_r = title.replace(res[0], res[1].replace(/\%parent\%/,parentValue));
-                		} else {
-                			_r = title.replace(res[0], '');
-                		}	
-            		}
-            		if (res[1].match(/\%item%/)) {
-	            		if (defaultValue.trim()!="") {
-	            			_r = title.replace(res[0], res[1].replace(/\%item\%/,defaultValue));
-	            		} else {
-	            			_r = title.replace(res[0], '');
-	            		}
-            		}
-            	}
+                if (res.length == 2) {
+                    if (res[1].match(/\%parent%/)) {
+                        if (parentValue.trim()!="") {
+                            _r = title.replace(res[0], res[1].replace(/\%parent\%/,parentValue));
+                        } else {
+                            _r = title.replace(res[0], '');
+                        }
+                    }
+                    if (res[1].match(/\%item%/)) {
+                        if (defaultValue.trim()!="") {
+                            _r = title.replace(res[0], res[1].replace(/\%item\%/,defaultValue));
+                        } else {
+                            _r = title.replace(res[0], '');
+                        }
+                    }
+                }
             } else {
                 _r = title
                    .replace(/\%parent\%/, parentValue)
                    .replace(/\%item\%/, defaultValue);
             }
-            return _r;        	
+            return _r;
         },
         getTitle : function(title,idx,replaceParentPerItem) {
-            
+
             return this._parseDefaultValues({
                     title: title,
                     replaceParentPerItem : replaceParentPerItem,
@@ -772,117 +742,105 @@
         },
         option2HTML : function(option, from, idx, fieldValue)
         {
-            
+
             var mainTitle = '',
                 buttonLabel = false,
                 classes = [],
-                entity = false,
-                curId = false;
-            
-            
+                entity = false;
+
             if (idx !== false && (option.showOnlyOnNotNull || option.showOnlyOnNull)) {
-                
+
                 if (fieldValue && option.showOnlyOnNull) {
                     return '';
                 }
-                
+
                 if (!fieldValue && option.showOnlyOnNotNull) {
                     return '';
                 }
-                
             }
-                
-            
-            
+
             var _node = $("<div />");
-            
             var mustShowLabel = option.label? true:false;
-            
-            
+
             // Es una entidad concreta (con índice "idx" en data.values
             if (idx && this.data && this.data.values) {
                 entity = this.data.values[idx];
-                curId = entity[this.data.pk];
             }
-            
+
             var externalData = false;
             if (option.externalOption && entity && fieldValue) {
-                var externalData = ' data-externalid="'+fieldValue+'"';
+                externalData = ' data-externalid="'+fieldValue+'"';
                 externalData += ' ' + this.getExternalData(option);
             }
-            
+
             if (option.external && option.file) {
                 externalData = 'data-externalfile="'+option.file+'"';
             }
-            
+
             switch(from) {
-                
+
                 case "List":
                     if (idx === false) {
                         classes.push('_generalOption');
                         mainTitle = this.getTitle(option.title, false, false);
-                        
+
                         if (mustShowLabel && typeof option.label == 'string') {
                             buttonLabel = this.getTitle(option.label, false,false);
                         }
-                        
+
                         if (option.labelOnList) {
                             if (typeof option.labelOnList == 'string') {
                                 buttonLabel = this.getTitle(option.labelOnList, false);
                             }
                             mustShowLabel = true;
                         }
-                        
-                        
-                        
+
                     } else {
-                        
+
                         option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
                         mainTitle = this.getTitle(option.title, idx, true);
-                        
+
                         if (mustShowLabel && typeof option.label == 'string') {
                             buttonLabel = this.getTitle(option.label, idx, true);
                         }
-                        
                     }
-                    
+
                 break;
                 case "Edit":
-                    
+
                     mainTitle = this.getTitle(option.title, idx, true);
-                    
-                    
+
                     if (mustShowLabel && typeof option.label == 'string') {
                         buttonLabel = this.getTitle(option.label, idx, true);
                     }
-                    
+
                     if (option.labelOnEdit) {
                         if (typeof option.labelOnEdit == 'string') {
                             buttonLabel = this.getTitle(option.labelOnEdit, idx, true);
                         }
                         mustShowLabel = true;
-                    } 
-                    
+                    }
+
                     option.multiItem = false;
                     if (fieldValue) {
                         classes.push('_fieldOption inherit ui-state-nojump');
                     } else {
                         classes.push('_generalOption');
                     }
-                break;
+                    break;
                 case "Field":
                     // TODO: cargar this con valores necesarios, en casa de querer invocar getTitle
                     mainTitle = option.title;
                     // Forzamos multiItem a false
                     option.multiItem = false;
-                    
+
                     if (mustShowLabel && typeof option.label == 'string') {
                         buttonLabel = option.label;
                     }
-                    
+
                     if (option.from && option.from == "entityPostSaveDialog") {
-                        
+
                         if (option.labelOnEntityPostSave) {
                             if (typeof option.labelOnEntityPostSave == 'string') {
                                 buttonLabel = option.labelOnEntityPostSave;
@@ -890,20 +848,19 @@
                             mustShowLabel = true;
                         }
                     }
-                    
+
                     classes.push('_fieldOption inherit ui-state-nojump');
-                break;
-                
+                    break;
             }
-            
+
             if (false === buttonLabel) {
                 buttonLabel = mainTitle;
             }
-            
+
             if (option.defaultOption) {
                 classes.push('default');
             }
-            
+
             var optionData = {
                     classes : classes.join(' '),
                     type : option.type,
@@ -914,6 +871,7 @@
                     multiInstance: option.multiInstance || false,
                     external: option.external || false,
                     externalData : externalData,
+                    disabledTime : option.disabledTime || false,
                     multiItem: option.multiItem || false,
                     mustShowLabel: mustShowLabel,
                     parentHolderSelector: option.parentHolderSelector || false,
@@ -926,7 +884,6 @@
         mustShowOptionColum : function(option, value) {
             return true;
         }
-        
     };
 
 })(jQuery);

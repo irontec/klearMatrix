@@ -23,8 +23,6 @@ class KlearMatrix_Model_DialogOption extends KlearMatrix_Model_AbstractOption
         $ret['dialog'] = $this->_name;
         $ret['type'] = 'dialog';
 
-       // $ret = $this->_removeFalse($ret);
-
         if ($this->isDefault()) {
             $ret['defaultOption'] = true;
         }

@@ -29,7 +29,6 @@
             var element = this.element,
             position = $.inArray(element, $.klearmatrix[this.options.moduleName].instances);
 
-
             // if this instance was found, splice it off
             if(position > -1){
                 $.klearmatrix[this.options.moduleName].instances.splice(position, 1);
@@ -41,17 +40,14 @@
         _setOptions: function() {
             $.Widget.prototype._setOptions.apply(this, arguments);
         },
-
         _setOption: function(key, value) {
             $.Widget.prototype._setOption.apply(this, arguments);
         },
-
         _parseDefaultItems : function() {
 
             if (!this.options.data.title) {
                 return;
             }
-
 
             this.options.data.title =  $.klearmatrix.template.helper._parseDefaultValues({
                 title: this.options.data.title,
@@ -62,9 +58,6 @@
                 values: this.options.data.values,
                 idx: 0
             });
-
-
-
         },
         getData : function(value) {
 
@@ -77,10 +70,10 @@
         _loadTemplate : function(tmplName) {
 
             var $tmplObj = $.tmpl(
-                            tmplName,
-                            this.options.data,
-                            $.klearmatrix.template.helper
-                            );
+                tmplName,
+                this.options.data,
+                $.klearmatrix.template.helper
+            );
 
             this._parseDefaultItems();
 
@@ -117,16 +110,14 @@
             if ($(element).data("multiitem")) {
                 return $("td.multiItem input:checked");
             }
-            
+
             if ($(element).data("parentHolderSelector")) {
 
-                
                 var _candidateParent = $(element).parents($(element).data("parentHolderSelector"));
-                
+
                 if (_candidateParent.length > 0) {
                     return _candidateParent;
                 }
-                
             }
 
             var modulecheck;
@@ -140,19 +131,15 @@
             switch (modulecheck) {
                 case 'list':
                     return $(element).parents("tr:eq(0)");
-                break;
+                    break;
                 case 'new':
                 case 'edit':
                     return $(element).parents("form:eq(0)");
-
-                break;
+                    break;
                 default:
-
                     throw 'no parentHolder found for option';
-
                 break;
             }
-
         },
         /*
          * Eventos comunes en todos los controladores para campos
@@ -176,17 +163,17 @@
                         _targetCommand = $(this).data('fielddecorator') + "_command";
                         $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command");
                     } else {
-                        _targetCommand = $(this).data('command'); 
+                        _targetCommand = $(this).data('command');
                     }
-                    
+
                     var requestData = {
-                            file: _self.klearModule("option","file"),
-                            pk: $(this).parents(parentSelector).data("id"),
-                            type : 'command',
-                            post: _post,
-                            command : _targetCommand
+                        file: _self.klearModule("option","file"),
+                        pk: $(this).parents(parentSelector).data("id"),
+                        type : 'command',
+                        post: _post,
+                        command : _targetCommand
                     };
-                    
+
                     var request = $.klear.buildRequest(requestData);
 
                     var _url = request.action; //encodeURI()
@@ -205,8 +192,8 @@
             if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
                  $(".filePreview",_self.klearModule("getPanel")).each(function() {
 
-                	 var _post;
-                	 
+                     var _post;
+
                      if ($(this).data("filename")) {
                          _post = {filename:$(this).data("filename")};
                      } else {
@@ -240,22 +227,20 @@
                      var _url = request.action; //encodeURI()
                      _url += '&' + $.param(request.data);
                      item.attr("src", _url);
-
                      $(this).replaceWith(item);
-
                 });
             }
-            
+
             if ($(".fieldInfo-tooltip",_self.klearModule("getPanel")).length>0) {
-            	$(".fieldInfo-tooltip",_self.klearModule("getPanel")).tooltip({
-            		'content': function(){return $el.attr('data-title');}
-            	});
+                $(".fieldInfo-tooltip",_self.klearModule("getPanel")).tooltip({
+                    'content': function(){return $el.attr('data-title');}
+                });
             }
-            
+
             if ($(".tooltip",_self.klearModule("getPanel")).length>0) {
-            	$(".tooltip",_self.klearModule("getPanel")).tooltip({
-            		'content': function(){return $(this).attr('data-title');}
-            	});
+                $(".tooltip",_self.klearModule("getPanel")).tooltip({
+                    'content': function(){return $(this).attr('data-title');}
+                });
             }
 
             if ($("input.auto, textarea.auto",_self.klearModule("getPanel")).length > 0) {
@@ -276,7 +261,6 @@
                                 pluginSettings[idx] = value;
                             }
                         });
-
 
                         (function lazyPluginLoad(target, pluginName, settings) {
                             if (!$.fn[pluginName]) {
@@ -318,18 +302,18 @@
 
                 self.klearModule("close");
             });
-            
+
             this._resolveAutoOption();
             this._doGhostList();
-            
+
             var $viewPort = $(this.element.klearModule("getPanel"));
             // Se trata de un dialogo!
             if (this.options.parent) {
-                var $viewPort = $($(this.options.parent).klearModule("getPanel"));
+                $viewPort = $($(this.options.parent).klearModule("getPanel"));
             }
 
             if ($('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).length > 0) {
-            	$('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).multiselect({
+                $('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).multiselect({
                     container: $viewPort,
                     selectedList: 4,
                     selectedText: $.translate("# of # selected"),
@@ -343,7 +327,7 @@
                      }
                 }).multiselectfilter();
             }
-            
+
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
                 .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
                 .on("change",function() {
@@ -352,10 +336,10 @@
 
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt({autoWidth: true})
-                                .data("resizeTrick",true)
-                                    .data("selectBoxIt").refresh(function () {
-                                        this.dropdown.addClass(cssClasses2Keep);
-                                    });
+                        .data("resizeTrick",true)
+                        .data("selectBoxIt").refresh(function () {
+                            this.dropdown.addClass(cssClasses2Keep);
+                        });
                     }
 
                     if ($(this).data('autofilter-select-by-data')) {
@@ -403,7 +387,7 @@
                             .data("prevOverflow", $(parent).css("overflow"))
                             .css("overflow","visible");
                     }
-                        
+
                 }).on('close', function() {
                     // Fix sólo para dialogos!
                     if (!_self.options.parent) {
@@ -422,31 +406,29 @@
                     $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
                 });
 
-
             $('a.option.screen', this.element.klearModule("getPanel"))
-                .off('mouseup.screenOption')
-                .on('mouseup.screenOption', function(e) {
+            .off('mouseup.screenOption')
+            .on('mouseup.screenOption', function(e) {
 
                 e.preventDefault();
                 e.stopPropagation();
 
                 var _menuLink = $(this);
-                
+
                 if (_self.options.parent) {
                     self = _self.options.parent;
                 }
-                var _container = self.klearModule("getContainer");
 
+                var _container = self.klearModule("getContainer");
                 var _file = self.klearModule("option", "file");
-                
+
                 if (_menuLink.data("externalfile")) {
                     _file= _menuLink.data("externalfile");
                 }
 
-                
                 var _screen = _menuLink.data("screen");
-
                 var _iden = "#tabs-" + _file;
+
                 if (!_menuLink.data("externalremovescreen")) {
                     _iden += '_' + _screen;
                 }
@@ -468,7 +450,6 @@
 
                 var _curPk = _parentHolder.data("id");
 
-
                 if (_menuLink.data("externalname")) {
                     var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
                     if (_field.length >0) {
@@ -478,7 +459,6 @@
                 if (_menuLink.data("externalid")) {
                     _curPk = _menuLink.data("externalid");
                 }
-
 
                 // Seteamos el valor para dispatchOptions
                 var _dispatchOptions = {
@@ -490,7 +470,6 @@
                 if (!_menuLink.data("externalremovescreen")) {
                     _dispatchOptions['screen'] = _menuLink.data("screen");
                 }
-
 
                 if (!_menuLink.data("externalnoiden")) {
                     _dispatchOptions ['pk'] = _curPk;
@@ -508,10 +487,9 @@
 
                 $.extend(_dispatchOptions['post'], _searchOps);
 
-
                 var tabTitle;
                 if (_menuLink.data("externaltitle")) {
-                	tabTitle = _menuLink.data("externaltitle");
+                    tabTitle = _menuLink.data("externaltitle");
                 } else {
                     tabTitle = _menuLink.tooltip("close").attr("title");
                 }
@@ -519,7 +497,6 @@
                 if ($(this).hasClass("_fieldOption")) {
                     _menuLink.addClass("ui-state-highlight");
                 }
-
 
                 // Si el tab ya está abierto
                 if ($(_iden).length > 0) {
@@ -541,7 +518,6 @@
 
                 var _newIndex = self.klearModule("option", "tabIndex")+1;
 
-
                 _container.one( "tabspostadd", function(event, ui) {
 
                     var $tabLi = $(ui.tab).parent("li");
@@ -554,7 +530,6 @@
                     // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
                     $tabLi.klearModule("option", "file", _file);
 
-
                     // Si la pantalla llamante tiene condición (parentId -- en data --
                     // enviarlos a la nueva pantalla
                     if (_self.options.data.parentId) {
@@ -562,15 +537,12 @@
                         _dispatchOptions.post.parentScreen = _self.options.data.parentScreen;
                     }
 
-
                     // highlight on hover
                     _menuLink.data("relatedtab", $tabLi);
 
                     $tabLi
                         .klearModule("option", "dispatchOptions", _dispatchOptions)
                         .klearModule("reload");
-
-
                 });
 
                 // Klear open in background
@@ -593,10 +565,10 @@
             /*
              * Capturar opciones de diálogo.
              */
-            
+
             $('a.option.dialog', this.element.klearModule("getPanel"))
-                .off('click.dialogOption')
-                .on('click.dialogOption', function(e, data) {
+            .off('click.dialogOption')
+            .on('click.dialogOption', function(e, data) {
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -606,20 +578,18 @@
                 if (_self.options.parent) {
                     self = _self.options.parent;
                 }
-                
-                var _container = self.klearModule("getContainer");
 
                 var _parentHolder = _self._resolveParentHolder(this);
-                
+
                 var curPK = _parentHolder.data("id");
-                
+
                 if ($(_parentHolder).length > 1) {
-                    curPK = [];    
+                    curPK = [];
                     $(_parentHolder).each(function() {
-                       curPK.push($(this).data("id")); 
+                       curPK.push($(this).data("id"));
                     });
                 }
-                
+
                 var $caller = $(this);
 
                 $(self).klearModule("showDialog",
@@ -654,28 +624,25 @@
                 }
 
                 $.klear.request(
-                        {
-                            file: self.klearModule("option", "file"),
-                            type: 'dialog',
-                            dialog : $_dialog.data("dialogName"),
-                            pk : curPK,
-                            post: _postData,
-                            external: external
-                        },
-                        function(response) {
-                            if (external) {
-                                $_dialog.moduleDialog("close");
-                            } else {
-                                $_dialog[response.plugin]({data : response.data, parent: self, caller: $caller});
-                            }
-                        },
-                        function() {
-                            console.log(arguments);
-
+                    {
+                        file: self.klearModule("option", "file"),
+                        type: 'dialog',
+                        dialog : $_dialog.data("dialogName"),
+                        pk : curPK,
+                        post: _postData,
+                        external: external
+                    },
+                    function(response) {
+                        if (external) {
+                            $_dialog.moduleDialog("close");
+                        } else {
+                            $_dialog[response.plugin]({data : response.data, parent: self, caller: $caller});
                         }
+                    },
+                    function() {
+                        console.log(arguments);
+                    }
                 );
-
-
             })
             .off('mouseup.dialogOption')
             .on('mouseup.dialogOption', function(e) {
@@ -690,8 +657,6 @@
                     $option.trigger("click.dialogOption");
                 });
             });
-           
-            
 
             /*
              * Capturar opciones de command (Siempre request externo -- no callback available!
@@ -699,20 +664,20 @@
              */
 
             $('a.option.command', this.element.klearModule("getPanel"))
-                .off('click.commandOption')
-                .on('click.commandOption', function(e, data) {
+            .off('click.commandOption')
+            .on('click.commandOption', function(e, data) {
 
                 e.preventDefault();
                 e.stopPropagation();
 
+                var selfCommand = $(this);
+
                 var external = data && data.external || false;
-                external = $(this).data("external")? true: external;
+                external = selfCommand.data("external")? true: external;
 
                 if (_self.options.parent) {
                     self = _self.options.parent;
                 }
-                
-                var _container = self.klearModule("getContainer");
 
                 var _parentHolder = _self._resolveParentHolder(this);
 
@@ -733,22 +698,29 @@
 
                 var _file = $(self).klearModule("option", "file");
 
+                var disabledTime = selfCommand.data('disabledtime') || null;
+                if (disabledTime) {
+
+                    selfCommand.button("option", "disabled", "disabled");
+                    window.setTimeout(function(){
+                        selfCommand.button("option", "disabled", false);
+                    }, disabledTime);
+                }
+
                 $.klear.request(
-                        {
-                            file: _file,
-                            type: 'command',
-                            command : $(this).data("command"),
-                            pk : _parentHolder.data("id"),
-                            post: _postData,
-                            external: external
-                        },
-                        function(response) {
-
-                        },
-                        function() {
-                            console.log(arguments);
-
-                        }
+                    {
+                        file: _file,
+                        type: 'command',
+                        command : selfCommand.data("command"),
+                        pk : _parentHolder.data("id"),
+                        post: _postData,
+                        external: external
+                    },
+                    function(response) {
+                    },
+                    function() {
+                        console.log(arguments);
+                    }
                 );
 
             }).filter("[data-shortcut]").each(function() {
@@ -758,7 +730,6 @@
                     $option.trigger("click.commandOption");
                 });
             });
-
 
             $("a[title]:not(.fieldInfo-box),span[title]", this.element.klearModule("getPanel")).tooltip();
 
@@ -818,7 +789,6 @@
             if (typeof data.traceString != 'undefined') {
                 var $showTrace = $('<p><a class="show-trace" href="#">Show trace string</a></p>');
                 var $trace = $('<div class="trace">' + data.traceString.replace(/\n/g, '<br />') + '</div>');
-                var $traceDiv = $('<div />').append($showTrace).append($trace);
 
                 $message.append($showTrace).append($trace);
 
@@ -828,14 +798,12 @@
                     $trace.toggle();
                     $_dialog.moduleDialog('option', 'width', 800);
                 });
-
             }
-
 
             $_dialog.moduleDialog("option", "title", $.translate("Error")  + _extraCode);
             $_dialog.moduleDialog("updateContent", $message);
         },
-        
+
         _resolveAutoOption : function() {
             var $container = $(this.element).klearModule("getContainer");
             $("span.autoOption",$container).each(function() {
@@ -847,11 +815,11 @@
             var $container = $(this.element).klearModule("getContainer");
 
             $("ul.ghostList", $container).each(function() {
-                
+
                 $optionHolder = $(this).next(".ghostListOptions");
                 $optionHolder.hide();
                 $futureOptions = $(".opClone",$(this));
-                
+
                 $("a",$optionHolder).each(function() {
                     var link = false;
                     if ($(this).hasClass("screen")) {
@@ -860,17 +828,15 @@
                         link = $(this).data("dialog");
                     } else if ($(this).hasClass("command")) {
                         link = $(this).data("command");
+                    } else {
+                        return;
                     }
-                    
-                    if (!link) return;
-                    
+
                     var optString = $("<div />").append($(this)).html();
-                    
                     $futureOptions.filter("[data-link='"+link+"']").replaceWith(optString);
-                    
                 });
             });
-            
+
             $(".ghostListCounter input",$container)
             .off('doSum')
             .on('doSum',function() {
@@ -887,12 +853,10 @@
                 }
                 $items.not(":contains("+$(this).val()+")").hide();
                 $(this).trigger("doSum");
-                
+
             })
             .trigger('keyup.ghostfilter');
         }
-
     });
-
 
 })(jQuery);

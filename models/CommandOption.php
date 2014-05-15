@@ -24,6 +24,10 @@ class KlearMatrix_Model_CommandOption extends KlearMatrix_Model_AbstractOption
         $ret['type'] = 'command';
         $ret['external'] = true;
 
+        if ($this->getConfig()->getProperty('disabledTime')) {
+            $ret['disabledTime'] = $this->getConfig()->getProperty('disabledTime');
+        }
+
         if ($this->isDefault()) {
             $ret['defaultOption'] = true;
         }

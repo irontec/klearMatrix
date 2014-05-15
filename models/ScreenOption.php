@@ -80,8 +80,6 @@ class KlearMatrix_Model_ScreenOption extends KlearMatrix_Model_AbstractOption
         $ret['type'] = 'screen';
         $ret['multiInstance'] = $this->_multiInstance;
 
-
-
         if (!is_null($this->_externalConfig)) {
             $ret['externalOption'] = true;
             foreach ($this->_allowedExternalAttrs as $attr) {

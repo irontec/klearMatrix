@@ -9,6 +9,9 @@ class KlearMatrix_Model_Column
     protected $_hasInfo = false;
     protected $_fieldInfo = false;
 
+    protected $_hasLink = false;
+    protected $_link = false;
+
     protected $_ordered = false;
     protected $_orderedType = 'asc';
 
@@ -165,6 +168,13 @@ class KlearMatrix_Model_Column
             $this->_fieldInfo->setConfig($this->_config->getProperty("info"));
         }
 
+        $this->_hasLink = (bool)$this->_config->getProperty("link");
+        if ($this->_hasLink) {
+            $this->_link = new KlearMatrix_Model_Link;
+            $this->_link->setConfig($this->_config->getProperty("link"))
+            ->setSetField($this->getFieldConfig());
+        }
+
         $this->_disabledOptions = $this->_config->getProperty("disabled");
 
         if ($this->_disabledOptions) {
@@ -260,6 +270,14 @@ class KlearMatrix_Model_Column
         if ($this->isOption()) return false;
 
         return $this->_hasInfo;
+    }
+
+    public function hasLink()
+    {
+
+        if ($this->isOption()) return false;
+
+        return $this->_hasLink;
     }
 
     public function setAsOrdered()
@@ -721,6 +739,10 @@ class KlearMatrix_Model_Column
 
         if ($this->hasInfo()) {
             $ret['fieldInfo'] = $this->_fieldInfo->toArray();
+        }
+
+        if ($this->hasLink()) {
+            $ret['link'] = $this->_link->toArray();
         }
 
         if ($this->_ordered) {

@@ -75,6 +75,10 @@ data-title="${info.text}"
 
                 {{/each}}
             {{/if}}
+
+            {{if column.link}}
+                <a href="${column.link.href}" target="${column.link.target}" class="${column.link.class}">${column.link.text}</a>
+            {{/if}}
         </div>
         {{/each}}
     </fieldset>

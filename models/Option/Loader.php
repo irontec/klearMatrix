@@ -10,7 +10,7 @@ class KlearMatrix_Model_Option_Loader
     protected $_defaultOption = null;
 
     protected $_availableOptionTypes = array(
-    	'screen',
+        'screen',
         'dialog',
         'command',
         'link'
@@ -54,21 +54,21 @@ class KlearMatrix_Model_Option_Loader
     {
         $retArray = array();
         switch($type) {
-        	case 'dialog':
-        	    $property = 'dialogs';
-        	    break;
-        	case 'screen':
-        	    $property = 'screens';
-        	    break;
-        	case 'command':
-        	    $property = 'commands';
-        	    break;
-        	case 'link':
-        	    $property = 'links';
-        	    break;
-        	default:
-        	    Throw new Zend_Exception("Undefined Option Type");
-        	    break;
+            case 'dialog':
+                $property = 'dialogs';
+                break;
+            case 'screen':
+                $property = 'screens';
+                break;
+            case 'command':
+                $property = 'commands';
+                break;
+            case 'link':
+                $property = 'links';
+                break;
+            default:
+                Throw new Zend_Exception("Undefined Option Type");
+                break;
         }
         $_items = $parent->getProperty($property);
         if (!$_items) {

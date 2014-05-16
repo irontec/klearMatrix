@@ -41,7 +41,6 @@ class KlearMatrix_Model_Link
                         'controller' => $this->_config->getRaw()->controller,
                         'action' => $this->_config->getRaw()->action
         );
-        $fieldsValues = array();
         foreach ($configFields as $fieldKey=>$fieldName) {
             $getter = 'get' . $mainModel->columnNameToVar($fieldName);
             $params[$fieldKey] = $mainModel->{$getter}();

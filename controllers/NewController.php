@@ -78,10 +78,6 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         }
 
         try {
-
-//             $model->setNameEs('asdg');
-//             $model->setNameEu('asdg');
-
             $this->_save($model, $hasDependant);
             $this->_helper->log(
                 'model created succesfully for ' . $mapperName
@@ -132,11 +128,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
         $KlearMatrixOptionLoader->setMainConfig($this->_mainRouter->getConfig());
         $KlearMatrixOptionLoader->setParentConfig($parent);
         $KlearMatrixOptionLoader->setExtraParamsFunction(
-                function ($option)
-                {
-                    $option->setFrom("postActionOptions");
-                    $option->setParentHolderSelector('span');
-                }
+            function ($option)
+            {
+                $option->setFrom("postActionOptions");
+                $option->setParentHolderSelector('span');
+            }
         );
         $fieldOptions = $KlearMatrixOptionLoader->getFieldOptions();
         return $fieldOptions;

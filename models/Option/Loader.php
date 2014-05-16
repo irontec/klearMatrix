@@ -96,7 +96,6 @@ class KlearMatrix_Model_Option_Loader
             $option->setName($conf);
             if ($conf === $this->_defaultOption) {
                 $option->setAsDefault();
-                $defaultOption = false;
             }
             $option->setConfig($this->_config->{'get' . ucfirst($type) . 'Config'}($conf));
             if (gettype($this->_extraParamsFunction) == 'object'

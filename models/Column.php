@@ -394,14 +394,14 @@ class KlearMatrix_Model_Column
             $KlearMatrixOptionLoader->setMainConfig($this->_routeDispatcher->getConfig());
             $KlearMatrixOptionLoader->setParentConfig($parent);
             $KlearMatrixOptionLoader->registerConditionalFunction(
-                    'screen',
-                    function ($option)
-                    {
-                        $mustBeAdded = !$this->_routeDispatcher->getCurrentItem()->isFilteredScreen()
-                        || !$option->getFilterField()
-                        || ($option->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField());
-                        $option->skip(!$mustBeAdded);
-                    }
+                'screen',
+                function ($option)
+                {
+                    $mustBeAdded = !$this->_routeDispatcher->getCurrentItem()->isFilteredScreen()
+                    || !$option->getFilterField()
+                    || ($option->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField());
+                    $option->skip(!$mustBeAdded);
+                }
             );
             $this->_options = $KlearMatrixOptionLoader->getFieldOptions();
 

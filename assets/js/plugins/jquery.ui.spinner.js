@@ -6,6 +6,14 @@
  */
 ;(function($, undefined) {
 
+var supportInputNumber = false; 
+(function() {
+    var input = document.createElement("input");
+    input.setAttribute("type","number");
+    supportInputNumber = typeof input.stepUp == 'function';
+})();
+
+    
 var
     // constants
     active = 'ui-state-active',
@@ -101,6 +109,11 @@ $.widget('ui.spinner', {
             console.error('Invalid target for ui.spinner');
             return;
         }
+        
+
+//        if (supportInputNumber) {
+//            return;
+//        }
 
         self._procOptions(true);
         self._createButtons(input);

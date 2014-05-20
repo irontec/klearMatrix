@@ -742,9 +742,6 @@
         },
         option2HTML : function(option, from, idx, fieldValue)
         {
-
-        	console.log(option, from, idx, fieldValue);
-        	
             var mainTitle = '',
                 buttonLabel = false,
                 classes = [],

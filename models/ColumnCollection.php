@@ -90,13 +90,40 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $this->_columns = array_merge($cols, $this->_columns);
     }
 
-    public function setReadOnly($readOnlyFields = array())
+    public function setReadOnly($readOnlyFields = array(), $model)
     {
         foreach ($readOnlyFields as $fieldName => $value) {
+
             if (isset($this->_columns[$fieldName])) {
+
+                if ($value instanceof Zend_Config && isset($value->conditions)) {
+                    $value = $this->_checkReadOnlyConditions($value->conditions, $model);
+                }
+
                 $this->_columns[$fieldName]->setReadOnly((bool)$value);
             }
         }
+    }
+
+    protected function _checkReadOnlyConditions($conditions, $model)
+    {
+        foreach ($conditions as $field => $condition) {
+
+            if ($condition instanceof Zend_Config) {
+                $values = $condition->toArray();
+            } else {
+                $values = (array)$condition;
+            }
+
+            $fieldGetter = 'get' . $model->columnNameToVar($field);
+            $fieldValue = $model->{$fieldGetter}();
+
+            if (!in_array($fieldValue, $values)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function _getOrderFieldsArray(Zend_Config $orderFields)

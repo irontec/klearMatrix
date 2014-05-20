@@ -133,7 +133,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         $this->_addConditionalBlackList($model);
 
-        $columns = $this->_item->getVisibleColumns();
+        $columns = $this->_item->getVisibleColumns(false, $model);
 
         $data = new KlearMatrix_Model_MatrixResponse;
 

@@ -468,32 +468,31 @@ class KlearMatrix_Model_ResponseItem
      *
      * @return KlearMatrix_Model_ColumnCollection listado de columnas que devuelve el modelo
      */
-    public function getVisibleColumns($ignoreBlackList = false)
+    public function getVisibleColumns($ignoreBlackList = false, $model = null)
     {
         if (isset($this->_visibleColumns)) {
-
             return $this->_visibleColumns;
         }
 
         $this->_visibleColumns =  new KlearMatrix_Model_ColumnCollection();
-        $model = $this->getObjectInstance();
+        $modelInstance = $this->getObjectInstance();
 
         if (!$ignoreBlackList) {
-            $this->_createBlackList($model);
+            $this->_createBlackList($modelInstance);
         }
 
         /*
          * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
         * que idiomas tienen los modelos disponibles
         */
-        $availableLangsPerModel = $model->getAvailableLangs();
+        $availableLangsPerModel = $modelInstance->getAvailableLangs();
         if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumns->setLangs($availableLangsPerModel);
         }
 
         // Campos de tipo "file"
         //TODO: Revisar este método, porque también se encarga de generar parte de la lista negra
-        $fileColumns = $this->_getVisibleFileColumns($model);
+        $fileColumns = $this->_getVisibleFileColumns($modelInstance);
         $this->_visibleColumns->addCols($fileColumns);
 
         // Campos Ghost
@@ -501,11 +500,11 @@ class KlearMatrix_Model_ResponseItem
         $this->_visibleColumns->addCols($ghostColumns);
 
         // Campos de la BBDD
-        $columns = $this->_getVisibleColumns($model, $ignoreBlackList);
+        $columns = $this->_getVisibleColumns($modelInstance, $ignoreBlackList);
         $this->_visibleColumns->addCols($columns);
 
         // Tablas dependientes
-        $dependantColumns = $this->_getVisibleDependantColumns($model, $ignoreBlackList);
+        $dependantColumns = $this->_getVisibleDependantColumns($modelInstance, $ignoreBlackList);
         $this->_visibleColumns->addCols($dependantColumns);
 
         if ($this->hasFieldOptions()) {
@@ -520,7 +519,7 @@ class KlearMatrix_Model_ResponseItem
         }
 
         if ($this->_config->exists("fields->readOnly")) {
-            $this->_visibleColumns->setReadOnly($this->_config->getRaw()->fields->readOnly);
+            $this->_visibleColumns->setReadOnly($this->_config->getRaw()->fields->readOnly, $model);
         }
 
 

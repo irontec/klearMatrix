@@ -96,7 +96,7 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
 
             if (isset($this->_columns[$fieldName])) {
 
-                if ($value instanceof Zend_Config && isset($value->conditions)) {
+                if (is_object($model) && $value instanceof Zend_Config && isset($value->conditions)) {
                     $value = $this->_checkReadOnlyConditions($value->conditions, $model);
                 }
 

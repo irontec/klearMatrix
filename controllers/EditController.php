@@ -57,7 +57,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             Throw new Zend_Exception($this->view->translate('Record not found.'));
         }
 
-        $columns = $this->_item->getVisibleColumns();
+        $columns = $this->_item->getVisibleColumns(false, $model);
         $hasDependant = false;
 
         foreach ($columns as $column) {

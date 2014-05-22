@@ -628,7 +628,7 @@
                 return title;
             }
 
-            var replaceParentPerItem = settings.replaceParentPerItem;
+            var replaceParentWithItem = settings.replaceParentWithItem;
             var defaultLang = settings.defaultLang;
             var parentIden = settings.parentIden;
             var columns = settings.columns;
@@ -681,10 +681,9 @@
             // siempre que no esé definido parentIden (el listado sea a su vez hijo de otro)
 
             defaultValue = this.cleanValue(defaultValue);
-            var parentValue = (replaceParentPerItem)?
+            var parentValue = (replaceParentWithItem)?
                                     this.cleanValue(defaultValue) :
                                     this.cleanValue(parentIden);
-
             return this.buildTitleString(title, defaultValue, parentValue);
 
         },
@@ -717,11 +716,11 @@
             }
             return _r;
         },
-        getTitle : function(title,idx,replaceParentPerItem) {
+        getTitle : function(title,idx,replaceParentWithItem) {
 
             return this._parseDefaultValues({
                     title: title,
-                    replaceParentPerItem : replaceParentPerItem,
+                    replaceParentWithItem : replaceParentWithItem,
                     defaultLang : this.data.defaultLang,
                     parentIden: this.data.parentIden,
                     columns: this.data.columns,
@@ -798,10 +797,11 @@
 
                         option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
-                        mainTitle = this.getTitle(option.title, idx, true);
+                        
+                        mainTitle = this.getTitle(option.title, idx, option.labelReplaceParentWithItem);
 
                         if (mustShowLabel && typeof option.label == 'string') {
-                            buttonLabel = this.getTitle(option.label, idx, true);
+                            buttonLabel = this.getTitle(option.label, idx, option.labelReplaceParentWithItem);
                         }
                     }
 

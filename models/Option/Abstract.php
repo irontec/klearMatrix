@@ -28,6 +28,14 @@ abstract class KlearMatrix_Model_Option_Abstract
 
     protected $_skip = false;
 
+
+    /**
+     * Especifica si una opción debe sustituir parent con item a la hora ed dibujar el título
+     * Se hará automáticamente para opciones con module: klearMatrix y controller: list
+     * @var unknown
+     */
+    protected $_labelReplaceParentWithItem = false;
+
     /**
      * List of attributes
      * @var array
@@ -37,6 +45,7 @@ abstract class KlearMatrix_Model_Option_Abstract
             'labelOnEdit',
             'labelOnList',
             'labelOnPostAction',
+            'labelReplaceParentWithItem',
             'shortcut',
             'multiItem',
             'showOnlyOnNotNull',
@@ -47,8 +56,6 @@ abstract class KlearMatrix_Model_Option_Abstract
 
     public function setConfig(Zend_Config $config)
     {
-
-
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
@@ -74,7 +81,22 @@ abstract class KlearMatrix_Model_Option_Abstract
 
         $this->_loadParentOptionCustomizers($this->_config->getProperty("parentOptionCustomizer"));
 
+        $this->_labelReplaceParentWithItem = $this->_resolveLabelReplaceParentWithItem();
+
+
+        $this->_loadParentOptionCustomizers($this->_config->getProperty("parentOptionCustomizer"));
+
         $this->_init();
+    }
+
+    protected function _resolveLabelReplaceParentWithItem() {
+
+
+        if ($this->_config->getProperty("controller") == 'list') {
+            return true;
+        }
+
+        return $this->_config->getProperty("labelReplaceParentWithItem");
     }
 
     protected function _parseLabelConfig($value)

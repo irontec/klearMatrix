@@ -1,16 +1,10 @@
 <?php
 abstract class KlearMatrix_Model_Field_Picker_Abstract
 {
-    protected $_locale;
     protected $_jqLocale;
 
-    protected $_css = array(
-            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css"
-    );
-
-    protected $_js = array(
-            "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js"
-    );
+    protected $_css = array();
+    protected $_js = array();
 
     protected $_availableSettings = array(
         'altField' ,
@@ -74,6 +68,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         'da' => 'dd-mm-yy',
         'de' => 'dd.mm.yy',
         'el' => 'dd/mm/yy',
+        'en' => 'yy/mm/dd',
         'en-AU' => 'dd/mm/yy',
         'en-GB' => 'dd/mm/yy',
         'en-NZ' => 'dd/mm/yy',
@@ -132,8 +127,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         'zh-TW' => 'yy/mm/dd',
     );
 
-    //ZF style
-    protected $_timeFormats = 'HH:mm:ss';
+    protected $_timeFormat = 'hh:mm:ss';
 
     protected $_settings = array();
     protected $_plugin;
@@ -141,29 +135,22 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
     public function __construct($config)
     {
         $currentKlearLanguage = Zend_Registry::get('currentSystemLanguage');
-        $this->_locale = $currentKlearLanguage->getLocale();
-
         $this->_jqLocale = $currentKlearLanguage->getjQLocale();
 
-        if (false === $this->_jqLocale) {
+        if ($this->_jqLocale === false || !array_key_exists($this->_jqLocale, $this->_dateFormats)) {
             throw new \Exception('Klear locale not available in current picker');
         }
 
-        $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-".$this->_jqLocale.".js";
-
-        $this->_init();
-        $this->_setConfig($config);
+        $this->_init(); //Only include timepicker if need it and showSecond parameter with true value
+        $this->_setConfig($config); //Set config in yaml field
         $this->_setPlugin();
     }
 
     protected function _setConfig($config)
     {
         if ($config->settings) {
-
             foreach ($config->settings as $key => $value) {
-
                 $this->_setSetting($key, $value);
-
             }
         }
 
@@ -172,90 +159,93 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
 
     abstract protected function _setPlugin();
 
-    protected function _init()
-    {
-        // To be overriden by child objects
-    }
+    protected function _init() {}
 
     protected function _setSetting($key, $value)
     {
         if (in_array($key, $this->_availableSettings)) {
             $this->_settings[$key] = $value;
         }
-        if (!$value) {
-            //var_dump(debug_backtrace());
-        }
         return $this;
-    }
-
-
-    public function getLocale()
-    {
-        return $this->_locale;
-    }
-
-    protected function _hasSetting($key)
-    {
-        return isset($this->_settings[$key]);
     }
 
     protected function _getSetting($key)
     {
-        return $this->_settings[$key];
+        if (array_key_exists($key, $this->_settings)) {
+            return $this->_settings[$key];
+        }
+        return null;
     }
 
     public function getConfig()
     {
-        return array(
+        $config = array(
             'settings' => $this->_settings,
             'plugin' => $this->_plugin
         );
+        return $config;
     }
 
     /**
-     * Devuelve el formato de fecha "Localizado" segun jQ; y fixeado para formato Zend_Date
+     * Returns date format to set date in Zend_Date
+     * @return string
      */
-    public function getFormat($locale = null)
+    protected function _getZendDateFormat()
     {
-        if ($this->_hasSetting('format')) {
-            return $this->_getSetting('format');
-        }
-
-        if (empty($locale)) {
-            $locale = $this->_jqLocale;
-        }
-
-        if (isset($this->_dateFormats[$locale])) {
-            return $this->_getDateFormatFixed($locale);
-        }
-
-        return null;
-    }
-
-    protected function _getDateFormatFixed($locale)
-    {
-        $_dateFormat = $this->_dateFormats[$locale];
-        return str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $_dateFormat);
+        $dateFormat = $this->_getSetting('dateFormat');
+        $dateFormat = str_replace(array('mm', 'yy'), array('MM', 'yyyy'), $dateFormat);
+        return $dateFormat;
     }
 
     /**
-     * Se trata de comprobar si en el yaml se ha especificado el formato de fecha, o si se utilizará el de por defecto
-     * Se envía al plugin el parámetro showSecond si se requiere dicho parámetro 
+     * Returns time format to set time in Zend_Date
+     * @return string
      */
-    protected function _fixTimeFormats() 
+    protected function _getZendTimeFormat()
     {
-        if (isset($this->_settings['timeFormat'])) {
-            $this->_timeFormats = $this->_settings['timeFormat'];
-        } else {
-            $this->_settings['timeFormat'] = strtolower($this->_timeFormats);
-        }
-        if (!preg_match("/\:ss/", $this->_settings['timeFormat'])) {
-            $this->_settings['showSecond'] = false;
-        } else {
-            $this->_settings['showSecond'] = true;
+        return str_replace('hh', 'HH', $this->_getSetting('timeFormat'));
+    }
+
+    /**
+     * If not exists dateFormat setting, set with jqLocale format
+     */
+    protected function _setPickerDateFormat()
+    {
+        if ($this->_getSetting('dateFormat') === null) {
+            $this->_setSetting('dateFormat', $this->_dateFormats[$this->_jqLocale]);
         }
     }
-    
+
+    /**
+     * If not exists timeFormat setting, set with default timeFormat
+     * If timeFormat do not have seconds, set showSecond to false
+     */
+    protected function _setPickerTimeFormat()
+    {
+        if ($this->_getSetting('timeFormat') === null) {
+            $this->_setSetting('timeFormat', $this->_timeFormat);
+        }
+
+        if ($this->_getSetting('showSecond') === false) {
+            $timeFormat = preg_replace("/\:ss/", '', $this->_getSetting('timeFormat'));
+            $this->_setSetting('timeFormat', $timeFormat);
+        }
+
+        if (!preg_match("/\:ss/", $this->_getSetting('timeFormat'))) {
+            $this->_setSetting('showSecond', false);
+        }
+    }
+
+    protected function _includeTimepicker()
+    {
+        $this->_css[] = "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.css";
+        $this->_js[] = "/js/plugins/datetimepicker/jquery-ui-timepicker-addon.js";
+        $this->_js[] = "/js/plugins/datetimepicker/localization/jquery-ui-timepicker-" . $this->_jqLocale . ".js";
+
+        $this->_availableSettings[] = 'showSecond';
+        $this->_setSetting('showSecond', true);
+    }
+
     public function getExtraJavascript()
     {
         return $this->_js;

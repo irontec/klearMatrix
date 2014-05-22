@@ -1,47 +1,34 @@
 <?php
-
 class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker_Abstract
 {
-    
-    protected $_settings = array(
-            );
-    
+    protected function _init()
+    {
+        $this->_includeTimepicker();
+    }
+
     protected function _setPlugin()
     {
         $this->_plugin = 'timepicker';
-        $this->_fixTimeFormats();
-        
+        $this->_setPickerTimeFormat();
     }
 
-
-    protected function _init()
+    public function prepareValue($value)
     {
-        $this->_availableSettings[] = 'showSecond';
+        return $this->_formatTime($value);
     }
 
     public function filterValue($value)
     {
-        if (empty($value)) {
-            return '';
-        }
-
-        $time = new Iron_Time($value);
-        return $time->getFormattedString($this->_timeFormats);
+        return $this->_formatTime($value);
     }
 
-    /**
-     * @param mixed $value Valor devuelto por el getter del model
-     * @param object $model Modelo cargado
-     * @return unknown
-     */
-    public function prepareValue($value)
+    protected function _formatTime($value)
     {
         if (empty($value)) {
             return '';
         }
 
         $time = new Iron_Time($value);
-
-        return $time->getFormattedString($this->_timeFormats);
+        return $time->getFormattedString($this->_getSetting('timeFormat'));
     }
 }

@@ -731,10 +731,16 @@
         getExternalData : function(externalData) {
             var _allowed = ['file','noiden','searchby','removescreen','title'];
             var _prefix = 'external';
-            var _ret = '';
+            var _ret = {
+                    'attributes' : [],
+                    'values' : []
+            };
+            
             for(var i=0;i<_allowed.length;i++) {
                 if (externalData[_prefix+_allowed[i]]) {
-                    _ret += ' data-' + _prefix+_allowed[i]+ '=' +externalData[_prefix+_allowed[i]]+'';
+                    console.log(externalData);
+                    _ret['attributes'].push(_prefix+_allowed[i]);
+                    _ret['values'].push(externalData[_prefix+_allowed[i]]);
                 }
             }
             return _ret;
@@ -761,20 +767,27 @@
             var mustShowLabel = option.label? true:false;
 
             // Es una entidad concreta (con índice "idx" en data.values
-            if (idx && this.data && this.data.values) {
+            if (false !== idx && this.data && this.data.values) {
                 entity = this.data.values[idx];
             }
 
             var externalData = false;
+            
             if (option.externalOption && entity && fieldValue) {
-                externalData = ' data-externalid="'+fieldValue+'"';
-                externalData += ' ' + this.getExternalData(option);
+                
+                externalData = this.getExternalData(option);
+                externalData['attributes'].push('externalid');
+                externalData['values'].push(fieldValue);
+                
+            } else {
+                
+                //TODO: Sin probar. Probablemente venga de una opción de un field a un screen external.
+                if (option.external && option.file) {
+                    externalData['attributes'] = ['externalfile'];
+                    externalData['values'] = [option.file];
+                }
+                
             }
-
-            if (option.external && option.file) {
-                externalData = 'data-externalfile="'+option.file+'"';
-            }
-
             switch(from) {
 
                 case "List":
@@ -859,7 +872,6 @@
             if (option.defaultOption) {
                 classes.push('default');
             }
-
             var optionData = {
                     classes : classes.join(' '),
                     type : option.type,

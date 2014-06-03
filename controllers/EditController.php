@@ -208,6 +208,13 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         if ($conditionalConfig) {
             foreach ($conditionalConfig as $field => $fieldConfig) {
 
+                /* Puede que field sea un índice indicativo (en el caso de querer tener
+                 * varias condiciones sobre un mismo campo y distintos valores.
+                 */
+                if (isset($fieldConfig->field)) {
+                    $field = $fieldConfig->field;
+                }
+
                 $curFieldGetter ='get' .  $model->columnNameToVar($field);
                 if ($model->{$curFieldGetter}() == $fieldConfig->condition) {
 

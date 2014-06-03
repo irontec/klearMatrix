@@ -199,6 +199,12 @@
             this.options.cache.adress.on('change', function(){
                 self._updateMarkerAddress($(this).val());
             });
+            
+            if ($('input.visualFilter, select.visualFilter', this.options.cache.context.parents('.klearMatrix_form')).length>0) {
+                $('input.visualFilter, select.visualFilter', this.options.cache.context.parents('.klearMatrix_form')).on("change", function(){
+                    google.maps.event.trigger(self.map, "resize");
+                });
+            } 
         },
 
         destroy: function() {

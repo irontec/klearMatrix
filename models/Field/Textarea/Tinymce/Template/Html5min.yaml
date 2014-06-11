@@ -1,0 +1,58 @@
+#http://www.tinymce.com/wiki.php/Configuration
+production: 
+
+#### Theme ####
+
+  theme: modern
+  
+#### Register plugins ####
+
+  plugins: |
+    advlist wordcount autolink lists link image charmap print preview hr anchor pagebreak
+    visualblocks visualchars code fullscreen searchreplace
+    insertdatetime media nonbreaking save table contextmenu
+    emoticons template textcolor paste
+  
+#### Basic conf ####
+  
+  resize: true
+  visualblocks_default_state: false
+  image_advtab: true
+  toolbar_items_size: 'small'
+
+  paste_data_images: true
+  paste_auto_cleanup_on_paste : true
+  paste_create_paragraphs: false
+  paste_create_linebreaks: false
+  paste_remove_spans: true
+  paste_remove_styles: true
+  paste_remove_styles_if_webkit: true
+  paste_retain_style_properties: none
+  paste_strip_class_attributes: all
+  paste_text_sticky: true
+  paste_text_sticky_default: true
+  convert_urls: false
+  valid_elements : em/i,strong/b,ol,ul,li,br,p,a[href|target|title|alt]
+  force_br_newlines: false
+  force_p_newlines: true
+  forced_root_block: false
+  invalid_elements: font
+  
+#### Menu bars ####
+
+  menubar: false
+
+#### Toolbars ####
+
+  toolbar1: "bold italic underline | bullist numlist indent outdent | undo redo | link"
+   
+#### Style formats ####
+
+
+
+testing: 
+  _extends: production
+staging: 
+  _extends: production  
+development: 
+  _extends: production

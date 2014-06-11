@@ -627,7 +627,7 @@ define("tinymce/pasteplugin/WordFilter", [
 
 		editor.on('BeforePastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
-
+			
 			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
 				validStyles = Tools.makeMap(retainStyleProperties);
@@ -791,7 +791,6 @@ define("tinymce/pasteplugin/WordFilter", [
 				content = Utils.filter(content, [
 					// Word comments like conditional comments etc
 					/<!--[\s\S]+?-->/gi,
-
 					// Remove comments, scripts (e.g., msoShowComment), XML tag, VML content,
 					// MS Office namespaced tags, and a few other tags
 					/<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,

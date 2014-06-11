@@ -11,7 +11,7 @@ production:
     advlist wordcount autolink lists link image charmap print preview hr anchor pagebreak
     visualblocks visualchars code fullscreen searchreplace
     insertdatetime media nonbreaking save table contextmenu
-    emoticons template pasteword textcolor moxiemanager
+    emoticons template paste textcolor moxiemanager
   
 #### Basic conf ####
 
@@ -22,6 +22,7 @@ production:
   image_advtab: true
   wordcount: true
   
+  paste_data_images: true
   paste_auto_cleanup_on_paste : true
   paste_create_paragraphs: false
   paste_create_linebreaks: false

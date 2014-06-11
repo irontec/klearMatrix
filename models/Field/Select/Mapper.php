@@ -120,6 +120,12 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
     protected function _getFilterWhere()
     {
+
+        $manualCondition = $this->_config->getProperty('config')->rawCondition;
+        if (!empty($manualCondition)) {
+            return $manualCondition;
+        }
+
         $filterClassName = $this->_config->getProperty('config')->filterClass;
         if ($filterClassName) {
             $filter = new $filterClassName;

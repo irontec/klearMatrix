@@ -22,6 +22,7 @@ production:
   image_advtab: true
   wordcount: true
   
+  inline_styles: false
   paste_data_images: true
   paste_auto_cleanup_on_paste : true
   paste_create_paragraphs: false
@@ -34,7 +35,7 @@ production:
   paste_text_sticky: true
   paste_text_sticky_default: true
   convert_urls: false
-  valid_elements : em/i,strong/b,span[style],u,ol,ul,li,br,p,a[href|target|title|alt],h1,h2,h3,h4,pre,section,article,blockquote,aside,figure,hgroup
+  valid_elements : em/i,strong/b,u,ol,ul,li,br,p,a[href|target|title|alt],h1,h2,h3,h4,pre,section,article,blockquote,aside,figure,hgroup
   force_br_newlines: false
   force_p_newlines: true
   forced_root_block: false
@@ -96,6 +97,12 @@ production:
           block: 'figure'
           wrapper: true
 
+#### Formats ####
+  formats:
+    underline:
+      inline: 'u'
+      exact : true
+      
 testing: 
   _extends: production
 staging: 

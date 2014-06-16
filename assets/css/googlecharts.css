@@ -1,0 +1,31 @@
+
+.gChartsDashboard h1 {
+    padding:.7em;
+    margin: .2em .1em .7em .1em;
+    font-size: 1.2em;
+}
+.gChartsDashboard h2 {
+	padding: .3em;
+	margin: .2em .1em .7em 2.1em;
+	font-size: 1.2em;
+}
+.gChartsDashboard fieldset {
+    width:auto;
+    padding:1em;
+    margin:0 1em 1em;
+}
+.gChartsDashboard label {
+	display: inline;
+	font-weight: bold
+}
+.gChartsDashboard div.container {
+	display: inline-block;
+}
+.gChart {
+	float: left;
+}
+.info {
+	width:auto;
+    padding:1em;
+    margin:0 1em 1em;
+}

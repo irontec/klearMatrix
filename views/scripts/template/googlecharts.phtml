@@ -1,0 +1,48 @@
+<div class="gChartsDashboard">
+<h1 class="ui-state-active  ui-corner-all">${title}</h1>
+<form>
+		<!-- GRUPOS DE GRÁFICOS -->
+		{{each(ids,group) chartGroups}}
+			<fieldset  class="ui-widget-content ui-corner-all">
+				<!-- TÍTULO DEL GRUPO -->
+				{{if group.title}}
+				<legend class="ui-state-active  ui-corner-all">${group.title}</legend>
+				{{/if}}
+				<!-- COMENTARIO DEL GRUPO -->
+				{{if group.comment}}
+					<div id="${ids}_comment_div">
+					</div>
+				{{/if}}
+				<!-- GRÁFICOS -->
+				{{each(idx,chart) group.charts}}
+					<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" --> 
+					{{if chart.options.width}}
+					<fieldset  class="gChart ui-widget-content ui-corner-all" style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;">
+					{{else}}
+					<fieldset  class="gChart ui-widget-content ui-corner-all">
+					{{/if}}
+						<!-- TÍTULO DEL GRAFICO -->
+						{{if chart.title}}
+						<legend class="ui-state-active  ui-corner-all">${chart.title}</legend>
+						{{/if}}
+						<!-- COMENTARIO DEL GRAFICO -->
+						{{if chart.comment}}
+							<div id="${ids}_${idx}_comment_div">
+							</div>
+						{{/if}}
+						<!-- GRÁFICO PROPIAMENTE DICHO -->
+						<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
+			    		<div id="${idx}_div"></div>
+						<!-- LEYENDA DEL GRÁFICO -->
+						{{if chart.legend}}
+						<fieldset  class="ui-widget-content ui-corner-all" style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;">
+							<div id="${ids}_${idx}_legend_div">
+							</div>
+						</fieldset>
+						{{/if}}
+					</fieldset>
+				{{/each}}
+			</fieldset>
+		{{/each}}
+</form>
+</div>

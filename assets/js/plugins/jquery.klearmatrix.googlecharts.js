@@ -57,35 +57,42 @@
                     );
 
 
-        	console.log(this.options.data.title, $template);
-
         	$(this.element.klearModule("getPanel")).append($template);
         	data = this.options.data;
             this._initPlugin();
         },
 
         _initPlugin: function() {
-        	$.getScript('https://www.google.com/jsapi', function()
-        			{
-        		 function drawVisualization(chartName, chart) {
-        			 	console.log(chart.table);
-        		        var wrap = new google.visualization.ChartWrapper({
-        		           'chartType': chart.type,
-        		           'dataTable': chart.table,
-        		           'options': chart.options,
-        		           'containerId': chartName+'_div'
-        		           });
-        		         wrap.draw();
+
+        	var $panel = $(this.element.klearModule("getPanel"));
+
+        	var idPrefix = "chart_"+this.options.data.randIden+"_"
+
+        	$.getScript('https://www.google.com/jsapi', function() {
+
+
+        		function drawVisualization(chartName, chart) {
+    			    var wrap = new google.visualization.ChartWrapper({
+    		           'chartType': chart.type,
+    		           'dataTable': chart.table,
+    		           'options': chart.options,
+    		           'containerId': chartName+'_div'
+			    	});
+    		        wrap.draw();
         		 }
-        		 console.log(data.chartGroups);
+
+
         		 $.each(data.chartGroups, function (gIndex, group){
-        			 $('#'+gIndex+'_comment_div').html(group.comment);
+
+        			 $('#'+idPrefix+gIndex+'_comment_div', $panel).html(group.comment);
+
         			 $.each(group.charts, function (cIndex, chart) {
-        				 $('#'+gIndex+"_"+cIndex+'_comment_div').html(chart.comment);
-        				 $('#'+gIndex+"_"+cIndex+'_legend_div').html(chart.legend);
- 						//$.each(chart, function( index, value ) {
- 							google.load('visualization', '1.0', {'packages':['corechart'], callback: function(){ drawVisualization(cIndex, chart) }});
- 						//});
+
+        				 $('#'+idPrefix+gIndex+"_"+cIndex+'_comment_div', $panel).html(chart.comment);
+
+        				 $('#'+idPrefix+gIndex+"_"+cIndex+'_legend_div', $panel).html(chart.legend);
+
+						google.load('visualization', '1.0', {'packages':['corechart'], callback: function(){ drawVisualization(idPrefix+cIndex, chart) }});
  					});
         		 });
         		});

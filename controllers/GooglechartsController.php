@@ -8,9 +8,6 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 
     public function init()
     {
-//     	$cacheManager = $this->getInvokeArg('bootstrap')->getResource('cachemanager');
-//     	$cache = $cacheManager->getCache('klearmatrixGooglecharts');
-//     	$cache->start();
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
         $this->_helper->ContextSwitch()
@@ -21,23 +18,17 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
             throw New Zend_Exception('',Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION);
         }
         $this->_item = $this->_mainRouter->getCurrentItem();
-
     }
 
     public function indexAction()
     {
         // Tenemos el $this->_mainRouter para explotar
         // los datos necesarios
-
         // Do stuff
         $pk = $this->getParam("pk");
-		if(!$pk){
-			$pk = "null";
-		}
         $data = array();
 
-        $data['title'] = $this->_item->getTitle();
-//         $data['title'] = $pk;
+        $data['title'] = Klear_Model_Gettext::gettextCheck($this->_item->getTitle());
 
 		//Generar gráficos
         $data["chartGroups"] = array();
@@ -70,18 +61,16 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 
 	        			if($show){
 	        				$chartTitle = Klear_Model_Gettext::gettextCheck($chart->title);
-							if(preg_match("/{parent} *and/",$chart->sql)){
-								$configSQL = preg_replace("/{parent} *(and | AND | And)/", $pk." and ", $chart->sql);
-							}elseif(preg_match("/{parent}/",$chart->sql)){
-								$configSQL = preg_replace("/{parent}/", $pk." ", $chart->sql);
-							}else{
+							if(preg_match("/= *{parent}/", $chart->sql)){
+								if(!is_null($pk)){
+									$configSQL = preg_replace("/= *{parent}/","= ". $pk, $chart->sql);
+								} else {
+									$configSQL = preg_replace("/= *{parent}/"," IS NOT NULL", $chart->sql);
+								}
+							} else {
 								$configSQL = $chart->sql;
 							}
 							$sql = Klear_Model_Gettext::gettextCheck($configSQL);
-// 							echo "<p>".$chart->sql."</p>";
-// 							echo "<p>".$configSQL."</p>";
-// 							echo "<p>".$sql."</p>";
-// 							die(1);
 	        				$options = array();
 	        				if (isset($chart->options)){
 		        				foreach ($chart->options->toArray() as $key => $value){
@@ -119,7 +108,20 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	        				$gChart["table"] = array();
 	        				$table = array();
 	        				if(count($results)>0){
-	        					$table[] = array_keys($results[0]);
+	        					$tableHeaders = array_keys($results[0]);
+	        					$tableHeadersTranslated = array();
+								if(isset($chart->cols)){
+									foreach ($tableHeaders as $tableHeader){
+										if(isset($chart->cols->$tableHeader)){
+											$tableHeadersTranslated[] = Klear_Model_Gettext::gettextCheck($chart->cols->$tableHeader);
+										}else {
+											$tableHeadersTranslated[] = $tableHeader;
+										}
+									}
+								} else {
+									$tableHeadersTranslated = $tableHeaders;
+								}
+								$table[] = $tableHeadersTranslated;
 	        					foreach ($results as $row){
 	        						$rowN = array();
 	        						foreach($row as $field){
@@ -144,19 +146,9 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
         	}
         }
 
-        // Hay que devolver un objeto Klear_Model_DispatchResponse()
-//         $jsonResponse = new Klear_Model_DispatchResponse();
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
         $jsonResponse->setPlugin("googlecharts");
-//         $jsonResponse->setModule('default');
         $jsonResponse->addTemplate("/template/googlecharts", "klearmatrixGooglecharts");
-
-        // Forzamos dependencias (solo daría problemas en entornos de desarrollo, ya que en producción se sirve todo en el bundle)
-//         $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.ui.form.js");
-//         $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.klearmatrix.template.helper.js");
-//         $jsonResponse->addJsFile("/../klearMatrix/js/translation/jquery.klearmatrix.translation.js");
-//         $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.klearmatrix.module.js");
-//         $jsonResponse->addCssFile("/../klearMatrix/css/klearMatrix.css");
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.googlecharts.js");
         $jsonResponse->addCssFile("/css/googlecharts.css");
         $jsonResponse->setData($data);

@@ -1,4 +1,4 @@
-<div class="gChartsDashboard">
+<div class="gChartsDashboard" id="chartBox_${randIden}">
 <h1 class="ui-state-active  ui-corner-all">${title}</h1>
 <form>
 		<!-- GRUPOS DE GRÁFICOS -->
@@ -10,12 +10,12 @@
 				{{/if}}
 				<!-- COMENTARIO DEL GRUPO -->
 				{{if group.comment}}
-					<div id="${ids}_comment_div">
+					<div id="chart_${randIden}_${ids}_comment_div">
 					</div>
 				{{/if}}
 				<!-- GRÁFICOS -->
 				{{each(idx,chart) group.charts}}
-					<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" --> 
+					<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
 					{{if chart.options.width}}
 					<fieldset  class="gChart ui-widget-content ui-corner-all" style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;">
 					{{else}}
@@ -27,16 +27,16 @@
 						{{/if}}
 						<!-- COMENTARIO DEL GRAFICO -->
 						{{if chart.comment}}
-							<div id="${ids}_${idx}_comment_div">
+							<div id="chart_${randIden}_${ids}_${idx}_comment_div">
 							</div>
 						{{/if}}
 						<!-- GRÁFICO PROPIAMENTE DICHO -->
 						<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
-			    		<div id="${idx}_div"></div>
+			    		<div id="chart_${randIden}_${idx}_div"></div>
 						<!-- LEYENDA DEL GRÁFICO -->
 						{{if chart.legend}}
 						<fieldset  class="ui-widget-content ui-corner-all" style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;">
-							<div id="${ids}_${idx}_legend_div">
+							<div id="chart_${randIden}_${ids}_${idx}_legend_div">
 							</div>
 						</fieldset>
 						{{/if}}

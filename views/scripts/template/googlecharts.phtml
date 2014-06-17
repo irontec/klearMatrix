@@ -1,8 +1,8 @@
 <div class="gChartsDashboard" id="chartBox_${randIden}">
-<h1 class="ui-state-active  ui-corner-all">${title}</h1>
+<h1 class="ui-state-active  ui-corner-all">${values.title}</h1>
 <form>
 		<!-- GRUPOS DE GRÁFICOS -->
-		{{each(ids,group) chartGroups}}
+		{{each(ids,group) values.chartGroups}}
 			<fieldset  class="ui-widget-content ui-corner-all">
 				<!-- TÍTULO DEL GRUPO -->
 				{{if group.title}}

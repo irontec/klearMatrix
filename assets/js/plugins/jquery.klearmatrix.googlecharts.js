@@ -50,6 +50,10 @@
 
         	//var $appliedTemplate = this._loadTemplate("customCustomDashboard");
 
+
+
+
+
         	var $template = $.tmpl(
                     "klearmatrixGooglecharts",
                     this.options.data,
@@ -57,16 +61,22 @@
                     );
 
 
+
+
         	$(this.element.klearModule("getPanel")).append($template);
-        	data = this.options.data;
-            this._initPlugin();
+
+        	this._parseDefaultItems();
+
+        	this._initPlugin();
         },
 
         _initPlugin: function() {
 
         	var $panel = $(this.element.klearModule("getPanel"));
 
-        	var idPrefix = "chart_"+this.options.data.randIden+"_"
+        	var idPrefix = "chart_"+this.options.data.randIden+"_";
+
+        	var data = this.options.data.values;
 
         	$.getScript('https://www.google.com/jsapi', function() {
 

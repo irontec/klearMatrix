@@ -456,9 +456,11 @@ class KlearMatrix_Model_MatrixResponse
     protected function _getLanguageDataToArray()
     {
         $ret = array();
-        $ret['langs'] = $this->_columns->getLangs();
-        $ret['defaultLang'] = $this->_columns->getDefaultLang();
-        $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
+        if (isset($this->_columns)){
+	        $ret['langs'] = $this->_columns->getLangs();
+	        $ret['defaultLang'] = $this->_columns->getDefaultLang();
+	        $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
+        }
         return $ret;
     }
 

@@ -101,7 +101,17 @@
         				 $('#'+idPrefix+gIndex+"_"+cIndex+'_comment_div', $panel).html(chart.comment);
 
         				 $('#'+idPrefix+gIndex+"_"+cIndex+'_legend_div', $panel).html(chart.legend);
-
+        				 var maxSize = $('#canvas').width()-145;
+        				 maxSize = maxSize.toFixed();
+        				 var chartWidth = chart.options.width;
+        				 console.log("titulo", $('#canvas').width());
+        				 console.log("max",maxSize);
+        				 console.log("grafico",chartWidth);
+        				 console.log("opciones",chart.options);
+        				 if( parseInt(chartWidth,10) > parseInt(maxSize,10)){
+        					 chart.options.width = maxSize;
+        					 console.log("opciones",chart.options);
+        				 }
 						google.load('visualization', '1.0', {'packages':['corechart'], callback: function(){ drawVisualization(idPrefix+cIndex, chart) }});
  					});
         		 });

@@ -13,6 +13,7 @@
     width:auto;
     padding:1em;
     margin:0 1em 1em;
+/*     overflow-x: auto; */
 }
 .gChartsDashboard label {
 	display: inline;

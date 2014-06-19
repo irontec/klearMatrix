@@ -82,9 +82,10 @@
 
 
         		function drawVisualization(chartName, chart) {
+        			console.log(chart.table);
     			    var wrap = new google.visualization.ChartWrapper({
     		           'chartType': chart.type,
-    		           'dataTable': chart.table,
+    		           'dataTable': google.visualization.arrayToDataTable(chart.table),
     		           'options': chart.options,
     		           'containerId': chartName+'_div'
 			    	});

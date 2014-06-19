@@ -93,19 +93,22 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	    					} else {
 	    						$show = true;
 	    					}
-
 	    					if($show){
 	    						$chartTitle = Klear_Model_Gettext::gettextCheck($chart->title);
-	    						if(preg_match("/= *%parent%/", $chart->sql)){
-	    							if(!is_null($pk)){
-	    								$configSQL = preg_replace("/= *%parent%/","= ". $pk, $chart->sql);
-	    							} else {
-	    								$configSQL = preg_replace("/= *%parent%/"," IS NOT NULL", $chart->sql);
-	    							}
+	    						if($chart->sql){
+		    						if(preg_match("/= *%parent%/", $chart->sql)){
+		    							if(!is_null($pk)){
+		    								$configSQL = preg_replace("/= *%parent%/","= ". $pk, $chart->sql);
+		    							} else {
+		    								$configSQL = preg_replace("/= *%parent%/"," IS NOT NULL", $chart->sql);
+		    							}
+		    						} else {
+		    							$configSQL = $chart->sql;
+		    						}
+		    						$sql = Klear_Model_Gettext::gettextCheck($configSQL);
 	    						} else {
-	    							$configSQL = $chart->sql;
+	    							$sql = null;
 	    						}
-	    						$sql = Klear_Model_Gettext::gettextCheck($configSQL);
 	    						$options = array();
 	    						if (isset($chart->options)){
 	    							foreach ($chart->options->toArray() as $key => $value){
@@ -113,7 +116,13 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	    									$options[$key] = Klear_Model_Gettext::gettextCheck($value);
 	    								} else {
 	    									foreach ($value as $key2 => $value2){
-	    										$options[$key][$key2] = Klear_Model_Gettext::gettextCheck($value2);
+	    										if(!is_array($value2)){
+	    											$options[$key][$key2] = Klear_Model_Gettext::gettextCheck($value2);
+	    										} else {
+	    											foreach ($value2 as $key3 => $value3){
+	    												$options[$key][$key2][$key3] = Klear_Model_Gettext::gettextCheck($value3);
+	    											}
+	    										}
 	    									}
 	    								}
 
@@ -138,38 +147,62 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	    						$gChart["vAxis"] = array();
 	    						$gChart["vAxis"]["values"] = array ();
 	    						$dbAdapter = Zend_Db_Table::getDefaultAdapter();
-	    						$stmt = $dbAdapter->query($sql);
-	    						$results = $stmt->fetchAll();
 	    						$gChart["table"] = array();
 	    						$table = array();
-	    						if(count($results)>0){
-	    							$tableHeaders = array_keys($results[0]);
-	    							$tableHeadersTranslated = array();
-	    							if(isset($chart->cols)){
-	    								foreach ($tableHeaders as $tableHeader){
-	    									if(isset($chart->cols->$tableHeader)){
-	    										$tableHeadersTranslated[] = Klear_Model_Gettext::gettextCheck($chart->cols->$tableHeader);
-	    									}else {
-	    										$tableHeadersTranslated[] = $tableHeader;
-	    									}
-	    								}
-	    							} else {
-	    								$tableHeadersTranslated = $tableHeaders;
-	    							}
-	    							$table[] = $tableHeadersTranslated;
-	    							foreach ($results as $row){
-	    								$rowN = array();
-	    								foreach($row as $field){
-	    									if (is_numeric($field)){
-	    										$field = floatval($field);
+	    						if ($sql){
+		    						$stmt = $dbAdapter->query($sql);
+		    						$results = $stmt->fetchAll();
+		    						if(count($results)>0){
+		    							$tableHeaders = array_keys($results[0]);
+		    							$tableHeadersTranslated = array();
+		    							if(isset($chart->cols)){
+		    								foreach ($tableHeaders as $tableHeader){
+		    									if(isset($chart->cols->$tableHeader)){
+		    										$tableHeadersTranslated[] = Klear_Model_Gettext::gettextCheck($chart->cols->$tableHeader);
+		    									}else {
+		    										$tableHeadersTranslated[] = $tableHeader;
+		    									}
+		    								}
+		    							} else {
+		    								$tableHeadersTranslated = $tableHeaders;
+		    							}
+		    							$table[] = $tableHeadersTranslated;
+		    							foreach ($results as $row){
+		    								$rowN = array();
+		    								foreach($row as $field){
+		    									if (is_numeric($field)){
+		    										$field = floatval($field);
+		    									} else {
+		    										$field = $this->_helper->translate($field);
+		    									}
+		    									$rowN[] = $field;
+		    								}
+		    								$table[] = $rowN;
+		    							}
+		    						}
+	    						} else if ($chart->table){
+	    							foreach ($chart->table as $value){
+	    								$cols = explode("|", $value);
+	    								$colsNew = array();
+	    								foreach ($cols as $col){
+	    									if (is_numeric(trim($col))){
+	    										$field = floatval(trim($col));
 	    									} else {
-	    										$field = $this->_helper->translate($field);
+	    										if (trim($col) == "null"){
+	    											$field = null;
+	    										} else {
+	    											$field = $this->_helper->translate(trim($col));
+	    										}
 	    									}
-	    									$rowN[] = $field;
+	    									$colsNew[]=$field;
 	    								}
-	    								$table[] = $rowN;
+	    								$table[]=$colsNew;
 	    							}
 	    						}
+// 	    						echo "<pre>";
+// 	    						print_r($table);
+// 	    						echo "</pre>";
+// 	    						exit;
 	    						$gChart["table"] = $table;
 	    						$gChart["options"] = $options;
 	    						$group["charts"][] = $gChart;
@@ -179,6 +212,7 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	    			}
 	    			$chartData["chartGroups"][] = $group;
 	    		}
+
 	    	}
     	}
     	$data->setResults($chartData);

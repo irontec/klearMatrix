@@ -24,23 +24,23 @@
 					{{if chart.options.width}}
 					<fieldset  class="gChart ui-widget-content ui-corner-all">
 					{{else}}
-					<fieldset  class="gChart ui-widget-content ui-corner-all"  style='min-width: 250px;'>
+					<fieldset  class="gChart ui-widget-content ui-corner-all" style='min-width: 250px;'>
 					{{/if}}
 						<!-- TÍTULO DEL GRAFICO -->
 						{{if chart.title}}
-						<legend class="ui-state-active  ui-corner-all">${chart.title}</legend>
+						<legend class="ui-state-active  ui-corner-all" style='max-width: ${chart.options.width}px;'>${chart.title}</legend>
 						{{/if}}
 						<!-- COMENTARIO DEL GRAFICO -->
 						{{if chart.comment}}
-							<div id="chart_${randIden}_${ids}_${idx}_comment_div">
+							<div id="chart_${randIden}_${ids}_${idx}_comment_div" style='max-width: ${chart.options.width}px;'>
 							</div>
 						{{/if}}
 						<!-- GRÁFICO PROPIAMENTE DICHO -->
 						<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
-			    		<div id="chart_${randIden}_${idx}_div"></div>
+			    		<div id="chart_${randIden}_${ids}_${idx}_div"></div>
 						<!-- LEYENDA DEL GRÁFICO -->
 						{{if chart.legend}}
-						<fieldset  class="ui-widget-content ui-corner-all">
+						<fieldset  class="ui-widget-content ui-corner-all" style='max-width: ${chart.options.width}px;'>
 							<div id="chart_${randIden}_${ids}_${idx}_legend_div">
 							</div>
 						</fieldset>

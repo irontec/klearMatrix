@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Controlador que muestra gráficos de Google Charts
+ *
+ * @author luis
+ *
+ */
+
 class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 {
     protected $_mainRouter;
@@ -42,15 +49,28 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	    	$columnNames = $model->getColumnsList();
 	    	$columnKeys = array_keys($columnNames);
 	    	$defaultColummn = $columnNames[$columnKeys[1]];
-	    	$defaultTitleSufix = " (".$model->__get($defaultColummn).")";
+// 	    	$defaultTitleSufix = " (".$model->__get($defaultColummn).")";
+	    	$defaultTitleSufix = $model->__get($defaultColummn);
     	} else {
     		$defaultTitleSufix = "";
     	}
     	$screenTitle = $this->_item->getTitle();
-    	$pattern = "/\[format\| *\(%parent%\)\]/";
+
+//     	$pattern = "/\[format\| *\(%parent%\)\]/";
+//     	if (preg_match($pattern, $screenTitle)){
+//     		$screenTitle = preg_replace($pattern, $defaultTitleSufix, $screenTitle);
+//     	}
+
+    	$pattern = "/\[format\|.*\%parent%.*\]/";
     	if (preg_match($pattern, $screenTitle)){
-    		$screenTitle = preg_replace($pattern, $defaultTitleSufix, $screenTitle);
+    		$titleParts = explode("[format|",$screenTitle);
+    		$parentSufix = $titleParts[1];
+    		$parentSufix = str_replace("%parent%", $defaultTitleSufix, $parentSufix);
+    		$parentSufix = trim($parentSufix, "]");
+    		$screenTitle = $titleParts[0].$parentSufix;
+//     		$screenTitle = preg_replace($pattern, $defaultTitleSufix, $screenTitle);
     	}
+
     	$this->_item->setName($screenTitle);
     	$data = new KlearMatrix_Model_MatrixResponse;
 

@@ -911,6 +911,11 @@
                 $(this).trigger("manualchange");
             });
 
+            $(".spinnerPreconfiguredValues", this.options.theForm).on("click", function(e) {
+                var element = $(this);
+                $('input[name=' + element.data('field') + ']').val(element.data('value'));
+            });
+
             $("select, input, textarea", this.options.theForm).on("keydown", function(e) {
                 // Support for shortcuts the klear-way (ctrl + Alt + [X])
                 if(e.altKey && e.ctrlKey && e.which == 13) {

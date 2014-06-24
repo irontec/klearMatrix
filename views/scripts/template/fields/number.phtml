@@ -29,4 +29,12 @@
         id="${_elemIden}"
         value="${_fieldValue}"
     />
+
+    {{if _dataConfig.settings.preconfiguredValues}}
+        {{each(idx, value) _dataConfig.settings.preconfiguredValues}}
+            <a class="spinnerPreconfiguredValues tooltip ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" data-value="${value}" data-field="${_elemName}" role="button" aria-disabled="false">
+            <span class="ui-button-text">${value}</span>
+            </a>
+        {{/each}}
+    {{/if}}
 {{/if}}

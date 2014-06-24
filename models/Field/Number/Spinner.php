@@ -6,6 +6,7 @@ class KlearMatrix_Model_Field_Number_Spinner
     protected $_max = null;
     protected $_min = null;
     protected $_step = 1;
+    protected $_preconfiguredValues = array();
 
     protected $_config;
 
@@ -33,18 +34,21 @@ class KlearMatrix_Model_Field_Number_Spinner
     public function init()
     {
         if (isset($this->_config->min)) {
-
             $this->_min = $this->_config->min;
         }
 
         if (isset($this->_config->max)) {
-
             $this->_max = $this->_config->max;
         }
 
         if (isset($this->_config->step)) {
-
             $this->_step = $this->_config->step;
+        }
+
+        if (isset($this->_config->preconfiguredValues)) {
+            foreach ($this->_config->preconfiguredValues as $value) {
+                $this->_preconfiguredValues[] = $value;
+            }
         }
 
         return $this;
@@ -65,9 +69,10 @@ class KlearMatrix_Model_Field_Number_Spinner
         $ret = array(
             "plugin" => 'spinner',
             "settings" => array(
-              'min' => $this->_min,
-              'max' => $this->_max,
-              'step' => $this->_step
+                'min' => $this->_min,
+                'max' => $this->_max,
+                'step' => $this->_step,
+                'preconfiguredValues' => $this->_preconfiguredValues
             )
         );
 

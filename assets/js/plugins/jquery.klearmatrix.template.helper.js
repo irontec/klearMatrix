@@ -738,7 +738,6 @@
             
             for(var i=0;i<_allowed.length;i++) {
                 if (externalData[_prefix+_allowed[i]]) {
-                    console.log(externalData);
                     _ret['attributes'].push(_prefix+_allowed[i]);
                     _ret['values'].push(externalData[_prefix+_allowed[i]]);
                 }

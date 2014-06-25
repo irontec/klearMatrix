@@ -1,11 +1,14 @@
 <a class="${classes} option ${type}" href=""
-    data-${type}="${optionIndex}"
     title="${optionTitle}"
+    data-${type}="${optionIndex}"
     {{if (disabledTime)}} data-disabledtime="${disabledTime}" {{/if}}
     {{if (shortcut)}} data-shortcut="${shortcut}" {{/if}}
     {{if (multiInstance)}} data-multiinstance='true'{{/if}}
-    {{if (external)}} data-external="true" ${externalData}{{/if}}
+    {{if (external)}} data-external="true"{{/if}}
     {{if (multiItem)}} data-multiitem="true"{{/if}}
     {{if (parentHolderSelector)}} data-parent-holder-selector="${parentHolderSelector}"{{/if}}
+    {{each(idx,attribute) externalData['attributes']}}
+        data-${attribute}="${externalData['values'][idx]}"
+    {{/each}}
 >
 <span class="ui-silk inline ${icon}"></span>{{if (mustShowLabel) }} ${buttonLabel}{{/if}}{{if (multiItem)}}<sup></sup>{{/if}}</a>

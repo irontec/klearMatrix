@@ -191,7 +191,6 @@ class KlearMatrix_Model_MatrixResponse
 
         // Informamos a la respuesta de que campo es el "padre"
         $this->_parentItem = $item->getFilterField();
-
         if (is_null($curScreenPK)) { // List|New
             $this->_parentPk = $router->getParam('pk', false);
             if (false != $this->_parentPk) {
@@ -212,7 +211,6 @@ class KlearMatrix_Model_MatrixResponse
 
         }
 
-
         // Instanciamos pantalla
         $parentScreen = new KlearMatrix_Model_Screen;
         $parentScreen->setRouteDispatcher($router);
@@ -225,7 +223,6 @@ class KlearMatrix_Model_MatrixResponse
         // Recuperamos mapper, para recuperar datos principales (default value)
         $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
 
-
         $pk = $this->_parentId;
         if (false == $this->_parentId) {
             $pk = $this->_parentPk;
@@ -233,7 +230,19 @@ class KlearMatrix_Model_MatrixResponse
         $this->_parentData = $parentMapper->find($pk);
 
         if ($this->_parentData) {
-            $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+
+            if (in_array($defaultParentCol->getDbFieldName(), $this->_parentData->getFileObjects())) {
+                $specsGetter = 'get' . ucfirst($defaultParentCol->getDbFieldName()) . 'Specs';
+                $specs = $this->_parentData->$specsGetter();
+                $getter = 'get' . $this->_parentData->columnNameToVar($specs['baseNameName']);
+            } else {
+                try {
+                    $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
+                } catch (\Exception $e) {
+                    throw new \Exception($defaultParentCol->getDbFieldName() . " is not a valid default column. Chech your modelName.yaml");
+                }
+            }
+
             $this->_parentIden = $this->_parentData->$getter();
         }
 

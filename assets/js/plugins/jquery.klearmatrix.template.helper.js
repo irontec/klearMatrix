@@ -665,6 +665,8 @@
 
                     if (defaultColumn.multilang) {
                         defaultValues.push(values[defaultColumn.id][defaultLang]);
+                    } else if (defaultColumn.type == 'file') {
+                        defaultValues.push(values[defaultColumn.id].name);
                     } else {
                         defaultValues.push(values[defaultColumn.id]);
                     }
@@ -735,7 +737,7 @@
                     'attributes' : [],
                     'values' : []
             };
-            
+
             for(var i=0;i<_allowed.length;i++) {
                 if (externalData[_prefix+_allowed[i]]) {
                     _ret['attributes'].push(_prefix+_allowed[i]);
@@ -771,21 +773,21 @@
             }
 
             var externalData = false;
-            
+
             if (option.externalOption && entity && fieldValue) {
-                
+
                 externalData = this.getExternalData(option);
                 externalData['attributes'].push('externalid');
                 externalData['values'].push(fieldValue);
-                
+
             } else {
-                
+
                 //TODO: Sin probar. Probablemente venga de una opción de un field a un screen external.
                 if (option.external && option.file) {
                     externalData['attributes'] = ['externalfile'];
                     externalData['values'] = [option.file];
                 }
-                
+
             }
             switch(from) {
 
@@ -809,7 +811,7 @@
 
                         option.multiItem = false;
                         classes.push('_fieldOption inherit ui-state-nojump');
-                        
+
                         mainTitle = this.getTitle(option.title, idx, option.labelReplaceParentWithItem);
 
                         if (mustShowLabel && typeof option.label == 'string') {

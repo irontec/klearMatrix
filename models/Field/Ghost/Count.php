@@ -31,7 +31,7 @@ class KlearMatrix_Model_Field_Ghost_Count extends KlearMatrix_Model_Field_Ghost_
     public function init()
     {
         if (!$this->_parentField) {
-            throw new Klear_Exception_MissingConfiguration('Missing parent host for Ghost_Concat');
+            throw new Klear_Exception_MissingConfiguration('Missing parent host for Ghost_Count');
         }
 
         $mainModel = $this->_parentField->getColumn()->getModel();

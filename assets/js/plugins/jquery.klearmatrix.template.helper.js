@@ -748,6 +748,7 @@
         },
         option2HTML : function(option, from, idx, fieldValue)
         {
+
             var mainTitle = '',
                 buttonLabel = false,
                 classes = [],
@@ -774,21 +775,18 @@
 
             var externalData = false;
 
-            if (option.externalOption && entity && fieldValue) {
+            if (option.externalOption) {
 
-                externalData = this.getExternalData(option);
-                externalData['attributes'].push('externalid');
-                externalData['values'].push(fieldValue);
+            	externalData = this.getExternalData(option);
 
-            } else {
+            	if (option.externalOption && entity && fieldValue) {
+	                externalData['attributes'].push('externalid');
+	                externalData['values'].push(fieldValue);
+            	}
 
-                //TODO: Sin probar. Probablemente venga de una opción de un field a un screen external.
-                if (option.external && option.file) {
-                    externalData['attributes'] = ['externalfile'];
-                    externalData['values'] = [option.file];
-                }
+        	}
 
-            }
+
             switch(from) {
 
                 case "List":

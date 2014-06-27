@@ -808,7 +808,10 @@
             var $container = $(this.element).klearModule("getContainer");
             $("span.autoOption",$container).each(function() {
                 var dataValues = $(this).data();
-                $(this).replaceWith($.klearmatrix.template.helper.option2HTML(dataValues, 'Field'));
+                var entity = null;
+                var fieldValue = null;
+
+                $(this).replaceWith($.klearmatrix.template.helper.option2HTML(dataValues, 'Field', entity, fieldValue));
             });
         },
         _doGhostList : function() {

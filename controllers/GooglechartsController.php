@@ -30,12 +30,23 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
     public function indexAction()
     {
 
-    	$pk = $this->getParam("pk");
-
+    	$id = $this->getParam("pk");
+    	$parentId = $this->getParam("parentId");
+    	if($id){
+    		$pk = $id;
+    		$mapperName = $this->_item->getMapperName();
+    	} else if ($parentId){
+    		$pk = $parentId;
+    		$parentScreenName = $this->getParam("parentScreen");
+    		$parentConfig = $this->_mainRouter->getConfig()->getScreenConfig($parentScreenName);
+    		$mapperName = $parentConfig->mapper;
+    	} else {
+    		$pk = false;
+    	}
 //     	$pk = $this->_item->getCurrentPk();
 
     	if ($pk){
-	    	$mapperName = $this->_item->getMapperName();
+// 	    	$mapperName = $this->_item->getMapperName();
 	    	if(!$mapperName){
 	    		throw new Klear_Exception_Default($this->view->translate('MapperName not found in yaml'));
 	    	}
@@ -44,30 +55,45 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 	    	$model = $mapper->find($pk);
 	    	if (!$model) {
 	    		$this->_helper->log('PK NOT FOUND ' . $mapperName . ' > PK('.$pk.')', Zend_Log::ERR);
-	    		throw new Klear_Exception_Default($this->view->translate('Element not found. Cannot edit.'));
+	    		throw new Klear_Exception_Default($this->view->translate('PK '.$pk.' not found. Cannot edit.'));
 	    	}
+
 	    	$columnNames = $model->getColumnsList();
 	    	$columnKeys = array_keys($columnNames);
 	    	$defaultColummn = $columnNames[$columnKeys[1]];
-// 	    	$defaultTitleSufix = " (".$model->__get($defaultColummn).")";
+	    	$screenTitle = $this->_item->getTitle();
+	    	$pattern = "/\[format\|.*\%parent.*%.*\]/";
+	    	$customParentField = $this->_item->getRawConfigAttribute("parentField");
+	    	if ($customParentField){
+	    		$defaultColummn = $customParentField;
+	    	}
+// 	    	if (preg_match($pattern, $screenTitle)){
+// 	    		$patternParts = explode("%", $screenTitle);
+// 	    		$paternContent = $patternParts[1];
+// 	    		$patternContentParts = explode(".", $paternContent);
+// 	    		if(count($patternContentParts)> 1){
+// 	    			$defaultColummn = $patternContentParts[1];
+// 	    		}
+// 	    	}
 	    	$defaultTitleSufix = $model->__get($defaultColummn);
     	} else {
     		$defaultTitleSufix = "";
     	}
-    	$screenTitle = $this->_item->getTitle();
+//     	$screenTitle = $this->_item->getTitle();
 
 //     	$pattern = "/\[format\| *\(%parent%\)\]/";
 //     	if (preg_match($pattern, $screenTitle)){
 //     		$screenTitle = preg_replace($pattern, $defaultTitleSufix, $screenTitle);
 //     	}
-
-    	$pattern = "/\[format\|.*\%parent%.*\]/";
+    	$screenTitle = $this->_item->getTitle();
+    	$pattern = "/\[format\|.*\%parent.*%.*\]/";
     	if (preg_match($pattern, $screenTitle)){
     		$titleParts = explode("[format|",$screenTitle);
     		$parentSufix = $titleParts[1];
-    		$parentSufix = str_replace("%parent%", $defaultTitleSufix, $parentSufix);
     		$parentSufix = trim($parentSufix, "]");
+    		$parentSufix = str_replace(trim($parentSufix," ()"), $defaultTitleSufix, $parentSufix);
     		$screenTitle = $titleParts[0].$parentSufix;
+//     		$screenTitle = $parentSufix;
 //     		$screenTitle = preg_replace($pattern, $defaultTitleSufix, $screenTitle);
     	}
 

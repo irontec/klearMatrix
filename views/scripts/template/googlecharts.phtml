@@ -1,9 +1,38 @@
-<div class="gChartsDashboard" id="chartBox_${randIden}">
-{{if values.title}}
-<h1 id="chartsTitle" class="ui-state-active  ui-corner-all">${values.title}</h1>
-{{else}}
-<h1 id="chartsTitle" class="ui-state-active  ui-corner-all" style='display: none;'></h1>
-{{/if}}
+<div class="gChartsDashboard" id="dashboardBox_${randIden}">
+	{{if (values.dashboard)}}
+	<h1 id="dashboardTitle" class="ui-state-active  ui-corner-all">${values.dashboard.title}</h1>
+	<div class="klearMatrixDashboard">
+		{{each(idx,section) values.dashboard.sections}}
+			<fieldset class="ui-widget-content ui-corner-all legacy">
+				<legend class="ui-state-active  ui-corner-all">${section.name}</legend>
+				 <ul>
+        			{{each(idx2,subsection) section.subsects}}
+						<li>
+						{{if (subsection.file)}}
+							<a class="subsection" href="?" id="target-${subsection.file}" >
+						{{/if}}
+						{{if (subsection['class'])}}
+						            <span class="ui-silk inline ${subsection['class']}"></span>
+						{{/if}}
+						${subsection.name}
+						{{if (subsection.file)}}
+            				</a>
+						{{/if}}
+						<strong>${subsection.subtitle}</strong>
+						</li>
+        			{{/each}}
+        		</ul>
+			</fieldset>
+		{{/each}}
+	</div>
+	{{/if}}
+<div class="clear"></div>
+<div class="gChartsDashboard" ui-state-active id="chartBox_${randIden}">
+	{{if values.title}}
+	<h1 id="chartsTitle" class="ui-state-active  ui-corner-all">${values.title}</h1>
+	{{else}}
+	<h1 id="chartsTitle" class="ui-state-active  ui-corner-all" style='display: none;'></h1>
+	{{/if}}
 <form>
 	{{if values.chartGroups}}
 		<!-- GRUPOS DE GRÁFICOS -->
@@ -37,7 +66,10 @@
 						{{/if}}
 						<!-- GRÁFICO PROPIAMENTE DICHO -->
 						<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
-			    		<div id="chart_${randIden}_${ids}_${idx}_div"></div>
+			    		<div id="chart_${randIden}_${ids}_${idx}_dashboard_div">
+			    			<div id="chart_${randIden}_${ids}_${idx}_div"></div>
+			    			<div id="chart_${randIden}_${ids}_${idx}_filter_div"></div>
+			    		</div>
 						<!-- LEYENDA DEL GRÁFICO -->
 						{{if chart.legend}}
 						<fieldset  class="ui-widget-content ui-corner-all" style='max-width: ${chart.options.width}px;'>
@@ -51,4 +83,5 @@
 		{{/each}}
 	{{/if}}
 </form>
+</div>
 </div>

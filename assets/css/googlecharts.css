@@ -33,3 +33,6 @@
 .gChartsDashboard legend {
 	padding: 4px;
 }
+.clear {
+	clear: both;
+}

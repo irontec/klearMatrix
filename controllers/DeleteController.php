@@ -1,8 +1,6 @@
 <?php
-
 class KlearMatrix_DeleteController extends Zend_Controller_Action
 {
-
     /**
      * Route Dispatcher desde klear/index/dispatch
      * @var KlearMatrix_Model_RouteDispatcher
@@ -28,7 +26,6 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
     }
-
 
     public function indexAction()
     {
@@ -58,7 +55,8 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
 
         $baseModel = $this->_item->getObjectInstance();
-        $result = $mapper->fetchList($baseModel->getPrimaryKeyName() . ' in ('.implode(',', $pk).')');
+        $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());
+        $result = $mapper->fetchList($primaryKeyFieldName . ' in ('.implode(',', $pk).')');
 
         if (sizeof($result) != sizeof($pk)) {
             throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
@@ -79,12 +77,10 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
         $pk = $this->_mainRouter->getParam("pk");
-
 
         if (is_array($pk)) {
             $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > various PK('.implode(',', $pk).')');
@@ -94,7 +90,8 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         }
 
         $baseModel = $this->_item->getObjectInstance();
-        $results = $mapper->fetchList($baseModel->getPrimaryKeyName() . ' in ('.implode(',', $pk).')');
+        $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());
+        $results = $mapper->fetchList($primaryKeyFieldName . ' in ('.implode(',', $pk).')');
 
         try {
             if (!is_array($results) || sizeof($results) == 0) {
@@ -142,5 +139,4 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }
-
 }

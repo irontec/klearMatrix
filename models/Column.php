@@ -483,25 +483,34 @@ class KlearMatrix_Model_Column
             $cont = 1;
 
             foreach ($values as $_val) {
+
                 $template = ':' . $searchField . $cont;
 
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_isMapperSelect()) {
-
                     if ($this->namedParamsAreSupported()) {
-                        $comparisons[] = "`" .$searchField . '` = ' . $template;
-                        $fieldValues[$template] = intval($_val);
+                        if ($_val == 'NULL') {
+                            $comparisons[] = "`" .$searchField . '` is ' . 'NULL';
+                            $fieldValues[$template] = $_val;
+                        } else {
+                            $comparisons[] = "`" .$searchField . '` = ' . $template;
+                            $fieldValues[$template] = intval($_val);
+                        }
                     } else {
                         $comparisons[] = "`" .$searchField . '` = ?';
                         $fieldValues[] = intval($_val);
                     }
-
                 } else {
-
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
                     if ($this->namedParamsAreSupported()) {
-                        $comparisons[] =  "`" . $searchField . "`" . $searchOperator . ' ' . $template;
-                        $fieldValues[$template] = '%' . $_val . '%';
+                        if ($_val == 'NULL' && $searchOperator == ' LIKE') {
+                            $searchOperator = ' IS';
+                            $comparisons[] =  "`" . $searchField . "`" . $searchOperator . ' ' . 'NULL';
+                            $fieldValues[$template] = $_val;
+                        } else {
+                            $comparisons[] =  "`" . $searchField . "`" . $searchOperator . ' ' . $template;
+                            $fieldValues[$template] = '%' . $_val . '%';
+                        }
                     } else {
                         $comparisons[] = "`" . $searchField . "`" . $searchOperator . ' ?';
                         $fieldValues[] = '%' . $_val . '%';
@@ -510,7 +519,7 @@ class KlearMatrix_Model_Column
                 $cont++;
             }
         }
-
+        
         return array(
                 '(' . implode(' or ', $comparisons). ')',
                 $fieldValues

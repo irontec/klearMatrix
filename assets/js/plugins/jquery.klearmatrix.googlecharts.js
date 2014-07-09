@@ -82,14 +82,58 @@
 
 
         		function drawVisualization(chartName, chart) {
-        			console.log(chart.table);
+
+        			var dateParts = chart.table[1][0].match(/\d+/g);
+        			if(dateParts){
+        				var date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4], dateParts[5]);
+            			if (!isNaN(date)){
+                			$.each(chart.table, function(index, value){
+                				if (index != 0){
+                					dateFragments = value[0].split("-");
+                					var year = parseInt(dateFragments[0],10);
+                					var month = parseInt(dateFragments[1],10)-1;
+                					var day = parseInt(dateFragments[2].split(" ")[0],10);
+                					var date = new Date(year,month,day);
+                					if (!isNaN(date.valueOf())){
+                						chart.table[index][0] = date;
+                					}
+                				}
+                			});
+            			}
+        			}
+
+        			var data = google.visualization.arrayToDataTable(chart.table);
+
+        			if (chart.controls){
+            			var dashboard = new google.visualization.Dashboard(
+            				document.getElementById(chartName+'_dashboard_div')
+            			);
+            			var filters = [];
+            			$.each(chart.controls.filters, function(filterIIndex, filterI){
+            				filters.push(new google.visualization.ControlWrapper({
+                				'controlType': filterI.controlType,
+                				'containerId': chartName+'_filter_'+filterIIndex+'_div',
+                				'options': filterI.options
+                			}));
+
+            			});
+        			}
+
     			    var wrap = new google.visualization.ChartWrapper({
     		           'chartType': chart.type,
-    		           'dataTable': google.visualization.arrayToDataTable(chart.table),
+    		           'dataTable': data,
     		           'options': chart.options,
-    		           'containerId': chartName+'_div'
+    		           'containerId': chartName+'_div',
+    		           'view': chart.view
 			    	});
-    		        wrap.draw();
+
+    			    if (chart.controls){
+    			    	console.log(filters);
+    			    	dashboard.bind(filters, wrap);
+    			    	dashboard.draw(data);
+    			    } else {
+    			    	wrap.draw(data);
+    			    }
         		 }
         		 $.each(data.chartGroups, function (gIndex, group){
         			 $('#'+idPrefix+gIndex+'_comment_div', $panel).html(group.comment);
@@ -106,7 +150,7 @@
         					 chart.options.width = maxSize;
         				 }
         				 console.log(idPrefix+gIndex+"_"+cIndex);
-						google.load('visualization', '1.0', {'packages':['corechart'], callback: function(){ drawVisualization(idPrefix+gIndex+"_"+cIndex, chart) }});
+						google.load('visualization', '1.0', {'packages':['corechart','controls'], callback: function(){ drawVisualization(idPrefix+gIndex+"_"+cIndex, chart) }});
  					});
         		 });
         		});

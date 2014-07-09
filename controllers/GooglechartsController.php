@@ -181,6 +181,22 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 
 	    							}
 	    						}
+	    						if (isset($chart->controls)){
+	    							$controlOptions = $chart->controls->toArray();
+	    							$allowedPositions = array ('top','right','bottom','left');
+	    							if (isset($chart->controls->position) && !in_array($chart->controls->position, $allowedPositions)){
+	    								$message = "controls position '".$chart->controls->position."' not alowed";
+	    								throw New Zend_Exception($message,Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION);
+	    							}
+	    						} else {
+	    							$controlOptions = false;
+	    						}
+	    						if (isset($chart->view)){
+	    							$viewColumns = $chart->view->toArray();
+	    						}else {
+	    							$viewColumns = false;
+	    						}
+
 	    						$gChart = array();
 	    						$gChart["title"] = $chartTitle;
 	    						if(isset($chart->comment)){
@@ -261,6 +277,8 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 // 	    						exit;
 	    						$gChart["table"] = $table;
 	    						$gChart["options"] = $options;
+	    						$gChart["controls"] = $controlOptions;
+	    						$gChart["view"] = $viewColumns;
 	    						$group["charts"][] = $gChart;
 
 	    					}

@@ -51,7 +51,7 @@
 				{{each(idx,chart) group.charts}}
 					<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
 					{{if chart.options.width}}
-					<fieldset  class="gChart ui-widget-content ui-corner-all">
+					<fieldset  class="gChart ui-widget-content ui-corner-all" style="max-width: ${chart.options.width}px;">
 					{{else}}
 					<fieldset  class="gChart ui-widget-content ui-corner-all" style='min-width: 250px;'>
 					{{/if}}
@@ -66,12 +66,66 @@
 						{{/if}}
 						<!-- GRÁFICO PROPIAMENTE DICHO -->
 						<!-- style="width: ${chart.options.width}px; min-width: ${chart.options.width}px;" -->
-			    		<div id="chart_${randIden}_${ids}_${idx}_dashboard_div">
-			    			<div id="chart_${randIden}_${ids}_${idx}_div"></div>
-			    			<div id="chart_${randIden}_${ids}_${idx}_filter_div"></div>
+			    		<div id="chart_${randIden}_${ids}_${idx}_dashboard_div" class="gDashboard">
+			    			<table>
+			    			{{if chart.controls.position == 'top' }}
+			    				<tr><td>
+									{{each(idz,filter) chart.controls.filters}}
+										{{if filter.options.height}}
+			    							<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter" style="height: ${filter.options.height};"></div>
+			    						{{else}}
+			    							<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter"></div>
+			    						{{/if}}
+			    					{{/each}}
+								</td></tr>
+							{{/if}}
+								<tr style='vertical-align: top;'>
+									{{if chart.controls.position == 'left' }}
+										<td  style='vertical-align: top;'>
+											{{each(idz,filter) chart.controls.filters}}
+												{{if filter.options.height}}
+			    									<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter" style="height: ${filter.options.height};"></div>
+			    								{{else}}
+			    									<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter"></div>
+			    								{{/if}}
+			    							{{/each}}
+										</td>
+									{{/if}}
+									<td>
+										<div id="chart_${randIden}_${ids}_${idx}_div"></div>
+									</td>
+									{{if chart.controls.position == 'right' }}
+										<td  style='vertical-align: top;'>
+											{{each(idz,filter) chart.controls.filters}}
+												{{if filter.options.height}}
+			    									<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter" style="height: ${filter.options.height};"></div>
+			    								{{else}}
+			    									<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter"></div>
+			    								{{/if}}
+			    							{{/each}}
+										</td>
+									{{/if}}
+								</tr>
+				    			{{if chart.controls.position == 'bottom' || !chart.controls.position }}
+			    				<tr><td>
+									{{each(idz,filter) chart.controls.filters}}
+										{{if filter.options.height}}
+											{{if filter.options.width}}
+			    								<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter" style="height: ${filter.options.height}; width: ${filter.options.widht};"></div>
+			    							{{else}}
+			    								<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter" style="height: ${filter.options.height};"></div>
+			    							{{/if}}
+			    						{{else}}
+			    							<div id="chart_${randIden}_${ids}_${idx}_filter_${idz}_div" class="gFilter"></div>
+			    						{{/if}}
+			    					{{/each}}
+								</td></tr>
+							{{/if}}
+			    			</table>
 			    		</div>
 						<!-- LEYENDA DEL GRÁFICO -->
 						{{if chart.legend}}
+						<div class="clear"></div>
 						<fieldset  class="ui-widget-content ui-corner-all" style='max-width: ${chart.options.width}px;'>
 							<div id="chart_${randIden}_${ids}_${idx}_legend_div">
 							</div>

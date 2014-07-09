@@ -36,3 +36,16 @@
 .clear {
 	clear: both;
 }
+.gFilter{
+	margin: 10px 5px 10px 0px;
+}
+.gFilterTop{
+	margin: 10px 5px 10px 0px;
+ 	height: 50px;
+}
+.gRight {
+	float: right;
+}
+.gLeft {
+	float: left;
+}

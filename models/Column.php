@@ -481,6 +481,7 @@ class KlearMatrix_Model_Column
     {
         foreach ($searchFields as $searchField) {
             $cont = 1;
+            $quotedSearchField = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($searchField);
 
             foreach ($values as $_val) {
 
@@ -490,14 +491,14 @@ class KlearMatrix_Model_Column
                 if ($this->_isMapperSelect()) {
                     if ($this->namedParamsAreSupported()) {
                         if ($_val == 'NULL') {
-                            $comparisons[] = "`" .$searchField . '` is ' . 'NULL';
+                            $comparisons[] = $quotedSearchField . ' is ' . 'NULL';
                             $fieldValues[$template] = $_val;
                         } else {
-                            $comparisons[] = "`" .$searchField . '` = ' . $template;
+                            $comparisons[] = $quotedSearchField . ' = ' . $template;
                             $fieldValues[$template] = intval($_val);
                         }
                     } else {
-                        $comparisons[] = "`" .$searchField . '` = ?';
+                        $comparisons[] = $quotedSearchField . ' = ?';
                         $fieldValues[] = intval($_val);
                     }
                 } else {
@@ -505,21 +506,21 @@ class KlearMatrix_Model_Column
                     if ($this->namedParamsAreSupported()) {
                         if ($_val == 'NULL' && $searchOperator == ' LIKE') {
                             $searchOperator = ' IS';
-                            $comparisons[] =  "`" . $searchField . "`" . $searchOperator . ' ' . 'NULL';
+                            $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . 'NULL';
                             $fieldValues[$template] = $_val;
                         } else {
-                            $comparisons[] =  "`" . $searchField . "`" . $searchOperator . ' ' . $template;
+                            $comparisons[] =  $quotedSearchField. $searchOperator . ' ' . $template;
                             $fieldValues[$template] = '%' . $_val . '%';
                         }
                     } else {
-                        $comparisons[] = "`" . $searchField . "`" . $searchOperator . ' ?';
+                        $comparisons[] = $quotedSearchField . $searchOperator . ' ?';
                         $fieldValues[] = '%' . $_val . '%';
                     }
                 }
                 $cont++;
             }
         }
-        
+
         return array(
                 '(' . implode(' or ', $comparisons). ')',
                 $fieldValues

@@ -184,10 +184,14 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
 
         $ulParts = array();
-
+		$i = 0;
         foreach ($this->_items as $i=>$item) {
             $id = $this->_keys[$i];
-            $li = '<li data-id="' . $id . '">';
+            $class = "";
+            if ($i%2 == 0){
+            	$class = 'class="highlight"';
+            }
+            $li = '<li data-id="' . $id . '" '.$class.'>';
             $li .= $item;
             foreach ($options as $option) {
                 $option->setParentHolderSelector("li");
@@ -199,7 +203,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
         $ret  = '<div class="ghostListCounter">';
         $ret .= '<span class="ui-icon ui-icon-search"></span>';
-        $ret .= '<input type="text" /> (<span class="counter"></span> items)</div>';
+        $ret .= '<input type="text" /><br>(<span class="counter"></span> items)</div>';
         $ret .= '<ul class="ui-widget-content ui-corner-all ghostList">';
         $ret .= implode("\n", $ulParts);
         $ret .= '</ul>';

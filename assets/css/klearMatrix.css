@@ -124,7 +124,7 @@ dl.multiLanguage {
 
 dl.multiLanguage div.buttonWrapper {
     float:right;
-    margin-right: 3.5em; 
+    margin-right: 3.5em;
 }
 
 dl.multiLanguage div.buttonWrapper label {
@@ -386,7 +386,7 @@ form.klearMatrix_form.autoclose-dialog {
     margin-left: 25px;
     margin-top: 9px;
     font-size: 0.8em;
-    float:left; 
+    float:left;
 }
 
 .klearMatrixFiltering span.ui-silk,
@@ -665,6 +665,20 @@ ul.ghostList {
     width: 300px;
     overflow: hidden;
 }
+
+ul.ghostList li{
+	margin: 0px;
+	border: none;
+	display: table-row;
+}
+ul.ghostList li.highlight{
+	background: #e9e9e9;
+}
+ul.ghostList li a{
+	display: table-cell;
+}
+
+
 div.ghostListCounter {
 	margin: 0.5em 0;
 }

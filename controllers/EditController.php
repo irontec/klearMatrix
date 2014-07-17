@@ -182,6 +182,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $columns->getMultiLangTemplateArray("/template/", 'field'),
             "klearmatrixMultiLangField"
         );
+        $jsonResponse->addTemplate("/template/option", "klearmatrixOption");
+
 
         $jsonResponse->addJsFile("/js/scripts/2.5.3-crypto-md5.js");
         $jsonResponse->addJsFile("/js/plugins/jquery.autoresize.js");

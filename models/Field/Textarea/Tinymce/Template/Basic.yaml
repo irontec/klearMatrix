@@ -36,8 +36,6 @@ production:
           block: 'h1'
         - title: 'h2'
           block: 'h2'
-        - title: 'h2'
-          block: 'h2'
         - title: 'h3'
           block: 'h3'
         - title: 'h4'

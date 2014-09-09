@@ -157,16 +157,13 @@
             // REFRESCAR EL LISTADO
             var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");
             var contInterval = [];
-            var timerInterval = [];
             
             if(myTime){
                 $('.generalOptionsToolbar .refresh',panel).hide();
-                timerInterval[self] = setInterval(function() {myInterval()}, myTime * 1000);
                 contInterval[self] = setInterval(function() {contadorRefresh()}, 1000);
             }
                 
             function myInterval() {
-                clearInterval(timerInterval[self]);
                 clearInterval(contInterval[self]);
                 $(self).klearModule("reDispatch");
             }
@@ -179,6 +176,11 @@
                     $('.generalOptionsToolbar .refresh',panel).fadeIn();
                 }
                 
+                if (numTime == 1) {
+                    clearInterval(contInterval[self]);
+                    $(self).klearModule("reDispatch");
+                }
+                
                 $('.generalOptionsToolbar .refresh .count',panel).text(newTime);
             }
             
@@ -188,14 +190,12 @@
                 e.stopPropagation();
                 
                 // DETENER LA CUENTA REGRESIVA DE TIEMPO Y DEL CONTADOR
-                clearInterval(timerInterval[self]);
                 clearInterval(contInterval[self]);
                 
                 $('.generalOptionsToolbar .refresh',panel).fadeOut();
                 $('.generalOptionsToolbar .refresh .count',panel).text(myTime);
                 
                 contInterval[self] = setInterval(function() {contadorRefresh()}, 1000);
-                timerInterval[self] = setInterval(function() {myInterval()}, myTime * 1000);
             });
 
             // Orden de columnas

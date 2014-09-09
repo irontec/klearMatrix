@@ -482,17 +482,16 @@ class KlearMatrix_Model_Column
         foreach ($searchFields as $searchField) {
             $cont = 1;
             $quotedSearchField = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($searchField);
-
+            $fieldValues = array();
             foreach ($values as $_val) {
 
-                $template = ':' . $searchField . $cont;
+                $template = ":" . $searchField . $cont ;
 
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_isMapperSelect()) {
                     if ($this->namedParamsAreSupported()) {
                         if ($_val == 'NULL') {
                             $comparisons[] = $quotedSearchField . ' is ' . 'NULL';
-                            $fieldValues[$template] = $_val;
                         } else {
                             $comparisons[] = $quotedSearchField . ' = ' . $template;
                             $fieldValues[$template] = intval($_val);
@@ -507,7 +506,6 @@ class KlearMatrix_Model_Column
                         if ($_val == 'NULL' && $searchOperator == ' LIKE') {
                             $searchOperator = ' IS';
                             $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . 'NULL';
-                            $fieldValues[$template] = $_val;
                         } else {
                             $comparisons[] =  $quotedSearchField. $searchOperator . ' ' . $template;
                             $fieldValues[$template] = '%' . $_val . '%';
@@ -520,7 +518,6 @@ class KlearMatrix_Model_Column
                 $cont++;
             }
         }
-
         return array(
                 '(' . implode(' or ', $comparisons). ')',
                 $fieldValues

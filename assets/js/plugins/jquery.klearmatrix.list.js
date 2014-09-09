@@ -153,6 +153,50 @@
                     .klearModule("reDispatch");
 
             });
+            
+            // REFRESCAR EL LISTADO
+            var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");
+            var contInterval = [];
+            var timerInterval = [];
+            
+            if(myTime){
+                $('.generalOptionsToolbar .refresh',panel).hide();
+                timerInterval[self] = setInterval(function() {myInterval()}, myTime * 1000);
+                contInterval[self] = setInterval(function() {contadorRefresh()}, 1000);
+            }
+                
+            function myInterval() {
+                clearInterval(timerInterval[self]);
+                clearInterval(contInterval[self]);
+                $(self).klearModule("reDispatch");
+            }
+            
+            function contadorRefresh() {
+                var numTime = $('.generalOptionsToolbar.bottomToolbar .refresh .count',panel).text();
+                var newTime = numTime - 1 ;
+                
+                if (numTime == 16) {
+                    $('.generalOptionsToolbar .refresh',panel).fadeIn();
+                }
+                
+                $('.generalOptionsToolbar .refresh .count',panel).text(newTime);
+            }
+            
+            // DETENER EL REFRESCO DEL LISTADO
+            $('.generalOptionsToolbar .refresh',panel).on('click',function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // DETENER LA CUENTA REGRESIVA DE TIEMPO Y DEL CONTADOR
+                clearInterval(timerInterval[self]);
+                clearInterval(contInterval[self]);
+                
+                $('.generalOptionsToolbar .refresh',panel).fadeOut();
+                $('.generalOptionsToolbar .refresh .count',panel).text(myTime);
+                
+                contInterval[self] = setInterval(function() {contadorRefresh()}, 1000);
+                timerInterval[self] = setInterval(function() {myInterval()}, myTime * 1000);
+            });
 
             // Orden de columnas
             $("th:not(.notSortable)",panel).on("click",function(e) {

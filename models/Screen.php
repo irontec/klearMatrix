@@ -12,11 +12,13 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
 
     protected $_hooks = array();
     protected $_csv = false;
+    protected $_autoRefresh = false;
 
     protected $_configOptionsCustom = array(
         '_mapper' => array('mapper', false),
         '_modelFile' => array('modelFile', false),
         '_csv' => array('csv', false),
+        '_autoRefresh' => array('autoRefresh', false),
         '_hooks' => array('hooks', false)
     );
 
@@ -48,12 +50,12 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         } else {
             $retValue = $this->_csv;
         }
+
         return $this->_csv;
     }
 
     public function getCsvParameters()
     {
-
         $csvOptions = array(
                 "active" => false,
                 "headers" => false,
@@ -66,8 +68,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
                 "encoding" => "utf-8"
                             );
 
-        if (is_object($this->_csv)
-                        && get_class($this->_csv) == 'Zend_Config') {
+        if (is_object($this->_csv) && get_class($this->_csv) == 'Zend_Config') {
 
             foreach ($csvOptions as $option => $value) {
                 $value; //Avoid PMD UnusedLocalVariable warning
@@ -78,7 +79,12 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         }
         return $csvOptions;
     }
-
+    
+    public function getAutoRefresh()
+    {
+        return $this->_autoRefresh;
+    }
+    
     public function getHooks()
     {
         return $this->_hooks;

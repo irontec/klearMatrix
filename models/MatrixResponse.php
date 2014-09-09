@@ -17,6 +17,8 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_paginator = false;
     protected $_csv = false;
+    
+    protected $_autoRefresh = false;
 
     protected $_parentIden = false;
     protected $_parentId = false;
@@ -48,7 +50,8 @@ class KlearMatrix_Model_MatrixResponse
         'disableSave',
         'disableAddAnother',
         'autoClose',
-        'fullWidth'
+        'fullWidth',
+        'autoRefresh'
     );
 
     protected $_arrayFields = array(
@@ -171,7 +174,6 @@ class KlearMatrix_Model_MatrixResponse
 
     public function setCsv($value)
     {
-
         $this->_csv = (bool)$value;
     }
 
@@ -330,6 +332,19 @@ class KlearMatrix_Model_MatrixResponse
         $this->_fullWidth = (bool)$fullWidth;
         return $this;
     }
+    
+    public function setAutoRefresh($value)
+    {
+        if ($value) {
+            if (is_numeric($value) && ($value >= 30)) {
+                $this->_autoRefresh = $value;
+            } else {
+                $this->_autoRefresh = 30;
+            }
+        }
+        
+        return $this;
+    }
 
     protected function _getValueFromColumn($column, $result)
     {
@@ -427,7 +442,8 @@ class KlearMatrix_Model_MatrixResponse
             ->setDisableSave($item->getDisableSave())
             ->setPreconfiguredFilters($item->getPreconfiguredFilters())
             ->setFixedPositions($item->getFixedPositions())
-            ->setFullWidth($item->getFullWidth());
+            ->setFullWidth($item->getFullWidth())
+            ->setAutoRefresh($item->getAutoRefresh());
 
     }
 

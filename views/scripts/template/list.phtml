@@ -111,7 +111,7 @@ data-title="${info.text}"
 </form>
 </div>
 
-{{if ( (generalOptions.length>0) || $item.data.csv )  }}
+{{if ( (generalOptions.length>0) || $item.data.csv || $item.data.autoRefresh)  }}
     {{if (optionsPlacement == 'both' || optionsPlacement == 'top')}}
         <div class="generalOptionsToolbar{{if ($item.data.paginator)}} topToolbar{{/if}}">
         {{each generalOptions}}
@@ -124,6 +124,11 @@ data-title="${info.text}"
             </a>
         {{/if}}
 
+        {{if ($item.data.autoRefresh)}}
+            <a class="_generalOption option refresh" href="" data-auto-refresh="${$item.data.autoRefresh}">
+                <span class="ui-silk inline ui-silk-arrow-refresh"></span> <?php echo $this->translate('Stop refresh'); ?> <span class="count">${$item.data.autoRefresh}</span>
+            </a>
+        {{/if}}
 
         </div>
     {{/if}}
@@ -232,7 +237,7 @@ ${$item.getTitle(title,false)}
 </div>
 
 
-{{if ((generalOptions.length > 0) || $item.data.csv )  }}
+{{if ((generalOptions.length > 0) || $item.data.csv || $item.data.autoRefresh)  }}
     {{if (optionsPlacement == 'both' || optionsPlacement == 'bottom')}}
         <div class="generalOptionsToolbar{{if ($item.data.paginator)}} bottomToolbar{{/if}}">
         {{each generalOptions}}
@@ -241,7 +246,13 @@ ${$item.getTitle(title,false)}
 
         {{if ($item.data.csv)}}
             <a class="_generalOption option csv" href="">
-                <span class="ui-silk inline ui-silk-page-white-database"></span><?php echo $this->translate('Export to CSV'); ?>
+                <span class="ui-silk inline ui-silk-page-white-database"></span> <?php echo $this->translate('Export to CSV'); ?>
+            </a>
+        {{/if}}
+
+        {{if ($item.data.autoRefresh)}}
+            <a class="_generalOption option refresh" href="" data-auto-refresh="${$item.data.autoRefresh}">
+                <span class="ui-silk inline ui-silk-arrow-refresh"></span> <?php echo $this->translate('Stop refresh'); ?> <span class="count">${$item.data.autoRefresh}</span>
             </a>
         {{/if}}
         </div>

@@ -11,9 +11,9 @@
             data : null,
             moduleName: 'list'
         },
+        _intervals: {},
         _super: $.klearmatrix.module.prototype,
         _create : function() {
-
             this._super._create.apply(this);
         },
         _init: function() {
@@ -28,7 +28,19 @@
                 ._registerBaseEvents()
                 ._registerFieldsEvents()
                 ._registerEvents();
+        },
+        destroy: function() {
 
+            this._clearInterval();
+            this._super.destroy.apply(this);
+        },
+        _clearInterval: function () {
+
+            for (idx in this._intervals) {
+                if (idx == $(this.element.klearModule("getPanel")).attr("id")) {
+                    clearInterval(this._intervals[idx]);
+                }  
+            }
         },
         _applyDecorators : function() {
 
@@ -140,7 +152,7 @@
 
                 var targetPage = $(this).data("page");
 
-                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 if (!_dispatchOptions.post) _dispatchOptions.post = {};
 
@@ -155,33 +167,36 @@
             });
             
             // REFRESCAR EL LISTADO
-            var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");
-            var contInterval = [];
-            
+            var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");          
+            var iden = $(panel).attr("id");
+            this._clearInterval();
+
             if(myTime){
                 $('.generalOptionsToolbar .refresh',panel).hide();
-                contInterval[self] = setInterval(function() {contadorRefresh()}, 1000);
+                this._intervals[iden] = setInterval(function() {contadorRefresh()}, 1000);
             }
-                
+
             function myInterval() {
-                clearInterval(contInterval[self]);
+                self._intervals(contInterval[iden]);
                 $(self).klearModule("reDispatch");
             }
-            
+
             function contadorRefresh() {
-                var numTime = $('.generalOptionsToolbar.bottomToolbar .refresh .count',panel).text();
-                var newTime = numTime - 1 ;
-                
+
+                var numTime = parseInt($('.generalOptionsToolbar .refresh:eq(0) .count',panel).html());
+                var newTime = numTime - 1;
+
                 if (numTime == 16) {
                     $('.generalOptionsToolbar .refresh',panel).fadeIn();
                 }
-                
+
                 if (numTime == 1) {
-                    clearInterval(contInterval[self]);
+                    clearInterval(self._intervals[iden]);
                     $(self).klearModule("reDispatch");
+                    return;
                 }
-                
-                $('.generalOptionsToolbar .refresh .count',panel).text(newTime);
+
+                $('.generalOptionsToolbar .refresh .count',panel).html(newTime);
             }
             
             // DETENER EL REFRESCO DEL LISTADO
@@ -190,12 +205,12 @@
                 e.stopPropagation();
                 
                 // DETENER LA CUENTA REGRESIVA DE TIEMPO Y DEL CONTADOR
-                clearInterval(contInterval[self]);
+                clearInterval(self._intervals[iden]);
                 
                 $('.generalOptionsToolbar .refresh',panel).fadeOut();
                 $('.generalOptionsToolbar .refresh .count',panel).text(myTime);
-                
-                contInterval[self] = setInterval(function() {contadorRefresh()}, 1000);
+
+                self._intervals[iden] = setInterval(function() {contadorRefresh()}, 1000);
             });
 
             // Orden de columnas
@@ -209,7 +224,6 @@
                 var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
 
                 if (!_dispatchOptions.post) _dispatchOptions.post = {};
-
 
                 $.extend(_dispatchOptions.post,{
                     order: targetOrder,

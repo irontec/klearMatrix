@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-23 11:13+0100\n"
-"PO-Revision-Date: 2014-04-23 11:22+0100\n"
-"Last-Translator: Lander Ontoria Gardeazabal <lander@irontec.com>\n"
+"POT-Creation-Date: 2014-09-10 11:19+0100\n"
+"PO-Revision-Date: 2014-09-10 11:19+0100\n"
+"Last-Translator: Victor <victor@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: en_ES\n"
 "MIME-Version: 1.0\n"
@@ -17,105 +17,56 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: controllers/FileController.php:204 controllers/MassUpdateController.php:193
-#: controllers/CloneController.php:82 assets/js/klearMatrix.compiled.js:317
-#: assets/js/plugins/jquery.klearmatrix.delete.js:94
-#: assets/js/plugins/jquery.klearmatrix.edit.js:857
-msgid "Cancel"
-msgstr "Utzi"
-
-#: controllers/FileController.php:207
-msgid "Download"
-msgstr "Jaitsi"
-
-#: controllers/FileController.php:230
-#, php-format
-msgid "Error preparing download.<br />(%s)"
-msgstr "Errorea jaitsiera prestatzen.<br />(%s)"
-
-#: controllers/MassUpdateController.php:139
+#: controllers/MassUpdateController.php:141
 msgid "Record not found. Could not Mass Update."
 msgstr "Ez da sarrerarik aurkitu. Ezin da eguneratu."
 
-#: controllers/MassUpdateController.php:153
+#: controllers/MassUpdateController.php:155
 #, php-format
 msgid "Do you want to update \"%s\"?"
 msgstr "%s eguneratu?"
 
-#: controllers/MassUpdateController.php:173
+#: controllers/MassUpdateController.php:175
 #, php-format
 msgid "and %s more"
 msgstr "eta %s gehiago"
 
-#: controllers/MassUpdateController.php:182
+#: controllers/MassUpdateController.php:184
 #, php-format
 msgid "Update %s"
 msgstr "%s eguneratu"
 
-#: controllers/MassUpdateController.php:196
+#: controllers/MassUpdateController.php:195
+#: controllers/CloneController.php:82
+#: controllers/FileController.php:204
+msgid "Cancel"
+msgstr "Utzi"
+
+#: controllers/MassUpdateController.php:198
 msgid "Update"
 msgstr "Eguneratu"
 
-#: controllers/MassUpdateController.php:307
+#: controllers/MassUpdateController.php:308
 #, php-format
 msgid "(%s) %s successfully updated"
 msgstr "(%s) %s eguneratu dira"
 
-#: controllers/MassUpdateController.php:309
-#: views/scripts/template/list.phtml:153
+#: controllers/MassUpdateController.php:310
 msgid "Records"
 msgstr "Sarrerak"
 
-#: controllers/MassUpdateController.php:317
-#: controllers/CloneController.php:164 views/scripts/template/new.phtml:19
-#: views/scripts/template/new.phtml:87 views/scripts/template/edit.phtml:20
-#: views/scripts/template/edit.phtml:106 assets/js/klearMatrix.compiled.js:245
-#: assets/js/klearMatrix.compiled.js:297 assets/js/klearMatrix.compiled.js:331
-#: assets/js/plugins/jquery.klearmatrix.module.js:746
-#: assets/js/plugins/jquery.klearmatrix.delete.js:71
-#: assets/js/plugins/jquery.klearmatrix.new.js:122
-#: assets/js/plugins/jquery.klearmatrix.edit.js:273
+#: controllers/MassUpdateController.php:318
+#: controllers/CloneController.php:164
 msgid "Close"
 msgstr "Itxi"
 
-#: controllers/DeleteController.php:64 controllers/DeleteController.php:105
-msgid "Record not found. Could not delete."
-msgstr "Ez da sarrerarik aurkitu. Ezin da ezabatu."
-
-#: controllers/DeleteController.php:119
-msgid "Could not delete record: "
-msgstr "Ezin da sarrera ezabatu:"
-
-#: controllers/DeleteController.php:135
-#, php-format
-msgid "(%d) %s successfully deleted"
-msgstr "(%d) %s ezabatu da"
-
-#: controllers/DeleteController.php:137 controllers/CloneController.php:156
-msgid "Record"
-msgstr "Sarrera"
-
-#: controllers/NewController.php:86 controllers/EditController.php:79
-msgid "Record successfully saved."
-msgstr "Sarrera gorde da."
-
-#: controllers/EditController.php:57
-msgid "Record not found."
-msgstr "Ez da sarrerarik aurkitu."
-
-#: controllers/EditController.php:114
-msgid "Error saving record"
-msgstr "Sarrera gordetzen errorea gertatu da"
-
-#: controllers/EditController.php:131
-msgid "Element not found. Cannot edit."
-msgstr "Ez da sarrerarik aurkitu. Ezin da editatu."
-
 #: controllers/DashboardController.php:48
+#: controllers/GooglechartsController.php:326
 msgid "(Aproximated values)"
 msgstr "(Gutxi gorabeherako balioak)"
 
-#: controllers/CloneController.php:42 controllers/CloneController.php:113
+#: controllers/CloneController.php:42
+#: controllers/CloneController.php:113
 msgid "Record not found. Could not clone."
 msgstr "Ez da sarrerarik aurkitu. Ezin da bikoiztu."
 
@@ -124,7 +75,8 @@ msgstr "Ez da sarrerarik aurkitu. Ezin da bikoiztu."
 msgid "Do you want to clone this %s?"
 msgstr "%s hau bikoiztu?"
 
-#: controllers/CloneController.php:59 controllers/CloneController.php:71
+#: controllers/CloneController.php:59
+#: controllers/CloneController.php:71
 msgid "record"
 msgstr "sarrera"
 
@@ -150,6 +102,63 @@ msgstr "Sarrera ezin da bikoiztu:"
 msgid "%s successfully cloned"
 msgstr "%s bikoiztu da"
 
+#: controllers/CloneController.php:156
+#: controllers/DeleteController.php:134
+msgid "Record"
+msgstr "Sarrera"
+
+#: controllers/FileController.php:207
+msgid "Download"
+msgstr "Jaitsi"
+
+#: controllers/FileController.php:230
+#, php-format
+msgid "Error preparing download.<br />(%s)"
+msgstr "Errorea jaitsiera prestatzen.<br />(%s)"
+
+#: controllers/NewController.php:103
+#: controllers/EditController.php:79
+msgid "Record successfully saved."
+msgstr "Sarrera gorde da."
+
+#: controllers/EditController.php:57
+msgid "Record not found."
+msgstr "Ez da sarrerarik aurkitu."
+
+#: controllers/EditController.php:114
+msgid "Error saving record"
+msgstr "Sarrera gordetzen errorea gertatu da"
+
+#: controllers/EditController.php:131
+msgid "Element not found. Cannot edit."
+msgstr "Ez da sarrerarik aurkitu. Ezin da editatu."
+
+#: controllers/DeleteController.php:62
+#: controllers/DeleteController.php:102
+msgid "Record not found. Could not delete."
+msgstr "Ez da sarrerarik aurkitu. Ezin da ezabatu."
+
+#: controllers/DeleteController.php:116
+msgid "Could not delete record: "
+msgstr "Ezin da sarrera ezabatu:"
+
+#: controllers/DeleteController.php:132
+#, php-format
+msgid "(%d) %s successfully deleted"
+msgstr "(%d) %s ezabatu da"
+
+#: controllers/GooglechartsController.php:51
+msgid "MapperName not found in yaml"
+msgstr ""
+
+#: controllers/GooglechartsController.php:58
+msgid "PK "
+msgstr ""
+
+#: models/Field/Ip.php:87
+msgid "Invalid IP Address"
+msgstr ""
+
 #: models/Field/Html5/Url.php:20
 msgid "Field is not a valid URL."
 msgstr "Eremua ez da URL egokia"
@@ -158,17 +167,39 @@ msgstr "Eremua ez da URL egokia"
 msgid "Email not valid."
 msgstr "Emaila ez da egokia."
 
-#: models/Field/Multiselect/Decorator/Autocomplete.php:72
 #: models/Field/Select/Decorator/Autocomplete.php:66
+#: models/Field/Multiselect/Decorator/Autocomplete.php:72
 #, php-format
 msgid "%d items found"
 msgstr "%d sarrera aurkitu dira"
 
-#: models/Field/Multiselect/Decorator/Autocomplete.php:76
 #: models/Field/Select/Decorator/Autocomplete.php:70
+#: models/Field/Multiselect/Decorator/Autocomplete.php:76
 #, php-format
 msgid "(showing %d)"
 msgstr "(%d erakusten)"
+
+#: views/scripts/template/edit.phtml:22
+#: views/scripts/template/edit.phtml:90
+#: views/scripts/template/new.phtml:20
+#: views/scripts/template/new.phtml:88
+msgid "Save"
+msgstr "Gorde"
+
+#: views/scripts/template/edit.phtml:23
+#: views/scripts/template/edit.phtml:91
+#: views/scripts/template/new.phtml:21
+#: views/scripts/template/new.phtml:89
+msgid "Close automatically after save"
+msgstr "Automatikoki itxi gorde ostean"
+
+#: views/scripts/template/delete.phtml:4
+msgid "Do you want delete this record?"
+msgstr "Erregistro hau ezabatu?"
+
+#: views/scripts/template/delete.phtml:21
+msgid "Close automatically"
+msgstr "Automatikoki itxi gorde ostean"
 
 #: views/scripts/template/list.phtml:19
 msgid "Search shortcuts"
@@ -178,7 +209,8 @@ msgstr "Bilaketa konbinazioak"
 msgid "Filter fields"
 msgstr "Eremu iragazketa"
 
-#: views/scripts/template/list.phtml:26 views/scripts/template/list.phtml:72
+#: views/scripts/template/list.phtml:26
+#: views/scripts/template/list.phtml:72
 msgid "Returns records that satisfy any of filters"
 msgstr "Edozein iragazki betetzen duten erregistroak itzultzen ditu"
 
@@ -202,254 +234,182 @@ msgstr "handiagoa"
 msgid "Add all filters"
 msgstr "Iragazki guztiak gehitu"
 
-#: views/scripts/template/list.phtml:133 views/scripts/template/list.phtml:289
+#: views/scripts/template/list.phtml:123
+#: views/scripts/template/list.phtml:249
 msgid "Export to CSV"
 msgstr "CSV moduan jaitsi"
 
-#: views/scripts/template/list.phtml:153
+#: views/scripts/template/list.phtml:129
+#: views/scripts/template/list.phtml:255
+msgid "Stop refresh"
+msgstr ""
+
+#: views/scripts/template/list.phtml:148
 msgid "Total: "
 msgstr "Guztira: "
 
-#: views/scripts/template/list.phtml:155
+#: views/scripts/template/list.phtml:150
 msgid "Records per page:"
 msgstr "Sarrera horrialdeko"
-
-#: views/scripts/template/new.phtml:20 views/scripts/template/new.phtml:88
-#: views/scripts/template/edit.phtml:22 views/scripts/template/edit.phtml:108
-msgid "Save"
-msgstr "Gorde"
-
-#: views/scripts/template/new.phtml:21 views/scripts/template/new.phtml:89
-#: views/scripts/template/edit.phtml:23 views/scripts/template/edit.phtml:109
-msgid "Close automatically after save"
-msgstr "Automatikoki itxi gorde ostean"
-
-#: views/scripts/template/delete.phtml:4
-msgid "Do you want delete this record?"
-msgstr "Erregistro hau ezabatu?"
-
-#: views/scripts/template/delete.phtml:21
-msgid "Close automatically"
-msgstr "Automatikoki itxi gorde ostean"
 
 #: views/scripts/template/fields/file.phtml:25
 msgid "Not available"
 msgstr "Ez dago eskuragarri"
-
-#: views/scripts/template/fields/password.phtml:1
-msgid "Change password"
-msgstr "Pasahitza aldatu"
 
 #: views/scripts/template/fields/video.phtml:55
 #: views/scripts/template/fields/video.phtml:74
 msgid "Channel:"
 msgstr "Kanala:"
 
-#: assets/js/klearMatrix.compiled.js:231 assets/js/klearMatrix.compiled.js:301
-#: assets/js/plugins/jquery.klearmatrix.module.js:279
-#: assets/js/plugins/jquery.klearmatrix.edit.js:395
+#: views/scripts/template/fields/password.phtml:1
+msgid "Change password"
+msgstr "Pasahitza aldatu"
+
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:310
+#: assets/js/plugins/jquery.klearmatrix.module.js:319
 msgid "# of # selected"
 msgstr "# #-tik aukeratuta"
 
-#: assets/js/klearMatrix.compiled.js:231 assets/js/klearMatrix.compiled.js:301
-#: assets/js/plugins/jquery.klearmatrix.module.js:280
-#: assets/js/plugins/jquery.klearmatrix.edit.js:396
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:310
+#: assets/js/plugins/jquery.klearmatrix.module.js:320
 msgid "Select all"
 msgstr "Danak aukeratu"
 
-#: assets/js/klearMatrix.compiled.js:231 assets/js/klearMatrix.compiled.js:301
-#: assets/js/plugins/jquery.klearmatrix.module.js:281
-#: assets/js/plugins/jquery.klearmatrix.edit.js:397
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:310
+#: assets/js/plugins/jquery.klearmatrix.module.js:321
 msgid "Unselect all"
 msgstr "Danak desaukeratu"
 
-#: assets/js/klearMatrix.compiled.js:231 assets/js/klearMatrix.compiled.js:301
-#: assets/js/plugins/jquery.klearmatrix.module.js:282
-#: assets/js/plugins/jquery.klearmatrix.edit.js:398
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:311
+#: assets/js/plugins/jquery.klearmatrix.module.js:322
 msgid "Select an option"
 msgstr "Aukeratu"
 
-#: assets/js/klearMatrix.compiled.js:231 assets/js/klearMatrix.compiled.js:301
-#: assets/js/plugins/jquery.klearmatrix.module.js:283
-#: assets/js/plugins/jquery.klearmatrix.edit.js:399
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:311
+#: assets/js/plugins/jquery.klearmatrix.module.js:323
 msgid "# selected"
 msgstr "# aukeratuta"
 
-#: assets/js/klearMatrix.compiled.js:246
-#: assets/js/plugins/jquery.klearmatrix.module.js:780
+#: assets/js/klearMatrix.compiled.js:248
+#: assets/js/plugins/jquery.klearmatrix.module.js:803
 msgid "Error"
 msgstr "Errorea"
 
-#: assets/js/klearMatrix.compiled.js:262
-#: assets/js/plugins/jquery.klearmatrix.template.helper.js:489
+#: assets/js/klearMatrix.compiled.js:265
 msgid "There are not associated elements"
 msgstr "Ez daude loturiko elementuak"
 
-#: assets/js/klearMatrix.compiled.js:269
+#: assets/js/klearMatrix.compiled.js:276
 #: assets/js/plugins/jquery.klearmatrix.list.js:44
 msgid "Field available in multi-language"
 msgstr "Eremuak hainbat hizkuntzetan eskugai"
 
-#: assets/js/klearMatrix.compiled.js:289
-#: assets/js/plugins/jquery.klearmatrix.edit.js:24
+#: assets/js/klearMatrix.compiled.js:298
 msgid "undefined error"
 msgstr "Errore ezezaguna"
 
-#: assets/js/klearMatrix.compiled.js:289
-#: assets/js/plugins/jquery.klearmatrix.edit.js:25
+#: assets/js/klearMatrix.compiled.js:298
 msgid "invalid pattern"
 msgstr "patroi ezegokia"
 
-#: assets/js/klearMatrix.compiled.js:289
-#: assets/js/plugins/jquery.klearmatrix.edit.js:26
+#: assets/js/klearMatrix.compiled.js:298
 msgid "range overflow"
 msgstr "_eu_range overflow"
 
-#: assets/js/klearMatrix.compiled.js:289
-#: assets/js/plugins/jquery.klearmatrix.edit.js:27
+#: assets/js/klearMatrix.compiled.js:298
 msgid "range underflow"
 msgstr "_eu_range underflow"
 
-#: assets/js/klearMatrix.compiled.js:290
-#: assets/js/plugins/jquery.klearmatrix.edit.js:28
+#: assets/js/klearMatrix.compiled.js:299
 msgid "step mismatch"
 msgstr "_eu_step mismatch"
 
-#: assets/js/klearMatrix.compiled.js:290
-#: assets/js/plugins/jquery.klearmatrix.edit.js:29
+#: assets/js/klearMatrix.compiled.js:299
 msgid "the value is too long"
 msgstr "_eu_the value is too long"
 
-#: assets/js/klearMatrix.compiled.js:290
-#: assets/js/plugins/jquery.klearmatrix.edit.js:30
+#: assets/js/klearMatrix.compiled.js:299
 msgid "type mismatched"
 msgstr "_eu_type mismatched"
 
-#: assets/js/klearMatrix.compiled.js:290
-#: assets/js/plugins/jquery.klearmatrix.edit.js:31
+#: assets/js/klearMatrix.compiled.js:299
 msgid "this is a required field"
 msgstr "_eu_this is a required field"
 
-#: assets/js/klearMatrix.compiled.js:297
-#: assets/js/plugins/jquery.klearmatrix.edit.js:280
+#: assets/js/klearMatrix.compiled.js:306
 msgid "Edit again"
 msgstr "Berriro editatu"
 
-#: assets/js/klearMatrix.compiled.js:308
-#: assets/js/plugins/jquery.klearmatrix.edit.js:621
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} has invalid extension. Only {extensions} are allowed."
 msgstr "_eu_{file} has invalid extension. Only {extensions} are allowed."
 
-#: assets/js/klearMatrix.compiled.js:308
-#: assets/js/plugins/jquery.klearmatrix.edit.js:622
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} is too large, maximum file size is {sizeLimit}."
 msgstr "_eu_{file} is too large, maximum file size is {sizeLimit}."
 
-#: assets/js/klearMatrix.compiled.js:308
-#: assets/js/plugins/jquery.klearmatrix.edit.js:623
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} is too small, minimum file size is {minSizeLimit}."
 msgstr "_eu_{file} is too small, minimum file size is {minSizeLimit}."
 
-#: assets/js/klearMatrix.compiled.js:308
-#: assets/js/plugins/jquery.klearmatrix.edit.js:624
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} is empty, please select files again without it."
 msgstr "_eu_{file} is empty, please select files again without it."
 
-#: assets/js/klearMatrix.compiled.js:308
-#: assets/js/plugins/jquery.klearmatrix.edit.js:625
-msgid ""
-"The files are being uploaded, if you leave now the upload will be cancelled."
-msgstr ""
-"_eu_The files are being uploaded, if you leave now the upload will be "
-"cancelled."
+#: assets/js/klearMatrix.compiled.js:316
+msgid "The files are being uploaded, if you leave now the upload will be cancelled."
+msgstr "_eu_The files are being uploaded, if you leave now the upload will be cancelled."
 
-#: assets/js/klearMatrix.compiled.js:309
-#: assets/js/plugins/jquery.klearmatrix.edit.js:629
+#: assets/js/klearMatrix.compiled.js:317
 msgid "Upload File"
 msgstr "Fitxategia gehitu"
 
-#: assets/js/klearMatrix.compiled.js:310 assets/js/klearMatrix.compiled.js:312
-#: assets/js/plugins/jquery.klearmatrix.edit.js:641
-#: assets/js/plugins/jquery.klearmatrix.edit.js:703
+#: assets/js/klearMatrix.compiled.js:318
+#: assets/js/klearMatrix.compiled.js:320
 msgid "ERROR"
 msgstr "ERROREA"
 
-#: assets/js/klearMatrix.compiled.js:313
-#: assets/js/plugins/jquery.klearmatrix.edit.js:742
+#: assets/js/klearMatrix.compiled.js:321
 msgid "Required field"
 msgstr "Derrigorrezko eremua"
 
-#: assets/js/klearMatrix.compiled.js:317
-#: assets/js/plugins/jquery.klearmatrix.edit.js:849
+#: assets/js/klearMatrix.compiled.js:325
 msgid "There is unsaved content."
 msgstr "Gorde ez diren edukiak daude."
 
-#: assets/js/klearMatrix.compiled.js:317
-#: assets/js/plugins/jquery.klearmatrix.edit.js:851
+#: assets/js/klearMatrix.compiled.js:325
 msgid "Close the screen?"
 msgstr "Pantaila itxi?"
 
-#: assets/js/klearMatrix.compiled.js:317
-#: assets/js/plugins/jquery.klearmatrix.edit.js:853
+#: assets/js/klearMatrix.compiled.js:325
 msgid "Attention!"
 msgstr "Adi!"
 
-#: assets/js/klearMatrix.compiled.js:318
-#: assets/js/plugins/jquery.klearmatrix.edit.js:863
+#: assets/js/klearMatrix.compiled.js:325
 msgid "Ignore changes and close"
 msgstr "Ezikusi aldaketak eta itxi"
 
-#: assets/js/klearMatrix.compiled.js:322
-#: assets/js/plugins/jquery.klearmatrix.edit.js:1020
+#: assets/js/klearMatrix.compiled.js:330
 msgid "Auto-copied field"
 msgstr "Eremu auto kopiatua"
 
-#: assets/js/klearMatrix.compiled.js:325 assets/js/klearMatrix.compiled.js:326
-#: assets/js/plugins/jquery.klearmatrix.edit.js:1103
-#: assets/js/plugins/jquery.klearmatrix.edit.js:1109
+#: assets/js/klearMatrix.compiled.js:334
 msgid "characters remaining"
 msgstr "karaktere gelditzen dira"
 
-#: assets/js/klearMatrix.compiled.js:332
-#: assets/js/plugins/jquery.klearmatrix.new.js:132
+#: assets/js/klearMatrix.compiled.js:340
+#: assets/js/plugins/jquery.klearmatrix.new.js:137
 msgid "Add another record"
 msgstr "Beste erregistro bat gehitu"
 
-#: assets/js/plugins/jquery.klearmatrix.delete.js:98
+#: assets/js/plugins/jquery.klearmatrix.delete.js:112
 msgid "Delete"
 msgstr "Ezabatu"
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:8
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js:8
-msgid ""
-"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press "
-"ALT-0 for help"
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:16
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/autosave/plugin.min.js:1
-msgid "You have unsaved changes are you sure you want to navigate away?"
-msgstr ""
-"Gorderik gabeko aldaketak daukazuz, nabigatzen jarraitu nahi duzu ala ere?"
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:20
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/plugin.min.js:1
-msgid "."
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:31
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:35
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:51
-msgid "%Y-%m-%d"
-msgstr "%Y-%m-%d"
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:31
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:35
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:51
-msgid "%H:%M:%S"
-msgstr "%H:%M:%S"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:18016
 msgid "Your browser doesn't support direct access to the clipboard. "
@@ -467,14 +427,34 @@ msgstr ""
 msgid "Raw string"
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/editable_selects.js:19
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/utils/editable_selects.js:19
-msgid "value"
-msgstr "value"
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js:8
+msgid "Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help"
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:15
+msgid "You have unsaved changes are you sure you want to navigate away?"
+msgstr "Gorderik gabeko aldaketak daukazuz, nabigatzen jarraitu nahi duzu ala ere?"
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:19
+msgid "."
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:30
+msgid "%Y-%m-%d"
+msgstr "%Y-%m-%d"
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:30
+msgid "%H:%M:%S"
+msgstr "%H:%M:%S"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/kleargallery/plugin.min.js:9
 msgid "Galería de imágenes"
 msgstr "Irudi galeria"
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/editable_selects.js:19
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/utils/editable_selects.js:19
+msgid "value"
+msgstr "value"
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:16
 msgid "Ningún estilo aplicable a este elemento"

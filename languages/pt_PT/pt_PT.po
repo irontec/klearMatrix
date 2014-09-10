@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-27 11:22+0100\n"
-"PO-Revision-Date: 2013-11-27 11:24+0100\n"
-"Last-Translator: Lander Ontoria <lander@irontec.com>\n"
+"POT-Creation-Date: 2014-09-10 11:48+0100\n"
+"PO-Revision-Date: 2014-09-10 11:48+0100\n"
+"Last-Translator: Victor <victor@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
@@ -17,10 +17,94 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: controllers/FileController.php:204 assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.delete.js:85
-#: assets/js/plugins/jquery.klearmatrix.edit.js:782
+#: controllers/MassUpdateController.php:141
+msgid "Record not found. Could not Mass Update."
+msgstr ""
+
+#: controllers/MassUpdateController.php:155
+#, php-format
+msgid "Do you want to update \"%s\"?"
+msgstr ""
+
+#: controllers/MassUpdateController.php:175
+#, php-format
+msgid "and %s more"
+msgstr ""
+
+#: controllers/MassUpdateController.php:184
+#, php-format
+msgid "Update %s"
+msgstr ""
+
+#: controllers/MassUpdateController.php:195
+#: controllers/CloneController.php:82
+#: controllers/FileController.php:204
 msgid "Cancel"
+msgstr ""
+
+#: controllers/MassUpdateController.php:198
+msgid "Update"
+msgstr ""
+
+#: controllers/MassUpdateController.php:308
+#, php-format
+msgid "(%s) %s successfully updated"
+msgstr ""
+
+#: controllers/MassUpdateController.php:310
+msgid "Records"
+msgstr ""
+
+#: controllers/MassUpdateController.php:318
+#: controllers/CloneController.php:164
+msgid "Close"
+msgstr "Close"
+
+#: controllers/DashboardController.php:48
+#: controllers/GooglechartsController.php:326
+msgid "(Aproximated values)"
+msgstr ""
+
+#: controllers/CloneController.php:42
+#: controllers/CloneController.php:113
+msgid "Record not found. Could not clone."
+msgstr ""
+
+#: controllers/CloneController.php:58
+#, php-format
+msgid "Do you want to clone this %s?"
+msgstr ""
+
+#: controllers/CloneController.php:59
+#: controllers/CloneController.php:71
+msgid "record"
+msgstr ""
+
+#: controllers/CloneController.php:64
+msgid "Title:"
+msgstr ""
+
+#: controllers/CloneController.php:70
+#, php-format
+msgid "Clone %s"
+msgstr ""
+
+#: controllers/CloneController.php:78
+msgid "Clone"
+msgstr ""
+
+#: controllers/CloneController.php:146
+msgid "Could not clone record: "
+msgstr ""
+
+#: controllers/CloneController.php:155
+#, php-format
+msgid "%s successfully cloned"
+msgstr ""
+
+#: controllers/CloneController.php:156
+#: controllers/DeleteController.php:134
+msgid "Record"
 msgstr ""
 
 #: controllers/FileController.php:207
@@ -32,19 +116,8 @@ msgstr ""
 msgid "Error preparing download.<br />(%s)"
 msgstr ""
 
-#: controllers/DeleteController.php:57 controllers/DeleteController.php:91
-msgid "Record not found. Could not delete."
-msgstr ""
-
-#: controllers/DeleteController.php:103
-msgid "Could not delete record: "
-msgstr ""
-
-#: controllers/DeleteController.php:118
-msgid "Record successfully deleted"
-msgstr ""
-
-#: controllers/NewController.php:86 controllers/EditController.php:79
+#: controllers/NewController.php:103
+#: controllers/EditController.php:79
 msgid "Record successfully saved."
 msgstr ""
 
@@ -60,11 +133,33 @@ msgstr ""
 msgid "Element not found. Cannot edit."
 msgstr ""
 
-#: controllers/DashboardController.php:48
-msgid "(Aproximated values)"
+#: controllers/DeleteController.php:62
+#: controllers/DeleteController.php:102
+msgid "Record not found. Could not delete."
 msgstr ""
 
-#: models/Field/Html5/Url.php:17
+#: controllers/DeleteController.php:116
+msgid "Could not delete record: "
+msgstr ""
+
+#: controllers/DeleteController.php:132
+#, php-format
+msgid "(%d) %s successfully deleted"
+msgstr ""
+
+#: controllers/GooglechartsController.php:51
+msgid "MapperName not found in yaml"
+msgstr ""
+
+#: controllers/GooglechartsController.php:58
+msgid "PK "
+msgstr ""
+
+#: models/Field/Ip.php:87
+msgid "Invalid IP Address"
+msgstr ""
+
+#: models/Field/Html5/Url.php:20
 msgid "Field is not a valid URL."
 msgstr ""
 
@@ -72,16 +167,38 @@ msgstr ""
 msgid "Email not valid."
 msgstr ""
 
-#: models/Field/Multiselect/Decorator/Autocomplete.php:72
 #: models/Field/Select/Decorator/Autocomplete.php:66
+#: models/Field/Multiselect/Decorator/Autocomplete.php:72
 #, php-format
 msgid "%d items found"
 msgstr ""
 
-#: models/Field/Multiselect/Decorator/Autocomplete.php:76
 #: models/Field/Select/Decorator/Autocomplete.php:70
+#: models/Field/Multiselect/Decorator/Autocomplete.php:76
 #, php-format
 msgid "(showing %d)"
+msgstr ""
+
+#: views/scripts/template/edit.phtml:22
+#: views/scripts/template/edit.phtml:90
+#: views/scripts/template/new.phtml:20
+#: views/scripts/template/new.phtml:88
+msgid "Save"
+msgstr ""
+
+#: views/scripts/template/edit.phtml:23
+#: views/scripts/template/edit.phtml:91
+#: views/scripts/template/new.phtml:21
+#: views/scripts/template/new.phtml:89
+msgid "Close automatically after save"
+msgstr ""
+
+#: views/scripts/template/delete.phtml:4
+msgid "Do you want delete this record?"
+msgstr ""
+
+#: views/scripts/template/delete.phtml:21
+msgid "Close automatically"
 msgstr ""
 
 #: views/scripts/template/list.phtml:19
@@ -92,7 +209,8 @@ msgstr ""
 msgid "Filter fields"
 msgstr ""
 
-#: views/scripts/template/list.phtml:26 views/scripts/template/list.phtml:72
+#: views/scripts/template/list.phtml:26
+#: views/scripts/template/list.phtml:72
 msgid "Returns records that satisfy any of filters"
 msgstr ""
 
@@ -100,61 +218,42 @@ msgstr ""
 msgid "Apply filters"
 msgstr ""
 
+#: views/scripts/template/list.phtml:38
+msgid "less than"
+msgstr ""
+
+#: views/scripts/template/list.phtml:39
+msgid "equals"
+msgstr ""
+
+#: views/scripts/template/list.phtml:40
+msgid "greater than"
+msgstr ""
+
 #: views/scripts/template/list.phtml:73
 msgid "Add all filters"
 msgstr ""
 
-#: views/scripts/template/list.phtml:123 views/scripts/template/list.phtml:267
+#: views/scripts/template/list.phtml:123
+#: views/scripts/template/list.phtml:249
 msgid "Export to CSV"
 msgstr ""
 
-#: views/scripts/template/list.phtml:143
+#: views/scripts/template/list.phtml:129
+#: views/scripts/template/list.phtml:255
+msgid "Stop refresh"
+msgstr ""
+
+#: views/scripts/template/list.phtml:148
 msgid "Total: "
 msgstr ""
 
-#: views/scripts/template/list.phtml:143
-msgid "Records"
-msgstr ""
-
-#: views/scripts/template/list.phtml:145
+#: views/scripts/template/list.phtml:150
 msgid "Records per page:"
 msgstr ""
 
-#: views/scripts/template/new.phtml:19 views/scripts/template/new.phtml:84
-#: views/scripts/template/edit.phtml:20 views/scripts/template/edit.phtml:105
-#: assets/js/klearMatrix.compiled.js:241 assets/js/klearMatrix.compiled.js:288
-#: assets/js/klearMatrix.compiled.js:319
-#: assets/js/plugins/jquery.klearmatrix.module.js:630
-#: assets/js/plugins/jquery.klearmatrix.delete.js:62
-#: assets/js/plugins/jquery.klearmatrix.new.js:122
-#: assets/js/plugins/jquery.klearmatrix.edit.js:277
-msgid "Close"
-msgstr "Close"
-
-#: views/scripts/template/new.phtml:20 views/scripts/template/new.phtml:85
-#: views/scripts/template/edit.phtml:22 views/scripts/template/edit.phtml:107
-msgid "Save"
-msgstr ""
-
-#: views/scripts/template/new.phtml:21 views/scripts/template/new.phtml:86
-#: views/scripts/template/edit.phtml:23 views/scripts/template/edit.phtml:108
-msgid "Close automatically after save"
-msgstr ""
-
-#: views/scripts/template/delete.phtml:6
-msgid "Do you want delete this record?"
-msgstr ""
-
-#: views/scripts/template/delete.phtml:21
-msgid "Close automatically"
-msgstr ""
-
-#: views/scripts/template/fields/file.phtml:20
+#: views/scripts/template/fields/file.phtml:25
 msgid "Not available"
-msgstr ""
-
-#: views/scripts/template/fields/password.phtml:1
-msgid "Change password"
 msgstr ""
 
 #: views/scripts/template/fields/video.phtml:55
@@ -162,199 +261,199 @@ msgstr ""
 msgid "Channel:"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:242
-#: assets/js/plugins/jquery.klearmatrix.module.js:664
+#: views/scripts/template/fields/password.phtml:1
+msgid "Change password"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:310
+#: assets/js/plugins/jquery.klearmatrix.module.js:319
+msgid "# of # selected"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:310
+#: assets/js/plugins/jquery.klearmatrix.module.js:320
+msgid "Select all"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:310
+#: assets/js/plugins/jquery.klearmatrix.module.js:321
+msgid "Unselect all"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:311
+#: assets/js/plugins/jquery.klearmatrix.module.js:322
+msgid "Select an option"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:233
+#: assets/js/klearMatrix.compiled.js:311
+#: assets/js/plugins/jquery.klearmatrix.module.js:323
+msgid "# selected"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:248
+#: assets/js/plugins/jquery.klearmatrix.module.js:803
 msgid "Error"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:255
-#: assets/js/plugins/jquery.klearmatrix.template.helper.js:419
+#: assets/js/klearMatrix.compiled.js:265
 msgid "There are not associated elements"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:262
+#: assets/js/klearMatrix.compiled.js:276
 #: assets/js/plugins/jquery.klearmatrix.list.js:44
 msgid "Field available in multi-language"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:280
-#: assets/js/plugins/jquery.klearmatrix.edit.js:25
+#: assets/js/klearMatrix.compiled.js:298
 msgid "undefined error"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:280
-#: assets/js/plugins/jquery.klearmatrix.edit.js:26
+#: assets/js/klearMatrix.compiled.js:298
 msgid "invalid pattern"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:280
-#: assets/js/plugins/jquery.klearmatrix.edit.js:27
+#: assets/js/klearMatrix.compiled.js:298
 msgid "range overflow"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:280
-#: assets/js/plugins/jquery.klearmatrix.edit.js:28
+#: assets/js/klearMatrix.compiled.js:298
 msgid "range underflow"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:281
-#: assets/js/plugins/jquery.klearmatrix.edit.js:29
+#: assets/js/klearMatrix.compiled.js:299
 msgid "step mismatch"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:281
-#: assets/js/plugins/jquery.klearmatrix.edit.js:30
+#: assets/js/klearMatrix.compiled.js:299
 msgid "the value is too long"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:281
-#: assets/js/plugins/jquery.klearmatrix.edit.js:31
+#: assets/js/klearMatrix.compiled.js:299
 msgid "type mismatched"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:281
-#: assets/js/plugins/jquery.klearmatrix.edit.js:32
+#: assets/js/klearMatrix.compiled.js:299
 msgid "this is a required field"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:288
-#: assets/js/plugins/jquery.klearmatrix.edit.js:284
+#: assets/js/klearMatrix.compiled.js:306
 msgid "Edit again"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:292
-#: assets/js/plugins/jquery.klearmatrix.edit.js:397
-msgid "# of # selected"
-msgstr ""
-
-#: assets/js/klearMatrix.compiled.js:292
-#: assets/js/plugins/jquery.klearmatrix.edit.js:398
-msgid "Select all"
-msgstr ""
-
-#: assets/js/klearMatrix.compiled.js:292
-#: assets/js/plugins/jquery.klearmatrix.edit.js:399
-msgid "Unselect all"
-msgstr ""
-
-#: assets/js/klearMatrix.compiled.js:292
-#: assets/js/plugins/jquery.klearmatrix.edit.js:400
-msgid "Select an option"
-msgstr ""
-
-#: assets/js/klearMatrix.compiled.js:293
-#: assets/js/plugins/jquery.klearmatrix.edit.js:401
-msgid "# selected"
-msgstr ""
-
-#: assets/js/klearMatrix.compiled.js:300
-#: assets/js/plugins/jquery.klearmatrix.edit.js:621
-#, python-brace-format
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} has invalid extension. Only {extensions} are allowed."
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:300
-#: assets/js/plugins/jquery.klearmatrix.edit.js:622
-#, python-brace-format
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} is too large, maximum file size is {sizeLimit}."
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:300
-#: assets/js/plugins/jquery.klearmatrix.edit.js:623
-#, python-brace-format
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} is too small, minimum file size is {minSizeLimit}."
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:300
-#: assets/js/plugins/jquery.klearmatrix.edit.js:624
-#, python-brace-format
+#: assets/js/klearMatrix.compiled.js:316
 msgid "{file} is empty, please select files again without it."
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:300
-#: assets/js/plugins/jquery.klearmatrix.edit.js:625
-msgid ""
-"The files are being uploaded, if you leave now the upload will be cancelled."
+#: assets/js/klearMatrix.compiled.js:316
+msgid "The files are being uploaded, if you leave now the upload will be cancelled."
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:301
-#: assets/js/plugins/jquery.klearmatrix.edit.js:629
+#: assets/js/klearMatrix.compiled.js:317
 msgid "Upload File"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:302 assets/js/klearMatrix.compiled.js:303
-#: assets/js/plugins/jquery.klearmatrix.edit.js:639
-#: assets/js/plugins/jquery.klearmatrix.edit.js:670
+#: assets/js/klearMatrix.compiled.js:318
+#: assets/js/klearMatrix.compiled.js:320
 msgid "ERROR"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:304
-#: assets/js/plugins/jquery.klearmatrix.edit.js:709
+#: assets/js/klearMatrix.compiled.js:321
 msgid "Required field"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:774
+#: assets/js/klearMatrix.compiled.js:325
 msgid "There is unsaved content."
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:776
+#: assets/js/klearMatrix.compiled.js:325
 msgid "Close the screen?"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:778
+#: assets/js/klearMatrix.compiled.js:325
 msgid "Attention!"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:307
-#: assets/js/plugins/jquery.klearmatrix.edit.js:788
+#: assets/js/klearMatrix.compiled.js:325
 msgid "Ignore changes and close"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:311
-#: assets/js/plugins/jquery.klearmatrix.edit.js:939
+#: assets/js/klearMatrix.compiled.js:330
 msgid "Auto-copied field"
 msgstr ""
 
-#: assets/js/klearMatrix.compiled.js:320
-#: assets/js/plugins/jquery.klearmatrix.new.js:132
+#: assets/js/klearMatrix.compiled.js:334
+msgid "characters remaining"
+msgstr ""
+
+#: assets/js/klearMatrix.compiled.js:340
+#: assets/js/plugins/jquery.klearmatrix.new.js:137
 msgid "Add another record"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.delete.js:89
+#: assets/js/plugins/jquery.klearmatrix.delete.js:112
 msgid "Delete"
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js:7
-msgid ""
-"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press "
-"ALT-0 for help"
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:18016
+msgid "Your browser doesn't support direct access to the clipboard. "
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/editable_selects.js:19
-msgid "value"
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:26381
+msgid "Rich Text Area. Press ALT-F9 for menu. "
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/autosave/plugin.min.js:1
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:27949
+msgid "Text"
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:27951
+msgid "Raw string"
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js:8
+msgid "Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help"
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:15
 msgid "You have unsaved changes are you sure you want to navigate away?"
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:19
+msgid "."
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:30
+msgid "%Y-%m-%d"
+msgstr ""
+
+#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:30
+msgid "%H:%M:%S"
 msgstr ""
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/kleargallery/plugin.min.js:9
 msgid "Galería de imágenes"
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:35
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:51
-msgid "%Y-%m-%d"
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/insertdatetime/plugin.min.js:1
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:35
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js:51
-msgid "%H:%M:%S"
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/editable_selects.js:19
+#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/utils/editable_selects.js:19
+msgid "value"
 msgstr ""
 
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:16
@@ -364,3 +463,4 @@ msgstr ""
 #: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:56
 msgid "Aplicar estilos al elemento seleccionado"
 msgstr ""
+

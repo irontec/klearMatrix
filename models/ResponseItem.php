@@ -35,6 +35,9 @@ class KlearMatrix_Model_ResponseItem
 
     // Especifica si un filedset tiene la clase fullWidth (width: auto);
     protected $_fullWidth;
+    
+    // Detectar el autorefresh
+    protected $_autoRefresh;
 
     //Condición raw injectadas al where directamente
     protected $_rawCondition;
@@ -125,6 +128,7 @@ class KlearMatrix_Model_ResponseItem
         '_preconfiguredFilters' => array('preconfiguredFilters', false),
         '_presettedFilters' => array('presettedFilters', false),
         '_fixedPositions' => array('fixedPositions', false),
+        '_autoRefresh' => array('autoRefresh', false),
     );
 
     //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
@@ -408,6 +412,11 @@ class KlearMatrix_Model_ResponseItem
     public function getFullWidth()
     {
         return $this->_fullWidth;
+    }
+    
+    public function getAutoRefresh()
+    {
+        return $this->_autoRefresh;
     }
 
 

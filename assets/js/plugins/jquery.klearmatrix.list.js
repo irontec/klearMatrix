@@ -191,7 +191,7 @@
                 }
 
                 if (numTime == 1) {
-                    clearInterval(self._intervals[iden]);
+                    _self._clearInterval();
                     $(self).klearModule("reDispatch");
                     return;
                 }
@@ -204,13 +204,13 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // DETENER LA CUENTA REGRESIVA DE TIEMPO Y DEL CONTADOR
-                clearInterval(self._intervals[iden]);
+                // DETENER  
+                clearInterval(_self._intervals[iden]);
                 
                 $('.generalOptionsToolbar .refresh',panel).fadeOut();
                 $('.generalOptionsToolbar .refresh .count',panel).text(myTime);
 
-                self._intervals[iden] = setInterval(function() {contadorRefresh()}, 1000);
+                _self._intervals[iden] = setInterval(function() {contadorRefresh()}, 1000);
             });
 
             // Orden de columnas

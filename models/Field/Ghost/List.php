@@ -167,6 +167,12 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         if (isset($this->_config->getProperty('config')->filterField)) {
             $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getPrimaryKey()."')";
         }
+        
+        if (isset($this->_config->getProperty('config')->forcedValues)) {
+            foreach ($this->_config->getProperty('config')->forcedValues as $fieldName => $valueField) {
+                $whereParts[] = "(".$fieldName." = '".$valueField."')";
+            }
+        }
 
         if ($filterWhere = $this->_getFilterWhere() && trim($filterWhere)!="") {
             $whereParts[] = $filterWhere;

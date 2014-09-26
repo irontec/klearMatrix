@@ -479,10 +479,10 @@ class KlearMatrix_Model_Column
 
     protected function _getConditions($searchFields, $values)
     {
-        foreach ($searchFields as $searchField) {
+      $fieldValues = array();
+      foreach ($searchFields as $searchField) {
             $cont = 1;
             $quotedSearchField = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($searchField);
-            $fieldValues = array();
             foreach ($values as $_val) {
 
                 $template = ":" . $searchField . $cont ;

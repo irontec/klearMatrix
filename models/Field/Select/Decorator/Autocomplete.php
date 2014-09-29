@@ -117,7 +117,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $query = array();
         $params = array();
         foreach ( $this->_fields as $field ) {
-            $query[] = $field . ' LIKE ?';
+            $query[] = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($field) . ' LIKE ?';
             $params[] = '%' . $searchTerm . '%';
         }
 

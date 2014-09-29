@@ -167,7 +167,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         if (isset($this->_config->getProperty('config')->filterField)) {
             $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getPrimaryKey()."')";
         }
-        
+
         if (isset($this->_config->getProperty('config')->forcedValues)) {
             foreach ($this->_config->getProperty('config')->forcedValues as $fieldName => $valueField) {
                 $whereParts[] = "(".$fieldName." = '".$valueField."')";
@@ -181,6 +181,15 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $where = implode(" and ", $whereParts);
 
         $order = $this->_config->getProperty('config')->order;
+
+        if (is_object($order)) {
+            $orderParts = array();
+            foreach ($order as $orderField) {
+                $orderParts[] = $orderField;
+            }
+            $order = $orderParts;
+        }
+
         $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
 
@@ -190,12 +199,12 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
 
         $ulParts = array();
-		$i = 0;
+    $i = 0;
         foreach ($this->_items as $i=>$item) {
             $id = $this->_keys[$i];
             $class = "";
             if ($i%2 == 0){
-            	$class = 'class="highlight"';
+              $class = 'class="highlight"';
             }
             $li = '<li data-id="' . $id . '" '.$class.'>';
             $li .= $item;

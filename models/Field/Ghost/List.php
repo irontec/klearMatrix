@@ -174,7 +174,8 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             }
         }
 
-        if ($filterWhere = $this->_getFilterWhere() && trim($filterWhere)!="") {
+        $filterWhere = $this->_getFilterWhere();
+        if ($filterWhere && trim($filterWhere)!="") {
             $whereParts[] = $filterWhere;
         }
 
@@ -312,5 +313,11 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         return array();
     }
 
+    protected function _getFilterCondition($filter)
+    {
+        $mainRouter = $this->_parentField->getColumn()->getRouteDispatcher();
+        $filter->setRouteDispatcher($mainRouter);
+        return $filter->getCondition();
+    }
 
 }

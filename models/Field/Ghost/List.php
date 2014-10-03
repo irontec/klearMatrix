@@ -92,6 +92,19 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         return $fieldConfig->getProperty("fields");
     }
 
+//     protected function _getLabels()
+//     {
+//         $fieldName = $this->_config->getProperty('config')->fieldName;
+
+//         if (!is_object($fieldName)) {
+//             return array($fieldName);
+//         }
+
+//         $fieldConfig = new Klear_Model_ConfigParser();
+//         $fieldConfig->setConfig($fieldName);
+//         return $fieldConfig->getProperty("labels");
+//     }
+
     protected function _getFieldsTemplate()
     {
         $fieldName = $this->_config->getProperty('config')->fieldName;
@@ -115,11 +128,19 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $fields = $this->_getFields();
         $fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
         $replace = array();
-        foreach ($fields as $fieldName) {
-            $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
-            $replace['%' . $fieldName . '%'] = $dataModel->$getter();
-        }
 
+        $tableFields = array();
+        foreach ($fields as $key => $fieldName) {
+            if (is_object($fieldName)) {
+                $tableFields[$key] = $fieldName;
+            } else {
+                $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
+                $replace['%' . $fieldName . '%'] = $dataModel->$getter();
+            }
+        }
+        if (count($tableFields) > 0) {
+            return $tableFields;
+        }
         return str_replace(array_keys($replace), $replace, $fieldsTemplate);
     }
 
@@ -199,34 +220,25 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
 
 
-        $ulParts = array();
-    $i = 0;
-        foreach ($this->_items as $i=>$item) {
-            $id = $this->_keys[$i];
-            $class = "";
-            if ($i%2 == 0){
-              $class = 'class="highlight"';
-            }
-            $li = '<li data-id="' . $id . '" '.$class.'>';
-            $li .= $item;
-            foreach ($options as $option) {
-                $option->setParentHolderSelector("li");
-                $li .= '<span class="opClone" data-link="'.$option->getName().'"></span>';
-            }
-            $li .= '</li>';
-            $ulParts[] = $li;
+        $asTable = $this->_config->getProperty('config')->showAsTable;
+        if ($asTable === true) {
+            $content = $this->_getTable($options, $results);
+            $ghostCounterClass = "ghostTableCounter";
+        } else {
+            $content = $this->_getList($options);
+            $ghostCounterClass = "ghostListCounter";
         }
 
-        $ret  = '<div class="ghostListCounter">';
+        $ret  = '<div class="'.$ghostCounterClass.'">';
         $ret .= '<span class="ui-icon ui-icon-search"></span>';
         $ret .= '<input type="text" /><br>(<span class="counter"></span> items)</div>';
-        $ret .= '<ul class="ui-widget-content ui-corner-all ghostList">';
-        $ret .= implode("\n", $ulParts);
-        $ret .= '</ul>';
+        $ret .= $content;
         $ret .= '<div class="ghostListOptions">';
-        foreach ($options as $option) {
-            $option->setParentHolderSelector("li");
-            $ret .= $option->toAutoOption();
+        if ($asTable !== true) {
+            foreach ($options as $option) {
+                $option->setParentHolderSelector("li");
+                $ret .= $option->toAutoOption();
+            }
         }
         $ret .= '</div>';
         return $ret;
@@ -320,4 +332,157 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         return $filter->getCondition();
     }
 
+    protected function _getList($options)
+    {
+        $ulParts = array();
+        $i = 0;
+        foreach ($this->_items as $i=>$item) {
+            $id = $this->_keys[$i];
+            $class = "";
+            if ($i%2 == 0){
+                $class = 'class="highlight"';
+            }
+            $li = '<li data-id="' . $id . '" '.$class.'>';
+            $li .= $item;
+            foreach ($options as $option) {
+                $option->setParentHolderSelector("li");
+//                 $li .= $option->toAutoOption();
+                $li .= '<span class="opClone" data-link="'.$option->getName().'"></span>';
+            }
+            $li .= '</li>';
+            $ulParts[] = $li;
+        }
+        $list = '<ul class="ui-widget-content ui-corner-all ghostList">';
+        $list .= implode("\n", $ulParts);
+        $list .= '</ul>';
+        return $list;
+    }
+
+    protected function _getTable($options, $results)
+    {
+        $tableParts = array();
+        $i = 0;
+        $tr = "<tr>";
+        $fields = $this->_getFields();
+        foreach ($fields as $key => $value) {
+            if (is_object($value)) {
+                $fieldConfig = new Klear_Model_ConfigParser();
+                $fieldConfig->setConfig($value);
+                $label = Klear_Model_Gettext::gettextCheck($fieldConfig->getProperty("title"));
+            } else {
+                $label = $value;
+            }
+            $tr .= '<th class="ui-widget-header" data-field="'.$label.'" style="cursor: pointer;">';
+            $tr .= '<span class="title">'.$label.'</span>';
+            $tr .= '</th>';
+        }
+        if (isset($this->_config->getProperty('config')->options)) {
+            $tr .= '<th class="ui-widget-header notSortable" data-field="_fieldOptions">';
+            $optionsTranslated = Klear_Model_Gettext::gettextCheck("_('Options')");
+            $tr .= '<span class="title">'.$optionsTranslated.'</span>';
+            $tr .= '</th>';
+        }
+        $tr .= "</tr>";
+
+        $klearBootstrap = Zend_Controller_Front::getInstance()
+            ->getParam("bootstrap")->getResource('modules')->offsetGet('klear');
+        $siteLanguage = $klearBootstrap->getOption('siteConfig')->getLang();
+        $currentLanguage = $siteLanguage->getLanguage();
+
+        $rows = array();
+        foreach ($results as $dataModel) {
+//             $currentLanguage = $dataModel->getCurrentLanguage();
+            $dataMlFields = array_keys($dataModel->getMultiLangColumnsList());
+            $fieldsValues = array();
+            foreach ($fields as $key => $value) {
+                if (is_object($value)) {
+                    $fieldName = $key;
+                    if (in_array($fieldName, $dataMlFields)) {
+                        $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName)).ucfirst($currentLanguage);
+                    } else {
+                        $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
+                    }
+                    $fieldConfig = new Klear_Model_ConfigParser();
+                    $fieldConfig->setConfig($value);
+                    if ($fieldConfig->getProperty("mapperName")) {
+                        $mapperName = $fieldConfig->getProperty("mapperName");
+                        $id = $dataModel->$getter();
+                        $targetMapper = new $mapperName();
+                        $targetModel = $targetMapper->find($id);
+                        if (is_null($targetModel)) {
+                            $fieldsValues[] = $id;
+                            continue;
+                        }
+                        $targetMlFields = array_keys($targetModel->getMultiLangColumnsList());
+                        $mapperField = $fieldConfig->getProperty("field");
+                        if (is_object($mapperField)) {
+                            $pattern = $fieldConfig->getProperty("pattern");
+                            $_fields = array();
+                            foreach ($mapperField as $_field) {
+                                if (in_array($_field, $targetMlFields)) {
+                                    $getter = 'get' . ucfirst($_field).ucfirst($currentLanguage);
+                                } else {
+                                    $getter = 'get' . ucfirst($_field);
+                                }
+                                $_fields['%'.$_field.'%'] = $targetModel->$getter();
+                            }
+                            $fieldsValues[] = str_replace(array_keys($_fields), $_fields, $pattern);
+                        } else {
+                            $getter = 'get' . ucfirst($mapperField);
+                            $fieldsValues[] = $targetModel->$getter();
+                        }
+                    } else {
+                        $fieldsValues[] = $dataModel->$getter();
+                    }
+                } else {
+                    $fieldName = $value;
+                    if (in_array($fieldName, $dataMlFields)) {
+                        $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName)).ucfirst($currentLanguage);
+                    } else {
+                        $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
+                    }
+                    $fieldsValues[] = $dataModel->$getter();
+                }
+            }
+            $rows[] = $fieldsValues;
+        }
+
+//         $defaultOption = null;
+//         $optionsConfig = $this->_config->getProperty('config')->options;
+//         if ($optionsConfig) {
+//             $defaultConfig = new Klear_Model_ConfigParser();
+//             $defaultConfig->setConfig($optionsConfig);
+//             $defaultOptionName = $defaultConfig->getProperty("default");
+//             if ($defaultOptionName) {
+//                 foreach ($options as $option) {
+//                     if ($option->getName() == $defaultOptionName) {
+//                         $defaultOption = $option;
+//                     }
+//                 }
+//             }
+//         }
+
+        foreach ($rows as $i=>$fieldsValues) {
+            $id = $this->_keys[$i];
+            $tr .= '<tr class="hideable" data-id="'. $id . '">';
+            foreach ($fieldsValues as $value) {
+                $tr .= '<td class="ui-widget-content default">'.$value.'</td>';
+            }
+            if (count($options) > 0) {
+                $tr .= '<td class="ui-widget-content options">';
+                foreach ($options as $option) {
+                    $option->setParentHolderSelector("tr");
+                    $tr .= $option->toAutoOption();
+                }
+                $tr .= '</td></tr>';
+            }
+        }
+        $tableParts[] = $tr;
+        $table = '<div class="ui-widget-content ui-corner-all ghostTableContainer">';
+        $table .= '<table class="kMatrix ghostTable">';
+        $table .= implode("\n", $tableParts);
+        $table .= '</table>';
+        $table .= '</div>';
+        return $table;
+    }
 }

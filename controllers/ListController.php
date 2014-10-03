@@ -110,13 +110,23 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $page = $this->_getCurrentPage();
         $offset = $this->_getOffset($count, $page);
 
-        $results = $this->_mapper->fetchList($where, $order, $count, $offset);
+        $config = $this->_item->getConfig();
+        if ($config->getProperty("rawSelect")) {
+            $result = $this->_getRawSelectResults($config, $where, $order, $count, $offset);
+            $results = $result["results"];
+            $rawCount = $result["rawCount"];
+        } else {
+            $results = $this->_mapper->fetchList($where, $order, $count, $offset);
+        }
+
         $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
 
         if (is_array($results)) {
-
-            $totalItems = $this->_mapper->countByQuery($where);
-
+            if ($config->getProperty("rawSelect")) {
+                $totalItems = $rawCount;
+            } else {
+                $totalItems = $this->_mapper->countByQuery($where);
+            }
             if (!is_null($count) && !is_null($offset)) {
 
                 $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($totalItems));
@@ -437,5 +447,44 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         fseek($fp, mb_strlen(PHP_EOL) * -1, SEEK_CUR);
         fwrite($fp, $newLine);
 
+    }
+
+    protected function _getRawSelectResults($config, $where, $order, $count, $offset)
+    {
+        if (!is_null($where)) {
+            $whereString = $where[0];
+            if ($config->getProperty("searchAlias")) {
+                $pattern = "#`[^`]*`#";
+                preg_match_all($pattern, $whereString, $matches);
+                $whereFields = $matches[0];
+                $replaces = array();
+                foreach ($whereFields as $whereField) {
+                    $replaces[] = "`".$config->getProperty("searchAlias")."`.`".trim($whereField, "`")."`";
+                }
+                $whereString = str_replace($whereFields, $replaces, $whereString);
+            }
+            $whereReplaces = $where[1];
+            foreach ($whereReplaces as $key => $value) {
+                $whereReplaces[$key] = "'".$value."'";
+            }
+            $whereCond = "WHERE ".str_replace(array_keys($whereReplaces), $whereReplaces, $whereString);
+        } else {
+            $whereCond = "";
+        }
+        $countQuery = "SELECT count(*) as count ".$config->getProperty("rawSelect")." ".$whereCond;
+        $countResult = $this->_mapper->getDbTable()->getAdapter()->fetchAll($countQuery);
+        $rawCount = $countResult[0]["count"];
+        $query = "SELECT * ".$config->getProperty("rawSelect")." ".$whereCond.
+        " ORDER BY ".implode(",", $order)." LIMIT ".$count." OFFSET ".$offset;
+        $resultSet = $this->_mapper->getDbTable()->getAdapter()->fetchAll($query);
+        $results = array();
+        foreach ($resultSet as $result) {
+            $model = $this->_mapper->loadModel($result);
+            $results[] = $model;
+        }
+        $result = array();
+        $result["rawCount"] = $rawCount;
+        $result["results"] = $results;
+        return $result;
     }
 }

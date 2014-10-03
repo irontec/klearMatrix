@@ -231,7 +231,7 @@ dl.multiLanguage dd.copied span.copied {
 }
 
 .klearMatrix_form fieldset.superContainer div.containerFixed {
-	border:0;
+  border:0;
 }
 
 
@@ -379,7 +379,7 @@ form.klearMatrix_form.autoclose-dialog {
 }
 
 .klearMatrixFiltering p.title {
-	float:left;
+  float:left;
 }
 
 .klearMatrixFilteringForm .applyFilters {
@@ -449,8 +449,8 @@ form.klearMatrix_form.autoclose-dialog {
 }
 
 .klearMatrixFilteringForm p.preconfiguredFilters {
-	text-align:left;
-	margin-bottom: 0.5em;
+  text-align:left;
+  margin-bottom: 0.5em;
 }
 
 .fieldInfo-tooltip {
@@ -557,46 +557,46 @@ img.imgFilePreviewList {
 }
 
 .filterItem span.infoShow {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .filterItem .infoDiv {
-	background-color: ghostwhite;
-	padding: 10px 20px;
-	margin-bottom: 10px;
-	border: 1px solid #aaa;
-	border-radius: 5px;
-	font-size: 0.9em;
-	max-width: 70%;
+  background-color: ghostwhite;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  font-size: 0.9em;
+  max-width: 70%;
 }
 
 .filterItem .infoDiv ul {
-	padding: 5px 25px;
-	list-style-type: square;
+  padding: 5px 25px;
+  list-style-type: square;
 }
 
 .filterItem .infoDiv ul li:not(:last-child) {
-	margin-bottom: 3px;
+  margin-bottom: 3px;
 }
 
 .filterItem .infoDiv p {
-	margin: 5px 0;
+  margin: 5px 0;
 }
 
 span.autocompleteCounter {
-	font-size: 0.8em;
-	border: 1px solid #aaa;
-	color: #aaa;
-	padding: .2em;
-	margin-left: .5em;
+  font-size: 0.8em;
+  border: 1px solid #aaa;
+  color: #aaa;
+  padding: .2em;
+  margin-left: .5em;
 }
 
 .deleteable-item,
 .updateable-item,
 .clonable-item {
-	font-size:0.7em;
-	opacity:0.8;
-	margin-top: 0.8em;
+  font-size:0.7em;
+  opacity:0.8;
+  margin-top: 0.8em;
 }
 
 .updateable-control {
@@ -605,24 +605,24 @@ span.autocompleteCounter {
 }
 
 a.option {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 /********* CSS para la opción FixedPositions *********/
 
 /* Para todos los campos dentro del FixedPosition */
 fieldset .containerFixed input, fieldset .containerFixed .selectboxit-container, fieldset .containerFixed .selectboxit-container .selectboxit {
-	width: 90%!important;
+  width: 90%!important;
 }
 
 /* Para el campo autocomplete */
 fieldset .containerFixed input.ui-autocomplete-input {
-	width: 85%!important;
+  width: 85%!important;
 }
 
 /* Para el campo requerido */
 fieldset .containerFixed input:required {
-	width: 80%!important;
+  width: 80%!important;
 }
 
 /* Para el campo numérico */
@@ -660,39 +660,53 @@ div.size-indicator span.zero{
 }
 
 ul.ghostList {
-	height: 150px;
+  height: 150px;
     max-height: 200px;
     width: 300px;
     overflow: hidden;
 }
-
+div.ghostTableContainer {
+  height: 150px;
+    max-height: 200px;
+    width: auto;
+    overflow: hidden;
+}
 ul.ghostList li{
-	margin: 0px;
-	border: none;
-	display: table-row;
+  margin: 0px;
+  border: none;
+  display: table-row;
 }
 ul.ghostList li.highlight{
-	background: #e9e9e9;
+  background: #e9e9e9;
 }
 ul.ghostList li a{
-	display: table-cell;
+  display: table-cell;
 }
 
 
 div.ghostListCounter {
-	margin: 0.5em 0;
+  margin: 0.5em 0;
 }
 div.ghostListCounter span.ui-icon {
-	float:left;
+  float:left;
 }
 table.kMatrix div.ghostListCounter {
-	display: none;
+  display: none;
+}
+div.ghostTableCounter {
+    margin: 0.5em 0;
+}
+div.ghostTableCounter span.ui-icon {
+    float:left;
+}
+table.kMatrix div.ghostTableCounter {
+    display: none;
 }
 
 table.kMatrix ul.ghostList {
-	border:0;
-	width:auto;
-	height: auto;
+  border:0;
+  width:auto;
+  height: auto;
 }
 
 fieldset .containerFixed ul.ghostList {
@@ -702,7 +716,9 @@ fieldset .containerFixed ul.ghostList {
 ul.ghostList:hover {
     overflow: auto;
 }
-
+div.ghostTableContainer:hover {
+    overflow: auto;
+}
 .postActionOptionsListUL {
     list-style: none;
     margin: 10px 0 0px 0;
@@ -711,7 +727,7 @@ ul.ghostList:hover {
 
 .postActionOptionsListUL li{
     display: inline;
-	margin: 0 7px 0 0;
-	padding: 2px;
+  margin: 0 7px 0 0;
+  padding: 2px;
 }
 

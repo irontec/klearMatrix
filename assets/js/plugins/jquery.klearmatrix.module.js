@@ -859,6 +859,26 @@
 
             })
             .trigger('keyup.ghostfilter');
+            $(".ghostTableCounter input",$container)
+            .off('doSum')
+            .on('doSum',function() {
+
+                var $parent = $(this).parent();
+                $("span.counter", $parent).html($parent.next("div.ghostTableContainer").find("tr.hideable:visible").length);
+            })
+            .off('keyup.ghostfilter')
+            .on('keyup.ghostfilter',function() {
+                var $items =  $(this).parent().next("div.ghostTableContainer").find("tr.hideable");
+                $items.show();
+                if ($(this).val() == "") {
+                    $(this).trigger("doSum");
+                    return;
+                }
+                $items.not(":contains("+$(this).val()+")").hide();
+                $(this).trigger("doSum");
+
+            })
+            .trigger('keyup.ghostfilter');
         }
     });
 

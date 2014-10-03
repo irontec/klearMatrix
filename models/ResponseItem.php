@@ -35,12 +35,15 @@ class KlearMatrix_Model_ResponseItem
 
     // Especifica si un filedset tiene la clase fullWidth (width: auto);
     protected $_fullWidth;
-    
+
     // Detectar el autorefresh
     protected $_autoRefresh;
 
     //Condición raw injectadas al where directamente
     protected $_rawCondition;
+    //Raw Query injectada directamente al dbtable
+    protected $_rawSelect;
+    protected $_searchAlias;
 
     protected $_forcedPk;
 
@@ -109,6 +112,8 @@ class KlearMatrix_Model_ResponseItem
         '_filterClass' => array('filterClass', false),
         '_forcedValues' => array('forcedValues', false),
         '_rawCondition' => array('rawCondition', false),
+        '_rawSelect' => array('rawSelect', false),
+        '_searchAlias' => array('searchAlias', false),
         '_forcedPk' => array('forcedPk', false),
         '_calculatedPkConfig' => array('calculatedPk', false),
         '_plugin' => array('plugin', false),
@@ -413,7 +418,7 @@ class KlearMatrix_Model_ResponseItem
     {
         return $this->_fullWidth;
     }
-    
+
     public function getAutoRefresh()
     {
         return $this->_autoRefresh;
@@ -960,7 +965,34 @@ class KlearMatrix_Model_ResponseItem
         return false;
     }
 
+    public function hasRawSelect()
+    {
 
+        return isset($this->_rawSelect);
+    }
+
+    public function getRawSelect()
+    {
+        if ($this->hasRawSelect()) {
+            return $this->_rawSelect;
+        }
+
+        return false;
+    }
+    public function hasSearchAlias()
+    {
+
+        return isset($this->_searchAlias);
+    }
+
+    public function getSearchAlias()
+    {
+        if ($this->hasSearchAlias()) {
+            return $this->_searchAlias;
+        }
+
+        return false;
+    }
     public function _getCondArray($field, $value, $paramName = null)
     {
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();

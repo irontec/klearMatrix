@@ -229,12 +229,12 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     {
         //Calculamos el orden del listado
         $orderField = $this->getRequest()->getPost("order");
+
         $orderColumn = $cols->getColFromDbName($orderField);
 
         if ($orderField && $orderColumn) {
             $this->_helper->log('Order column especified for:' . $this->_mapperName);
-            $order = $orderColumn->getOrderField();
-
+            $order = $orderColumn->getOrderField($cols->getLangs());
             if (! is_array($order)) {
                 $order = array($order);
             }
@@ -269,6 +269,18 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
                     $order = array($order);
                 }
+
+                $orders =array();
+                foreach ($order as $_order) {
+                    $orderColumn = $cols->getColFromDbName($_order);
+                    if (!is_null($orderColumn)) {
+                        $orders[] = $orderColumn->getOrderField($cols->getLangs());
+                    } else {
+                        $orders[] = $_order;
+                    }
+
+                }
+                $order = $orders;
 
                 if ($orderConfig->getProperty('type')) {
 

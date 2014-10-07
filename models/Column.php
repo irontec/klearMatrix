@@ -290,11 +290,28 @@ class KlearMatrix_Model_Column
         $this->_orderedType = $_orderType;
     }
 
-    public function getOrderField()
+    public function getOrderField($langs = null)
     {
         $orderField = $this->getFieldConfig()->getCustomOrderField();
         if ($orderField) {
             return $orderField;
+        }
+
+        if ($this->_isMultilang) {
+            $klearBootstrap = Zend_Controller_Front::getInstance()
+            ->getParam("bootstrap")->getResource('modules')->offsetGet('klear');
+            $siteLanguage = $klearBootstrap->getOption('siteConfig')->getLang();
+            $currentLanguage = $siteLanguage->getLanguage();
+
+            if (in_array($currentLanguage, $langs)) {
+                return $this->_dbFieldName."_".$currentLanguage;
+            }
+
+            $orderFields = array();
+            foreach ($langs as $lang) {
+                $orderFields[] = $this->_dbFieldName."_".$lang;
+            }
+            return $orderFields;
         }
 
         return $this->_dbFieldName;

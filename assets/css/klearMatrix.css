@@ -660,7 +660,7 @@ div.size-indicator span.zero{
 }
 
 ul.ghostList {
-  height: 150px;
+	display: table;
     max-height: 200px;
     width: 300px;
     overflow: hidden;

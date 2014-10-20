@@ -330,8 +330,9 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 
     }
 
-    protected function _dashboard($config){
-        $data['title'] = $config->title;
+    protected function _dashboard($config)
+    {
+        $data['title'] = Klear_Model_Gettext::gettextCheck($config->title);
 
         if ($config->useExplain) {
             $data['title'] .= ' ' . $this->_helper->translate('(Aproximated values)');

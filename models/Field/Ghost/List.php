@@ -466,7 +466,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             $id = $this->_keys[$i];
             $tr .= '<tr class="hideable" data-id="'. $id . '">';
             foreach ($fieldsValues as $value) {
-                $tr .= '<td class="ui-widget-content default">'.$value.'</td>';
+                $tr .= '<td class="ui-widget-content default">'.htmlentities($value).'</td>';
             }
             if (count($options) > 0) {
                 $tr .= '<td class="ui-widget-content options">';

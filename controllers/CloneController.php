@@ -113,6 +113,7 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                     $this->view->translate('Record not found. Could not clone.')
                 );
             }
+
             $newObj = clone $obj;
 
             // If object has related Files, they are cloned too
@@ -135,9 +136,69 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                 }
             }
             $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
+
             if (!$newObj->save()) {
                 throw new Exception('Unknown error');
             }
+
+            $newPk = $newObj->getPrimaryKey();
+
+            if ($this->_item->getConfig()->getProperty("cloneDependents")
+                    && $this->_item->getConfig()->getProperty("cloneDependents") === true) {
+
+                $mapperNameParts = explode("\\", $mapperName);
+                $tableName = $mapperNameParts[count($mapperNameParts)-1];
+                $relatedTables = $obj->getDependentList();
+
+                foreach ($relatedTables as $relatedTable) {
+                    if ($relatedTable["table_name"] == $tableName) {
+                        continue;
+                    }
+                    $getter = "get".$relatedTable["property"];
+                    $relatedModels = $obj->$getter();
+
+                    foreach ($relatedModels as $relatedModel) {
+                        $relatedColums = array();
+                        $parentList = $relatedModel->getParentList();
+                        foreach ($parentList as $parent) {
+                            if (in_array($tableName, $parent)) {
+                                $relatedColums[] = $parent["property"];
+                            }
+                        }
+
+                        if (count($relatedColums) > 0) {
+                            $relatedModel->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
+                            foreach ($relatedColums as $relatedColum) {
+                                $relatedValue = $relatedModel->{"get".$relatedColum}();
+                                if ($relatedValue && $relatedValue->getPrimaryKey() == $obj->getPrimaryKey()) {
+                                    $relatedModel->{"set".$relatedColum}($newObj);
+                                }
+                            }
+
+                            if (!$relatedModel->save()) {
+                                throw new Exception('Unknown error');
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            if ($postCloneMethods = $this->_item->getConfig()->getProperty("postCloneMethods")) {
+                $obj = $mapper->find($pk);
+                $newObj = $mapper->find($newPk);
+                $methods = array();
+                foreach ($postCloneMethods as $model => $method) {
+                    $methods[$model] = $method;
+                }
+                if (isset($methods["original"])) {
+                    $obj->{$methods["original"]}($newObj);
+                }
+                if (isset($methods["clonned"])) {
+                    $newObj->{$methods["clonned"]}($obj);
+                }
+            }
+
         } catch (Exception $e) {
             $this->_helper->log(
                 'Error cloning model for ' . $mapperName . ' > PK('.$pk.')',

@@ -664,6 +664,11 @@
              */
 
             $('a.option.command', this.element.klearModule("getPanel"))
+            .off('mouseup.commandOption')
+            .on('mouseup.commandOption',function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            })
             .off('click.commandOption')
             .on('click.commandOption', function(e, data) {
 
@@ -730,6 +735,7 @@
                     $option.trigger("click.commandOption");
                 });
             });
+              
 
             $("a[title]:not(.fieldInfo-box),span[title]", this.element.klearModule("getPanel")).tooltip();
 

@@ -208,8 +208,10 @@
 
                     config.onBeforeResize.call(el);
                     config.onResize.call(el);
-
-                    el.scrollLeft(0);
+                    
+                    if (el.attr('type') != 'text') {
+                        el.scrollLeft(0);
+                    }
 
                     if (config.animate && !immediate) {
                         el.stop(1,1).animate({

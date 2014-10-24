@@ -65,11 +65,12 @@ class KlearMatrix_Model_ResponseItem
     protected $_disableSave = false;
     protected $_disableAddAnother = false;
 
+    protected $_showFilterForm = false;
+
     /*
      * Filtros preconfigurados para pantallas ListController
      */
     protected $_preconfiguredFilters = array();
-
 
     /*
      * Filtros presetteados para pantallas ListController
@@ -131,6 +132,7 @@ class KlearMatrix_Model_ResponseItem
         '_useExplain' => array('useExplain', false),
         '_sectionsBlackList' => array('sectionsBlackList', false),
         '_preconfiguredFilters' => array('preconfiguredFilters', false),
+        '_showFilterForm' => array('showFilterForm', false),
         '_presettedFilters' => array('presettedFilters', false),
         '_fixedPositions' => array('fixedPositions', false),
         '_autoRefresh' => array('autoRefresh', false),
@@ -328,6 +330,11 @@ class KlearMatrix_Model_ResponseItem
         return $this->_customScripts;
     }
 
+    public function getShowFilterForm()
+    {
+        return $this->_showFilterForm;
+    }
+
     public function getPreconfiguredFilters()
     {
         if (is_null($this->_preconfiguredFilters)) {
@@ -356,7 +363,6 @@ class KlearMatrix_Model_ResponseItem
 
         $presettedFilters = new \Zend_Config(array(), true);
 
-
         foreach ($this->_presettedFilters as $key => $presettedFilter) {
 
             $keys = array_keys($presettedFilter->toArray());
@@ -372,7 +378,6 @@ class KlearMatrix_Model_ResponseItem
 
         }
 
-
         if (sizeof($presettedFilters) == 0) {
             $presettedFilters = NULL;
         }
@@ -384,7 +389,6 @@ class KlearMatrix_Model_ResponseItem
     {
         return $this->_config->getProperty($attribute);
     }
-
 
     /**
      * Devuelve un "cacho" de configuración de sección especificada con nomenclatura de clases
@@ -461,6 +465,7 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _createDependantColumn($columnConfig, $dependantConfig)
     {
+
         $column = $this->_createColumn($dependantConfig['property'], $columnConfig);
         $column->markAsDependant();
 

@@ -17,7 +17,7 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_paginator = false;
     protected $_csv = false;
-    
+
     protected $_autoRefresh = false;
 
     protected $_parentIden = false;
@@ -51,6 +51,7 @@ class KlearMatrix_Model_MatrixResponse
         'disableAddAnother',
         'autoClose',
         'fullWidth',
+        'showFilterForm',
         'autoRefresh'
     );
 
@@ -77,6 +78,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_preconfiguredFilters = array();
 
     protected $_info = false;
+    protected $_showFilterForm = false;
 
     //@var KlearMatrix_Model_ResponseItem;
     protected $_item;
@@ -332,7 +334,13 @@ class KlearMatrix_Model_MatrixResponse
         $this->_fullWidth = (bool)$fullWidth;
         return $this;
     }
-    
+
+    public function setShowFilterForm($show)
+    {
+        $this->_showFilterForm = $show;
+        return $this;
+    }
+
     public function setAutoRefresh($value)
     {
         if ($value) {
@@ -342,7 +350,7 @@ class KlearMatrix_Model_MatrixResponse
                 $this->_autoRefresh = 30;
             }
         }
-        
+
         return $this;
     }
 
@@ -443,6 +451,7 @@ class KlearMatrix_Model_MatrixResponse
             ->setPreconfiguredFilters($item->getPreconfiguredFilters())
             ->setFixedPositions($item->getFixedPositions())
             ->setFullWidth($item->getFullWidth())
+            ->setShowFilterForm($item->getShowFilterForm())
             ->setAutoRefresh($item->getAutoRefresh());
 
     }

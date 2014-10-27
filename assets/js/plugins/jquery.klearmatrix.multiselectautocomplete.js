@@ -114,6 +114,8 @@
         _initSelectedValue: function () {
             var preloadValue = this.options.cache.element.val();
             var recoveredValue = this.options.cache.element.data("recoveredValue");
+            
+            this.options.cache.originalValue = preloadValue;
 
             if (preloadValue || recoveredValue) {
 
@@ -154,7 +156,7 @@
                                 _parentContext.options.cache.element.append(newOption);
                             }
 
-                            _parentContext._addToSelectedList(record.id, record.label);
+                            _parentContext._addToSelectedList(record.id, record.label, true);
                         });
                       }
                    });
@@ -162,7 +164,7 @@
                 }
             }
         },
-        _addToSelectedList: function (id, label) {
+        _addToSelectedList: function (id, label, isReload) {
 
             if (this.options.cache.selectedList.find('li[data-value='+ id +']').length == 0) {
 
@@ -185,14 +187,39 @@
             } else {
                 targetOption.attr("selected", "selected");
             }
-            this.options.cache.element.addClass('changed');
+            
+            if (!isReload) {
+                
+                var currentValue = this.options.cache.element.val();
+                var originalValue = this.options.cache.originalValue;
+                
+                if (this.checkArrays(originalValue, currentValue)) {
+                    this.options.cache.element.removeClass('changed');
+                } else {
+                    this.options.cache.element.addClass('changed');
+                }
+                
+            }
+            
         },
 
         _removeFromSelectedList: function (node) {
+            
             var nodeValue = node.attr("data-value");
             node.remove();
             this.options.cache.element.find("option[value="+nodeValue+"]").removeAttr("selected");
-            this.options.cache.element.addClass('changed');
+            
+            var currentValue = this.options.cache.element.val();
+            var originalValue = this.options.cache.originalValue;
+            
+            if (this.checkArrays(originalValue, currentValue)) {
+                this.options.cache.element.removeClass('changed');
+            } else {
+                this.options.cache.element.addClass('changed');
+            }
+            
+            this.options.parent.options.theForm.trigger("updateChangedState");
+            
         },
 
         _cleanSelectedList: function() {
@@ -331,6 +358,16 @@
 
             $.Widget.prototype.destroy.call( this );
             return this;
+        },
+        checkArrays: function( arrA, arrB ) {
+
+            if(arrA.length !== arrB.length) return false;
+
+            var cA = arrA.slice().sort().join(","); 
+            var cB = arrB.slice().sort().join(",");
+
+            return cA===cB;
+
         }
     });
 

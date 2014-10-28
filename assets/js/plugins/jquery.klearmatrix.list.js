@@ -39,7 +39,7 @@
             for (idx in this._intervals) {
                 if (idx == $(this.element.klearModule("getPanel")).attr("id")) {
                     clearInterval(this._intervals[idx]);
-                }  
+                }
             }
         },
         _applyDecorators : function() {
@@ -106,11 +106,11 @@
                 // Haciendo toda la tupla clickable para la default option
                 e.stopPropagation();
                 e.preventDefault();
-                
+
                 if ($(this).is(".options")) {
                     return;
                 }
-                
+
                 if ($(this).hasClass("multiItem")) {
                     var $chkBox = $("input:checkbox",$(this));
                     $chkBox.prop('checked', !($chkBox.is(':checked')));
@@ -127,7 +127,7 @@
                     }
                     return;
                 }
-                
+
                 $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default", $(this).parent('tr')));
 
                 var $optionAnchor = $("a.option.default", $(this).parent('tr'));
@@ -165,9 +165,9 @@
                     .klearModule("reDispatch");
 
             });
-            
+
             // REFRESCAR EL LISTADO
-            var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");          
+            var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");
             var iden = $(panel).attr("id");
             this._clearInterval();
 
@@ -198,15 +198,15 @@
 
                 $('.generalOptionsToolbar .refresh .count',panel).html(newTime);
             }
-            
+
             // DETENER EL REFRESCO DEL LISTADO
             $('.generalOptionsToolbar .refresh',panel).on('click',function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                // DETENER  
+
+                // DETENER
                 clearInterval(_self._intervals[iden]);
-                
+
                 $('.generalOptionsToolbar .refresh',panel).fadeOut();
                 $('.generalOptionsToolbar .refresh .count',panel).text(myTime);
 
@@ -235,7 +235,7 @@
                     .klearModule("option","dispatchOptions",_dispatchOptions)
                     .klearModule("reDispatch");
             }).css("cursor","pointer");
-            
+
             $("th.multiItem", panel).on("mouseup",function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -244,11 +244,11 @@
                 $(".multiItem input:checkbox", panel).prop('checked', targetValue);
                 return;
             }).css("cursor","pointer");
-            
+
             $(".multiItem input:checkbox", panel).on("click",function(e) {
                 e.preventDefault();
             });
-            
+
             $("th:not(.notSortable) span.filter",panel).on("click",function(e) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -256,8 +256,13 @@
 
             $("th.multiItem", panel).on('refreshButtons',function(e) {
                 var numberOfChecks = $("td.multiItem input:checked", panel).length;
-                var disabled = (numberOfChecks == 0);
+//                var disabled = (numberOfChecks == 0);
                 $("a._generalOption[data-multiitem]", panel).each(function() {
+                	if ($(this).data("alwaysenabled") === true) {
+                		var disabled = false;
+                	} else {
+                		var disabled = (numberOfChecks == 0);
+                	}
                     $(this).button("option", "disabled", disabled);
                     if (numberOfChecks > 0) {
                         $("sup",$(this)).html('('+numberOfChecks+')');
@@ -268,14 +273,14 @@
                 var headChecked = (numberOfChecks == $("td.multiItem input:checkbox", panel).length);
                 $("th.multiItem input:checkbox", panel).prop('checked', headChecked);
             });
-            
+
             $(".multiItem", panel).on('mouseup',function() {
-                $("th.multiItem", panel).trigger('refreshButtons'); 
+                $("th.multiItem", panel).trigger('refreshButtons');
             });
-            
+
             $("th.multiItem", panel).trigger('refreshButtons');
-            
-            
+
+
             $("span.mlTag",panel).on("click",function(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -670,7 +675,7 @@
                     };
 
                     if (! $(this).data('command')) {
-                        $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command"); 
+                        $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command");
                         requestData['command'] = $(this).data('fielddecorator') + "_command";
                     }
 

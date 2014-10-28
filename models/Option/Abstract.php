@@ -28,6 +28,8 @@ abstract class KlearMatrix_Model_Option_Abstract
 
     protected $_skip = false;
 
+    protected $_alwaysEnabled = false;
+
 
     /**
      * Especifica si una opción debe sustituir parent con item a la hora ed dibujar el título
@@ -48,6 +50,7 @@ abstract class KlearMatrix_Model_Option_Abstract
             'labelReplaceParentWithItem',
             'shortcut',
             'multiItem',
+            'alwaysEnabled',
             'showOnlyOnNotNull',
             'showOnlyOnNull',
             'parentHolderSelector',
@@ -74,6 +77,7 @@ abstract class KlearMatrix_Model_Option_Abstract
         $this->_multiItem = (bool)$this->_config->getProperty("multiItem");
         $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
         $this->_showOnlyOnNull = (bool)$this->_config->getProperty("optionShowOnlyOnNull");
+        $this->_alwaysEnabled = (bool)$this->_config->getProperty("alwaysEnabled");
 
         // Propiedad que indica al lanzador de la acción desde donde coger el ID (enviado al request)
         // No tiene nada que ver con parentOptionCustomizer

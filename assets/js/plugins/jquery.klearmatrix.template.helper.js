@@ -884,6 +884,7 @@
                     disabledTime : option.disabledTime || false,
                     multiItem: option.multiItem || false,
                     mustShowLabel: mustShowLabel,
+                    alwaysEnabled: option.alwaysEnabled,
                     parentHolderSelector: option.parentHolderSelector || false,
                     buttonLabel: this.buildTitleString(buttonLabel)
             };

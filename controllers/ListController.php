@@ -62,13 +62,13 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $this->_mapperName = $this->_item->getMapperName();
         $this->_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_mapperName);
         $this->_helper->log('List mapper: ' . $this->_mapperName);
-
+        
     }
 
 
     protected function _getIgnoreBlackList()
     {
-        if ($this->getRequest()->getParam("format") == 'csv') {
+        if ($this->_helper->ContextSwitch()->getCurrentContext() == 'csv') {
             $csvParams = $this->_item->getCsvParameters();
             if ($csvParams['ignoreBlackList']) {
                 return true;
@@ -79,6 +79,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        $this->_initContextParams();
         $data = new KlearMatrix_Model_MatrixResponse();
 
         $ignoreBlackList = $this->_getIgnoreBlackList();
@@ -498,5 +499,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $result["rawCount"] = $rawCount;
         $result["results"] = $results;
         return $result;
+    }
+
+    protected function _initContextParams()
+    {
+        if ($this->_helper->ContextSwitch()->getCurrentContext() == 'csv') {
+            $csvParams = $this->_item->getCsvParameters();
+            if (is_int($csvParams['executionSeconds'])) {
+                set_time_limit($csvParams['executionSeconds']);
+            }
+        }
     }
 }

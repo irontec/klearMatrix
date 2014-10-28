@@ -650,10 +650,9 @@
                 
                 $.klear.request(reqOpts,function() {
                 	$button.button("option", "disabled", false);
-                    $button.tooltip('destroy').attr("title", curTitle).tooltip();
+                    $button.tooltip('close').attr("title", curTitle).tooltip();
                     $("span.ui-silk",$button).removeClass("spining");
                 },function() {
-                    
                      $(self).klearModule("showDialogError", $.translate("Error download CSV file.") + '<br />' + $.translate("Please contact administrator."),
                         {
                             title: $.translate("Error")
@@ -661,7 +660,7 @@
                     );
                     
                     $button.button("option", "disabled", false);
-                    $button.tooltip('destroy').attr("title", curTitle).tooltip();
+                    $button.tooltip('close').attr("title", curTitle).tooltip();
                     $("span.ui-silk",$button).removeClass("spining");
                 });
             });

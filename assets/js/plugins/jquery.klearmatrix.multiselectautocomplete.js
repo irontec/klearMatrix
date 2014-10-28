@@ -361,7 +361,8 @@
         },
         checkArrays: function( arrA, arrB ) {
 
-            if(arrA.length !== arrB.length) return false;
+            if (arrA == undefined) return false;
+            if (arrA.length !== arrB.length) return false;
 
             var cA = arrA.slice().sort().join(","); 
             var cB = arrB.slice().sort().join(",");

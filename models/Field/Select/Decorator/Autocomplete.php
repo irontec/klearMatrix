@@ -116,9 +116,29 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         $query = array();
         $params = array();
+
+        $startParam = "%";
+        $endParam = "%";
+        if ($this->_commandConfiguration->matchAt) {
+            switch ($this->_commandConfiguration->matchAt) {
+                case "start":
+                    $startParam = "";
+                    $endParam = "%";
+                    break;
+                case "end":
+                    $startParam = "%";
+                    $endParam = "";
+                    break;
+                default:
+                    $startParam = "%";
+                    $endParam = "%";
+                    break;
+            }
+        }
+
         foreach ( $this->_fields as $field ) {
             $query[] = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($field) . ' LIKE ?';
-            $params[] = '%' . $searchTerm . '%';
+            $params[] = $startParam.$searchTerm . $endParam;
         }
 
         $query = '('. implode(" OR ", $query) .')';

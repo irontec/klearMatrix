@@ -731,3 +731,40 @@ div.ghostTableContainer:hover {
   padding: 2px;
 }
 
+
+.spining {
+  -webkit-animation: spining 2s infinite linear;
+  -moz-animation: spining 2s infinite linear;
+  -o-animation: spining 2s infinite linear;
+  animation: spining 2s infinite linear;
+  -webkit-transform-origin: 50% 50%;
+  transform-origin:50% 50%;
+  -ms-transform-origin:50% 50%; /* IE 9 */
+}
+
+@-moz-keyframes spining {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spining {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spining {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

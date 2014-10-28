@@ -630,6 +630,7 @@
                         screen: _self.options.data.screen,
                         post: _tmpOptions,
                         external: true
+                        
                     };
 
 
@@ -637,8 +638,17 @@
                     reqOpts.pk = _dispatchOptions.pk;
                     reqOpts.screen = _dispatchOptions.screen;
                 }
-
-                $.klear.request(reqOpts);
+                var $button = $(this);
+                $button.button("option", "disabled", true);
+                $("span.ui-silk",$button).addClass("spining");
+                var curTitle = $button.attr("title");
+                $button.attr("title",$.translate("Loading content")).tooltip();
+                
+                $.klear.request(reqOpts,function() {
+                    $button.button("option", "disabled", false);
+                    $button.attr("title", curTitle).tooltip();
+                    $("span.ui-silk",$button).removeClass("spining");
+                });
             });
 
             //Autocompletes

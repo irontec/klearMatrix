@@ -379,7 +379,6 @@
             $(".klearMatrixFiltering input[name=addFilters]",panel).on('change',function(e) {
 
                 if ($(".klearMatrixFiltering .filteredFields .field",panel).length<=1) {
-
                     return;
                 }
 
@@ -650,8 +649,19 @@
                 $button.attr("title",$.translate("Loading content")).tooltip();
                 
                 $.klear.request(reqOpts,function() {
+                	$button.button("option", "disabled", false);
+                    $button.tooltip('destroy').attr("title", curTitle).tooltip();
+                    $("span.ui-silk",$button).removeClass("spining");
+                },function() {
+                    
+                     $(self).klearModule("showDialogError", $.translate("Error download CSV file.") + '<br />' + $.translate("Please contact administrator."),
+                        {
+                            title: $.translate("Error")
+                        }
+                    );
+                    
                     $button.button("option", "disabled", false);
-                    $button.attr("title", curTitle).tooltip();
+                    $button.tooltip('destroy').attr("title", curTitle).tooltip();
                     $("span.ui-silk",$button).removeClass("spining");
                 });
             });

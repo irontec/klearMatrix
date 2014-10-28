@@ -128,7 +128,6 @@
 			    	});
 
     			    if (chart.controls){
-    			    	console.log(filters);
     			    	dashboard.bind(filters, wrap);
     			    	dashboard.draw(data);
     			    } else {
@@ -149,7 +148,6 @@
         				 if( parseInt(chartWidth,10) > parseInt(maxSize,10)){
         					 chart.options.width = maxSize;
         				 }
-        				 console.log(idPrefix+gIndex+"_"+cIndex);
 						google.load('visualization', '1.0', {'packages':['corechart','controls'], callback: function(){ drawVisualization(idPrefix+gIndex+"_"+cIndex, chart) }});
  					});
         		 });

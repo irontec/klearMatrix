@@ -20,7 +20,11 @@ class KlearMatrix_Model_Field_File_Preview_Image implements KlearMatrix_Model_Fi
     public function setBinary($binary)
     {
         $imagick = new Imagick();
+        
         $imagick->readimageblob($binary);
+        
+        \Iron_Utils_PngFix::process($imagick);
+        
         if ($this->_crop === true) {
             $imagick->cropthumbnailimage($this->_width, $this->_height);
         } else {

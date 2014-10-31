@@ -106,6 +106,11 @@
                 // Haciendo toda la tupla clickable para la default option
                 e.stopPropagation();
                 e.preventDefault();
+                if (document.getSelection() &&
+                    document.getSelection().toString() != '' && 
+                    $(document.getSelection().focusNode).parents("table.kMatrix").length ==1) {
+                    return;
+                }
 
                 if ($(this).is(".options")) {
                     return;

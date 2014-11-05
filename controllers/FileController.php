@@ -41,6 +41,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->_helper->ContextSwitch()
             ->addActionContext('download', 'json')
+            ->addActionContext('delete', 'json')
             ->addActionContext('upload', 'json')
             ->initContext('json');
 
@@ -240,6 +241,110 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $jsonResponse->setModule('klearMatrix');
         $jsonResponse->setPlugin('klearMatrixGenericDialog');
         $jsonResponse->addJsFile("/js/plugins/jquery.klearmatrix.genericdialog.js");
+        $jsonResponse->setData($data);
+        $jsonResponse->attachView($this->view);
+    }
+
+    public function deleteAction()
+    {
+        try {
+            $this->_loadModel();
+
+            if (!$this->_model) {
+                $this->_helper->log(
+                    'Model not found for '. $this->_item->getMapperName() . ' >> PK(' . $this->_pk . ')',
+                    Zend_Log::ERR
+                );
+                throw new Zend_Exception("Requested column not found.");
+            }
+
+            $this->_setFileFields();
+
+            if ($this->getRequest()->getPost("delete-file") == true) {
+                return $this->_removeFile();
+            }
+
+            $data = array(
+                'message' => sprintf(
+                    $this->view->translate('Do you want to delete this %s?'),
+                    $this->_getFileColumn()->getPublicName()
+                ),
+                'title' => sprintf(
+                    $this->view->translate('Delete %s'),
+                    $this->view->translate('file')
+                ),
+                'buttons' => array(
+                    $this->view->translate('Delete') => array(
+                        'recall' => true,
+                        'params' => array('delete-file' => true)
+                    ),
+                    $this->view->translate('Cancel') => array(
+                        'recall' => false,
+                    )
+                )
+            );
+
+        } catch (Exception $e) {
+
+            if (!$this->_request->isXmlHttpRequest()) {
+                $this->_helper->log('Error Deleting; request not from XHR.', Zend_Log::ERR);
+                throw new Zend_Controller_Action_Exception('File not found.', 404);
+                return;
+            }
+            $this->_helper->log('Error Deleting; ('.$e->getMessage().')', Zend_Log::ERR);
+            $data = array(
+                'message' => sprintf($this->view->translate('Error preparing deleting.<br />(%s)'), $e->getMessage()),
+                'buttons' => array(
+                    'Aceptar' => array(
+                        'recall' => false,
+                    )
+                )
+            );
+        }
+
+        $jsonResponse = new Klear_Model_DispatchResponse();
+        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse->setPlugin('klearMatrixGenericDialog');
+        $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.klearmatrix.genericdialog.js");
+        $jsonResponse->setData($data);
+        $jsonResponse->attachView($this->view);
+    }
+
+    protected function _removeFile()
+    {
+        try {
+            $removeAction = 'remove' . $this->_fileFields['basePath'];
+            $this->_model->{$removeAction}();
+            $this->_model->save();
+            $data = array(
+                'title' => sprintf(
+                    $this->view->translate('Delete %s'),
+                    $this->view->translate('file')
+                ),
+                'message' => sprintf(
+                    $this->view->translate('%s successfully deleted'),
+                    $this->_getFileColumn()->getPublicName()
+                ),
+                'buttons' =>  array(
+                    $this->view->translate('Close') => array(
+                        'reloadParent' => true
+                    )
+                )
+            );
+        } catch (Exception $e) {
+            $this->_helper->log(
+                'Error deleting file ' . $this->_getFileColumn()->getDbFieldName() . ' for ' . $this->_item->getMapperName() . ' > PK(' . $this->_pk . ')',
+                Zend_Log::ERR
+            );
+            throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
+        }
+
+        $this->_helper->log('file ' . $this->_getFileColumn()->getDbFieldName() . ' succesfully deleted for ' . $this->_item->getMapperName() . ' > PK(' . $this->_pk . ')');
+
+        $jsonResponse = new Klear_Model_DispatchResponse();
+        $jsonResponse->setModule('klearMatrix');
+        $jsonResponse->setPlugin('klearMatrixGenericDialog');
+        $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.klearmatrix.genericdialog.js");
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }

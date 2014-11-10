@@ -358,6 +358,8 @@
                         $parent.css({'opacity':1});
                         selectBox.dropdown.trigger("click");
                         selectBox.close();
+                        selectBox.selectOption(0);
+                        
                     }
 
                     $(this).trigger("manualchange");
@@ -404,7 +406,8 @@
                 })
                 .each(function() {
                     $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
-                });
+                })
+                .filter("[data-autofilter-select-by-data]").trigger("change");
 
             $('a.option.screen', this.element.klearModule("getPanel"))
             .off('mouseup.screenOption')

@@ -332,8 +332,7 @@
                 .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
                 .on("change",function() {
                     // Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
-                    if (!$(this).data("resizeTrick")) {
-
+                    if (!$(this).data("resizeTrick") && $(this).data("target-for-change")) {
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt({autoWidth: true})
                         .data("resizeTrick",true)
@@ -359,15 +358,14 @@
                         selectBox.dropdown.trigger("click");
                         selectBox.close();
                         selectBox.selectOption(0);
-                        
+                        $(this).trigger("manualchange");
+                    } else {
+                        $(this).trigger("manualchange");
                     }
 
-                    $(this).trigger("manualchange");
                 })
                 .on("postmanualchange", function () {
-
                     if ($(this).data("target-for-change")) {
-
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt().data("selectBoxIt").refresh(function () {
                             this.dropdown.addClass(cssClasses2Keep);
@@ -406,8 +404,10 @@
                 })
                 .each(function() {
                     $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
-                })
-                .filter("[data-autofilter-select-by-data]").trigger("change");
+                    if ($(this).is("[data-autofilter-select-by-data]")) {
+                        $(this).trigger("change");
+                    }
+                });
 
             $('a.option.screen', this.element.klearModule("getPanel"))
             .off('mouseup.screenOption')

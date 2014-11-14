@@ -114,7 +114,7 @@
         _initSelectedValue: function () {
             var preloadValue = this.options.cache.element.val();
             var recoveredValue = this.options.cache.element.data("recoveredValue");
-            
+
             this.options.cache.originalValue = preloadValue;
 
             if (preloadValue || recoveredValue) {
@@ -187,39 +187,39 @@
             } else {
                 targetOption.attr("selected", "selected");
             }
-            
+
             if (!isReload) {
-                
+
                 var currentValue = this.options.cache.element.val();
                 var originalValue = this.options.cache.originalValue;
-                
+
                 if (this.checkArrays(originalValue, currentValue)) {
                     this.options.cache.element.removeClass('changed');
                 } else {
                     this.options.cache.element.addClass('changed');
                 }
-                
+
             }
-            
+
         },
 
         _removeFromSelectedList: function (node) {
-            
+
             var nodeValue = node.attr("data-value");
             node.remove();
             this.options.cache.element.find("option[value="+nodeValue+"]").removeAttr("selected");
-            
+
             var currentValue = this.options.cache.element.val();
             var originalValue = this.options.cache.originalValue;
-            
+
             if (this.checkArrays(originalValue, currentValue)) {
                 this.options.cache.element.removeClass('changed');
             } else {
                 this.options.cache.element.addClass('changed');
             }
-            
+
             this.options.parent.options.theForm.trigger("updateChangedState");
-            
+
         },
 
         _cleanSelectedList: function() {
@@ -245,7 +245,7 @@
             var _self = context;
 
             targetNode.autocomplete({
-                delay: 0,
+                delay: 500,
                 minLength: 0,
                 source: function( request, response ) {
 
@@ -364,7 +364,7 @@
             if (arrA == undefined) return false;
             if (arrA.length !== arrB.length) return false;
 
-            var cA = arrA.slice().sort().join(","); 
+            var cA = arrA.slice().sort().join(",");
             var cB = arrB.slice().sort().join(",");
 
             return cA===cB;

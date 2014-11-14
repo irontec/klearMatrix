@@ -151,7 +151,7 @@
             var _self = context;
 
             targetNode.autocomplete({
-                delay: 0,
+                delay: 500,
                 minLength: 0,
                 source: function(request, response) {
 

@@ -146,12 +146,17 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     protected function _setOptions($results)
     {
         if ($results) {
+
+            $keyGetter = 'getPrimaryKey';
+            if ($keyProperty = $this->_config->getProperty("config")->get("keyProperty")) {
+                $keyGetter = 'get' . ucfirst($keyProperty); 
+            }
+
             foreach ($results as $dataModel) {
-                $this->_keys[] = $dataModel->getPrimaryKey();
+                $this->_keys[] = $dataModel->{$keyGetter}();
                 $this->_items[] = $this->_getItemValue($dataModel);
 
                 $this->_setValuesForExtraAttributes($dataModel, $dataModel->getPrimaryKey());
-
                 $this->_initVisualFilter($dataModel);
             }
         }

@@ -10,7 +10,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     protected $_editableFields;
 
-
     protected $_js = array();
 
     public function init()
@@ -46,12 +45,16 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 $replace = array();
                 foreach ($relatedFields as $fieldName) {
-
                     $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
                     $replace['%' . $fieldName . '%'] = $dataModel->$getter();
                 }
 
-                $this->_keys[] = $dataModel->getPrimaryKey();
+                $keyGetter = 'getPrimaryKey';
+                if ($keyProperty = $this->_parsedValues->getProperty("relatedKeyProperty")) {
+                    $keyGetter = 'get' . ucfirst($keyProperty); 
+                }
+
+                $this->_keys[] = $dataModel->{$keyGetter}();
                 $this->_items[] = str_replace(array_keys($replace), $replace, $relatedFieldsTemplate);
             }
         }

@@ -5,6 +5,7 @@ class KlearMatrix_Model_Column
     protected $_publicName;
     protected $_isDefault = false;
     protected $_isReadonly = false;
+    protected $_isKeepTextArea = false;
 
     protected $_hasInfo = false;
     protected $_fieldInfo = false;
@@ -100,6 +101,12 @@ class KlearMatrix_Model_Column
     public function setReadOnly($readOnly = true)
     {
         $this->_isReadonly = (bool)$readOnly;
+        $this->setKeepTextArea($this->_config->getProperty("readOnlyTextArea"));
+    }
+
+    public function setKeepTextArea($keepTextArea = true)
+    {
+        $this->_isKeepTextArea = (bool)$keepTextArea;
     }
 
     public function isOption()
@@ -262,6 +269,15 @@ class KlearMatrix_Model_Column
         }
 
         return $this->_isReadonly;
+    }
+
+    public function isKeepTextArea()
+    {
+        if ($this->isOption()) {
+            return false;
+        }
+
+        return $this->_isKeepTextArea;
     }
 
     public function hasInfo()
@@ -525,11 +541,11 @@ class KlearMatrix_Model_Column
                             $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . 'NULL';
                         } else {
                             $comparisons[] =  $quotedSearchField. $searchOperator . ' ' . $template;
-                            $fieldValues[$template] = '%' . $_val . '%';
+                            $fieldValues[$template] = $this->_formatValue($_val);
                         }
                     } else {
                         $comparisons[] = $quotedSearchField . $searchOperator . ' ?';
-                        $fieldValues[] = '%' . $_val . '%';
+                        $fieldValues[] = $this->_formatValue($_val);
                     }
                 }
                 $cont++;
@@ -539,6 +555,33 @@ class KlearMatrix_Model_Column
                 '(' . implode(' or ', $comparisons). ')',
                 $fieldValues
         );
+    }
+
+    protected function _formatValue($val)
+    {
+        $startCond = "%";
+        $endCond = "%";
+        if ($this->getKlearConfig()->getProperty("searchAt")) {
+            switch ($this->getKlearConfig()->getProperty("searchAt")) {
+                case "start":
+                    $startCond = "";
+                    $endCond = "%";
+                    break;
+                case "end":
+                    $startCond = "%";
+                    $endCond = "";
+                    break;
+                case "strict":
+                    $startCond = "";
+                    $endCond = "";
+                    break;
+                default:
+                    $startCond = "%";
+                    $endCond = "%";
+                    break;
+            }
+        }
+        return $startCond.$val.$endCond;
     }
 
     protected function _isMapperSelect()
@@ -695,6 +738,7 @@ class KlearMatrix_Model_Column
             'default',
             'multilang',
             'readonly',
+            'keepTextArea',
         );
 
         foreach ($booleanProperties as $prop) {

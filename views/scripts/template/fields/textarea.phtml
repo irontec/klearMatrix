@@ -1,5 +1,9 @@
 {{if (_readonly)}}
-    {{html _fieldValue}}
+    {{if (_keepTextArea)}}
+        <pre>${_fieldValue}</pre>
+    {{else}}
+        {{html _fieldValue}}
+    {{/if}}
 {{else}}
     <textarea
         id="${_elemIden}"
@@ -7,11 +11,11 @@
         class="auto"
 
         data-basename="${_elemBaseName}"
-        
+
         {{if (_properties.required)}}
             required=""
         {{/if}}
-        
+
         {{if (_properties.maxLength)}}
             maxlength="${_properties.maxLength}"
         {{/if}}

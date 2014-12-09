@@ -121,6 +121,7 @@
                     _elemName: column.id,
                     _elemBaseName: column.id,
                     _readonly: column.readonly? true:false,
+            		_keepTextArea: column.keepTextArea? true:false,
                     _dataConfig : extraConfig,
                     _decorators: column.decorators,
                     _properties : properties,

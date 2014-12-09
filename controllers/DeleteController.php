@@ -56,7 +56,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $baseModel = $this->_item->getObjectInstance();
         $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());
-        $result = $mapper->fetchList($primaryKeyFieldName . ' in ('.implode(',', $pk).')');
+        $result = $mapper->fetchList($primaryKeyFieldName . " in ('".implode("','", $pk)."')");
 
         if (sizeof($result) != sizeof($pk)) {
             throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
@@ -91,7 +91,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
         $baseModel = $this->_item->getObjectInstance();
         $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());
-        $results = $mapper->fetchList($primaryKeyFieldName . ' in ('.implode(',', $pk).')');
+        $results = $mapper->fetchList($primaryKeyFieldName . " in ('".implode("','", $pk)."')");
 
         try {
             if (!is_array($results) || sizeof($results) == 0) {

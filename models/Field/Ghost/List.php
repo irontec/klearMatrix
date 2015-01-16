@@ -395,15 +395,20 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             $dataMlFields = array_keys($dataModel->getMultiLangColumnsList());
             $fieldsValues = array();
             foreach ($fields as $key => $value) {
+
+                $fieldName = $key;
+
                 if (is_object($value)) {
-                    $fieldName = $key;
+
                     if (in_array($fieldName, $dataMlFields)) {
                         $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName)).ucfirst($currentLanguage);
                     } else {
                         $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
                     }
+
                     $fieldConfig = new Klear_Model_ConfigParser();
                     $fieldConfig->setConfig($value);
+
                     if ($fieldConfig->getProperty("mapperName")) {
                         $mapperName = $fieldConfig->getProperty("mapperName");
                         $id = $dataModel->$getter();
@@ -432,7 +437,26 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                             $fieldsValues[] = $targetModel->$getter();
                         }
                     } else {
-                        $fieldsValues[] = $dataModel->$getter();
+
+                        $fieldsOptions = $this->_config->getProperty('config')->fieldName->fields;
+
+                        if (!is_null($fieldsOptions->$fieldName)) {
+                            if (!is_null($fieldsOptions->$fieldName->mapValues)) {
+
+                                $mapValues = $fieldsOptions->$fieldName->mapValues;
+                                $modelValue = $dataModel->$getter();
+
+                                $fieldsValues[] = Klear_Model_Gettext::gettextCheck(
+                                    $mapValues->$modelValue
+                                );
+
+                            } else {
+                                $fieldsValues[] = $dataModel->$getter();
+                            }
+                        } else {
+                            $fieldsValues[] = $dataModel->$getter();
+                        }
+
                     }
                 } else {
                     $fieldName = $value;
@@ -444,7 +468,9 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                     $fieldsValues[] = $dataModel->$getter();
                 }
             }
+
             $rows[] = $fieldsValues;
+
         }
 
 //         $defaultOption = null;
@@ -483,6 +509,9 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $table .= implode("\n", $tableParts);
         $table .= '</table>';
         $table .= '</div>';
+
         return $table;
+
     }
+
 }

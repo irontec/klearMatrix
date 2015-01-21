@@ -76,9 +76,10 @@
 
             var self = this;
             $("div.feed").each(function () {
-
+                
                 if ($(this).data("channel")) {
-
+                    
+                    var channel = $(this).data("channel");
                     var currentFeed = this;
 
                     if ($(this).data("source") == 'youtube') {
@@ -86,7 +87,7 @@
                         jQTubeUtil.feed($(this).data("channel"), function (results) {
                             if (results) {
 
-                                self._renderFeed(currentFeed, results, "youtube");
+                                self._renderFeed(currentFeed, results, "youtube", channel);
                             }
                         });
 
@@ -95,7 +96,7 @@
                         jQVimeoUtil.feed($(this).data("channel"), function (results) {
                             if (results) {
 
-                                self._renderFeed(currentFeed, results, "vimeo");
+                                self._renderFeed(currentFeed, results, "vimeo", channel);
                             }
                         });
                     }
@@ -103,19 +104,21 @@
             });
         },
 
-        _renderFeed: function (containner, results, source) {
-
+        _renderFeed: function (containner, results, source, channel) {
+            
             source = source || "";
             var vid, url, title, author, src;
 
             var self = this;
             var results = results || {};
-
+            
             switch(source) {
 
                 case 'youtube':
 
                     author = results.videos[0].entry.author[0].name.$t.toLowerCase();
+                    author = channel;
+                    
                     break;
 
                 case 'vimeo':
@@ -167,7 +170,7 @@
             if (!this.options.cache.feedContainner) {
                 this.options.cache.feedContainner = {};
             }
-
+            
             this.options.cache.feedContainner[author] = this.options.cache.wrapper.find("div.feed[data-channel="+author+"] div.content");
 
             var itemNum = this.options.cache.feedContainner[author].children("img").length;

@@ -214,7 +214,7 @@
     /** Get a particular video via VideoID */
     p.feed = function(customUrl, cb){
 
-        url = 'http://gdata.youtube.com/feeds/base/users/'+ customUrl +'/uploads?alt=json';
+        url = '//gdata.youtube.com/feeds/base/users/'+ customUrl +'/uploads?alt=json';
         return _request(url, cb);
     };
 

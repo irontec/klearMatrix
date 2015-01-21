@@ -13,7 +13,7 @@
     var MaxResults = 10,
         StartPoint = 1,
         // URLs
-        BaseURL = "http://vimeo.com/api/v2",
+        BaseURL = "//vimeo.com/api/v2",
         FeedsURL = BaseURL + '/',
         VideoURL = BaseURL + "/video/";
 

@@ -93,7 +93,7 @@
     var MaxResults = 10,
         StartPoint = 1,
         // URLs
-        BaseURL = "http://gdata.youtube.com",
+        BaseURL = "//gdata.youtube.com",
         FeedsURL = BaseURL + "/feeds/api",
         VideoURL = FeedsURL + "/videos/",
         SearchURL = FeedsURL + "/videos",
@@ -104,7 +104,7 @@
         TopRated = StandardFeedsURL + "/top_rated",
         TopFavs = StandardFeedsURL + "/top_favorites",
         RecentlyFeatured = StandardFeedsURL + "/recently_featured",
-        SuggestURL = "http://suggestqueries.google.com/complete/search",
+        SuggestURL = "//suggestqueries.google.com/complete/search",
         // Settings
         Times = ["today","this_week","this_month","all_time"],
         OrderBy = ["relevance", "published", "viewCount", "rating"],

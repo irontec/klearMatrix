@@ -143,7 +143,7 @@
                         var linkNum = results.videos[idx].entry.link.length;
                         url = results.videos[idx].entry.link[linkNum-2].href;
                         title = results.videos[idx].title;
-                        src = 'http://i.ytimg.com/vi/'+ vid +'/2.jpg';
+                        src = '//i.ytimg.com/vi/'+ vid +'/2.jpg';
                         break;
 
                     case 'vimeo':
@@ -338,12 +338,12 @@
 
                 case 'youtube':
 
-                    var code = '<iframe width="560" height="315" src="http://www.youtube.com/embed/' + this.options.cache.id.val() + '?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>';
+                    var code = '<iframe width="560" height="315" src="//www.youtube.com/embed/' + this.options.cache.id.val() + '?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>';
                     break;
 
                 case 'vimeo':
 
-                    var code = '<iframe src="http://player.vimeo.com/video/' + this.options.cache.id.val() + '?byline=0&amp;portrait=0&amp;badge=0&amp;color=ffffff" width="640" height="360" \
+                    var code = '<iframe src="//player.vimeo.com/video/' + this.options.cache.id.val() + '?byline=0&amp;portrait=0&amp;badge=0&amp;color=ffffff" width="640" height="360" \
                                frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
 
                     break;

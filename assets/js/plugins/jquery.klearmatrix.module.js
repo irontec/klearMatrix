@@ -357,7 +357,7 @@
                         $parent.css({'opacity':1});
                         selectBox.dropdown.trigger("click");
                         selectBox.close();
-                        selectBox.selectOption(0);
+
                         $(this).trigger("manualchange");
                     } else {
                         $(this).trigger("manualchange");

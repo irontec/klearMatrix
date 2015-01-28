@@ -156,7 +156,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
                 $this->_keys[] = $dataModel->{$keyGetter}();
                 $this->_items[] = $this->_getItemValue($dataModel);
 
-                $this->_setValuesForExtraAttributes($dataModel, $dataModel->getPrimaryKey());
+                $this->_setValuesForExtraAttributes($dataModel, $dataModel->{$keyGetter}());
                 $this->_initVisualFilter($dataModel);
             }
         }

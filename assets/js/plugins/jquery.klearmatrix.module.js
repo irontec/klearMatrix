@@ -342,23 +342,30 @@
                     }
 
                     if ($(this).data('autofilter-select-by-data')) {
-                        var _configData = $(this).data('autofilter-select-by-data');
-                        var _filterField = _configData.split(":")[0];
-                        var _filterData = _configData.split(":")[1];
-                        var _targetValue = $(this).val();
-                        var $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
-                        var $parent = $field.parents(".container:eq(0)");
-                        $parent.css("opacity",'0.5');
-                        var selectBox = $field.data("selectBoxIt");
-                        var $holder = $("<div />");
-                        $("option",$field).not("[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
-                        selectBox.refresh();
-                        $holder.children().appendTo($field);
-                        $parent.css({'opacity':1});
-                        selectBox.dropdown.trigger("click");
-                        selectBox.close();
+                        var _configDataArray = $(this).data('autofilter-select-by-data').split("|");
+                        
+                        var _configData, _filterField, _filterData, _targetValue, selectBox, $holder;
+                        for (var cdIdx in _configDataArray) {
 
-                        $(this).trigger("manualchange");
+                            _configData = _configDataArray[cdIdx];
+
+                            _filterField = _configData.split(":")[0];
+                            _filterData = _configData.split(":")[1];
+                            _targetValue = $(this).val();
+                            $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
+                            $parent = $field.parents(".container:eq(0)");
+                            $parent.css("opacity",'0.5');
+                            selectBox = $field.data("selectBoxIt");
+                            $holder = $("<div />");
+                            $("option",$field).not("[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
+                            selectBox.refresh();
+                            $holder.children().appendTo($field);
+                            $parent.css({'opacity':1});
+                            selectBox.dropdown.trigger("click");
+                            selectBox.close();
+
+                            $(this).trigger("manualchange");
+                        }
                     } else {
                         $(this).trigger("manualchange");
                     }

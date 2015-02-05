@@ -330,9 +330,13 @@
 
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
                 .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
+                .add($('input[type=hidden].readOnlySelectField', $viewPort))
                 .on("change",function() {
+                    var isReadOnlyHiddenInput = (this.nodeName.toLowerCase() == "input");
+
                     // Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
-                    if (!$(this).data("resizeTrick") && $(this).data("target-for-change")) {
+                    if (!isReadOnlyHiddenInput && !$(this).data("resizeTrick") && $(this).data("target-for-change")) {
+
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt({autoWidth: true})
                         .data("resizeTrick",true)

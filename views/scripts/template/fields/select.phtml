@@ -2,7 +2,7 @@
     {{each(idx,dataValue) _dataConfig.values}}
         {{if (_fieldValue && dataValue.key == _fieldValue)}}
             {{html dataValue.item }}
-            <input type="hidden" name="${_elemName}" value="${_fieldValue}"
+            <input type="hidden" name="${_elemName}" value="${_fieldValue}" class="readOnlySelectField"
              {{if (_dataConfig.visualFilter)}}class="visualFilter"{{/if}}
              {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[dataValue.key]) }}
                 data-show="
@@ -20,6 +20,10 @@
                     {{/if}}
                 {{/each}}"
             {{/if}}
+            {{each(idx,attrValue) _dataConfig.attributes}}
+                ${idx}="${attrValue}"
+            {{/each}}
+
             />
         {{/if}}
     {{/each}}
@@ -30,6 +34,7 @@
     data-preload="${_fieldValue}"
     name="${_elemName}"
     id="${_elemIden}"
+
 {{if (_dataConfig.visualFilter)}}
     class="visualFilter"
 {{/if}}

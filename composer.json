@@ -1,0 +1,11 @@
+{
+    "name": "irontec/klearMatrix",
+    "description": "klearMatrix",
+    "authors": [
+        {
+            "name": "ddniel",
+            "email": "ddniel16@gmail.com"
+        }
+    ],
+    "require": {}
+}

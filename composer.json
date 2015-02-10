@@ -3,8 +3,49 @@
     "description": "klearMatrix",
     "authors": [
         {
-            "name": "ddniel",
+            "name": "Jabi Infante",
+            "email": "jabiinfante@gmail.com"
+        },
+        {
+            "name": "Lander Ontoria Gardeazabal",
+            "email": "lander@irontec.com"
+        },
+        {
+            "name": "Mikel Madariaga Madariaga",
+            "email": "flamenjaut@gmail.com"
+        },
+        {
+            "name": "Luis Felipe García Fernández",
+            "email": "garcia.luisfelipe@gmail.com"
+        },
+
+        {
+            "name": "Aitor Llamas",
+            "email": "aitorllj93@gmail.com"
+        },
+        {
+            "name": "Daniel Rendon",
             "email": "ddniel16@gmail.com"
+        },
+        {
+            "name": "Kaian",
+            "email": "kaian@irontec.com"
+        },
+        {
+            "name": "Alayn Gortazar",
+            "email": "zutoin@gmail.com"
+        },
+        {
+            "name": "Arkaitz Etxeberria",
+            "email": "kondi80@gmail.com"
+        },
+        {
+            "name": "David Lores",
+            "email": "loresito@gmail.com"
+        },
+        {
+            "name": "Victor Vargas",
+            "email": "victor@irontec.com"
         }
     ],
     "require": {}

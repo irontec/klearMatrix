@@ -332,11 +332,12 @@
                 .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
                 .add($('input[type=hidden].readOnlySelectField', $viewPort))
                 .on("change",function() {
+
                     var isReadOnlyHiddenInput = (this.nodeName.toLowerCase() == "input");
 
                     // Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
                     if (!isReadOnlyHiddenInput && !$(this).data("resizeTrick") && $(this).data("target-for-change")) {
-
+                        
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt({autoWidth: true})
                         .data("resizeTrick",true)
@@ -347,7 +348,7 @@
 
                     if ($(this).data('autofilter-select-by-data')) {
                         var _configDataArray = $(this).data('autofilter-select-by-data').split("|");
-                        
+
                         var _configData, _filterField, _filterData, _targetValue, selectBox, $holder;
                         for (var cdIdx in _configDataArray) {
 
@@ -356,14 +357,31 @@
                             _filterField = _configData.split(":")[0];
                             _filterData = _configData.split(":")[1];
                             _targetValue = $(this).val();
+
+                            var $targetCombo = $("[name="+_filterField+"]", $(this).parents("form:eq(0)"));
+                            var $targetComboId = $targetCombo.attr("id");
+
+                            if ($targetComboId) {
+                                $targetComboId = "hiddenComboValues" + $targetComboId;
+                            }
+
+                            $holder = $("#" + $targetComboId);
+                            if ($holder.length < 1) {
+                                $holder = $("<select class='hidden' id='"+ $targetComboId +"' />");
+                                $(this).parents("form:eq(0)").append($holder);
+                            } else {
+                                $holder.children().appendTo($field);
+                            }
+
                             $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
+
                             $parent = $field.parents(".container:eq(0)");
                             $parent.css("opacity",'0.5');
                             selectBox = $field.data("selectBoxIt");
-                            $holder = $("<div />");
-                            $("option",$field).not("[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
+
+                            $("option",$field).not("[value=__NULL__],[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
                             selectBox.refresh();
-                            $holder.children().appendTo($field);
+
                             $parent.css({'opacity':1});
                             selectBox.dropdown.trigger("click");
                             selectBox.close();
@@ -376,6 +394,7 @@
 
                 })
                 .on("postmanualchange", function () {
+
                     if ($(this).data("target-for-change")) {
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt().data("selectBoxIt").refresh(function () {
@@ -385,6 +404,7 @@
                     $(this).trigger("blur.selectBoxIt");
                 })
                 .on('open', function() {
+
                     // Fix sólo para dialogos!
                     if (!_self.options.parent) {
                         return;
@@ -400,6 +420,7 @@
                     }
 
                 }).on('close', function() {
+
                     // Fix sólo para dialogos!
                     if (!_self.options.parent) {
                         return;
@@ -414,6 +435,7 @@
                     }
                 })
                 .each(function() {
+
                     $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
                     if ($(this).is("[data-autofilter-select-by-data]")) {
                         $(this).trigger("change");

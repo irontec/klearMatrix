@@ -337,7 +337,7 @@
 
                     // Necesario para que los select "invisibles" cojan la anchura correcta (el el filtrado por ejemplo)
                     if (!isReadOnlyHiddenInput && !$(this).data("resizeTrick") && $(this).data("target-for-change")) {
-                        
+
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt({autoWidth: true})
                         .data("resizeTrick",true)
@@ -347,9 +347,10 @@
                     }
 
                     if ($(this).data('autofilter-select-by-data')) {
+
                         var _configDataArray = $(this).data('autofilter-select-by-data').split("|");
 
-                        var _configData, _filterField, _filterData, _targetValue, selectBox, $holder;
+                        var _configData, _filterField, _filterData, _targetValue, selectBox, $holder, $field;
                         for (var cdIdx in _configDataArray) {
 
                             _configData = _configDataArray[cdIdx];
@@ -358,8 +359,8 @@
                             _filterData = _configData.split(":")[1];
                             _targetValue = $(this).val();
 
-                            var $targetCombo = $("[name="+_filterField+"]", $(this).parents("form:eq(0)"));
-                            var $targetComboId = $targetCombo.attr("id");
+                            $field = $("select[name="+_filterField+"]",$(this).parents("form:eq(0)"));
+                            var $targetComboId = $field.attr("id");
 
                             if ($targetComboId) {
                                 $targetComboId = "hiddenComboValues" + $targetComboId;
@@ -369,23 +370,25 @@
                             if ($holder.length < 1) {
                                 $holder = $("<select class='hidden' id='"+ $targetComboId +"' />");
                                 $(this).parents("form:eq(0)").append($holder);
-                            } else {
+                            } else {                         
                                 $holder.children().appendTo($field);
                             }
-
-                            $field = $("[name="+_filterField+"]",$(this).parents("form:eq(0)"));
 
                             $parent = $field.parents(".container:eq(0)");
                             $parent.css("opacity",'0.5');
                             selectBox = $field.data("selectBoxIt");
 
-                            $("option",$field).not("[value=__NULL__],[data-"+_filterData+"="+_targetValue+"]").appendTo($holder);
-                            selectBox.refresh();
+                            var filterCriterion = "[value=__NULL__],[data-"+_filterData+"="+_targetValue+"]";
+                            var filteredOptionElements = $("option",$field).not(filterCriterion);
+                            filteredOptionElements.appendTo($holder);
+                            if (typeof selectBox !== "undefined") {
+
+                                selectBox.refresh();
+                                selectBox.dropdown.trigger("click");
+                                selectBox.close();                                
+                            }
 
                             $parent.css({'opacity':1});
-                            selectBox.dropdown.trigger("click");
-                            selectBox.close();
-
                             $(this).trigger("manualchange");
                         }
                     } else {

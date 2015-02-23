@@ -350,16 +350,16 @@
 
                         var _configDataArray = $(this).data('autofilter-select-by-data').split("|");
 
-                        var _configData, _filterField, _filterData, _targetValue, selectBox, $holder, $field;
+                        var _configData, _fieldToBeFiltered, _filterData, _targetValue, selectBox, $holder, $field;
                         for (var cdIdx in _configDataArray) {
 
                             _configData = _configDataArray[cdIdx];
 
-                            _filterField = _configData.split(":")[0];
+                            _fieldToBeFiltered = _configData.split(":")[0];
                             _filterData = _configData.split(":")[1];
                             _targetValue = $(this).val();
 
-                            $field = $("select[name="+_filterField+"]",$(this).parents("form:eq(0)"));
+                            $field = $("select[name="+_fieldToBeFiltered+"]",$(this).parents("form:eq(0)"));
                             var $targetComboId = $field.attr("id");
 
                             if ($targetComboId) {
@@ -370,8 +370,16 @@
                             if ($holder.length < 1) {
                                 $holder = $("<select class='hidden' id='"+ $targetComboId +"' />");
                                 $(this).parents("form:eq(0)").append($holder);
-                            } else {                         
+                            } else {      
                                 $holder.children().appendTo($field);
+
+                                var originalValue = $field.data("preload");
+                                var originalValueOption = $field.find("option[value="+ originalValue +"]");
+                                if (originalValue && originalValueOption) {
+                                	originalValueOption.prop("selected", true);
+                                } else {
+                                	$field.find("option:eq(0)").prop("selected", true);
+                                }
                             }
 
                             $parent = $field.parents(".container:eq(0)");

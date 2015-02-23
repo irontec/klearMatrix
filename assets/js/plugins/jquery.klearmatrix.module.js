@@ -398,7 +398,7 @@
                 })
                 .on("postmanualchange", function () {
 
-                    if ($(this).data("target-for-change")) {
+                    if ($(this).filter("select").data("target-for-change")) {
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt().data("selectBoxIt").refresh(function () {
                             this.dropdown.addClass(cssClasses2Keep);

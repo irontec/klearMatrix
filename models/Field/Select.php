@@ -50,14 +50,14 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
 
     protected function _prepareFieldCustomAttributes($fieldConfig)
     {
-        return $this->_prepareAutofilterAttribute($fieldConfig);        
+        return $this->_prepareAutofilterAttribute($fieldConfig);
     }
 
     protected function _prepareAutofilterAttribute($fieldConfig)
     {
         $autoFilterKey = 'data-autofilter-select-by-data';
         if (
-            !is_array($fieldConfig) || 
+            !is_array($fieldConfig) ||
             !array_key_exists($autoFilterKey, $fieldConfig) ||
             !is_array($fieldConfig[$autoFilterKey])
         ) {
@@ -65,8 +65,12 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         }
 
         $autofilter = array();
-        foreach ($fieldConfig[$autoFilterKey] as $autofilterElement) {
-            $autofilter[] = key($autofilterElement) . ':' . current($autofilterElement);
+        foreach ($fieldConfig[$autoFilterKey] as $autofilterElement => $value) {
+            if (is_array($value)) {
+                $autofilter[] = key($value) . ':' . current($value);
+            } else {
+                $autofilter[] = $autofilterElement . ':' . $value;
+            }
         }
 
         $fieldConfig[$autoFilterKey] = implode("|", $autofilter);

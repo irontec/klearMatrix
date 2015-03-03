@@ -131,7 +131,7 @@
     			    	dashboard.bind(filters, wrap);
     			    	dashboard.draw(data);
     			    } else {
-    			    	wrap.draw(data);
+    			    	wrap.draw();
     			    }
         		 }
         		 $.each(data.chartGroups, function (gIndex, group){

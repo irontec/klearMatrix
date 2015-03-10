@@ -122,6 +122,7 @@ $.widget("ech.multiselect", {
         if( this.element.is(':disabled') ){
             this.disable();
         }
+        this.options.position = $.extend({}, this.options.position);
     },
 
     refresh: function( init ){

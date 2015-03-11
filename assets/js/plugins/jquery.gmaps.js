@@ -19,6 +19,7 @@
         geocoder: null,
         map: null,
         marker: null,
+        mapCenterMarker: null,
         greenPin: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
 
         _setOption: function (name, value) {
@@ -146,42 +147,61 @@
 
                 google.maps.event.addListener(this.marker, 'drag', function() {
                     self._updateMarkerPosition(self.marker.getPosition());
-                    self.map.setCenter(self.marker.getPosition());
                 });
 
                 google.maps.event.addListener(this.marker, 'dragend', function() {
                     self._geocodePosition(self.marker.getPosition());
+                    self.map.setCenter(self.marker.getPosition());
                     self.options.cache.adress.trigger('change');
                 });
 
                 // Show new marker on Map Move
                 var $currentMap = this.map;
-                google.maps.event.addListener($currentMap, 'dragend', (function($currentMap){
+                google.maps.event.addListener($currentMap, 'dragend', (function($currentMap) {
                     return function() {
+
                         var center = $currentMap.getCenter();
-                        self.marker.setMap(null);
+
+                        if (self.centerPositionMarker) {
+                            self.centerPositionMarker.setMap(null);
+                        }
+
                         var marker = new google.maps.Marker({
                             position: center,
                             map: $currentMap,
                             icon: self.greenPin,
-                            draggable: true
+                            draggable: true,
+                            opacity: 0.4,
                         });
+
                         $currentMap.setCenter(center);
                         $currentMap.marker = marker;
-                        self.marker = marker;
-                        google.maps.event.addListener(marker, 'dragend', (function(marker){
+                        self.centerPositionMarker = marker;
+
+                        google.maps.event.addListener(marker, 'dragend', (function(marker) {
                             return function() {
-                                marker.setIcon();
-                                self._updateMarkerPosition(marker.getPosition());
-                                self._geocodePosition(marker.getPosition());
-                                self.options.cache.adress.trigger('change');
-                            }
+                                self._replaceMapCenterMarker(marker);
+                            };
                         })(marker));
-                    }
+
+                        google.maps.event.addListener(marker, 'click', (function(marker) {
+                            return function() {
+                                self._replaceMapCenterMarker(marker);
+                            };
+                        })(marker));
+                    };
                 })($currentMap));
             }
         },
+        _replaceMapCenterMarker: function (centerPositionMarker) {
 
+            this.marker.setPosition(centerPositionMarker.getPosition());
+            centerPositionMarker.setMap(null);
+
+            this._updateMarkerPosition(this.marker.getPosition());
+            this._geocodePosition(this.marker.getPosition());
+            this.options.cache.adress.trigger('change');
+        },
         _bindEvents: function() {
 
             var self = this;
@@ -197,7 +217,7 @@
             this.options.cache.adress.on('change', function(){
                 self._updateMarkerAddress($(this).val());
             });
-            
+
             if ($('input.visualFilter, select.visualFilter', this.options.cache.context.parents('.klearMatrix_form')).length>0) {
                 $('input.visualFilter, select.visualFilter', this.options.cache.context.parents('.klearMatrix_form')).on("change", function(){
                     google.maps.event.trigger(self.map, "resize");

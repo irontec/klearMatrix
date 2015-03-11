@@ -141,17 +141,15 @@
 
                 // Add dragging event listeners.
                 google.maps.event.addListener(this.marker, 'dragstart', function() {
-
                     self._updateMarkerAddress('Calculando...');
                 });
 
                 google.maps.event.addListener(this.marker, 'drag', function() {
                     self._updateMarkerPosition(self.marker.getPosition());
-                    self.map.setCenter(marker.getPosition());
+                    self.map.setCenter(self.marker.getPosition());
                 });
 
                 google.maps.event.addListener(this.marker, 'dragend', function() {
-
                     self._geocodePosition(self.marker.getPosition());
                     self.options.cache.adress.trigger('change');
                 });

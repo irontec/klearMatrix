@@ -128,9 +128,12 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                             $newObj->{$putter}(
                                 $tmpName,
                                 $obj->{$fetcher}()->getBaseName()
-                                );
-                            // Borramos le fichero temporal
-                            unlink($tmpName);
+                            );
+                            /**
+                             * Al hacer el save, el fso invoca al flush,
+                             * que se encarga de burrar en archivo.
+                             */
+                            //unlink($tmpName);
                         }
                     }
                 }

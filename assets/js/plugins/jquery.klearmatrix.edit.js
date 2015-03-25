@@ -818,7 +818,6 @@
                 }
 
                 var _resolveFieldFromName = function(val, $parent) {
-
                     var fName = $.trim(val);
                     if (fName == '') {
                         return false;
@@ -826,6 +825,7 @@
 
                     // Es un campo vacío para fixedPosition
                     if (fName.match(/^__empty/)) {
+
                         return $("div[data-empty=" + fName + "]", $parent) || false;
                     }
 
@@ -1055,8 +1055,11 @@
             if (fixedFields.label) {
                 $("<legend>" + fixedFields.label + "</label>").addClass("ui-widget-content ui-corner-all").appendTo($superContainer);
             }
-
-            $elements[0].before($superContainer);
+            if ($elements[0].data("empty") && $elements[1]) {
+                $elements[1].before($superContainer);
+            } else {
+            	$elements[0].before($superContainer);
+            }
             $.each($elements, function() {
                 $(this).addClass("containerFixed").appendTo($superContainer);
                 var curPercent = widthPercent * $(this).data("numberWidth");

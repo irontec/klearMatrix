@@ -101,7 +101,9 @@ class KlearMatrix_Model_Column
     public function setReadOnly($readOnly = true)
     {
         $this->_isReadonly = (bool)$readOnly;
-        $this->setKeepTextArea($this->_config->getProperty("readOnlyTextArea"));
+        if ($this->_config) {
+            $this->setKeepTextArea($this->_config->getProperty("readOnlyTextArea"));
+        }
     }
 
     public function setKeepTextArea($keepTextArea = true)
@@ -551,6 +553,7 @@ class KlearMatrix_Model_Column
                 $cont++;
             }
         }
+
         return array(
                 '(' . implode(' or ', $comparisons). ')',
                 $fieldValues
@@ -561,7 +564,7 @@ class KlearMatrix_Model_Column
     {
         $startCond = "%";
         $endCond = "%";
-        if ($this->getKlearConfig()->getProperty("searchAt")) {
+        if ($this->getKlearConfig() && $this->getKlearConfig()->getProperty("searchAt")) {
             switch ($this->getKlearConfig()->getProperty("searchAt")) {
                 case "start":
                     $startCond = "";

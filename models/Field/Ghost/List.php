@@ -229,9 +229,13 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             $ghostCounterClass = "ghostListCounter";
         }
 
-        $ret  = '<div class="'.$ghostCounterClass.'">';
-        $ret .= '<span class="ui-icon ui-icon-search"></span>';
-        $ret .= '<input type="text" /><br>(<span class="counter"></span> items)</div>';
+        $noSearch = $this->_config->getProperty('config')->noSearch;
+        $ret = "";
+        if (is_null($noSearch) || $noSearch !== true) {
+            $ret .= '<div class="'.$ghostCounterClass.'">';
+            $ret .= '<span class="ui-icon ui-icon-search"></span>';
+            $ret .= '<input type="text" /><br>(<span class="counter"></span> items)</div>';
+        }
         $ret .= $content;
         $ret .= '<div class="ghostListOptions">';
         if ($asTable !== true) {
@@ -365,14 +369,18 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $tr = "<tr>";
         $fields = $this->_getFields();
         foreach ($fields as $key => $value) {
+            $width = "auto";
             if (is_object($value)) {
                 $fieldConfig = new Klear_Model_ConfigParser();
                 $fieldConfig->setConfig($value);
                 $label = Klear_Model_Gettext::gettextCheck($fieldConfig->getProperty("title"));
+                if ($fieldConfig->getProperty("percentWidth")) {
+                    $width = $fieldConfig->getProperty("percentWidth")."%";
+                }
             } else {
                 $label = $value;
             }
-            $tr .= '<th class="ui-widget-header" data-field="'.$label.'" style="cursor: pointer;">';
+            $tr .= '<th class="ui-widget-header" data-field="'.$label.'" style="cursor: pointer; width: '.$width.';">';
             $tr .= '<span class="title">'.$label.'</span>';
             $tr .= '</th>';
         }

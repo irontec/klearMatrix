@@ -12,6 +12,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
     protected $_js = array();
 
+    protected $_extraDataAttributes = array();
+    protected $_extraDataAttributesValues = array();
+
+
     public function init()
     {
         $this->_parsedValues = new Klear_Model_ConfigParser;
@@ -29,6 +33,12 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
             //Nothing to do
             return;
+        }
+
+        if ($this->_config->config->get("extraDataAttributes", false)) {
+
+            $extraAttrs = $this->_config->config->get("extraDataAttributes");
+            $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs, $dataMapper);
         }
 
         $where = $this->_getFilterWhere();
@@ -51,14 +61,61 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 $keyGetter = 'getPrimaryKey';
                 if ($keyProperty = $this->_parsedValues->getProperty("relatedKeyProperty")) {
-                    $keyGetter = 'get' . ucfirst($keyProperty); 
+                    $keyGetter = 'get' . ucfirst($keyProperty);
                 }
 
                 $this->_keys[] = $dataModel->{$keyGetter}();
                 $this->_items[] = str_replace(array_keys($replace), $replace, $relatedFieldsTemplate);
             }
+
+            $this->_setOptions($results);
         }
     }
+
+    protected function _setOptions($results)
+    {
+        if ($results) {
+
+            $keyGetter = 'getPrimaryKey';
+            if ($keyProperty = $this->_config->config->get("keyProperty")) {
+                $keyGetter = 'get' . ucfirst($keyProperty);
+            }
+
+            foreach ($results as $dataModel) {
+                $this->_setValuesForExtraAttributes($dataModel, $dataModel->{$keyGetter}());
+            }
+        }
+    }
+
+    protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
+    {
+
+        $model = $dataMapper->loadModel(false);
+        $retAttrs = array();
+        foreach ($extraConfig as $label => $field) {
+            if (!$varName = $model->columnNameToVar($field)) {
+                continue;
+            }
+
+            $retAttrs[$label] = 'get' . ucfirst($varName);
+        }
+        return $retAttrs;
+    }
+
+    protected function _setValuesForExtraAttributes($model, $key)
+    {
+        if (sizeof($this->_extraDataAttributes) == 0) {
+            return;
+        }
+
+        $ret = array();
+        foreach ($this->_extraDataAttributes as $label => $getter) {
+            $ret[$label] = $model->$getter();
+        }
+
+        $this->_extraDataAttributesValues[$key] = $ret;
+    }
+
 
     /**
      * return bool
@@ -435,20 +492,37 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
         return $originalModel->getPrimaryKeyName() . ' in (' . implode(',', $returnIds). ')';
     }
-    
+
+    public function _toArray()
+    {
+        $ret = array();
+
+        foreach ($this as $key => $value) {
+            $_val = array('key' => $key, 'item' => $value);
+            if (isset($this->_extraDataAttributesValues[$key])) {
+                $_val['data'] = array();
+                foreach ($this->_extraDataAttributesValues[$key] as $label => $dataVal) {
+                    $_val['data'][$label] = $dataVal;
+                }
+            }
+            $ret[] = $_val;
+        }
+        return $ret;
+    }
+
     public function getRelationMapper()
     {
         return $this->_relationMapper;
     }
-    
+
     public function getRelationProperty()
     {
         return $this->_relationProperty;
     }
-    
+
     public function getRelatedMapper()
     {
         return $this->_relatedMapper;
     }
-    
+
 }

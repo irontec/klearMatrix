@@ -347,7 +347,6 @@
                     }
 
                     if ($(this).data('autofilter-select-by-data')) {
-
                         var _configDataArray = $(this).data('autofilter-select-by-data').split("|");
 
                         var _configData, _fieldToBeFiltered, _filterData, _targetValue, selectBox, $holder, $field;
@@ -366,13 +365,16 @@
                                 $targetComboId = "hiddenComboValues" + $targetComboId;
                             }
 
+                        	$field.data("olds", $field.val());
                             $holder = $("#" + $targetComboId);
+                            
                             if ($holder.length < 1) {
                                 $holder = $("<select class='hidden' id='"+ $targetComboId +"' />");
                                 $(this).parents("form:eq(0)").append($holder);
-                            } else {      
-                                $holder.children().appendTo($field);
-
+                            } else {
+                                $holder.children('option').appendTo($field);
+                                $field.val($field.data("olds"));
+                                
                                 var originalValue = $field.data("preload");
                                 var originalValueOption = $field.find("option[value="+ originalValue +"]");
                                 if (originalValue && originalValueOption) {
@@ -381,7 +383,6 @@
                                 	$field.find("option:eq(0)").prop("selected", true);
                                 }
                             }
-
                             $parent = $field.parents(".container:eq(0)");
                             $parent.css("opacity",'0.5');
                             selectBox = $field.data("selectBoxIt");
@@ -390,10 +391,11 @@
                             var filteredOptionElements = $("option",$field).not(filterCriterion);
                             filteredOptionElements.appendTo($holder);
                             if (typeof selectBox !== "undefined") {
-
                                 selectBox.refresh();
                                 selectBox.dropdown.trigger("click");
                                 selectBox.close();                                
+                            } else if (typeof $field.multiselect !== "undefined"){
+                            	$field.multiselect("refresh");
                             }
 
                             $parent.css({'opacity':1});
@@ -405,7 +407,6 @@
 
                 })
                 .on("postmanualchange", function () {
-
                     if ($(this).filter("select").data("target-for-change")) {
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt().data("selectBoxIt").refresh(function () {

@@ -48,13 +48,24 @@
 
 {{if (_decorators && _decorators.autocomplete)}}
     {{each(pk,relatedId) _fieldValue.relStruct}}
-        <option selected="selected" value="${relatedId}">${relatedId}</option>
+        <option selected="selected"
+        {{if (dataValue.data)}}
+            {{each(extraDataLabel, extraDataVal) dataValue.data}}
+            data-${extraDataLabel}="${extraDataVal}"
+            {{/each}}
+        {{/if}}
+        value="${relatedId}">${relatedId}</option>
     {{/each}}
 {{else}}
     {{each(idx,dataValue) _dataConfig.values}}
             <option
             {{if ( (_fieldValue['relIndex']) && (_fieldValue['relIndex'][dataValue.key]) )}}
                  selected="selected"
+            {{/if}}
+            {{if (dataValue.data)}}
+                {{each(extraDataLabel, extraDataVal) dataValue.data}}
+                data-${extraDataLabel}="${extraDataVal}"
+                {{/each}}
             {{/if}}
             value="${dataValue.key}">${dataValue.item}</option>
     {{/each}}

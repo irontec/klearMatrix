@@ -343,7 +343,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         foreach ($this->_items as $i=>$item) {
             $id = $this->_keys[$i];
             $class = "";
-            if ($i%2 == 0){
+            if ($i%2 == 0) {
                 $class = 'class="highlight"';
             }
             $li = '<li data-id="' . $id . '" '.$class.'>';
@@ -397,13 +397,15 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $siteLanguage = $klearBootstrap->getOption('siteConfig')->getLang();
         $currentLanguage = $siteLanguage->getLanguage();
 
-        $rows = array();
+        $tempRows = array();
+        $orderType = null;
+        $fieldName = "";
+        $orderedRows = array();
         foreach ($results as $dataModel) {
-//             $currentLanguage = $dataModel->getCurrentLanguage();
             $dataMlFields = array_keys($dataModel->getMultiLangColumnsList());
             $fieldsValues = array();
+            $orderKey = null;
             foreach ($fields as $key => $value) {
-
                 $fieldName = $key;
 
                 if (is_object($value)) {
@@ -422,8 +424,12 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                         $id = $dataModel->$getter();
                         $targetMapper = new $mapperName();
                         $targetModel = $targetMapper->find($id);
+                        if ($fieldConfig->getProperty("order")) {
+                            $orderType = $fieldConfig->getProperty("order");
+                        }
                         if (is_null($targetModel)) {
-                            $fieldsValues[] = $id;
+                            $orderKey = $id;
+                            $fieldsValues[] = $orderKey;
                             continue;
                         }
                         $targetMlFields = array_keys($targetModel->getMultiLangColumnsList());
@@ -439,10 +445,12 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                                 }
                                 $_fields['%'.$_field.'%'] = $targetModel->$getter();
                             }
-                            $fieldsValues[] = str_replace(array_keys($_fields), $_fields, $pattern);
+                            $orderKey = str_replace(array_keys($_fields), $_fields, $pattern);
+                            $fieldsValues[] = $orderKey;
                         } else {
                             $getter = 'get' . ucfirst($mapperField);
-                            $fieldsValues[] = $targetModel->$getter();
+                            $orderKey = $targetModel->$getter();
+                            $fieldsValues[] = $orderKey;
                         }
                     } else {
 
@@ -454,15 +462,18 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                                 $mapValues = $fieldsOptions->$fieldName->mapValues;
                                 $modelValue = $dataModel->$getter();
 
-                                $fieldsValues[] = Klear_Model_Gettext::gettextCheck(
+                                $orderKey = Klear_Model_Gettext::gettextCheck(
                                     $mapValues->$modelValue
                                 );
+                                $fieldsValues[] = $orderKey;
 
                             } else {
-                                $fieldsValues[] = $dataModel->$getter();
+                                $orderKey = $dataModel->$getter();
+                                $fieldsValues[] = $orderKey;
                             }
                         } else {
-                            $fieldsValues[] = $dataModel->$getter();
+                            $orderKey = $dataModel->$getter();
+                            $fieldsValues[] = $orderKey;
                         }
 
                     }
@@ -473,12 +484,28 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                     } else {
                         $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
                     }
-                    $fieldsValues[] = $dataModel->$getter();
+                    $orderKey = $dataModel->$getter();
+                    $fieldsValues[] = $orderKey;
                 }
             }
-
-            $rows[] = $fieldsValues;
-
+            $tempRows[] = $fieldsValues;
+            if (!is_null($orderType)) {
+                $orderedRows[] = $orderKey;
+            }
+        }
+        if (!is_null($orderType)) {
+            if ($orderType == "asc") {
+                asort($orderedRows);
+            }
+            if ($orderType == "desc") {
+                arsort($orderedRows);
+            }
+            $rows = array();
+            foreach ($orderedRows as $key => $value) {
+                $rows[] = $tempRows[$key];
+            }
+        } else {
+            $rows = $tempRows;
         }
 
 //         $defaultOption = null;
@@ -496,8 +523,10 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 //             }
 //         }
 
-        foreach ($rows as $i=>$fieldsValues) {
+        $i = 0;
+        foreach ($rows as $fieldsValues) {
             $id = $this->_keys[$i];
+            $i++;
             $tr .= '<tr class="hideable" data-id="'. $id . '">';
             foreach ($fieldsValues as $value) {
                 $tr .= '<td class="ui-widget-content default">'.htmlentities($value).'</td>';

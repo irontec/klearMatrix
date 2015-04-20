@@ -120,6 +120,16 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
             $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
 
+            $forceValues = $this->_item
+                ->getConfig()
+                ->getProperty('cloneForceValues');
+
+            if (is_object($forceValues)) {
+                foreach ($forceValues as $key => $val) {
+                    $newObj->{"set".ucfirst($key)}($val);
+                }
+            }
+
             if (!$newObj->save()) {
                 throw new Exception('Unknown error');
             }

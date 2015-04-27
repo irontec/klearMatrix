@@ -40,14 +40,25 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $this->_fields = $this->_getFields();
         $this->_fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
 
+        $options = array();
+
         if ($this->_request->getParam("reverse")) {
             $this->_runReverse();
         } else {
             $this->_run();
+            if ($this->_commandConfiguration->null) {
+                $options["'__null__'"] = array(
+                    'id' => "__NULL__",
+                    'value' => strip_tags(Klear_Model_Gettext::gettextCheck($this->_commandConfiguration->null)),
+                    'label' => Klear_Model_Gettext::gettextCheck($this->_commandConfiguration->null),
+                );
+            }
         }
 
-        $options = array();
+
+
         foreach ($this->_results as $record) {
+
             $replace = array();
             foreach ($this->_fields as $fieldName) {
                 $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));

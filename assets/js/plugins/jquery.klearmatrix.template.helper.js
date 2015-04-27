@@ -690,9 +690,18 @@
             return this.buildTitleString(title, defaultValue, parentValue);
 
         },
+        htmlentities: function (data) {
+            if (!data) {
+                return "";
+            }
+            var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+                return '&#'+i.charCodeAt(0)+';';
+            });
+            return encodedStr;
+        },
         buildTitleString: function(title, defaultValue, parentValue) {
-            defaultValue = defaultValue || "";
-            parentValue = parentValue || "";
+            defaultValue = defaultValue || '';
+            parentValue = parentValue || '';
             var res = [];
             var _r = "";
             if (res = title.match(/\[format\|(.*[\%parent\%|\%item\%].*)\]/)) {
@@ -720,7 +729,6 @@
             return _r;
         },
         getTitle : function(title,idx,replaceParentWithItem) {
-
             return this._parseDefaultValues({
                     title: title,
                     replaceParentWithItem : replaceParentWithItem,
@@ -877,7 +885,7 @@
                     type : option.type,
                     icon: option.icon,
                     optionIndex : this.getIndex(option, option.type),
-                    optionTitle : this.buildTitleString(mainTitle),
+                    optionTitle : this.htmlentities(this.buildTitleString(mainTitle)),
                     shortcut: option.shortcut  || false,
                     multiInstance: option.multiInstance || false,
                     external: option.external || false,

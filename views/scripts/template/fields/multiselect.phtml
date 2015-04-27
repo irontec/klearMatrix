@@ -48,13 +48,12 @@
 
 {{if (_decorators && _decorators.autocomplete)}}
     {{each(pk,relatedId) _fieldValue.relStruct}}
-        <option selected="selected"
-        {{if (dataValue.data)}}
-            {{each(extraDataLabel, extraDataVal) dataValue.data}}
-            data-${extraDataLabel}="${extraDataVal}"
-            {{/each}}
-        {{/if}}
-        value="${relatedId}">${relatedId}</option>
+        <option selected="selected" value="${relatedId}">${relatedId}</option>
+        <!--
+        README!!
+        No se soporta el MULTISELECT con AUTOCOMPLETADA y con CONDICIONES.
+        Ver commit para mas información
+         -->
     {{/each}}
 {{else}}
     {{each(idx,dataValue) _dataConfig.values}}

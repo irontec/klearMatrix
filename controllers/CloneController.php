@@ -116,26 +116,19 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
             $newObj = clone $obj;
 
-            // If object has related Files, they are cloned too
-            if ($files = $obj->getFileObjects()) {
-                foreach ($files as $columnName) {
-                    $fetcher = "fetch" . ucfirst($columnName);
-                    $putter = "put" . ucfirst($columnName);
-                    if ($obj->{$fetcher}()->getFilePath()) {
-                        if ($obj->{$fetcher}()->getFilePath()) {
-                            $tmpName = tempnam("/tmp", "CLONED");
-                            copy($obj->{$fetcher}()->getFilePath(), $tmpName);
-                            $newObj->{$putter}(
-                                $tmpName,
-                                $obj->{$fetcher}()->getBaseName()
-                                );
-                            // Borramos le fichero temporal
-                            unlink($tmpName);
-                        }
-                    }
+            $this->_cloneFiles($obj);
+
+            $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
+
+            $forceValues = $this->_item
+                ->getConfig()
+                ->getProperty('cloneForceValues');
+
+            if (is_object($forceValues)) {
+                foreach ($forceValues as $key => $val) {
+                    $newObj->{"set".ucfirst($key)}($val);
                 }
             }
-            $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
 
             if (!$newObj->save()) {
                 throw new Exception('Unknown error');
@@ -167,6 +160,9 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                         }
 
                         if (count($relatedColums) > 0) {
+
+                            $this->_cloneFiles($relatedModel);
+
                             $relatedModel->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
                             foreach ($relatedColums as $relatedColum) {
                                 $relatedValue = $relatedModel->{"get".$relatedColum}();
@@ -236,4 +232,38 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
     }
+
+    /**
+     * Comprueba si el obj tiene archivos y los clona
+     */
+    protected function _cloneFiles($obj)
+    {
+
+        if ($files = $obj->getFileObjects()) {
+            foreach ($files as $columnName) {
+
+                $fetcher = "fetch" . ucfirst($columnName);
+                $putter = "put" . ucfirst($columnName);
+
+                if ($obj->{$fetcher}()->getFilePath()) {
+
+                    $tmpName = tempnam(sys_get_temp_dir(), "CLONE");
+
+                    copy(
+                        $obj->{$fetcher}()->getFilePath(),
+                        $tmpName
+                    );
+
+                    $obj->{$putter}(
+                        $tmpName,
+                        $obj->{$fetcher}()->getBaseName()
+                    );
+
+                }
+            }
+        }
+
+        return $obj;
+    }
+
 }

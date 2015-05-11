@@ -387,6 +387,15 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                     $previewElement->setRequest($this->getRequest());
                     $previewElement->setBinary($this->_getBinary());
                     break;
+                case preg_match('/^application.*[pdf]/i', $mimeType):
+                    // Avoid loading from binary while working with PDF
+                    // They can be pretty heavy
+                    $previewElement = new KlearMatrix_Model_Field_File_Preview_Pdf();
+                    $previewElement->setRequest($this->getRequest());
+                    $previewElement->setFilename($this->_getFilePath());
+                    // Override original mime-type
+                    $mimeType = 'image/png';
+                    break;
                 default:
                     Throw new Exception("file type not valid");
                     break;

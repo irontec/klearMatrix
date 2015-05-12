@@ -469,6 +469,7 @@
                 $(".qq-uploader", this.options.theForm).each(function() {
 
                     var _hiddenField = $("#" + $(this).attr("rel"));
+                    
                     if (_hiddenField.length == 0) {
                         return;
                     }
@@ -478,15 +479,41 @@
 
                     $(this).replaceWith(item);
 
+                    var $shownFDesc = $('#new_'+ $(this).attr("rel"));
+                    var $currentFile = $('#current_'+ $(this).attr("rel"));
+                    $shownFDesc.html('');
+                    
                     _hiddenField.on("postmanualchange",function() {
 
-                        var $shownFDesc = $('#new_'+ $(this).attr("id"));
                         if ($(this).hasClass("changed")) {
                             $shownFDesc.html($(this).data("fileDescription")).css("display", "block");
+                            var $close = $("<span class='ui-icon ui-icon-close right pointer'></span>");
+                            $close.on('click',function() {
+                                _hiddenField
+                                    .data("toBeRemoved", false)
+                                    .removeClass("changed")
+                                    .val('')
+                                    .trigger("postmanualchange");
+                                
+                            }).appendTo($shownFDesc);
+                            
                             $shownFDesc.addClass("changed ui-state-highlight");
                         } else {
-                            $shownFDesc.removeClass("changed ui-state-highlight");
+                            $shownFDesc.html('').removeClass("changed ui-state-highlight").css("display", "none");
                         }
+                        
+                        if ($(this).data("toBeRemoved")) {
+                            // Se va a eliminar el fichero
+                            if ($currentFile.get(0).firstChild.nodeType == 3) {
+                                $($currentFile.get(0).firstChild).wrap("<strike>");
+                            }
+                        } else {
+                            // remvoe striked, if any ;) nothing to remove
+                            var $striked = $("strike",$currentFile);
+                            $striked.replaceWith($striked.text());
+                        }
+                        
+                        
                     });
 
                     var requestData = {
@@ -556,6 +583,7 @@
                             var fSize = $(".qq-upload-size",$list).html();
                             _hiddenField.val(result.code)
                             .data("fileDescription", fName + ' (' + fSize + ')')
+                            .data("toBeRemoved",false)
                             .trigger("manualchange");
                             $list.html('');
 
@@ -626,7 +654,23 @@
                     })();
                 });
             }
-
+            
+            $(".klearMatrix_file a.option.setNullFso").on("click",function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var _hiddenField = $("#" + $(this).attr("rel"));
+                if (_hiddenField.length == 0) {
+                    return;
+                }
+                _hiddenField
+                    .val('__NULL__')
+                    .data("fileDescription", $.translate("File will be deleted"))
+                    .data('toBeRemoved', true)
+                    .trigger("manualchange");
+                
+                
+            });
+            
             $("input, textarea", this.options.theForm)
             .autoResize({
                 maxWidth : function() {

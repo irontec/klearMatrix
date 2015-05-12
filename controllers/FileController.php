@@ -196,7 +196,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             $nameGetter = 'get' . $fileFields['baseNameName'];
             $sizeGetter = 'get' . $fileFields['sizeName'];
-//             $mimeGetter = 'get' . $fileFields['mimeName'];
+            $mimeGetter = 'get' . $fileFields['mimeName'];
 
             $data = array(
                     'pk'=>$this->_pk,
@@ -366,61 +366,32 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     public function previewAction()
     {
 
-        try {
-            $this->_loadModel();
+        
+        $this->_loadModel();
 
-            if (!$this->_model) {
-                Throw new Exception("file not exists");
-            }
-
-            $this->_setFileFields();
-
-            $typeGetter = 'get' . $this->_fileFields['mimeName'];
-            $nameGetter = 'get' . $this->_fileFields['baseNameName'];
-
-            $mimeType = $this->_model->{$typeGetter}();
-            $filename = $this->_model->{$nameGetter}();
-
-            switch (true) {
-                case preg_match('/^image*[jpg|gif|jpeg|png|bmp]/i', $mimeType):
-                    $previewElement = new KlearMatrix_Model_Field_File_Preview_Image();
-                    $previewElement->setRequest($this->getRequest());
-                    $previewElement->setBinary($this->_getBinary());
-                    break;
-                case preg_match('/^application.*[pdf]/i', $mimeType):
-                    // Avoid loading from binary while working with PDF
-                    // They can be pretty heavy
-                    $previewElement = new KlearMatrix_Model_Field_File_Preview_Pdf();
-                    $previewElement->setRequest($this->getRequest());
-                    $previewElement->setFilename($this->_getFilePath());
-                    // Override original mime-type
-                    $mimeType = 'image/png';
-                    break;
-                default:
-                    Throw new Exception("file type not valid");
-                    break;
-            }
-
-        } catch(Exception $e) {
-
-            $mimeType = 'image/png';
-            $filename = 'default.png';
-
-            $front = $this->getFrontController();
-            $imageBlob = file_get_contents($front->getModuleDirectory() .'/assets/bin/default.svg');
-
-            $previewElement = new KlearMatrix_Model_Field_File_Preview_Default();
-            $previewElement->setRequest($this->getRequest());
-            $previewElement->setBinary($imageBlob);
+        if (!$this->_model) {
+            Throw new Exception("file not exists");
         }
 
+        $this->_setFileFields();
 
+        $typeGetter = 'get' . $this->_fileFields['mimeName'];
+        $nameGetter = 'get' . $this->_fileFields['baseNameName'];
+
+        $mimeType = $this->_model->{$typeGetter}();
+        $filename = $this->_model->{$nameGetter}();
+
+        $previewElement = KlearMatrix_Model_Field_File_Preview_Abstract::factory($filename, $mimeType);
+        $previewElement->setRequest($this->getRequest());
+        $previewElement->setFilename($this->_getFilePath());
+        
+        
         $this->_helper->log('Sending file to Client: ('.$filename.')');
         $this->_helper->sendFileToClient(
             $previewElement->getBinary(),
             array(
                 'filename' => $filename,
-                'type' => $mimeType,
+                'type' => $previewElement->getMimeType(),
                 'disposition' => 'inline'
             ),
             true

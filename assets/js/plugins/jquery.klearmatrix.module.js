@@ -207,7 +207,7 @@
                              _post[value] = $self.data(value);
                          }
 
-                         if (value == 'width' || value == 'height') {
+                         if (value == 'height') {
                              imageAttribs += value + '="'+_post[value]+'px" ';
                          }
                      });

@@ -291,7 +291,7 @@
                 change: false,
                 keyup: false,
                 allValidSelectors: 'input.hiddenFile, :input:visible:not(:button):not(:disabled):not(.novalidate):not(.ui-autocomplete-input), \
-                    select[required]:visible:not(:disabled):not(.novalidate)'
+                    select[required]:not(:disabled):not(.novalidate)'
             })
             .on('validated', function(formElement, validation) {
 
@@ -894,7 +894,7 @@
                                 checkSuperContainer.show(field);
 
                                 field.find('select').each(function () {
-                                	
+                                    $(this).removeClass('novalidate');
                                 	var selectBox = $(this).data("selectBoxIt");
                                 	var selectBoxIsObjectAndRefreshIsCallable = (
                                 			(typeof selectBox == "object") &&  
@@ -925,6 +925,9 @@
                         if (!field) {
                             return;
                         }
+                        field.find('select').each(function () {
+                            $(this).addClass('novalidate');
+                        });
                         if (manual) {
                             field.hide(1,function() {
                                 // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer

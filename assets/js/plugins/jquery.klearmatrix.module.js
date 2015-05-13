@@ -207,9 +207,6 @@
                              _post[value] = $self.data(value);
                          }
 
-                         if (value == 'width' || value == 'height') {
-                             imageAttribs += value + '="'+_post[value]+'px" ';
-                         }
                      });
                      var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
 

@@ -65,7 +65,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
             // Si una de las columnas tienen dependencias,
             // el save deberá llevar "saveRecursive"
-            $hasDependant |= $column->isDependant();
+            $hasDependant = $hasDependant || $column->isDependant();
         }
 
         try {
@@ -111,7 +111,12 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             $this->_helper->log(
                 'Error saving record: ' . $exception->getMessage()
             );
-            throw new \Zend_Exception($this->view->translate('Error saving record'));
+            $displayErrors = (ini_get("display_errors"));
+            $message = $this->view->translate('Error saving record');
+            if ($displayErrors) {
+                $message.= " (".$exception->getMessage().")";
+            }
+            throw new \Zend_Exception($message);
         }
     }
 

@@ -291,7 +291,7 @@
                 change: false,
                 keyup: false,
                 allValidSelectors: 'input.hiddenFile, :input:visible:not(:button):not(:disabled):not(.novalidate):not(.ui-autocomplete-input), \
-                    select[required]:not(:disabled):not(.novalidate)'
+                    select[required]:visible:not(:disabled):not(.novalidate)'
             })
             .on('validated', function(formElement, validation) {
 

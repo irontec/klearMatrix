@@ -70,9 +70,9 @@
                 activeKeyup: true,
 
                 // Setup mouse event delegation.
-                mSelectors: '[type="range"]:not(:disabled):not(.novalidate), :radio:not(:disabled):not(.novalidate), :checkbox:not(:disabled):not(.novalidate), select:not(:disabled):not(.novalidate), option:not(:disabled):not(.novalidate)',
+                mSelectors: '[type="range"]:not(:disabled):not(.novalidate), :radio:not(:disabled):not(.novalidate), :checkbox:not(:disabled):not(.novalidate), option:not(:disabled):not(.novalidate)',
                 click: true,
-
+                
                 // What do we name the required .data variable?
                 requiredVar: 'h5-required',
 

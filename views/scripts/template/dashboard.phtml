@@ -3,7 +3,7 @@
 <h1 class="ui-state-active  ui-corner-all">${title}</h1>
 <div>
 {{each(idx,section) sections}}
-<fieldset class="ui-widget-content ui-corner-all legacy">
+<fieldset class="ui-widget-content ui-corner-all legacy" data-meta="${section.meta}">
 <legend class="ui-state-active  ui-corner-all">${section.name}</legend>
     <ul>
         {{each(idx2,subsection) section.subsects}}

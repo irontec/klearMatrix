@@ -5,7 +5,7 @@
     }
 
     var __namespace__ = "klearmatrix.dashboard";
-
+    
     $.widget("klearmatrix.dashboard", $.klearmatrix.module,  {
         options: {
             data : null,
@@ -28,6 +28,9 @@
                 ._registerBaseEvents()
                 ._registerEvents()
                 ._css3Columns();
+
+            $(document).trigger("kDashboardLoaded");
+
 
         },
         _applyDecorators : function() {

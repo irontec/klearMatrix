@@ -24,14 +24,14 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
     public function init()
     {
         $cacheManager = $this->getInvokeArg('bootstrap')->getResource('cachemanager');
-        
-        
+
+
         $keyGenerator = new \Klear_Model_CacheKeyGenerator('dashboardKlearMatrix');
         $cacheKey = $keyGenerator->getKey();
-        
+
         $cache = $cacheManager->getCache('klearmatrixDashboard');
         $cache->start($cacheKey);
-        
+
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
 
@@ -69,11 +69,12 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
         foreach ($menuConfig as $section) {
             $sectionTmp = array(
                     'name' => $section->getName(),
+                    'meta' => $section->getMeta(),
                     'subsects' => array()
             );
 
             foreach ($section as $subsection) {
-                
+
                 $file = $subsection->getMainFile();
 
                 $sectionConfig = new Klear_Model_SectionConfig;
@@ -93,7 +94,6 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 $moduleRouter->resolveDispatch();
 
                 if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class")) {
-
                     $dashElementClassName = $moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class");
                     $dashSection = new $dashElementClassName;
                     $dashSection->setConfig($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard"));
@@ -120,8 +120,8 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
 
             if (sizeof($sectionTmp['subsects'])>0) {
                 $data['sections'][] = $sectionTmp;
-            } 
-            
+            }
+
         }
 
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();

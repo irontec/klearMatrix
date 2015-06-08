@@ -12,16 +12,36 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         $request = $this->getRequest();
 
         if (!$column->isMultilang()) {
-            return $request->getPost($column->getDbFieldName());
+            return $this->_autoTrim($column, $request->getPost($column->getDbFieldName()));
         }
 
         $value = array();
         foreach ($langs as $lang) {
-            $value[$lang] = $request->getPost($column->getDbFieldName() . $lang);
+            $value[$lang] = $this->_autoTrim($column, $request->getPost($column->getDbFieldName() . $lang));
         }
+
         return $value;
     }
 
+    protected function _autoTrim($column, $value)
+    {
+        $klearConfig = $column->getKlearConfig();
+        if (!is_null($klearConfig) && $klearConfig->hasProperty("trim")) {
+
+            $trimMode = $klearConfig->getProperty("trim");
+            if ($trimMode === "both") {
+                $value = trim($value);
+            }
+            if ($trimMode === "left") {
+                $value = ltrim($value);
+            }
+            if ($trimMode === "right") {
+                $value = rtrim($value);
+            }
+        }
+
+        return $value;
+    }
 
     public function column2Model($model, KlearMatrix_Model_Column $column)
     {
@@ -53,7 +73,7 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         }
 
         if ($column->isFile()) {
-            
+
             if (is_null($value)) {
                 $removeMethod = 'remove'. ucfirst($column->getDbFieldName());
                 $model->{$removeMethod}();

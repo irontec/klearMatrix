@@ -418,8 +418,20 @@
                 switch(column.type){
 
                     case 'select':
-
+                        
                         var _curVal = values[column.id];
+                        
+                        var selectConfig = column.config;
+                        
+                        var attrs = selectConfig.attributes;
+                        if (attrs !== undefined && attrs !== null) {
+                            if (attrs.imgpreview !== undefined) {
+                                var previewUrl = attrs.imgpreview;
+                                var img = previewUrl + _curVal;
+                                
+                                return '<p style="text-align: center;"><img src="' + img + '" /></p>';
+                            }
+                        };
 
                         if (_curVal && column.decorators) {
 
@@ -434,7 +446,7 @@
                             return this.getValuesFromSelectColumn(column)['__null__'];
                         }
 
-                        return '';
+                        
                         break;
 
                     case 'multiselect':

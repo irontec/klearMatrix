@@ -768,3 +768,23 @@ div.ghostTableContainer:hover {
     transform: rotate(360deg);
   }
 }
+
+/**
+  * Img in Select's
+  */
+.select-img-previe {
+    float: inherit;
+    height: 32px;
+    width: 32px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    position: relative;
+    display: inline-block;
+}
+
+.select-img-previe img {
+    width: 32px !important;
+    height: 32px !important;
+}

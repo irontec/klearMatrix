@@ -1,3 +1,9 @@
+{{if (_dataConfig.attributes && _dataConfig.attributes.imgpreview !== null)}}
+    <div class="select-img-previe">
+        <img src="${_dataConfig.attributes.imgpreview}${_fieldValue}" alt="lol" />
+    </div>
+{{/if}}
+
 {{if (_readonly)}}
     {{each(idx,dataValue) _dataConfig.values}}
         {{if (_fieldValue && dataValue.key == _fieldValue)}}
@@ -59,8 +65,8 @@
             data-${extraDataLabel}="${extraDataVal}"
         {{/each}}
     {{/if}}
-    
-    
+
+
     {{if (dataValue.key != '__null__')}}
         value="${dataValue.key}"
     {{else}}

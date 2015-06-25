@@ -308,6 +308,11 @@
             if (this.options.parent) {
                 $viewPort = $($(this.options.parent).klearModule("getPanel"));
             }
+            if ($('select[imgPreview]') !== undefined && $('select[imgPreview]').length > 0) {
+                $('select[imgPreview]').on('change', function() {
+                    _self._imgPreviewChange($(this));
+                });
+            }
 
             if ($('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).length > 0) {
                 $('select:not(.notcombo, [data-decorator]).multiselect', $viewPort).multiselect({
@@ -809,7 +814,15 @@
 
             return this;
         },
-
+        _imgPreviewChange: function (element) {
+            
+            var newValue = element.val();
+            var imgPreview = element.parent('div.container').find('div.select-img-previe img');
+            var path = element.attr('imgpreview');
+            
+            imgPreview.attr('src', path + newValue);
+            
+        },
         standardError : function(data) {
             var self = this;
             var $_dialog = $(self.element).klearModule("getModuleDialog");

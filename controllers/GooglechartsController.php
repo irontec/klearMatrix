@@ -108,12 +108,12 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 
 
         $chartData = array();
-        $dashboard = $this->_item->getRawConfigAttribute("dashboard");
-        if ( $dashboard && $dashboard->show !== false){
-            $chartData["dashboard"] = $this->_dashboard($dashboard);
-//             var_dump($chartData);
-//             die(1);
+        $dashboardPannel = $this->_item->getRawConfigAttribute("dashboardPannel");
+        
+        if ( $dashboardPannel && $dashboardPannel->show !== false){
+            $chartData["dashboard"] = $this->_dashboard($dashboardPannel);
         }
+        
         $chartData["title"] = $screenTitle;
         $chartData["chartGroups"] = array();
         $chartGroups = $this->_item->getRawConfigAttribute("chartGroups");

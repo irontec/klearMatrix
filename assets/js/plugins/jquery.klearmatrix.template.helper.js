@@ -429,7 +429,7 @@
                                 var previewUrl = attrs.imgpreview;
                                 var img = previewUrl + _curVal;
                                 
-                                return '<p style="text-align: center;"><img src="' + img + '" /></p>';
+                                return '<p style="text-align: center;"><img class="imgpreview" src="' + img + '" /></p>';
                             }
                         };
 

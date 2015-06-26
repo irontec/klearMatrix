@@ -772,7 +772,7 @@ div.ghostTableContainer:hover {
 /**
   * Img in Select's
   */
-.select-img-previe {
+.select-img-preview {
     float: inherit;
     height: 32px;
     width: 32px;
@@ -784,7 +784,7 @@ div.ghostTableContainer:hover {
     display: inline-block;
 }
 
-.select-img-previe img {
+.select-img-preview img, .imgpreview {
     width: 32px !important;
     height: 32px !important;
 }

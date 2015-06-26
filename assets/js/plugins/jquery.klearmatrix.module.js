@@ -817,7 +817,7 @@
         _imgPreviewChange: function (element) {
             
             var newValue = element.val();
-            var imgPreview = element.parent('div.container').find('div.select-img-previe img');
+            var imgPreview = element.parent('div.container').find('div.select-img-preview img');
             var path = element.attr('imgpreview');
             
             imgPreview.attr('src', path + newValue);

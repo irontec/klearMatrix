@@ -446,7 +446,7 @@
                             return this.getValuesFromSelectColumn(column)['__null__'];
                         }
 
-                        
+                        return '';
                         break;
 
                     case 'multiselect':

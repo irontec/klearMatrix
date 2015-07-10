@@ -237,7 +237,10 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
         $this->_klearBootstrap = $bootstrap->getResource('modules')->offsetGet('klear');
 
-        $_currentLangs = $this->_klearBootstrap->getOption('siteConfig')->getLangs();
+        $_currentLangs = $this->_klearBootstrap->getOption('siteConfig')->getModelLangs();
+        if( $_currentLangs === false){
+            $_currentLangs = $this->_klearBootstrap->getOption('siteConfig')->getLangs();
+        }
         foreach ($_currentLangs as $kLanguage) {
             foreach ($langs as $_langIden) {
                 if ($kLanguage->getLanguage() == $_langIden) {

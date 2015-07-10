@@ -1,7 +1,9 @@
-{{if (_dataConfig.attributes && _dataConfig.attributes.imgpreview !== null)}}
-    <div class="select-img-preview">
-        <img src="${_dataConfig.attributes.imgpreview}${_fieldValue}" alt="lol" />
-    </div>
+{{if (_dataConfig.attributes)}}
+    {{if (_dataConfig.attributes.imgpreview)}}
+        <div class="select-img-preview">
+            <img src="${_dataConfig.attributes.imgpreview}${_fieldValue}" alt="klear" />
+        </div>
+    {{/if}}
 {{/if}}
 
 {{if (_readonly)}}

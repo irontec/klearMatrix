@@ -43,14 +43,13 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             ->addActionContext('download', 'json')
             ->addActionContext('delete', 'json')
             ->addActionContext('upload', 'json')
+            ->addActionContext('free-upload', 'json')
             ->initContext('json');
 
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
-        if (!$this->_item->hasModelFile()) {
-            $errorMessage = 'modelFile must be specified in ' . $this->_item->getType() . 'configuration';
-            throw new \KlearMatrix_Exception_File($errorMessage);
-        }
+
+
 
     }
 
@@ -66,6 +65,20 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         return $fileColumn;
     }
 
+    protected function _processUpload($allowedExtensions, $sizeLimit)
+    {
+
+        $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
+
+        return $uploader->handleUpload(
+                sys_get_temp_dir(),
+                false,
+                $this->_filePrefix . sha1(time() . rand(1000, 10000)),
+                ''
+        );
+
+    }
+
     public function uploadAction()
     {
         try {
@@ -75,15 +88,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $allowedExtensions = $colConfig['allowed_extensions'];
             $sizeLimit = $colConfig['size_limit'];
 
-            //TODO: Igual habría que meter el uploader como parte de Klear? Abandonar las librerías Iron por Klear_*?
-            $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
-
-            $result = $uploader->handleUpload(
-                sys_get_temp_dir(),
-                false,
-                $this->_filePrefix . sha1(time() . rand(1000, 10000)),
-                ''
-            );
+            $result = $this->_processUpload($allowedExtensions, $sizeLimit);
 
             $this->_helper->log('new file uploaded (' .$result['basename'].')');
 
@@ -105,6 +110,40 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $this->view->code = $result['filename'];
     }
 
+    /**
+     * EntryPoint de subida libre de ficheros siguiendo metodología KlearMatrix
+     * Integrado con custom_dialog, pero usable desde cualquier control custom.
+     * @throws \KlearMatrix_Exception_File
+     */
+    public function freeUploadAction()
+    {
+        try {
+
+            $result = $this->_processUpload(array(), false);
+            $this->_helper->log('new file free-uploaded (' .$result['basename'].')');
+
+        } catch(Exception $e) {
+            $this->_helper->log(
+                    'Error uploading File [' . $e->getCode() . '] (' . $e->getMessage() . ')',
+                    Zend_Log::ERR
+            );
+
+            throw new \KlearMatrix_Exception_File($e->getMessage(), $e->getCode());
+        }
+
+
+
+        $tempFSystemNS = new Zend_Session_Namespace('File_Controller');
+        $tempFSystemNS->{$result['filename']} = array(
+                'path'=>$result['path'],
+                'basename' => $result['basename']);
+
+        $this->_clearOldFiles();
+        $this->view->success = true;
+        $this->view->code = $result['filename'];
+
+    }
+
     protected function _clearOldFiles()
     {
 
@@ -114,7 +153,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         foreach ($files as $file) {
 
             if (!is_file($file)) {
-                // WTF?!?!?! symlink? dir? some maderfoker in the house?
                 $this->_helper->log(
                     'KlearMatrix::FSO NOT A FILE TO BE DELETED! something nasty!! ['.$file.']',
                     Zend_Log::ALERT
@@ -366,7 +404,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     public function previewAction()
     {
 
-        
+
         $this->_loadModel();
 
         if (!$this->_model) {
@@ -384,8 +422,8 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $previewElement = KlearMatrix_Model_Field_File_Preview_Abstract::factory($filename, $mimeType);
         $previewElement->setRequest($this->getRequest());
         $previewElement->setFilename($this->_getFilePath());
-        
-        
+
+
         $this->_helper->log('Sending file to Client: ('.$filename.')');
         $this->_helper->sendFileToClient(
             $previewElement->getBinary(),

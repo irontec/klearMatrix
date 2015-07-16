@@ -508,7 +508,7 @@
                                 $($currentFile.get(0).firstChild).wrap("<strike>");
                             }
                         } else {
-                            // remvoe striked, if any ;) nothing to remove
+                            // remove striked, if any ;) nothing to remove
                             var $striked = $("strike",$currentFile);
                             $striked.replaceWith($striked.text());
                         }
@@ -525,24 +525,12 @@
 
                     var request = $.klear.buildRequest(requestData);
 
-                    // Capa que se pondrá por encima el control input:file (opacity=0)... la única manera de "deshabilitarlo" temporalmente
-                    // TODO: testearlo en IE
-                    var $buttonHidder = $("<div />")
-                    .addClass('buttonHidder')
-                    .css({
-                        position: 'absolute',
-                        top: '0',
-                        left: '0',
-                        zIndex: '1000',
-                        width: '100%',
-                        height: '100%'
-                    });
 
                     // Objeto que encapsula métodos para habilitar/deshabilitar el botón de upload
                     var buttonAcc = {
                         disable : function($context) {
                             $(".qq-upload-button", $context).addClass("ui-state-disabled");
-                            $(".qq-upload-button", $context).append($buttonHidder);
+                            $(".qq-upload-button", $context).append($('<div class="buttonHidder" />'));
                         },
                         enable : function($context) {
                             $(".qq-upload-button", $context).removeClass("ui-state-disabled");

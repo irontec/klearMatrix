@@ -270,24 +270,45 @@ dl.multiLanguage dd.copied span.copied {
     border:0;
 }
 
-.klearMatrix_form .klearMatrix_file {
+.klearMatrix_form .klearMatrix_file, .dialog-uploader .klearMatrix_file {
     display:block;
     padding:0.4em;
     margin:0.5em 0;
+}
+
+.dialog-uploader .klearMatrix_file {
+	display: none;
 }
 
 .klearMatrix_form .newFile {
     display:none;
 }
 
-.klearMatrix_form .qq-uploader {
+.klearMatrix_form .qq-uploader, .dialog-uploader .qq-uploader {
     margin:0.5em 0;
 }
 
-.klearMatrix_form .qq-upload-button {
+.klearMatrix_form .qq-upload-button, .dialog-uploader .qq-upload-button {
     padding:0.5em;
     width:10em;
 }
+
+.dialog-uploader {
+	display: inline-block;
+}
+.buttonHidder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    zIndex: 1000;
+    width: 100%;
+    height: 100%;
+}
+
+.qq-upload-list {
+    list-style:none;
+}
+
 
 .klearMatrix_form li {
     list-style: none;

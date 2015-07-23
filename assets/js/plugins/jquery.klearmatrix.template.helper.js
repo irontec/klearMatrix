@@ -424,12 +424,20 @@
                         var selectConfig = column.config;
                         
                         var attrs = selectConfig.attributes;
+                        
+                        if (_curVal == null &&  this.getValuesFromSelectColumn(column)['__null__']) {
+                            return this.getValuesFromSelectColumn(column)['__null__'];
+                        }
+                        
                         if (attrs !== undefined && attrs !== null) {
                             if (attrs.imgpreview !== undefined) {
                                 var previewUrl = attrs.imgpreview;
                                 var img = previewUrl + _curVal;
-                                
-                                return '<p style="text-align: center;"><img class="imgpreview" src="' + img + '" /></p>';
+                                var imgClass = "";
+                                if (attrs.imgClass !== undefined) {
+                                    imgClass = attrs.imgClass;
+                                } 
+                                return '<p style="text-align: center;"><img class="imgpreview '+imgClass+'" src="' + img + '" /></p>';
                             }
                         };
 
@@ -440,10 +448,6 @@
                         } else if (this.getValuesFromSelectColumn(column)[_curVal]) {
 
                             return this.getValuesFromSelectColumn(column)[_curVal];
-                        }
-
-                        if (_curVal == null &&  this.getValuesFromSelectColumn(column)['__null__']) {
-                            return this.getValuesFromSelectColumn(column)['__null__'];
                         }
 
                         return '';

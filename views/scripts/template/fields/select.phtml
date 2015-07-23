@@ -1,7 +1,11 @@
 {{if (_dataConfig.attributes)}}
-    {{if (_dataConfig.attributes.imgpreview)}}
+    {{if (_dataConfig.attributes.imgpreview) && !(_dataConfig.attributes.iconsInOptions)}}
         <div class="select-img-preview">
-            <img src="${_dataConfig.attributes.imgpreview}${_fieldValue}" alt="klear" />
+            <img src="${_dataConfig.attributes.imgpreview}${_fieldValue}" alt="${_fieldValue}"
+            {{if (_dataConfig.attributes.imgClass)}}
+                class="${_dataConfig.attributes.imgClass}"
+            {{/if}}
+            />
         </div>
     {{/if}}
 {{/if}}
@@ -71,6 +75,18 @@
 
     {{if (dataValue.key != '__null__')}}
         value="${dataValue.key}"
+        {{if (_dataConfig.attributes)}}
+            {{if (_dataConfig.attributes.imgpreview)}}
+                data-image="${_dataConfig.attributes.imgpreview}${dataValue.item}"
+            {{/if}}
+            {{if (_dataConfig.attributes.imgClass)}}
+                data-icon="${_dataConfig.attributes.imgClass}"
+            {{/if}}
+            {{if (_dataConfig.attributes.imgpreview) && (_dataConfig.attributes.iconsInOptions)}}
+                data-iconurl="${_dataConfig.attributes.imgpreview}${dataValue.key}"
+            {{/if}}
+            data-selectedtext="${dataValue.item}"
+        {{/if}}
     {{else}}
         value="__NULL__"
     {{/if}}
@@ -80,7 +96,9 @@
     {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.hide[dataValue.key]) }}
         data-hide="{{each(idxField,hideField) _dataConfig.visualFilter.hide[dataValue.key]}} ${hideField},{{/each}}"
     {{/if}}
-    >${dataValue.item}</option>
+    >
+    ${dataValue.item}
+    </option>
 {{/each}}
 </select>
 {{/if}}

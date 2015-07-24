@@ -18,6 +18,7 @@ class KlearMatrix_TemplateController extends Zend_Controller_Action
             "map",
             "html5",
     		"ip",
+            "color"
     );
 
     public function init()

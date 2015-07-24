@@ -577,6 +577,11 @@
                         return '<img src="'+imgUrl+'" class="makeItBigger" />';
                         break;
 
+                    case 'color':
+                        console.log(values[column.id]);
+                        return '<div style="background-color: '+values[column.id]+'; color: '+values[column.id]+';">'+values[column.id]+'</div>';
+                        break;
+                        
                     default:
 
                         if(column.properties && column.properties.maxLength) {

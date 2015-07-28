@@ -66,7 +66,8 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
                 "enclosure" => '"',
                 "separator" => ";",
                 "encoding" => "utf-8",
-                "executionSeconds" => false
+                "executionSeconds" => false,
+                "rawValues" => false
         );
 
         if (is_object($this->_csv) && get_class($this->_csv) == 'Zend_Config') {
@@ -80,12 +81,12 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
         }
         return $csvOptions;
     }
-    
+
     public function getAutoRefresh()
     {
         return $this->_autoRefresh;
     }
-    
+
     public function getHooks()
     {
         return $this->_hooks;

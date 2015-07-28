@@ -62,7 +62,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $this->_mapperName = $this->_item->getMapperName();
         $this->_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_mapperName);
         $this->_helper->log('List mapper: ' . $this->_mapperName);
-        
+
     }
 
 
@@ -331,7 +331,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $toBeChanged = array();
 
         foreach ($fields as $field) {
-            if ($field['type'] == 'select') {
+            if ( $field['type'] == 'select' && !$csvParams["rawValues"] ) {
 
                 $toBeChanged[$field['id']] = array();
 

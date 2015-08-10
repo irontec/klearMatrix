@@ -1,8 +1,6 @@
 <?php
-
 class KlearMatrix_Model_Field_Textarea_Tinymce_Template
 {
-
     protected $_jsController;
     protected $_jsControllerClass;
 
@@ -175,7 +173,6 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         }
 
         $templateFile = __DIR__ . '/Template/' . ucfirst($template) . '.yaml';
-
         if (!file_exists($templateFile)) {
             $templateFile = __DIR__ . '/Template/' . ucfirst($this->_defaultTemplate) . '.yaml';
         }
@@ -191,10 +188,12 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         $this->_jsControllerClass = ucfirst($template);
 
         if ($this->_config->hasProperty('settings')) {
+            
             $this->_settings = array_merge(
                 $this->_templateConfig->toArray(),
                 $this->_config->getProperty('settings')->toArray()
             );
+
         } else {
             $this->_settings = $this->_templateConfig->toArray();
         }
@@ -213,11 +212,10 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
     protected function _loadBars()
     {
         $toolbarCounter = 1;
-        while (!isset($this->_settings['toolbar' . $toolbarCounter])) {
+        while (isset($this->_settings['toolbar' . $toolbarCounter])) {
             $this->_toolBars[$toolbarCounter] = array();
             $toolbarCounter++;
         }
-
         for ($barIndex = 1; $barIndex < $toolbarCounter; ++$barIndex) {
             $this->_toolBars[$barIndex] = explode(" ", $this->_settings['toolbar' . $barIndex]);
             unset($this->_settings['toolbar' . $barIndex]);
@@ -229,16 +227,21 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
         $this->_loadBars();
         $this->_removeButtons();
         $this->_addButtons();
-        $this->_addBar();
+        $this->_addBar();       
+        $this->_cleanBars();
+
         return $this->_toolBars;
     }
 
     protected function _removeButtons()
-    {
+    {       
         if ($this->_config->getProperty('removeButtons')) {
             foreach ($this->_toolBars as $barIndex => $bar) {
                 foreach ($this->_config->getProperty('removeButtons') as $button) {
-                    if ($index = array_search($button, $bar)) {
+
+                    $index = array_search($button, $bar);
+                    $inArray = ($index !== false); 
+                    if ($inArray) {
                         unset($this->_toolBars[$barIndex][$index]);
                     }
                 }
@@ -269,6 +272,28 @@ class KlearMatrix_Model_Field_Textarea_Tinymce_Template
                     $this->_toolBars[$barIndex] = $bar;
                 }
             }
+        }
+    }
+
+    protected function _cleanBars()
+    {
+        foreach ($this->_toolBars as $idx => $toolbar) {
+
+            $firstVal = trim(current($toolbar));
+            if ($firstVal == '|') {
+                array_shift($toolbar);
+            }
+
+            $prevButton = null;
+            foreach ($toolbar as $pos => $button) {
+                $button = trim($button);
+                $duplicated = ($prevButton == $button); 
+                if ($duplicated) {
+                    unset($toolbar[$pos]);       
+                }
+                $prevButton = $button;
+            }
+            $this->_toolBars[$idx] = $toolbar; 
         }
     }
 

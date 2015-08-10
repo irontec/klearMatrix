@@ -7,10 +7,7 @@ production:
 
 #### Register plugins ####
 
-  plugins: "simple kleargallery"
-
-  pluginsAlias:
-    simple: "advlist autolink lists anchor link preview code fullscreen media"
+  plugins: "advlist autolink lists anchor link preview code fullscreen media kleargallery"
 
 #### Basic conf ####
 

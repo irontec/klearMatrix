@@ -7,10 +7,7 @@ production:
 
 #### Register plugins ####
 
-  plugins: "basic"
-
-  pluginsAlias:
-    basic: "lists link fullscreen"
+  plugins: "lists link fullscreen"
 
 #### Basic conf ####
 

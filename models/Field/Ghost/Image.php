@@ -9,7 +9,7 @@ class KlearMatrix_Model_Field_Ghost_Image extends KlearMatrix_Model_Field_Ghost_
     protected $_searchedValues;
 
     protected $_idField;
-    protected $_md5Field;
+    protected $_md5IdField;
     protected $_imageURL;
     protected $_imageId;
     protected $_urlParams = null;
@@ -44,7 +44,7 @@ class KlearMatrix_Model_Field_Ghost_Image extends KlearMatrix_Model_Field_Ghost_
 
         $this->_imageURL = $this->_config->getRaw()->source->url;
         $this->_idField = $this->_config->getRaw()->source->idField;
-        $this->_md5IdField = true;
+        $this->_md5IdField = false;
         if (isset($this->_config->getRaw()->source->md5IdField)) {
             $this->_md5IdField = $this->_config->getRaw()->source->md5IdField;
         }

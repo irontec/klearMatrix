@@ -409,7 +409,6 @@ class KlearMatrix_Model_MatrixResponse
         $_newResults = array();
 
         foreach ($this->_results as $result) {
-
             $_newResult = array();
             if ((is_object($result)) && (get_class($result) == $screen->getModelName())) {
 
@@ -432,6 +431,8 @@ class KlearMatrix_Model_MatrixResponse
                 }
 
                 $_newResults[] = $_newResult;
+            } else {
+                $_newResults[] = $result;
             }
         }
 

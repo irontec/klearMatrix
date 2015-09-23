@@ -16,7 +16,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected $_mapperName;
     protected $_mapper;
-
+    protected $_contextParam;
 
     public function init()
     {
@@ -49,6 +49,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->addActionContext('index', array('json', 'csv'));
 
         $contextParam = $this->getRequest()->getParam($context->getContextParam());
+        $this->_contextParam = $contextParam;
 
         if (empty($contextParam)) {
             $context
@@ -57,7 +58,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $context
                 ->initContext($contextParam);
         }
-
         $this->_item = $this->_mainRouter->getCurrentItem();
         $this->_mapperName = $this->_item->getMapperName();
         $this->_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_mapperName);
@@ -87,7 +87,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $cols = $this->_item->getVisibleColumns($ignoreBlackList);
         $model = $this->_item->getObjectInstance();
 
-
         if ($this->_item->isFilteredScreen()) {
             //Si es un listado que viene de otro listado "heredado"
             $parentScreenName = $this->getRequest()->getPost("callerScreen", false);
@@ -103,7 +102,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             ->setColumnCollection($cols)
             ->setPK($this->_item->getPkName())
             ->setResults(array())
-            ->setCsv((bool)$this->_item->getCsv());
+            ->setCsv((bool) $this->_item->getCsv());
 
         $where = $this->_helper->createListWhere($cols, $model, $data, $this->_item, $this->_helper->log);
         $order = $this->_getListOrder($cols);
@@ -111,11 +110,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $page = $this->_getCurrentPage();
         $offset = $this->_getOffset($count, $page);
 
+        $csvParams = $this->_item->getCsvParameters();
         $config = $this->_item->getConfig();
         if ($config->getProperty("rawSelect")) {
             $result = $this->_getRawSelectResults($config, $where, $order, $count, $offset);
             $results = $result["results"];
             $rawCount = $result["rawCount"];
+
+        } else if ($this->_contextParam == "csv" && isset($csvParams["rawValues"]) && $csvParams["rawValues"]) {
+            $results = $this->_mapper->fetchListToArray($where, $order, $count, $offset);
         } else {
             $results = $this->_mapper->fetchList($where, $order, $count, $offset);
         }
@@ -428,6 +431,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     {
         $values = array();
         $valuesSize = count($tmpValues);
+        $csvParams = $this->_item->getCsvParameters();
 
         for ($i = 0; $i < $valuesSize; $i++) {
 
@@ -440,6 +444,8 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                         $langs = $fieldName . '_' . $langKey;
                         $values[$i][$langs] = html_entity_decode($content);
                     }
+                } else if (is_null($value) && isset($csvParams["rawValues"]) && $csvParams["rawValues"]) {
+                    $values[$i][$fieldName] = 'null';
                 } else {
 
                     $values[$i][$fieldName] = html_entity_decode($value);

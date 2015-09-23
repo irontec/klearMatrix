@@ -16,6 +16,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected $_mapperName;
     protected $_mapper;
+    protected $_model;
     protected $_contextParam;
 
     public function init()
@@ -61,6 +62,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
         $this->_item = $this->_mainRouter->getCurrentItem();
         $this->_mapperName = $this->_item->getMapperName();
         $this->_mapper = \KlearMatrix_Model_Mapper_Factory::create($this->_mapperName);
+        $this->_model = $this->_item->getModelSpec()->getInstance();
         $this->_helper->log('List mapper: ' . $this->_mapperName);
 
     }
@@ -351,22 +353,26 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             throw new Exception('Unable to create output resource for csv.');
         }
 
-        $firstLine = $values[0];
-
         if ($csvParams['nameklear']) {
             $headers = $headerstmp;
             // Borrar Options
             $options = array_pop($headers);
             unset($headers[$options]);
         } else {
+            if (empty($values)) {
+                $firstLine = $this->_model->getColumnsList();
+            } else {
+                $firstLine = $values[0];
+            }
+            if ($removePk) {
+                unset($firstLine[$pkName]);
+            }
+
             $headers = array_keys($firstLine);
         }
 
-        if ($removePk) {
-            unset($firstLine[$pkName]);
-        }
 
-        if ($csvParams['headers']==true) {
+        if ($csvParams['headers'] == true) {
             fputcsv($fp, $headers, $csvParams['separator'], $csvParams['enclosure']);
             $this->_fixNewLine($fp, $csvParams['newLine']);
         }

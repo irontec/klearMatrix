@@ -134,8 +134,8 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
         $fieldConfig = $this->_column->getFieldConfig();
 
-        $this->_results = $mapper->fetchList($baseModel->getPrimaryKeyName() . ' in ('.implode(',', $pk).')');
-
+        $where = $baseModel->getPrimaryKeyName() . " in ('".implode("','", $pk)."')";
+        $this->_results = $mapper->fetchList($where);
 
         if (sizeof($this->_results) != sizeof($pk)) {
             throw new Klear_Exception_Default($this->view->translate('Record not found. Could not Mass Update.'));
@@ -294,10 +294,6 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
             $this->_helper->log($total . ' models succesfully update > PK('. implode(',', $pks). ') > ' . $this->_column->getPublicName() . ' >> ' . $value);
         }
-
-
-
-
 
         if ($this->_item->getMessage()) {
             $message = $this->_item->getMessage();

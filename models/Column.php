@@ -525,8 +525,8 @@ class KlearMatrix_Model_Column
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_isMapperSelect()) {
                     if ($this->namedParamsAreSupported()) {
-                        if ($_val == 'NULL') {
-                            $comparisons[] = $quotedSearchField . ' is ' . 'NULL';
+                        if ($_val == 'NULL' || $_val == 'NOT NULL') {
+                            $comparisons[] = $quotedSearchField . ' is ' . $_val;
                         } else {
                             $comparisons[] = $quotedSearchField . ' = ' . $template;
                             $fieldValues[$template] = intval($_val);
@@ -538,16 +538,21 @@ class KlearMatrix_Model_Column
                 } else {
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
                     if ($this->namedParamsAreSupported()) {
-                        if ($_val == 'NULL' && $searchOperator == ' LIKE') {
+                        if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
                             $searchOperator = ' IS';
-                            $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . 'NULL';
+                            $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
                         } else {
                             $comparisons[] =  $quotedSearchField. $searchOperator . ' ' . $template;
                             $fieldValues[$template] = $this->_formatValue($_val);
                         }
                     } else {
-                        $comparisons[] = $quotedSearchField . $searchOperator . ' ?';
-                        $fieldValues[] = $this->_formatValue($_val);
+                        if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
+                            $searchOperator = ' IS';
+                            $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
+                        } else {
+                            $comparisons[] = $quotedSearchField . $searchOperator . ' ?';
+                            $fieldValues[] = $this->_formatValue($_val);
+                        }
                     }
                 }
                 $cont++;

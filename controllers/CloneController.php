@@ -17,7 +17,10 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
     public function init()
     {
-        /* Initialize action controller here */
+
+        /**
+         * Initialize action controller here
+         */
         $this->_helper->layout->disableLayout();
 
         $this->_helper->ContextSwitch()
@@ -25,24 +28,31 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
             ->addActionContext('clone', 'json')
             ->initContext('json');
 
-        $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
+        $this->_mainRouter = $this->getRequest()->getUserParam('mainRouter');
         $this->_item = $this->_mainRouter->getCurrentItem();
-    }
 
+    }
 
     public function indexAction()
     {
+
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
-        $pk = $this->_mainRouter->getParam("pk");
-        $this->_helper->log('Clone for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
+        $pk = $this->_mainRouter->getParam('pk');
+
+        $this->_helper->log(
+            'Clone for mapper (not executed):' . $mapperName . ' > PK('.$pk.')'
+        );
+
         $obj = $mapper->find($pk);
 
         if (!$obj) {
-            throw new Klear_Exception_Default($this->view->translate('Record not found. Could not clone.'));
+            throw new Klear_Exception_Default(
+                $this->view->translate('Record not found. Could not clone.')
+            );
         }
 
-        if ($this->getRequest()->getPost("activate") == true) {
+        if ($this->getRequest()->getPost('activate') == true) {
             return $this->_doTheAction();
         }
 
@@ -71,13 +81,16 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                 $this->view->translate('record')
             );
         }
+
         $data = array(
             'message' => $message,
             'title' => $this->_item->getTitle(),
             'buttons' => array(
                 $this->view->translate('Clone') => array(
                     'recall' => true,
-                    'params' => array('activate'=>true)
+                    'params' => array(
+                        'activate' => true
+                    )
                 ),
                 $this->view->translate('Cancel') => array(
                     'recall' => false,
@@ -99,10 +112,15 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
         $pk = $this->_mainRouter->getParam("pk");
-        $this->_helper->log('Clone::clone action for mapper:' . $mapperName . ' > PK('.$pk.')');
+
+        $this->_helper->log(
+            'Clone::clone action for mapper:' . $mapperName . ' > PK('.$pk.')'
+        );
+
         $obj = $mapper->find($pk);
 
         try {
+
             if (!$obj) {
                 $this->_helper->log(
                     'Error cloning model for ' . $mapperName . ' > PK('.$pk.')',
@@ -114,11 +132,9 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                 );
             }
 
-            $newObj = clone $obj;
+            $newObj = $this->_cloneModel($obj);
 
-            $this->_cloneFiles($obj);
-
-            $newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
+            //$newObj->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
 
             $forceValues = $this->_item
                 ->getConfig()
@@ -136,23 +152,25 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
             $newPk = $newObj->getPrimaryKey();
 
-            if ($this->_item->getConfig()->getProperty("cloneDependents")
-                    && $this->_item->getConfig()->getProperty("cloneDependents") === true) {
+            if ($this->_isCloneDependents()) {
 
                 $mapperNameParts = explode("\\", $mapperName);
                 $tableName = $mapperNameParts[count($mapperNameParts)-1];
                 $relatedTables = $obj->getDependentList();
 
                 foreach ($relatedTables as $relatedTable) {
-                    if ($relatedTable["table_name"] == $tableName) {
+                    if ($relatedTable['table_name'] === $tableName) {
                         continue;
                     }
-                    $getter = "get".$relatedTable["property"];
+
+                    $getter = 'get' . $relatedTable['property'];
                     $relatedModels = $obj->$getter();
 
                     foreach ($relatedModels as $relatedModel) {
+
                         $relatedColums = array();
                         $parentList = $relatedModel->getParentList();
+
                         foreach ($parentList as $parent) {
                             if (in_array($tableName, $parent)) {
                                 $relatedColums[] = $parent["property"];
@@ -161,9 +179,7 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
 
                         if (count($relatedColums) > 0) {
 
-                            $this->_cloneFiles($relatedModel);
-
-                            $relatedModel->{"set".ucfirst($obj->columnNameToVar($obj->getPrimaryKeyName()))}(null);
+                            $this->_cloneFiles($relatedModel, $relatedModel);
                             foreach ($relatedColums as $relatedColum) {
                                 $relatedValue = $relatedModel->{"get".$relatedColum}();
                                 if ($relatedValue && $relatedValue->getPrimaryKey() == $obj->getPrimaryKey()) {
@@ -171,13 +187,16 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                                 }
                             }
 
-                            if (!$relatedModel->save()) {
+                            $newRelModel = $this->_cloneModel($relatedModel);
+
+                            if (!$newRelModel->save()) {
                                 throw new Exception('Unknown error');
                             }
+
                         }
                     }
-                }
 
+                }
             }
 
             if ($postCloneMethods = $this->_item->getConfig()->getProperty("postCloneMethods")) {
@@ -215,14 +234,14 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         }
 
         $data = array(
-                'message' => $message,
-                'title' => $this->_item->getTitle(),
-                'buttons' =>  array(
-                    $this->view->translate('Close') => array(
-                        'recall' => false,
-                        'reloadParent' => true
-                    )
+            'message' => $message,
+            'title' => $this->_item->getTitle(),
+            'buttons' =>  array(
+                $this->view->translate('Close') => array(
+                    'recall' => false,
+                    'reloadParent' => true
                 )
+            )
         );
 
         $jsonResponse = new Klear_Model_DispatchResponse();
@@ -231,39 +250,77 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
         $jsonResponse->addJsFile("/../klearMatrix/js/plugins/jquery.klearmatrix.genericdialog.js");
         $jsonResponse->setData($data);
         $jsonResponse->attachView($this->view);
+
     }
 
     /**
-     * Comprueba si el obj tiene archivos y los clona
+     * Clona el modelo y si tiene ficheros tambien se clonan.
      */
-    protected function _cloneFiles($obj)
+    protected function _cloneModel($obj)
     {
 
-        if ($files = $obj->getFileObjects()) {
-            foreach ($files as $columnName) {
+        $objArray = $obj->toArray();
+        $objArray[$obj->getPrimaryKeyName()] = null;
 
-                $fetcher = "fetch" . ucfirst($columnName);
-                $putter = "put" . ucfirst($columnName);
+        $modelName = get_class($obj);
+        $newModel = new $modelName();
+        $newModel->setFromArray($objArray);
 
-                if ($obj->{$fetcher}()->getFilePath()) {
+        $this->_cloneFiles($obj, $newModel);
 
-                    $tmpName = tempnam(sys_get_temp_dir(), "CLONE");
+        return $newModel;
 
-                    copy(
-                        $obj->{$fetcher}()->getFilePath(),
-                        $tmpName
-                    );
+    }
 
-                    $obj->{$putter}(
-                        $tmpName,
+    /**
+     * Copia los ficheros del modelo original al clon.
+     */
+    protected function _cloneFiles($obj, $newModel)
+    {
+
+        $files = $obj->getFileObjects();
+
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                $fetcher = 'fetch' . ucfirst($file);
+                $putter = 'put' . ucfirst($file);
+
+                $filePath = $obj->{$fetcher}()->getFilePath();
+                $realPath = realpath($filePath);
+
+                if (file_exists($filePath)) {
+                    $tmpFile = tempnam(sys_get_temp_dir(), 'CLONE');
+
+                    copy($realPath, $tmpFile);
+
+                    $newModel->{$putter}(
+                        $tmpFile,
                         $obj->{$fetcher}()->getBaseName()
                     );
-
                 }
             }
         }
 
-        return $obj;
+    }
+
+    /**
+     * Clonar items hijos?
+     */
+    protected function _isCloneDependents()
+    {
+
+        $config = $this->_item->getConfig();
+
+        if (empty($config->getProperty('cloneDependents'))) {
+            return false;
+        }
+
+        if ($config->getProperty('cloneDependents') === true) {
+            return true;
+        }
+
+        return false;
+
     }
 
 }

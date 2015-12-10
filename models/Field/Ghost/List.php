@@ -222,7 +222,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
         $asTable = $this->_config->getProperty('config')->showAsTable;
         if ($asTable === true) {
-            $content = $this->_getTable($options, $results);
+            $content = $this->_getTable($options, $results, $model);
             $ghostCounterClass = "ghostTableCounter";
         } else {
             $content = $this->_getList($options);
@@ -362,7 +362,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         return $list;
     }
 
-    protected function _getTable($options, $results)
+    protected function _getTable($options, $results, $model = null)
     {
         $tableParts = array();
         $i = 0;
@@ -398,6 +398,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $currentLanguage = $siteLanguage->getLanguage();
 
         $rows = array();
+        $dataModels = array();
         foreach ($results as $dataModel) {
 //             $currentLanguage = $dataModel->getCurrentLanguage();
             $dataMlFields = array_keys($dataModel->getMultiLangColumnsList());
@@ -478,7 +479,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             }
 
             $rows[] = $fieldsValues;
-
+            $dataModels[] = $dataModel;
         }
 
 //         $defaultOption = null;
@@ -505,6 +506,13 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             if (count($options) > 0) {
                 $tr .= '<td class="ui-widget-content options">';
                 foreach ($options as $option) {
+                    $filterClassName = $option->getConfig()->getProperty("filterClass");
+                    if (!is_null($filterClassName)) {
+                        $filterClass = new $filterClassName($dataModels[$i], $model);
+                        if (!$filterClass->show()) {
+                            continue;
+                        }
+                    }
                     $option->setParentHolderSelector("tr");
                     $tr .= $option->toAutoOption();
                 }

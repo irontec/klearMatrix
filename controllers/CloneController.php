@@ -284,6 +284,10 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
             foreach ($files as $file) {
                 $fetcher = 'fetch' . ucfirst($file);
                 $putter = 'put' . ucfirst($file);
+                $setterBasetname = 'set' . ucfirst($file) . 'BaseName';
+
+                $getBasename = 'get' . ucfirst($file) . 'BaseName';
+                $basename = $obj->{$getBasename}();
 
                 $filePath = $obj->{$fetcher}()->getFilePath();
                 $realPath = realpath($filePath);
@@ -297,6 +301,9 @@ class KlearMatrix_CloneController extends Zend_Controller_Action
                         $tmpFile,
                         $obj->{$fetcher}()->getBaseName()
                     );
+
+                    $newModel->{$setterBasetname}($basename);
+
                 }
             }
         }

@@ -172,11 +172,18 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $fields = $this->_getFields();
         $fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
         $replace = array();
+        $fieldConfig = $this->_config->getProperty("config")->fieldName->toArray();
         foreach ($fields as $fieldName) {
             $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
-            $replace['%' . $fieldName . '%'] = $dataModel->$getter();
+            $fieldValue = $dataModel->$getter();
+            if (isset($fieldConfig["mapValues"]) && isset($fieldConfig["mapValues"][$fieldName])) {
+                if (isset($fieldConfig["mapValues"][$fieldName][$fieldValue])) {
+                    $fieldValue = Klear_Model_Gettext::gettextCheck($fieldConfig["mapValues"][$fieldName][$fieldValue]);
+                }
+            }
+            $replace['%' . $fieldName . '%'] = $fieldValue;
         }
-
+        
         return str_replace(array_keys($replace), $replace, $fieldsTemplate);
     }
 

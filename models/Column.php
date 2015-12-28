@@ -434,7 +434,8 @@ class KlearMatrix_Model_Column
                 {
                     $mustBeAdded = !$this->_routeDispatcher->getCurrentItem()->isFilteredScreen()
                     || !$option->getFilterField()
-                    || ($option->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField());
+                    || ($option->getFilterField() == $this->_routeDispatcher->getCurrentItem()->getFilterField())
+                    || $option->getAlwaysEnabled();
                     $option->skip(!$mustBeAdded);
                 }
             );

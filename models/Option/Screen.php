@@ -47,6 +47,10 @@ class KlearMatrix_Model_Option_Screen extends KlearMatrix_Model_Option_Abstract
         "removescreen",
         "title");
 
+    // Para hacer que una opción esté siempre habilitada aún cuando su comportamiento
+    // por defecto sería no estarlo
+    protected $_alwaysEnabled = false;
+
     protected function _init()
     {
         $this->_type = 'screen';
@@ -70,7 +74,10 @@ class KlearMatrix_Model_Option_Screen extends KlearMatrix_Model_Option_Abstract
         return $this->_type;
     }
 
-
+    public function getAlwaysEnabled()
+    {
+        return $this->_alwaysEnabled;
+    }
 
     public function toArray()
     {

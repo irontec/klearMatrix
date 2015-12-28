@@ -366,7 +366,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     {
         $tableParts = array();
         $i = 0;
-        $tr = "<tr>";
+        $tr = '<tr>';
         $fields = $this->_getFields();
         foreach ($fields as $key => $value) {
             $width = "auto";
@@ -459,6 +459,21 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                                     $mapValues->$modelValue
                                 );
 
+                            } else if (!is_null($fieldsOptions->$fieldName->type)) {
+                                $type = $fieldsOptions->$fieldName->type;
+                                if ($type == "datetime") {
+                                    $value = $dataModel->$getter(true);
+                                    $value->setTimezone(date_default_timezone_get());
+                                    $fieldsValues[] = $value;
+                                } else if ($type == "date") {
+                                    $date = $dataModel->$getter(true);
+                                    $date->setTimezone(date_default_timezone_get());
+                                    $dateParts = explode(" ", $date->getDate()->toString());
+                                    $value = $dateParts[0];
+                                    $fieldsValues[] = $value;
+                                } else {
+                                    $fieldsValues[] = $dataModel->$getter();
+                                }
                             } else {
                                 $fieldsValues[] = $dataModel->$getter();
                             }

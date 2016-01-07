@@ -74,11 +74,21 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             );
         }
 
+        $maxReached = false;
+        if ($this->_totalItems === false) {
+            $this->_totalItems = count($this->_results);
+            $maxReached = true;
+        }
         $this->_view->totalItems = $this->_view->translate("%d items found", $this->_totalItems);
 
         if (isset($this->_limit) && !is_null($this->_limit)) {
             $show = ($this->_limit < $this->_totalItems)? $this->_limit : $this->_totalItems;
             $this->_view->totalItems .= ' ' . $this->_view->translate("(showing %d)", $show);
+
+            if ($maxReached === true && count($this->_results) == $this->_limit) {
+                $this->_view->totalItems = $this->_view->translate("More than %d items found", $this->_limit);
+                $this->_view->totalItems .= ' ' . $this->_view->translate("(showing %d)", $this->_limit);
+            }
         }
 
         $this->_view->results = $options;

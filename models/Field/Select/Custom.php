@@ -7,14 +7,20 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
 
     public function init()
     {
+        if ($this->_dynamicDataLoading() === true) {
+
+            //Nothing to do
+            return;
+        }
+
         $excludeKeys = $this->_getExcludeKeys();
 
         $className = $this->_config->getProperty("class");
         $methodName = $this->_config->getProperty("method");
         $customClass = new $className();
-        
-        $data = $customClass->$methodName(); 
-        
+
+        $data = $customClass->$methodName();
+
         foreach ($data as $key => $value) {
 
             if (is_array($excludeKeys) && in_array($key, $excludeKeys)) {
@@ -104,6 +110,46 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
         $response .= ' END)';
 
         return $response;
+    }
+
+    protected function _dynamicDataLoading()
+    {
+        if (isset($this->_column->getKlearConfig()->getRaw()->decorators)) {
+            $selfClassName = get_class($this);
+            $classBasePath = substr($selfClassName, 0, strrpos($selfClassName, '_') + 1);
+            $decoratorClassBaseName = $classBasePath . 'Decorator_';
+
+            $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
+
+            foreach ($decorators as $decoratorName => $decorator) {
+
+                $decorator; //Avoid PMD UnusedLocalVariable warning
+                $decoratorClassName = $decoratorClassBaseName . ucfirst($decoratorName);
+
+                if (class_exists($decoratorClassName)
+                        && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')
+                        && $decoratorClassName::DYNAMIC_DATA_LOADING
+                        ) {
+
+                            $this->_loadJsDependencies($decoratorName);
+                            return true;
+                        }
+            }
+        }
+
+        return false;
+    }
+
+    protected function _loadJsDependencies($decoratorName)
+    {
+        $jsDependencies = array();
+        switch ($decoratorName) {
+            case 'autocomplete':
+                $jsDependencies[] = '/js/plugins/jquery.klearmatrix.selectautocomplete.js';
+                break;
+        }
+
+        $this->_js += $jsDependencies;
     }
 
 }

@@ -23,7 +23,22 @@ class KlearMatrix_Model_Field_Ghost_Count extends KlearMatrix_Model_Field_Ghost_
     {
         $this->_parentField = $field;
         $this->_parentField->setSearchMethod('getSearch');
-        $this->_parentField->setOrderMethod('getOrder');
+        
+        $orderMethod = $this->_config->getProperty("orderMethod");
+        $isSortable = true;
+        $sortable = $this->_config->getProperty("sortable");
+        if (!is_null($sortable)) {
+        	$isSortable = (bool) $sortable;
+        }
+
+        if ($isSortable) {
+	        if (!is_null($orderMethod)) {
+		        $this->_parentField->setOrderMethod($orderMethod);        	
+	        } else {
+	        	$this->_parentField->setOrderMethod('getOrder');
+	        }        	
+        }
+        
         $this->_parentField->setGetterMethod('getValue');
         return $this;
     }
@@ -34,6 +49,9 @@ class KlearMatrix_Model_Field_Ghost_Count extends KlearMatrix_Model_Field_Ghost_
             throw new Klear_Exception_MissingConfiguration('Missing parent host for Ghost_Count');
         }
 
+
+        $this->_isSearchable = false;
+        $this->_isSortable = false;
         $mainModel = $this->_parentField->getColumn()->getModel();
     }
 

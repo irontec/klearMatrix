@@ -17,9 +17,9 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
 
         $className = $this->_config->getProperty("class");
         $methodName = $this->_config->getProperty("method");
-        $customClass = new $className();
+        $this->_customClass = new $className();
 
-        $data = $customClass->$methodName();
+        $data = $this->_customClass->$methodName();
 
         foreach ($data as $key => $value) {
 
@@ -99,11 +99,11 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
 
         if (!count($keys)) {
 
-            return $this->_quoteIdentifier($this->_column->getDbFieldName());
+            return $this->_column->getDbFieldName();
         }
 
         $priority = 1;
-        $response =  '(CASE '. $this->_quoteIdentifier($this->_column->getDbFieldName()) .' ';
+        $response =  '(CASE '. $this->_column->getDbFieldName() .' ';
         foreach ($keys as $posibleResult) {
             $response .= " WHEN '" . $posibleResult . "' THEN " . $priority++;
         }

@@ -149,7 +149,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
             $keyGetter = 'getPrimaryKey';
             if ($keyProperty = $this->_config->getProperty("config")->get("keyProperty")) {
-                $keyGetter = 'get' . ucfirst($keyProperty); 
+                $keyGetter = 'get' . ucfirst($keyProperty);
             }
 
             foreach ($results as $dataModel) {
@@ -172,7 +172,12 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $fields = $this->_getFields();
         $fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
         $replace = array();
-        $fieldConfig = $this->_config->getProperty("config")->fieldName->toArray();
+        if (is_array($this->_config->getProperty("config")->fieldName)) {
+            $fieldConfig = $this->_config->getProperty("config")->fieldName->toArray();
+        } else {
+            $fieldConfig = false;
+        }
+
         foreach ($fields as $fieldName) {
             $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
             $fieldValue = $dataModel->$getter();
@@ -183,7 +188,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             }
             $replace['%' . $fieldName . '%'] = $fieldValue;
         }
-        
+
         return str_replace(array_keys($replace), $replace, $fieldsTemplate);
     }
 

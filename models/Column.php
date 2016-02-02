@@ -530,11 +530,11 @@ class KlearMatrix_Model_Column
                             $comparisons[] = $quotedSearchField . ' is ' . $_val;
                         } else {
                             $comparisons[] = $quotedSearchField . ' = ' . $template;
-                            $fieldValues[$template] = intval($_val);
+                            $fieldValues[$template] = $_val;
                         }
                     } else {
                         $comparisons[] = $quotedSearchField . ' = ?';
-                        $fieldValues[] = intval($_val);
+                        $fieldValues[] = $_val;
                     }
                 } else {
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();

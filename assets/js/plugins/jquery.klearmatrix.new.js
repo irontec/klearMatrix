@@ -1,5 +1,4 @@
 ;(function load($) {
-
     if (!$.klear.checkDeps(['$.klearmatrix.edit'],load)) {
         return;
     }
@@ -24,7 +23,7 @@
 
         	this.options.data.title = this.options.data.title || this.element.klearModule("option","title");
 
-        	$.console.info("["+__namespace__+"] _init" + this.options.data.title);
+        	$.console.info("["+__namespace__+"] _init " + this.options.data.title);
 
             $.extend(this.options.data,{randIden:Math.round(Math.random(1000,9999)*100000)});
 
@@ -38,7 +37,7 @@
 
             var self = this;
 
-            $container.one("focusin",function(e) {
+            $container.one("focusin", function(e) {
 
             	$.console.info("["+__namespace__+"] focusin " + self.options.data.title);
 
@@ -120,7 +119,6 @@
                     }
                     
                     
-
                     var _buttons = [{
                         text: $.translate("Close"),
                         click: function() {
@@ -129,7 +127,6 @@
                         }
                     }];
 
-                    
                     
                     if (addAnotherOption) {
                         _buttons.push(
@@ -152,10 +149,7 @@
                     });
 
                     $dialog.moduleDialog("option","buttons",_buttons);
-                    $dialog.moduleDialog("updateContent",data.message,function() {
-                        self._registerBaseEvents();
-                        self._registerFieldsEvents();
-                    });
+                    $dialog.moduleDialog("updateContent",data.message);
 
                     var triggerData = {'data': data, 'postData': postData};
                     $self.trigger('postMainActionHook', triggerData);
@@ -169,5 +163,4 @@
     });
 
     $.widget.bridge("klearMatrixNew", $.klearmatrix['new']);
-
 })(jQuery);

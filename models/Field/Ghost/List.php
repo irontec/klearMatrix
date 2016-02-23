@@ -14,6 +14,9 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     protected $_items = array();
     protected $_keys = array();
 
+    protected $_dirty;
+    protected $_default = null;
+
     public function setConfig(Zend_Config $config)
     {
         $kconfig = new Klear_Model_ConfigParser;
@@ -165,6 +168,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         if (!$this->_parentField) {
             throw new Klear_Exception_MissingConfiguration('Missing parent host for Ghost_Concat');
         }
+        $this->_dirty = $this->_config->getProperty('dirty');
 
     }
 
@@ -259,6 +263,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $this->_parseOptionSection($fieldOptions, 'screen');
         $this->_parseOptionSection($fieldOptions, 'dialog');
         $this->_parseOptionSection($fieldOptions, 'command');
+        $this->_parseOptionSection($fieldOptions, 'default');
 
         return $fieldOptions;
     }
@@ -266,8 +271,25 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
     protected function _parseOptionSection($fieldOptions, $itemName)
     {
 
+
         $mainRouter = $this->_parentField->getColumn()->getRouteDispatcher();
         $options = $this->_config->getProperty('config')->options;
+        $isDefaultOption = false;
+        if ($itemName == "default") {
+            $isDefaultOption = true;
+            if (isset($options->default)) {
+                $keys = array_keys($options->default->toArray());
+                $defaultName = $keys[0];
+                foreach ($fieldOptions as $type => $value) {
+                    $valueArray = $value->toArray();
+                    $optionName = $valueArray[$valueArray["type"]];
+                    if ($optionName == $defaultName) {
+                        $itemName = $valueArray["type"];
+                        break;
+                    }
+                }
+            }
+        }
 
         $collection = strtolower($itemName) . 's';
         $getter = 'get' . ucfirst($itemName) . 'Config';
@@ -276,16 +298,21 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         if (!isset($options->$collection)) {
             return;
         }
+
         foreach ($options->$collection as $item => $enabled) {
             $enabled = (bool)$enabled;
-            if (false === $enabled) {
+            if (false === $enabled && !$isDefaultOption) {
                 continue;
             }
 
             $itemOption = new $className;
             $itemOption->setName($item);
             $itemOption->setConfig($mainRouter->getConfig()->$getter($item));
-            $fieldOptions->addOption($itemOption);
+            if ($isDefaultOption) {
+                $this->_default = $itemOption;
+            } else {
+                $fieldOptions->addOption($itemOption);
+            }
         }
     }
 
@@ -514,9 +541,18 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
         foreach ($rows as $i=>$fieldsValues) {
             $id = $this->_keys[$i];
-            $tr .= '<tr class="hideable" data-id="'. $id . '">';
+            $tr .= '<tr class="hideable" data-id="'. $id . '"';
+            $tr .= '>';
+
+            if (!is_null($this->_default)) {
+                $this->_default->setParentHolderSelector("td");
+//                 $this->_default->toAutoOption();
+            }
             foreach ($fieldsValues as $value) {
-                $tr .= '<td class="ui-widget-content default">'.htmlentities($value).'</td>';
+                if (!$this->_dirty) {
+                    $value = htmlentities($value);
+                }
+                $tr .= '<td class="ui-widget-content default">'.$value.'</td>';
             }
             if (count($options) > 0) {
                 $tr .= '<td class="ui-widget-content options">';

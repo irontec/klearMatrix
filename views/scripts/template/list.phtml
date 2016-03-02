@@ -34,14 +34,6 @@ data-title="${info.text}"
     </span>
 {{/if}}
     <p class="filterItem">
-    <span class="searchOption">
-        <select name="searchOption">
-            <option value="lt"><?php echo $this->translate('less than'); ?></option>
-            <option value="eq"><?php echo $this->translate('equals'); ?></option>
-            <option value="gt"><?php echo $this->translate('greater than'); ?></option>
-        </select>
-    </span>
-    <input type="text" class="term">
     <select name="searchField">
 
      {{each(idx,column) columns}}
@@ -68,6 +60,14 @@ data-title="${info.text}"
          {{/if}}
      {{/each}}
     </select>
+    <span class="searchOption">
+        <select name="searchOption">
+            <option value="lt"><?php echo $this->translate('less than'); ?></option>
+            <option value="eq"><?php echo $this->translate('equals'); ?></option>
+            <option value="gt"><?php echo $this->translate('greater than'); ?></option>
+        </select>
+    </span>
+    <input type="text" class="term">
     <span class="ui-silk inline ui-silk-add addTerm"></span>
     <br />
     <span class="addToggle" title="<?php echo $this->translate('Returns records that satisfy any of filters'); ?>">

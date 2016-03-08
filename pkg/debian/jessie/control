@@ -1,0 +1,15 @@
+Source: klear-matrix
+Section: php
+Priority: optional
+Build-Depends: debhelper
+Maintainer: Irontec OASIS Team <oasis@irontec.com>
+
+Package: klear-matrix
+Architecture: all
+Section: php
+Priority: optional
+Homepage: http://www.irontec.com
+Description: OASIS - Klear Framework (CRUD module) Angel Release
+ Zend Framework 1 main CRUD module for Klear Universe
+ .
+

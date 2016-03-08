@@ -1,0 +1,9 @@
+assets /opt/klear/modules/klearMatrix
+Bootstrap.php /opt/klear/modules/klearMatrix
+composer.json /opt/klear/modules/klearMatrix
+controllers /opt/klear/modules/klearMatrix
+exceptions /opt/klear/modules/klearMatrix
+languages /opt/klear/modules/klearMatrix
+models /opt/klear/modules/klearMatrix
+plugins /opt/klear/modules/klearMatrix
+views /opt/klear/modules/klearMatrix

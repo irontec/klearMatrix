@@ -9,7 +9,7 @@ Architecture: all
 Section: php
 Priority: optional
 Homepage: http://www.irontec.com
-Description: OASIS - Klear Framework (CRUD module) Angel Release
+Description: Klear Framework (CRUD module) Chloe Release
  Zend Framework 1 main CRUD module for Klear Universe
  .
 

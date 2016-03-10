@@ -2,6 +2,7 @@ Source: klear-matrix
 Section: php
 Priority: optional
 Build-Depends: debhelper
+Standards-Version: 3.9.6
 Maintainer: Irontec OASIS Team <oasis@irontec.com>
 
 Package: klear-matrix

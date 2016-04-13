@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -42,13 +42,26 @@ tinymce.PluginManager.add('example', function(editor, url) {
 			// Open window with a specific url
 			editor.windowManager.open({
 				title: 'TinyMCE site',
-				url: 'http://www.tinymce.com',
-				width: 800,
-				height: 600,
-				buttons: [{
-					text: 'Close',
-					onclick: 'close'
-				}]
+				url: url + '/dialog.html',
+				width: 600,
+				height: 400,
+				buttons: [
+					{
+						text: 'Insert',
+						onclick: function() {
+							// Top most window object
+							var win = editor.windowManager.getWindows()[0];
+
+							// Insert the contents of the dialog.html textarea into the editor
+							editor.insertContent(win.getContentWindow().document.getElementById('content').value);
+
+							// Close the window
+							win.close();
+						}
+					},
+
+					{text: 'Close', onclick: 'close'}
+				]
 			});
 		}
 	});

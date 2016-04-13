@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -84,9 +84,9 @@ tinymce.PluginManager.add('insertdatetime', function(editor) {
 		insertDateTime(editor.getParam("insertdatetime_timeformat", editor.translate('%H:%M:%S')));
 	});
 
-	editor.addButton('inserttime', {
+	editor.addButton('insertdatetime', {
 		type: 'splitbutton',
-		title: 'Insert time',
+		title: 'Insert date/time',
 		onclick: function() {
 			insertDateTime(lastFormat || defaultButtonTimeFormat);
 		},

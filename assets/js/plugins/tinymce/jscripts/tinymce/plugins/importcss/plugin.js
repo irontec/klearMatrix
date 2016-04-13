@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -13,8 +13,36 @@
 tinymce.PluginManager.add('importcss', function(editor) {
 	var self = this, each = tinymce.each;
 
+	function removeCacheSuffix(url) {
+		var cacheSuffix = tinymce.Env.cacheSuffix;
+
+		if (typeof url == 'string') {
+			url = url.replace('?' + cacheSuffix, '').replace('&' + cacheSuffix, '');
+		}
+
+		return url;
+	}
+
+	function isSkinContentCss(href) {
+		var settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
+
+		if (skin) {
+			var skinUrl = settings.skin_url;
+
+			if (skinUrl) {
+				skinUrl = editor.documentBaseURI.toAbsolute(skinUrl);
+			} else {
+				skinUrl = tinymce.baseURL + '/skins/' + skin;
+			}
+
+			return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css';
+		}
+
+		return false;
+	}
+
 	function compileFilter(filter) {
-		if (typeof(filter) == "string") {
+		if (typeof filter == "string") {
 			return function(value) {
 				return value.indexOf(filter) !== -1;
 			};
@@ -33,11 +61,9 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		function append(styleSheet, imported) {
 			var href = styleSheet.href, rules;
 
-			if (!imported && !contentCSSUrls[href]) {
-				return;
-			}
+			href = removeCacheSuffix(href);
 
-			if (fileFilter && !fileFilter(href)) {
+			if (!href || !fileFilter(href, imported) || isSkinContentCss(href)) {
 				return;
 			}
 
@@ -48,7 +74,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			try {
 				rules = styleSheet.cssRules || styleSheet.rules;
 			} catch (e) {
-				// Firefox fails on rules to remote domain for example: 
+				// Firefox fails on rules to remote domain for example:
 				// @import url(//fonts.googleapis.com/css?family=Pathway+Gothic+One);
 			}
 
@@ -67,11 +93,19 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			contentCSSUrls[url] = true;
 		});
 
+		if (!fileFilter) {
+			fileFilter = function(href, imported) {
+				return imported || contentCSSUrls[href];
+			};
+		}
+
 		try {
 			each(doc.styleSheets, function(styleSheet) {
 				append(styleSheet);
 			});
-		} catch (e) {}
+		} catch (e) {
+			// Ignore
+		}
 
 		return selectors;
 	}
@@ -127,10 +161,10 @@ tinymce.PluginManager.add('importcss', function(editor) {
 	editor.on('renderFormatsMenu', function(e) {
 		var settings = editor.settings, selectors = {};
 		var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
-		var selectorFilter = compileFilter(settings.importcss_selector_filter);
+		var selectorFilter = compileFilter(settings.importcss_selector_filter), ctrl = e.control;
 
 		if (!editor.settings.importcss_append) {
-			e.control.items().remove();
+			ctrl.items().remove();
 		}
 
 		// Setup new groups collection by cloning the configured one
@@ -141,7 +175,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 			groups.push(group);
 		});
 
-		each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
+		each(getSelectors(e.doc || editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 			if (selector.indexOf('.mce-') === -1) {
 				if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
 					var format = selectorConverter.call(self, selector), menu;
@@ -164,7 +198,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 						editor.formatter.register(formatName, format);
 
-						var menuItem = tinymce.extend({}, e.control.settings.itemDefaults, {
+						var menuItem = tinymce.extend({}, ctrl.settings.itemDefaults, {
 							text: format.title,
 							format: formatName
 						});
@@ -172,7 +206,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 						if (menu) {
 							menu.push(menuItem);
 						} else {
-							e.control.add(menuItem);
+							ctrl.add(menuItem);
 						}
 					}
 
@@ -182,7 +216,7 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		});
 
 		each(groups, function(group) {
-			e.control.add(group.item);
+			ctrl.add(group.item);
 		});
 
 		e.control.renderNew();

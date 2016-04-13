@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
- * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -17,6 +17,6 @@
  * init method is called). plugins in a depends list should typically be specified using the short name). If necessary
  * this can be done with an object which has the url to the plugin and the shortname.
  */
-tinymce.PluginManager.add('example_dependency', function(editor) {
+tinymce.PluginManager.add('example_dependency', function() {
 	// Example logic here
 }, ['example']);

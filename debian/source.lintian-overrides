@@ -1,0 +1,14 @@
+# Debian complains about minimized JS in sources
+klear-matrix source: source-is-missing assets/js/klearMatrix.compiled.js
+klear-matrix source: source-is-missing assets/bin/Jplayer.swf
+klear-matrix source: source-is-missing assets/js/scripts/2.5.3-crypto-md5.js
+klear-matrix source: source-is-missing assets/js/plugins/jquery.jplayer.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/jquery.tinymce.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/simple/plugin.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/media/moxieplayer.swf
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/kleargallery/plugin.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/full/plugin.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/basic/plugin.min.js
+klear-matrix source: source-is-missing assets/js/plugins/tinymce/jscripts/tinymce/plugins/autoclean/plugin.min.js

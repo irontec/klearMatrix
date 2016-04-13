@@ -1,0 +1,8 @@
+assets          /opt/irontec/klear/modules/klearMatrix
+Bootstrap.php   /opt/irontec/klear/modules/klearMatrix
+controllers     /opt/irontec/klear/modules/klearMatrix
+exceptions      /opt/irontec/klear/modules/klearMatrix
+languages       /opt/irontec/klear/modules/klearMatrix
+models          /opt/irontec/klear/modules/klearMatrix
+plugins         /opt/irontec/klear/modules/klearMatrix
+views           /opt/irontec/klear/modules/klearMatrix

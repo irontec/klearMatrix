@@ -522,7 +522,9 @@ class KlearMatrix_Model_Column
             foreach ($values as $_val) {
 
                 $template = ":" . $searchField . $cont ;
-
+                if ($_val === '__null__') {
+                    $_val = 'NULL';
+                }
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_isMapperSelect()) {
                     if ($this->namedParamsAreSupported()) {
@@ -533,8 +535,12 @@ class KlearMatrix_Model_Column
                             $fieldValues[$template] = $_val;
                         }
                     } else {
-                        $comparisons[] = $quotedSearchField . ' = ?';
-                        $fieldValues[] = $_val;
+                        if ($_val == 'NULL' || $_val == 'NOT NULL') {
+                            $comparisons[] = $quotedSearchField . ' is ' . $_val;
+                        } else {
+                            $comparisons[] = $quotedSearchField . ' = ?';
+                            $fieldValues[] = $_val;
+                        }
                     }
                 } else {
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();

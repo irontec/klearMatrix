@@ -94,6 +94,14 @@
             } else {
                 if (column.properties && column.properties.defaultValue !== null) {
                     _value = column.properties.defaultValue;
+                    
+                } else if (this.data.defaultValues) {
+                    
+                    // Soporte para defaultValues especificado por pantalla "New"
+                    var columnIden = column.id || false;
+                    if (this.data.defaultValues[columnIden]) {
+                        _value = this.data.defaultValues[columnIden];
+                    }
                 }
             }
 

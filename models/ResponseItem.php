@@ -136,6 +136,7 @@ class KlearMatrix_Model_ResponseItem
         '_presettedFilters' => array('presettedFilters', false),
         '_fixedPositions' => array('fixedPositions', false),
         '_autoRefresh' => array('autoRefresh', false),
+        '_defaultValues' => array('defaultValues', false)
     );
 
     //Guardamos en $this->_config un objeto Klear_Model_ConfigParser
@@ -426,6 +427,11 @@ class KlearMatrix_Model_ResponseItem
     public function getAutoRefresh()
     {
         return $this->_autoRefresh;
+    }
+
+    public function getDefaultValues()
+    {
+        return $this->_defaultValues;
     }
 
 

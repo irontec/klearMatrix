@@ -62,7 +62,8 @@ class KlearMatrix_Model_MatrixResponse
         'generalOptions',
         'fieldOptions',
         'info',
-        'fixedPositions'
+        'fixedPositions',
+        'defaultValues'
     );
 
     protected $_title;
@@ -79,6 +80,7 @@ class KlearMatrix_Model_MatrixResponse
 
     protected $_info = false;
     protected $_showFilterForm = false;
+    protected $_defaultValues = array();
 
     //@var KlearMatrix_Model_ResponseItem;
     protected $_item;
@@ -353,6 +355,11 @@ class KlearMatrix_Model_MatrixResponse
 
         return $this;
     }
+    public function setDefaultValues($defaultValues)
+    {
+        $this->_defaultValues = $defaultValues;
+        return $this;
+    }
 
     protected function _getValueFromColumn($column, $result)
     {
@@ -453,7 +460,8 @@ class KlearMatrix_Model_MatrixResponse
             ->setFixedPositions($item->getFixedPositions())
             ->setFullWidth($item->getFullWidth())
             ->setShowFilterForm($item->getShowFilterForm())
-            ->setAutoRefresh($item->getAutoRefresh());
+            ->setAutoRefresh($item->getAutoRefresh())
+            ->setDefaultValues($item->getDefaultValues());
 
     }
 

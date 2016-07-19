@@ -582,6 +582,8 @@
 
             }).trigger('manualchange.searchValues', true);
 
+            $(".klearMatrixFiltering select[name=searchField]",panel).trigger("manualchange");
+
             var $filteredFields = $(".klearMatrixFiltering .filteredFields",panel);
             $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
                 var $searchForm = $(this).parents("form:eq(0)");

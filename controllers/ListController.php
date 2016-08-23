@@ -256,6 +256,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             foreach ($order as $key => $val) {
                 $order[$key] .= ' '. $orderType;
+                $order[$key] = new \Zend_Db_Expr($order[$key]);
             }
 
         } else {

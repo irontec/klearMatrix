@@ -130,9 +130,17 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
                 throw new Exception('Filters must implement KlearMatrix_Model_Field_Select_Filter_Interface.');
             }
             $filter->setRouteDispatcher($this->_request->getParam("mainRouter"));
-            $condition = $filter->getCondition() . ' AND ';
+
+            $condition = $filter->getCondition();
+
+            if (!$this->_commandConfiguration->ignoreWhereDefault) {
+                $condition .= ' AND ';
+            }
         } elseif (isset($this->_commandConfiguration->condition)) {
-            $condition = '(' . $this->_commandConfiguration->condition . ') and ';
+            $condition = '(' . $this->_commandConfiguration->condition . ')';
+            if (!$this->_commandConfiguration->ignoreWhereDefault) {
+                $condition = '(' . $this->_commandConfiguration->condition . ') and ';
+            }
         }
 
         $query = array();
@@ -164,10 +172,14 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         }
 
         $query = '('. implode(" OR ", $query) .')';
-        $where =  array(
-                $condition . $query,
-                $params
-        );
+        if (!$this->_commandConfiguration->ignoreWhereDefault) {
+            $where =  array(
+                    $condition . $query,
+                    $params
+            );
+        } else {
+            $where =  $condition;
+        }
 
         $records = $this->_mapper->fetchList($where, $order, $this->_limit);
 

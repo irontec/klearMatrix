@@ -53,6 +53,14 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             ->setPK($this->_item->getPkName())
             ->setResponseItem($this->_item);
 
+        $parentScreenName = $this->getRequest()->getPost("parentScreen", false);
+        if (!$parentScreenName) {
+            $parentScreenName = $this->getRequest()->getPost("callerScreen", false);
+        }
+
+        if (false !== $parentScreenName) {
+            $data->calculateParentData($this->_mainRouter, $parentScreenName, $pk);
+        }
 
         $baseModel = $this->_item->getObjectInstance();
         $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());

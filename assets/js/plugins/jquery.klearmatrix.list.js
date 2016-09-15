@@ -576,7 +576,7 @@
                     break;
                 }
 
-                if (manual !== true) {
+                if (manual !== true && !$(searchField).hasClass("hasDatepicker")) {
                     searchField.focus();
                 }
 

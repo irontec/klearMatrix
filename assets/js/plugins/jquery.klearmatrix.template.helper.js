@@ -606,8 +606,7 @@
 
                                 for (idx in values[column.id]) {
 
-                                    if (values[column.id][idx].length > column.properties.maxLength) {
-
+                                    if (values[column.id][idx] !== null && values[column.id][idx].length > column.properties.maxLength) {
                                         values[column.id][idx] = values[column.id][idx].substring(0,column.properties.maxLength);
                                         values[column.id][idx] += '...';
                                     }

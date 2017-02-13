@@ -676,7 +676,7 @@
             .eq(0).trigger("focusin").select().focus();
 
             //Mark required fields
-            var _required = $('<span title="' + $.translate("Required field") + '" class="ui-icon inline ui-icon-heart"></span>');
+            var _required = $('<span title="' + $.translate("Required field") + '" class="ui-icon inline ui-icon-star"></span>');
             $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
 
             //Validate required select fields by regExp

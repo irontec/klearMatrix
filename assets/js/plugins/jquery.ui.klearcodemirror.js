@@ -23,18 +23,20 @@
         }
     });
     
-    function setCodeMirror($el){
-        var cm = CodeMirror.fromTextArea($el.get(0), {
+    function setCodeMirror($el) {
+        var modes = $el.attr("data-setting-mode").split(',');
+        var config = {
             lineNumbers: $el.attr("data-setting-line-numbers") == "true",
-            mode: $el.attr("data-setting-mode"),
+            mode: modes[0],
             theme: $el.attr("data-setting-theme") ? $el.attr("data-setting-theme") : "default",
             tabSize: $el.attr("data-setting-tab-size") ? $el.attr("data-setting-tab-size") : 4,
             readOnly: $el.attr("data-setting-read-only") == "true",
             autofocus: $el.attr("data-setting-autofocus") == "true",
             dragDrop: $el.attr("data-setting-drag-drop") ? $el.attr("data-setting-drag-drop") == "true" : true,
             matchBrackets: $el.attr("data-setting-match-brackets") ? $el.attr("data-setting-match-brackets") == "true" : true,
-        });
-    
+        };
+
+        var cm = CodeMirror.fromTextArea($el.get(0), config);
         cm.on("change", function(){
             cm.save();
         });
@@ -45,12 +47,21 @@
     }
     
     function checkLanguage($el){
-    
-        if( $el.attr("data-setting-mode") && $.inArray($el.attr("data-setting-mode"), plugins) == -1){
-            plugins.push($.inArray($el.attr("data-setting-mode")));
-            $.getScript("../klearMatrix/js/plugins/codemirror/mode/" + $el.attr("data-setting-mode") + '/' + $el.attr("data-setting-mode") + '.js',function() {
-            	setCodeMirror($el)
-            });
+
+        if ($el.attr("data-setting-mode") && $.inArray($el.attr("data-setting-mode"), plugins) == -1) {
+
+            var loaded = 0;
+            var modes = $el.attr("data-setting-mode").split(',');
+            var dependencies = modes.length > 1 ? modes.slice(1) : modes;
+
+            for (var idx in dependencies) {
+                $.getScript("../klearMatrix/js/plugins/codemirror/mode/" + dependencies[idx] + '/' + dependencies[idx] + '.js',function() {
+                    loaded++;
+                    if (loaded >= dependencies.length) {
+                        setCodeMirror($el);
+                    }
+                });
+            }
         }
         else setCodeMirror($el);
     }

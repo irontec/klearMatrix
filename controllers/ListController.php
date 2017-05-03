@@ -477,6 +477,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected function _getRawSelectResults($config, $where, $order, $count, $offset)
     {
+        $whereReplaces = array();
         if (!is_null($where)) {
             $whereString = $where[0];
             if ($config->getProperty("searchAlias")) {
@@ -490,19 +491,17 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 $whereString = str_replace($whereFields, $replaces, $whereString);
             }
             $whereReplaces = $where[1];
-            foreach ($whereReplaces as $key => $value) {
-                $whereReplaces[$key] = "'".$value."'";
-            }
             $whereCond = "WHERE ".str_replace(array_keys($whereReplaces), $whereReplaces, $whereString);
+
         } else {
             $whereCond = "";
         }
         $countQuery = "SELECT count(*) as count ".$config->getProperty("rawSelect")." ".$whereCond;
-        $countResult = $this->_mapper->getDbTable()->getAdapter()->fetchAll($countQuery);
+        $countResult = $this->_mapper->getDbTable()->getAdapter()->query($countQuery, $whereReplaces)->fetchAll();
         $rawCount = $countResult[0]["count"];
         $query = "SELECT * ".$config->getProperty("rawSelect")." ".$whereCond.
         " ORDER BY ".implode(",", $order)." LIMIT ".$count." OFFSET ".$offset;
-        $resultSet = $this->_mapper->getDbTable()->getAdapter()->fetchAll($query);
+        $resultSet = $this->_mapper->getDbTable()->getAdapter()->query($query, $whereReplaces)->fetchAll();
         $results = array();
         foreach ($resultSet as $result) {
             $model = $this->_mapper->loadModel($result);

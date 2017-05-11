@@ -642,27 +642,36 @@ class KlearMatrix_Model_Column
 
         if ($this->isDependant()) {
             return 'get' . ucfirst($this->getDbFieldName());
-        } else {
+        } else if ($GLOBALS['sf']) {
+            return 'get' . ucfirst($this->getDbFieldName());
+        } else if (!$GLOBALS['sf']) {
             return 'get' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
         }
     }
 
     public function getSetterName($default = false)
     {
-        if ($this->isOption()) {
-            return false;
-        }
+        if ($GLOBALS['sf']) {
 
-        if (method_exists($this->getFieldConfig(), 'getCustomSetterName') && $default === false) {
-            return $this->getFieldConfig()->getCustomSetterName();
-        }
-
-        if ($this->isDependant()) {
             return 'set' . ucfirst($this->getDbFieldName());
-        } else {
-            return 'set' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
-        }
 
+        } else if (!$GLOBALS['sf']) {
+
+
+            if ($this->isOption()) {
+                return false;
+            }
+
+            if (method_exists($this->getFieldConfig(), 'getCustomSetterName') && $default === false) {
+                return $this->getFieldConfig()->getCustomSetterName();
+            }
+
+            if ($this->isDependant()) {
+                return 'set' . ucfirst($this->getDbFieldName());
+            } else {
+                return 'set' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
+            }
+        }
     }
 
     protected function _getDecoratorsConfig()

@@ -4,6 +4,9 @@ class KlearMatrix_Model_FilterProcessor
 {
     protected $_request;
     protected $_columns;
+    /**
+     * @deprecated
+     */
     protected $_model;
 
     protected $_where = false;
@@ -30,6 +33,9 @@ class KlearMatrix_Model_FilterProcessor
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function setModel($model)
     {
         $this->_model = $model;
@@ -104,7 +110,11 @@ class KlearMatrix_Model_FilterProcessor
 
     protected function _generate()
     {
-        if ((!isset($this->_request)) || (!isset($this->_columns)) || (!isset($this->_model))) {
+        if (!isset($this->_model)  && !$GLOBALS['sf']) {
+            Throw new Exception("FilterProcessor not properly invocated");
+        }
+
+        if ((!isset($this->_request)) || (!isset($this->_columns))) {
             Throw new Exception("FilterProcessor not properly invocated");
         }
 

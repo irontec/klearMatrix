@@ -29,14 +29,12 @@ class KlearMatrix_NewController extends Zend_Controller_Action
 
         if ('save' === $this->getRequest()->getActionName()) {
 
-            $this->_item->setIgnoreMetadataBlacklist(true);
+//            $this->_item->setIgnoreMetadataBlacklist(true);
         }
     }
 
     public function saveAction()
     {
-
-
         $mapperName = $this->_item->getMapperName();
 
         $model = $this->_item->getObjectInstance();
@@ -97,9 +95,10 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 }
             }
 
+            $pk = isset($GLOBALS['sf']) ? $model->getId() :  $model->getPrimaryKey();
             $data = array(
                 'error' => false,
-                'pk' => $model->getPrimaryKey(),
+                'pk' => $pk,
                 'message' => $this->view->translate('Record successfully saved.') . $optsString
             );
         } catch (\Zend_Exception $exception) {
@@ -141,15 +140,26 @@ class KlearMatrix_NewController extends Zend_Controller_Action
     protected function _save($model, $hasDependant)
     {
         try {
-            if (method_exists($model, 'saveRecursive')) {
-                if ($hasDependant) {
-                    $model->saveRecursive();
+
+            if ($GLOBALS['sf']) {
+                $dataGateway = \Zend_Registry::get('data_gateway');
+                $dataGateway->persist($this->_item->getEntityClassName(), $model);
+            } else if (!$GLOBALS['sf']) {
+
+                if (method_exists($model, 'saveRecursive')) {
+                    if ($hasDependant) {
+                        /**
+                         * @todo implement this in sf
+                         */
+                        $model->saveRecursive();
+                    } else {
+                        $model->save();
+                    }
                 } else {
-                    $model->save();
+                    $model->save(false, $hasDependant);
                 }
-            } else {
-                $model->save(false, $hasDependant);
             }
+
         } catch (\Zend_Exception $exception) {
             $displayErrors = ini_get("display_errors");
             $message = $this->view->translate('Error saving record');

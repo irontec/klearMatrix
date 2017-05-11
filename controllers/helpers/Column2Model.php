@@ -51,7 +51,7 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
 
         $this->_setForcedValues($model, $column);
         $setter = $column->getSetterName();
-        $value = $this->_retrieveValueForColumn($column, $model->getAvailableLangs());
+        $value = $this->_retrieveValueForColumn($column, []);
 
         // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
         if (is_null($value)) {
@@ -94,9 +94,18 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         if ($item->hasForcedValues()) {
             foreach ($item->getForcedValues() as $field => $value) {
                 try {
-                    $varName = $model->columnNameToVar($field);
-                    $model->{'set' . $varName}($value);
-                } catch (Exception $e) {
+                    if ($GLOBALS['sf']) {
+
+                        $setter = 'set' . ucfirst($field);
+                        if (!method_exists($model, $setter)) {
+                            $setter .= 'Id';
+                        }
+                        $model->{$setter}($value);
+                    } else if (!$GLOBALS['sf']) {
+                        $varName = $model->columnNameToVar($field);
+                        $model->{'set' . $varName}($value);
+                    }
+                } catch (\Exception $e) {
                     // Nothing to do... condition not found in model... :S
                     // Debemos morir??
                 }

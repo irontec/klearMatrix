@@ -13,6 +13,10 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             return null;
         }
 
+        if ($value instanceof \Datetime) {
+            $value = $value->format('Y-m-d H:i:s');
+        }
+
         $date = new Zend_Date();
         $date->setTimeZone('UTC');
         $date->setDate($value, 'yyyy-MM-dd');

@@ -58,11 +58,19 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
     public function customize($parentModel)
     {
         $item = $this->_mainRouter->loadScreen($this->_option->getName());
-        $model = $item->getObjectInstance();
-        $mapper = $model->getMapper();
+        $model = null;
+
+        if (!$GLOBALS['sf']) {
+            $model = $item->getObjectInstance();
+            $mapper = $model->getMapper();
+        }
 
         //Al tratarse de un filtered screen necesita la pk del padre
-        $this->_mainRouter->setParams(array("pk" => $parentModel->getPrimaryKey()));
+        if ($GLOBALS['sf']) {
+            $this->_mainRouter->setParams(array("pk" => $parentModel->getId()));
+        } else if (!$GLOBALS['sf']) {
+            $this->_mainRouter->setParams(array("pk" => $parentModel->getPrimaryKey()));
+        }
 
         $listWhereCreator = new KlearMatrix_Controller_Helper_CreateListWhere;
         $where = $listWhereCreator->createListWhere(
@@ -74,9 +82,15 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
 
         $where = $this->_parseWhereCondition($where);
 
-        $resultCount = $mapper->countByQuery($where);
-        if ($resultCount == 0 && $this->_nullIfZero == true) {
+        if ($GLOBALS['sf']) {
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $entityName = $item->getEntityClassName();
+            $resultCount = $dataGateway->countBy($entityName, $where);
+        } else if (!$GLOBALS['sf']) {
+            $resultCount = $mapper->countByQuery($where);
+        }
 
+        if ($resultCount == 0 && $this->_nullIfZero == true) {
             return null;
         }
 

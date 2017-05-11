@@ -54,13 +54,13 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
 
                 if (is_array($condition)) {
                     $expressions[] = $condition[0];
-                    $values = array_merge($values, $condition[1]);
+                    $values += $condition[1];
                 } else {
                     $expressions[] = $condition;
                 }
             }
 
-            $where = array(implode(" and ", $expressions), $values);
+            $where = array(implode(" AND ", $expressions), $values);
         }
 
         return $where;

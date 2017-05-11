@@ -11,8 +11,17 @@ class KlearMatrix_Model_ResponseItem
     protected $_item;
     protected $_config;
 
+    /**
+     * @deprecated
+     */
     protected $_mapper;
+    /**
+     * @deprecated
+     */
     protected $_modelFile;
+
+    protected $_entity;
+
     protected $_routeDispatcher;
 
     protected $_plugin;
@@ -111,6 +120,7 @@ class KlearMatrix_Model_ResponseItem
     protected $_configOptions = array(
         '_mapper' => array('mapper', false),
         '_modelFile' => array('modelFile', false),
+        '_entity' => array('entity', false),
         '_filteredField' => array('filterField', false),
         '_filterClass' => array('filterClass', false),
         '_forcedValues' => array('forcedValues', false),
@@ -159,14 +169,24 @@ class KlearMatrix_Model_ResponseItem
             }
         }
 
-        //Si hay modelFile, lo parseamos
-        if ($this->_modelFile) {
-            $this->_parseModelFile();
-        }
+        if ($GLOBALS['sf']) {
 
-        //Si hay mapper, lo checkeamos a ver si es válido
-        if ($this->_mapper) {
-            $this->_checkClassesExist(array("_mapper"));
+            //Si hay modelFile, lo parseamos
+            if ($this->_entity) {
+                $this->_parseModelFile();
+            }
+
+        } else if (!$GLOBALS['sf']) {
+
+            //Si hay modelFile, lo parseamos
+            if ($this->_modelFile) {
+                $this->_parseModelFile();
+            }
+
+            //Si hay mapper, lo checkeamos a ver si es válido
+            if ($this->_mapper) {
+                $this->_checkClassesExist(array("_mapper"));
+            }
         }
         return $this;
     }
@@ -275,11 +295,13 @@ class KlearMatrix_Model_ResponseItem
         return $this->_routeDispatcher;
     }
 
+    /** @deprecated **/
     public function getMapperName()
     {
         return $this->_mapper;
     }
 
+    /** @deprecated **/
     public function getModelName()
     {
         $className = $this->_modelSpec->getClassName();
@@ -288,6 +310,22 @@ class KlearMatrix_Model_ResponseItem
         }
         return $className;
     }
+
+    public function getEntityClassName()
+    {
+        return $this->_modelSpec->getEntityClassName();
+    }
+
+
+    public function getEntityName()
+    {
+        $className = $this->_modelSpec->getEntityClassName();
+        $entitySegments = explode('\\', $className);
+
+        return end($entitySegments);
+    }
+
+//    public function get
 
     public function getPlugin($defaultValue = '')
     {
@@ -518,7 +556,7 @@ class KlearMatrix_Model_ResponseItem
          * Si estamos en una vista multi-lenguaje, instanciamos en el columnWrapper
         * que idiomas tienen los modelos disponibles
         */
-        $availableLangsPerModel = $modelInstance->getAvailableLangs();
+        $availableLangsPerModel = $this->getAvailableLangs();
         if (count($availableLangsPerModel) > 0) {
             $this->_visibleColumns->setLangs($availableLangsPerModel);
         }
@@ -533,7 +571,11 @@ class KlearMatrix_Model_ResponseItem
         $this->_visibleColumns->addCols($ghostColumns);
 
         // Campos de la BBDD
-        $columns = $this->_getVisibleColumns($modelInstance, $ignoreBlackList);
+        if ($GLOBALS['sf']) {
+            $columns = $this->_getVisibleColumns(null, $ignoreBlackList);
+        } else if (!$GLOBALS['sf']) {
+            $columns = $this->_getVisibleColumns($modelInstance, $ignoreBlackList);
+        }
         $this->_visibleColumns->addCols($columns);
 
         // Tablas dependientes
@@ -567,11 +609,18 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _poblateBlackList($model)
     {
-        $pk = $model->getPrimaryKeyName();
+        if ($GLOBALS['sf']) {
 
-        // Si la clave primaria no está en la lista blanca no la mostramos
-        //TODO: comprobación de que no esté en el whitelist? sigue estando?
-        $this->addFieldToBlackList($pk);
+            $this->addFieldToBlackList('id');
+
+        } else if (!$GLOBALS['sf']) {
+
+            $pk = $model->getPrimaryKeyName();
+
+            // Si la clave primaria no está en la lista blanca no la mostramos
+            //TODO: comprobación de que no esté en el whitelist? sigue estando?
+            $this->addFieldToBlackList($pk);
+        }
 
         /*
          * LLenamos el array blacklist en base al fichero de configuración
@@ -609,10 +658,10 @@ class KlearMatrix_Model_ResponseItem
             }
         }
 
-        if ($this->_ignoreMetadataBlacklist == false) {
-
-            $this->_blacklistFieldsByMeta($model);
-        }
+//        if ($this->_ignoreMetadataBlacklist == false) {
+//
+//            $this->_blacklistFieldsByMeta($model);
+//        }
 
         /*
          * Metemos en la lista negra los campos multi-idioma.
@@ -624,50 +673,52 @@ class KlearMatrix_Model_ResponseItem
         }
     }
 
-    /**
-     * Allow /Deny field blacklisting based on ddbb tags
-     * @param $ignore bool
-     */
-    public function setIgnoreMetadataBlacklist($ignore)
-    {
-        $this->_ignoreMetadataBlacklist = (bool) $ignore;
-    }
+//    /**
+//     * Allow /Deny field blacklisting based on ddbb tags
+//     * @param $ignore bool
+//     * @deprecated
+//     */
+//    public function setIgnoreMetadataBlacklist($ignore)
+//    {
+//        $this->_ignoreMetadataBlacklist = (bool) $ignore;
+//    }
 
-    /**
-     * Hace una criba de columnas visibles a los COMMENT del campo en ddbb
-     * @return bool
-     */
-    protected function _blacklistFieldsByMeta ($model)
-    {
-        //FIXME method_exists condition, just for backward compatibility reasons
-        if (method_exists($model, 'getColumnsMeta')) {
-
-            $fieldsMetadata = $model->getColumnsMeta();
-            foreach ($fieldsMetadata as $field => $metatags) {
-
-                foreach ($metatags as $tag) {
-
-                    if (! $this->_blacklistFieldMetaMatch($tag)) {
-
-                        continue;
-                    }
-
-                    if (is_array($this->_metadataBlacklist[$tag])) {
-
-                        foreach ($this->_metadataBlacklist[$tag] as $suffix) {
-
-                            $this->addFieldToBlackList($field . $suffix, true);
-                        }
-
-                    } else {
-
-                        $this->addFieldToBlackList($field, true);
-                        break;
-                    }
-                }
-            }
-        }
-    }
+//    /**
+//     * Hace una criba de columnas visibles a los COMMENT del campo en ddbb
+//     * @return bool
+//     * @deprecated
+//     */
+//    protected function _blacklistFieldsByMeta ($model)
+//    {
+//        //FIXME method_exists condition, just for backward compatibility reasons
+//        if (method_exists($model, 'getColumnsMeta')) {
+//
+//            $fieldsMetadata = $model->getColumnsMeta();
+//            foreach ($fieldsMetadata as $field => $metatags) {
+//
+//                foreach ($metatags as $tag) {
+//
+//                    if (! $this->_blacklistFieldMetaMatch($tag)) {
+//
+//                        continue;
+//                    }
+//
+//                    if (is_array($this->_metadataBlacklist[$tag])) {
+//
+//                        foreach ($this->_metadataBlacklist[$tag] as $suffix) {
+//
+//                            $this->addFieldToBlackList($field . $suffix, true);
+//                        }
+//
+//                    } else {
+//
+//                        $this->addFieldToBlackList($field, true);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /**
      * @return bool
@@ -708,19 +759,30 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _getMultilangFields($model)
     {
+        $availableLangsPerModel = $this->getAvailableLangs();
+        $multiLangFields = $this->getModelSpec()->getMultilangFields();
+
         $returnMultiLangFields = array();
-
-        $availableLangsPerModel = $model->getAvailableLangs();
-        $multiLangFields = $model->getMultiLangColumnsList();
-
         foreach ($multiLangFields as $dbFieldName => $columnName) {
             $columnName; //Avoid PMD UnusedLocalVariable warning
             foreach ($availableLangsPerModel as $langIden) {
-
-                $returnMultiLangFields[] = $dbFieldName . '_'. $langIden;
+                if ($GLOBALS['sf']) {
+                    $returnMultiLangFields[] = $dbFieldName . ucfirst($langIden);
+                } else if (!$GLOBALS['sf']) {
+                    $returnMultiLangFields[] = $dbFieldName . '_'. $langIden;
+                }
             }
         }
+
         return $returnMultiLangFields;
+    }
+
+    public function getAvailableLangs()
+    {
+        $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
+        $availableModelLangs = $bootstrap->getOption('modelLanguages');
+
+        return array_keys($availableModelLangs);
     }
 
     /**
@@ -802,18 +864,25 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _getVisibleColumns($model, $ignoreBlackList = false)
     {
+        /** @deprecated **/
+        $model = $model;
+
         $columns = array();
+        if ($GLOBALS['sf']) {
+            $dbFieldNames = array_keys($this->_modelSpec->getFields());
+        } else if (!$GLOBALS['sf']) {
+            $dbFieldNames = array_keys($model->getColumnsList());
+        }
+
         /*
          * Iteramos sobre todos los campos
         */
-        $dbFieldNames = array_keys($model->getColumnsList());
         foreach ($dbFieldNames as $dbFieldName) {
             /*
              * TODO: Revisar esto, en principio ya no debería hacer falta comprobar el $ignoreBlackList,
             *       la lista no se genera si no es necesaria, pero hay que repasar el método _getVisibleFileColumns.
             */
             if (!$ignoreBlackList && isset($this->_blacklist[$dbFieldName])) {
-
                 continue;
             }
 
@@ -821,15 +890,21 @@ class KlearMatrix_Model_ResponseItem
 
             //Si es un campo ghost, pasamos de él. Ya estaba metido antes
             if (isset($config->type) && $config->type == 'ghost') {
-
                 continue;
             }
 
             $column = $this->_createColumn($dbFieldName, $config);
 
-            $multiLangFields = $model->getMultiLangColumnsList();
-            if (isset($multiLangFields[$dbFieldName])) {
+            if ($GLOBALS['sf']) {
+                $multiLangFields = $this->_getMultiLangColumnsList();
+                /**
+                 * @todo  put _getMultiLangColumnsList here and exec $column->markAsMultilang directly
+                 */
+            } else if (!$GLOBALS['sf']) {
+                $multiLangFields = $model->getMultiLangColumnsList();
+            }
 
+            if (isset($multiLangFields[$dbFieldName])) {
                 $column->markAsMultilang();
             }
 
@@ -839,12 +914,23 @@ class KlearMatrix_Model_ResponseItem
         return $columns;
     }
 
+    private function _getMultiLangColumnsList()
+    {
+        return $this->_modelSpec->getMultilangFields();
+    }
+
+
     /**
      * Devuelve las columans de tipo dependant
      * @param unknown_type $model
      */
     protected function _getVisibleDependantColumns($model, $ignoreBlacklist = false)
     {
+        /**
+         * @todo recuperar esto
+         */
+        return [];
+
         $columns = array();
         foreach ($model->getDependentList() as $dependantConfig) {
 
@@ -947,7 +1033,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function getFilteredCondition($value)
     {
-        return $this->_getCondArray($this->_filteredField, $value, 'filtered');
+        return $this->_getCondArray($value, $value, 'filtered');
     }
 
     public function hasForcedValues()
@@ -957,8 +1043,6 @@ class KlearMatrix_Model_ResponseItem
 
     public function getForcedValuesConditions()
     {
-        $forcedValueConds = array();
-
         foreach ($this->_forcedValues as $field => $value) {
             //FIXME: Aquí se confía demasiado en el rand, podrían repetirse valores...
             $valConstant = 'v' . rand(1000, 9999);
@@ -966,6 +1050,17 @@ class KlearMatrix_Model_ResponseItem
         }
 
         return $forcedValueConds;
+    }
+
+    protected function _prependFieldEntity($field)
+    {
+        $fieldTemplate = '%s';
+        if ($GLOBALS['sf']) {
+            $entityName = $this->getEntityName();
+            $fieldTemplate = ' IDENTITY('. $entityName .'.%s)';
+        }
+
+        return sprintf($fieldTemplate, $field);
     }
 
 
@@ -1012,34 +1107,52 @@ class KlearMatrix_Model_ResponseItem
 
         return false;
     }
+
     public function _getCondArray($field, $value, $paramName = null)
     {
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+        if ($GLOBALS['sf']) {
 
-        if ($dbAdapter) {
-            $field = $dbAdapter->quoteIdentifier($field);
-        }
+            /**
+             * @todo field == $value on filtered conditions ¿?
+             */
+            if ($paramName == 'filtered') {
 
-        if (is_null($value) || $value == 'NULL') {
-            return $field . ' is NULL';
-        }
+                return [
+                    $field. ' = ' .$value,
+                    []
+                ];
+            }
 
-        /*
-         * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
-         * y usamos un namedParameter porque MasterLogic lo espera así
-         * TODO: Molaría sacar esto de aquí porque es específico de Euskaltel
-         */
-        if (!$dbAdapter || ($paramName && $dbAdapter->supportsParameters('named'))) {
+            $doctrineFld = $this->_prependFieldEntity($field);
+            $namedParam = trim(str_replace('.', '', $field));
+
+            if (is_null($value) || $value == 'NULL') {
+                return $doctrineFld . ' is NULL';
+            }
+
             return array(
-                $field . ' = :' . $paramName,
-                array(':' . $paramName => $value)
+                $doctrineFld . ' = :' . $namedParam,
+                array($namedParam => $value)
+            );
+
+        } else if (!$GLOBALS['sf']) {
+
+
+            if (is_null($value) || $value == 'NULL') {
+                return $field . ' is NULL';
+            }
+
+            $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+
+            if ($dbAdapter) {
+                $field = $dbAdapter->quoteIdentifier($field);
+            }
+
+            return array(
+                $field . " = ? ",
+                array($value)
             );
         }
-
-        return array(
-            $field . " = ? ",
-            array($value)
-        );
     }
 
     public function getForcedValues()
@@ -1260,7 +1373,11 @@ class KlearMatrix_Model_ResponseItem
      */
     public function getPkName()
     {
-        return $this->_modelSpec->getInstance()->getPrimaryKeyName();
+        if ($GLOBALS['sf']) {
+            return 'id';
+        } else if (!$GLOBALS['sf']) {
+            return $this->_modelSpec->getInstance()->getPrimaryKeyName();
+        }
     }
 
     /**

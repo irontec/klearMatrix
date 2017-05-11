@@ -143,7 +143,13 @@ class KlearMatrix_Model_Field_Ghost extends KlearMatrix_Model_Field_Abstract
             return $method;
         }
 
-        return 'getPrimaryKey';
+        if ($GLOBALS['sf']) {
+            return 'getId';
+        }
+
+        if (!$GLOBALS['sf']) {
+            return 'getPrimaryKey';
+        }
     }
 
 

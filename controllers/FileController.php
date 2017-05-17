@@ -415,8 +415,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             if (isset($cache->enabled) && $cache->enabled) {
                 $useCache = true;
                 $cacheKey = 'preview'
-                            . preg_replace('/[^\w]/', '', get_class($this->_model))
-                            . $this->_model->getId();
+                            . preg_replace('/[^\w]/', '', get_class($this->_model). $this->_model->getId());
             }
         }
 

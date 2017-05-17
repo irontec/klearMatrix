@@ -48,9 +48,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->_mainRouter = $this->getRequest()->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
-
-
-
     }
 
     protected function _getFileColumn()
@@ -399,16 +396,28 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     /**
      * TODO: Imágen por defecto si el modelo no existe
      * TODO: Default preview de default
-     * TODO: Sistema de cacheo
      */
     public function previewAction()
     {
-
-
         $this->_loadModel();
 
         if (!$this->_model) {
             Throw new Exception("file not exists");
+        }
+
+        $arguments = $this->_item->getConfigAttribute('arguments');
+        $useCache = false;
+        $cacheKey = null;
+
+        if ($arguments && isset($arguments->cache)) {
+            $cache = (object) $arguments->cache->toArray();
+
+            if (isset($cache->enabled) && $cache->enabled) {
+                $useCache = true;
+                $cacheKey = 'preview'
+                            . preg_replace('/[^\w]/', '', get_class($this->_model))
+                            . $this->_model->getId();
+            }
         }
 
         $this->_setFileFields();
@@ -419,17 +428,39 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $mimeType = $this->_model->{$typeGetter}();
         $filename = $this->_model->{$nameGetter}();
 
-        $previewElement = KlearMatrix_Model_Field_File_Preview_Abstract::factory($filename, $mimeType);
-        $previewElement->setRequest($this->getRequest());
-        $previewElement->setFilename($this->_getFilePath());
+        $preview = new stdClass();
+        if ($useCache) {
+            $filePath = $this->_getFilePath();
+            $cache = $this->_getFileCache($filePath);
+            $cachedPreview = $cache->load($cacheKey);
+
+            if ($cachedPreview) {
+                $preview->binary = $cachedPreview->binary;
+                $preview->type = $cachedPreview->type;
+            }
+        }
+
+        if (!isset($preview->binary)) {
+
+            $previewElement = KlearMatrix_Model_Field_File_Preview_Abstract::factory($filename, $mimeType);
+            $previewElement->setRequest($this->getRequest());
+            $previewElement->setFilename($this->_getFilePath());
+
+            $preview->binary = base64_encode($previewElement->getBinary());
+            $preview->type = $previewElement->getMimeType();
+
+            if ($useCache) {
+                $cache->save($preview, $cacheKey);
+            }
+        }
 
 
         $this->_helper->log('Sending file to Client: ('.$filename.')');
         $this->_helper->sendFileToClient(
-            $previewElement->getBinary(),
+            base64_decode($preview->binary),
             array(
                 'filename' => $filename,
-                'type' => $previewElement->getMimeType(),
+                'type' => $preview->type,
                 'disposition' => 'inline'
             ),
             true
@@ -439,6 +470,44 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $response->clearHeaders();
 
         return;
+    }
+
+    private function _getFileCache($referenceFilePath)
+    {
+        $bootstrap = Zend_Controller_Front::getInstance()
+                     ->getParam('bootstrap');
+        $cacheManager = $bootstrap->getResource('cachemanager');
+
+        if (!is_array($referenceFilePath)) {
+
+            $referenceFilePath = [$referenceFilePath];
+        }
+
+        $frontend = array(
+            'name' => 'File',
+            'options' => array(
+                'master_files' => $referenceFilePath,
+                'master_files_mode' => \Zend_Cache_Frontend_File::MODE_OR,
+                'automatic_serialization' => true
+            )
+        );
+
+        if (!$cacheManager->hasCacheTemplate('klearmatrixFilePreview')) {
+            $cache = array(
+                'frontend' => $frontend,
+                'backend' => array(
+                    'name' => 'File',
+                    'options' => array(
+                        'cache_dir' => APPLICATION_PATH . '/cache',
+                    )
+                )
+            );
+
+            $cacheManager->setCacheTemplate('klearmatrixFilePreview', $cache);
+        }
+
+
+        return $cacheManager->getCache('klearmatrixFilePreview');
     }
 
     /**

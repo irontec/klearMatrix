@@ -81,7 +81,6 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 $sectionConfig->setFile($file);
                 if (!$sectionConfig->isValid()) {
                     continue;
-                    return;
                 }
 
                 if (in_array($file, $sectionsBlackList)) {

@@ -174,11 +174,10 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
     public function getValue($model)
     {
-
-//         $mainModel = $this->_parentField->getColumn()->getModel();
-
-        $mapperName = $this->_config->getProperty("config")->mapperName;
-        $dataMapper = new $mapperName;
+        if (!$GLOBALS['sf']) {
+            $mapperName = $this->_config->getProperty("config")->mapperName;
+            $dataMapper = new $mapperName;
+        }
 
         if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
 
@@ -189,7 +188,11 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $whereParts = array();
 
         if (isset($this->_config->getProperty('config')->filterField)) {
-            $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getPrimaryKey()."')";
+            if ($GLOBALS['sf']) {
+                $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getId()."')";
+            } else if (!$GLOBALS['sf']) {
+                $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getPrimaryKey()."')";
+            }
         }
 
         if (isset($this->_config->getProperty('config')->forcedValues)) {
@@ -215,13 +218,16 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             $order = $orderParts;
         }
 
-        $results = $dataMapper->fetchList($where, $order);
+        if ($GLOBALS['sf']) {
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $entity = $this->_config->getProperty("config")->entityClass;
+            $results = $dataGateway->findBy($entity, [$where]);
+        } else if (!$GLOBALS['sf']) {
+            $results = $dataMapper->fetchList($where, $order);
+        }
+
         $this->_setOptions($results);
-
-
         $options = $this->_parseOptions();
-
-
 
         $asTable = $this->_config->getProperty('config')->showAsTable;
         if ($asTable === true) {

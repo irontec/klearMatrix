@@ -1,8 +1,9 @@
 <?php
 class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstract
 {
-
     protected $_adapter;
+
+    protected $sourceConfig;
 
     protected $_js = array(
        "/js/plugins/jquery.multiselect.filter.js",
@@ -16,13 +17,13 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
     protected function _init()
     {
-        $sourceConfig = $this->_config->getRaw()->source;
+        $this->sourceConfig = $this->_config->getRaw()->source;
 
-        $adapterClassName = "KlearMatrix_Model_Field_Multiselect_" . ucfirst($sourceConfig->data);
+        $adapterClassName = "KlearMatrix_Model_Field_Multiselect_" . ucfirst($this->sourceConfig->data);
 
-        $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
+        $this->_adapter = new $adapterClassName($this->sourceConfig, $this->_column);
         $this->_isSortable = false;
-        
+
         if ($this->_adapter->getExtraJavascript()) {
             $this->_js = $this->_adapter->getExtraJavascript();
         }
@@ -41,18 +42,19 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
     protected function _filterValue($value)
     {
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $relationEntityClass = $this->sourceConfig->config->relation;
+        $relationEntityName = substr($relationEntityClass, strrpos($relationEntityClass, '\\')+1);
+        $relationProperty = $this->sourceConfig->config->relationProperty;
+
         $model = $this->_column->getModel();
-        $getter = $this->_column->getGetterName();
+        $where = [
+            $relationEntityName . '.' . $relationProperty . ' = :pk',
+            ['pk' => $model->getId()]
+        ];
+        $currentValues = $dataGateway->findBy($relationEntityClass, $where);
 
-/*
- * FIXME: No elimino estas líneas para recordar que hay que comprobar que el multilang funciona en los multiselect...
- *
- */
-//         if ($this->_column->isMultilang()) {
-//             return $this->_adapter->filterValue($value, $model->$getter($lang));
-//         }
-
-        return $this->_adapter->filterValue($value, $model->$getter());
+        return $this->_adapter->filterValue($value, $currentValues);
     }
 
     public function isMassUpdateable()

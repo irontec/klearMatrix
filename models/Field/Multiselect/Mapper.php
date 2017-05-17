@@ -4,9 +4,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 {
     protected $_parsedValues;
 
-    protected $_relationMapper;
+    protected $_relation;
     protected $_relationProperty;
-    protected $_relatedMapper;
+    protected $_relatedProperty;
+    protected $_related;
 
     protected $_editableFields;
 
@@ -15,19 +16,16 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     protected $_extraDataAttributes = array();
     protected $_extraDataAttributesValues = array();
 
-
     public function init()
     {
         $this->_parsedValues = new Klear_Model_ConfigParser;
         $this->_parsedValues->setConfig($this->_config->config);
 
         // Mapper de las relaciones. Aquí se guardarán las coincidencias.
-        $this->_relationMapper = $this->_parsedValues->getProperty("relationMapper");
+        $this->_relation = $this->_parsedValues->getProperty("relation");
         $this->_relationProperty = $this->_parsedValues->getProperty("relationProperty");
-        $this->_relatedMapper = $this->_parsedValues->getProperty("relatedMapperName");
-
-        $dataMapperName = $this->_relatedMapper;
-        $dataMapper = new $dataMapperName;
+        $this->_relatedProperty =  $this->_parsedValues->getProperty("relatedProperty");
+        $this->_related = $this->_parsedValues->getProperty("related");
 
         if ($this->_dynamicDataLoading() === true) {
 
@@ -38,33 +36,34 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         if ($this->_config->config->get("extraDataAttributes", false)) {
 
             $extraAttrs = $this->_config->config->get("extraDataAttributes");
-            $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs, $dataMapper);
+            $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs);
         }
 
         $where = $this->_getFilterWhere();
         $order = $this->_getRelatedOrder();
 
-        $results = $dataMapper->fetchList($where, $order);
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $results = $dataGateway->findBy($this->_related, $where, $order);
 
         if ($results) {
 
             $relatedFields = $this->_getRelatedFields();
             $relatedFieldsTemplate = $this->_getRelatedFieldsTemplate();
 
-            foreach ($results as $dataModel) {
+            foreach ($results as $dto) {
 
                 $replace = array();
                 foreach ($relatedFields as $fieldName) {
-                    $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
-                    $replace['%' . $fieldName . '%'] = $dataModel->$getter();
+                    $getter = 'get' . ucfirst($fieldName);
+                    $replace['%' . $fieldName . '%'] = $dto->$getter();
                 }
 
-                $keyGetter = 'getPrimaryKey';
+                $keyGetter = 'getId';
                 if ($keyProperty = $this->_parsedValues->getProperty("relatedKeyProperty")) {
                     $keyGetter = 'get' . ucfirst($keyProperty);
                 }
 
-                $this->_keys[] = $dataModel->{$keyGetter}();
+                $this->_keys[] = $dto->{$keyGetter}();
                 $this->_items[] = str_replace(array_keys($replace), $replace, $relatedFieldsTemplate);
             }
 
@@ -76,7 +75,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     {
         if ($results) {
 
-            $keyGetter = 'getPrimaryKey';
+            $keyGetter = 'getId';
             if ($keyProperty = $this->_config->config->get("keyProperty")) {
                 $keyGetter = 'get' . ucfirst($keyProperty);
             }
@@ -87,18 +86,13 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         }
     }
 
-    protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
+    protected function _parseExtraAttrs(Zend_Config $extraConfig)
     {
-
-        $model = $dataMapper->loadModel(false);
         $retAttrs = array();
         foreach ($extraConfig as $label => $field) {
-            if (!$varName = $model->columnNameToVar($field)) {
-                continue;
-            }
-
-            $retAttrs[$label] = 'get' . ucfirst($varName);
+            $retAttrs[$label] = 'get' . ucfirst($field);
         }
+
         return $retAttrs;
     }
 
@@ -171,6 +165,11 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             if ( !$filter instanceof KlearMatrix_Model_Field_Select_Filter_Interface ) {
                 throw new Exception('Filters must implement KlearMatrix_Model_Field_Multiselect_Filter_Interface.');
             }
+
+            /**
+             * @todo
+             */
+            throw new \Exception('TODO');
             return $this->_getFilterCondition($filter);
         }
         return null;
@@ -220,59 +219,17 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     public function prepareValue($value)
     {
         if (sizeof($value) == 0) {
-
             return array();
         }
 
-        // Instancio el mapper de los valores a relacionar
-        // dentro de los modelos de relation
-        $dataMapperName = $this->_relatedMapper;
-        $dataMapper = new $dataMapperName;
-
-        // Recupero el nombre de la tabla, para poder llegar a la FK del modelo de relation
-        $tableRelatedName = $dataMapper->getDbTable()->getTableName();
-
-        $retStruct = array();
         $relationIndex = array();
 
-        // Itero en value, que supuestamente es un array de modelos de relación
         foreach ($value as $model) {
 
-            if ((!is_object($model))
-                || (!$model->getMapper() instanceof $this->_relationMapper)) {
-
-                $exceptionMessage = 'El valor ('.get_class($model).') ' .
-                        'no tiene una estructura válida para mapper multiselect ' .
-                        '('.$this->_relationMapper.')';
-                throw new Zend_Exception($exceptionMessage);
-
-            }
-
-            $fkName = false;
-
-            $parents = $model->getParentList();
-            foreach ($parents as $_fk => $parentData) {
-                if (strtolower($parentData['table_name']) == strtolower($tableRelatedName)) {
-                    if ($this->_relationProperty == $parentData['property']) {
-
-                        $fkName = $_fk;
-                        break;
-                    }
-                }
-            }
-
-            if (false === $fkName) {
-                throw new Zend_Exception('No se encuentra el valor de la FK.');
-            }
-
-            // Recuperamos el atributo de bd de la tabla de relación,
-            // que coincide con la clave foránea de la tabla relacionada
-            $columnName = $model->getMapper()->getDbTable()->getReferenceMap($fkName);
-
-            $relationAttributte = $model->columnNameToVar($columnName);
+            $relationAttributte = $this->_relatedProperty . 'Id';
 
             $retStruct = array(
-                'pk'=> $model->getPrimaryKey(),
+                'pk'=> $model->getId(),
                 'relatedId'=>$model->{'get' . ucfirst($relationAttributte)}()
             );
 
@@ -294,49 +251,34 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
      *
      * @see KlearMatrix_Model_Field_Multiselect_Abstract::filterValue()
      */
+    /**
+     * @param $value
+     * @param $original
+     * @return array
+     * @throws Exception
+     * @throws Zend_Exception
+     */
     public function filterValue($value, $original)
     {
         // Devolveremos un array de modelos de relaciones
-        $retRelations = array();
+        $retRelations =[];
 
-        // Recupero el nombre de la tabla, para poder llegar a la FK del modelo de relation
-        $dataMapperName = $this->_relatedMapper;
-        $dataMapper = new $dataMapperName;
-        $tableRelatedName = $dataMapper->getDbTable()->getTableName();
-
-        $fkColumn = false;
+        //En EditController se comprueba si llega un campo para guardarlo.
+        //Cuando se deja un multiselect vacío, no se enviaba el campo, por lo que no actualizaba
+        //En el template del multiselect siempre va un input[hidden] con el nombre del campo y value=""
+        //Ese valor siempre se desecha
+        $value = array_filter($value, function ($value) {
+            return !empty($value);
+        });
 
         if (is_array($original) && is_array($value)) {
 
+            $getter = 'get' . ucfirst($this->_relatedProperty) . 'Id';
             foreach ($original as $model) {
 
-                if ((!is_object($model))
-                    || (!$model->getMapper() instanceof $this->_relationMapper)
-                ) {
-
-                    $exceptionMessage = 'El valor ('.get_class($model).') ' .
-                            'no tiene una estructura válida para mapper ' .
-                            'multiselect ('.$this->_relationMapper.')';
-                    throw new Zend_Exception($exceptionMessage);
-                }
-
-                if (false === $fkColumn) {
-
-                    $fkColumn = $model->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
-                }
-
-                $getter = 'get' . ucfirst($fkColumn);
                 foreach ($value as $idx => $idRelatedItem) {
 
-                    //En EditController se comprueba si llega un campo para guardarlo.
-                    //Cuando se deja un multiselect vacío, no se enviaba el campo, por lo que no actualizaba
-                    //En el template del multiselect siempre va un input[hidden] con el nombre del campo y value=""
-                    //Ese valor siempre se desecha
-                    if (empty($idRelatedItem)) {
-                        continue;
-                    }
-
-                    if ($idRelatedItem ==  $model->{$getter}()) {
+                    if ($idRelatedItem == $model->{$getter}()) {
 
                         $retRelations[] = $model;
                         unset($value[$idx]);
@@ -345,27 +287,19 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             }
         }
 
-        $relationMapperName = $this->_relationMapper;
         if (is_array($value)) {
+
+            $relationEntityName = $this->_relation;
+            $relationModelReflectionClass = new \ReflectionClass($relationEntityName);
+            $relatedPropertySetter = 'set' . ucfirst($this->_relatedProperty) . 'Id';
 
             foreach ($value as $idRelated) {
 
-                //Ver comentario del foreach de $value de arriba
-                if (empty($idRelated)) {
-                    continue;
-                }
+                $relationModel = $relationModelReflectionClass
+                    ->newInstanceWithoutConstructor()
+                    ->createDTO();
 
-                $relationMapper = new $relationMapperName;
-                $relationModel = $relationMapper->loadModel(null);
-
-                if (false === $fkColumn) {
-
-                    $fkColumn = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
-                }
-
-                $setter = 'set' . ucfirst($fkColumn);
-
-                $relationModel->{$setter}($idRelated);
+                $relationModel->{$relatedPropertySetter}($idRelated);
                 $retRelations[] = $relationModel;
             }
         }
@@ -384,13 +318,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     protected function _getEditableFields()
     {
         $editableFieldList = $this->_parsedValues->getProperty("editableFields");
-
         $parsedEditableFields = array();
 
         if ($editableFieldList) {
-
             foreach ($editableFieldList as $name => $editableField) {
-
                 $parsedEditableFields[] = $this->_parseEditableField($name, $editableField);
             }
         }
@@ -419,6 +350,11 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
      */
     public function getCustomSearchCondition($values, $searchOps)
     {
+        /**
+         * @todo
+         */
+        throw new \Exception('TODO');
+
         $dataIds = array();
         // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
         // Cuando el campo va acompañado de un decorator autocomplete no disponemos de las ids, damos fe
@@ -432,11 +368,11 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             return '';
         }
 
-        $relationMapperName = $this->_relationMapper;
+        $relationMapperName = $this->_relation;
         $relationMapper = new $relationMapperName;
         $relationModel = $relationMapper->loadModel(null);
 
-        $dataMapperName = $this->_relatedMapper;
+        $dataMapperName = $this->_related;
         $dataMapper = new $dataMapperName;
         $tableRelatedName = $dataMapper->getDbTable()->getTableName();
 
@@ -510,9 +446,17 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         return $ret;
     }
 
+    /**
+     * @deprecated
+     */
     public function getRelationMapper()
     {
-        return $this->_relationMapper;
+        return $this->_relation;
+    }
+
+    public function getRelationEntity()
+    {
+        return $this->_relation;
     }
 
     public function getRelationProperty()
@@ -520,9 +464,21 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         return $this->_relationProperty;
     }
 
-    public function getRelatedMapper()
+    public function getRelatedProperty()
     {
-        return $this->_relatedMapper;
+        return $this->_relatedProperty;
     }
 
+    /**
+     * @deprecated
+     */
+    public function getRelatedMapper()
+    {
+        return $this->_related;
+    }
+
+    public function getRelatedEntity()
+    {
+        return $this->_related;
+    }
 }

@@ -38,7 +38,6 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         if ($GLOBALS['sf']) {
 
-            $dataGateway = \Zend_Registry::get('data_gateway');
             $entityName = $this->_item->getEntityClassName();
 
         } else if (!$GLOBALS['sf']) {
@@ -65,7 +64,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         // TODO: traducir mensaje?
         if ($GLOBALS['sf']) {
-            $model = $dataGateway->find($entityName, $pk);
+            $modelSpec = $this->_item->getModelSpec();
+            $model = $modelSpec->setPrimaryKey($pk)->getInstance();
         } else if (!$GLOBALS['sf']) {
             $model = $mapper->find($pk);
             // TODO: traducir mensaje?

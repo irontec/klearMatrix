@@ -24,7 +24,6 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
     protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
     {
-
         $model = $dataMapper->loadModel(false);
         $retAttrs = array();
         foreach ($extraConfig as $label => $field) {
@@ -59,8 +58,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             return;
         }
 
-        $mapperName = $this->_config->getProperty("config")->mapperName;
-        $dataMapper = new $mapperName;
+//        $mapperName = $this->_config->getProperty("config")->mapperName;
+        $entity = $this->_config->getProperty("config")->entity;
 
         if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
 
@@ -71,7 +70,13 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $where = $this->_getFilterWhere();
 
         $order = $this->_config->getProperty('config')->order;
-        $results = $dataMapper->fetchList($where, $order);
+        if ($order) {
+            $order = $order->toArray();
+        }
+
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $results = $dataGateway->findBy($entity, $where, $order);
+//        $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
     }
 
@@ -147,26 +152,26 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     {
         if ($results) {
 
-            $keyGetter = 'getPrimaryKey';
+            $keyGetter = 'getId';
             if ($keyProperty = $this->_config->getProperty("config")->get("keyProperty")) {
                 $keyGetter = 'get' . ucfirst($keyProperty);
             }
 
-            foreach ($results as $dataModel) {
-                $this->_keys[] = $dataModel->{$keyGetter}();
-                $this->_items[] = $this->_getItemValue($dataModel);
+            foreach ($results as $dto) {
+                $this->_keys[] = $dto->{$keyGetter}();
+                $this->_items[] = $this->_getItemValue($dto);
 
-                $this->_setValuesForExtraAttributes($dataModel, $dataModel->{$keyGetter}());
-                $this->_initVisualFilter($dataModel);
+                $this->_setValuesForExtraAttributes($dto, $dto->{$keyGetter}());
+                $this->_initVisualFilter($dto);
             }
         }
     }
 
-    protected function _getItemValue($dataModel)
+    protected function _getItemValue($dto)
     {
         $customValueMethod = $this->_config->getProperty('config')->customValueMethod;
         if ($customValueMethod) {
-            return $dataModel->$customValueMethod();
+            return $dto->$customValueMethod();
         }
 
         $fields = $this->_getFields();
@@ -179,8 +184,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         foreach ($fields as $fieldName) {
-            $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
-            $fieldValue = $dataModel->$getter();
+            $getter = 'get' . ucfirst($fieldName);
+            $fieldValue = $dto->$getter();
             if (isset($fieldConfig["mapValues"]) && isset($fieldConfig["mapValues"][$fieldName])) {
                 if (isset($fieldConfig["mapValues"][$fieldName][$fieldValue])) {
                     $fieldValue = Klear_Model_Gettext::gettextCheck($fieldConfig["mapValues"][$fieldName][$fieldValue]);

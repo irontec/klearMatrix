@@ -6,7 +6,6 @@
 
 class KlearMatrix_Model_MatrixResponse
 {
-
     /**
      * @var KlearMatrix_Model_ColumnCollection
      */
@@ -87,7 +86,9 @@ class KlearMatrix_Model_MatrixResponse
     protected $_showFilterForm = false;
     protected $_defaultValues = array();
 
-    //@var KlearMatrix_Model_ResponseItem;
+    /**
+     * @var KlearMatrix_Model_ResponseItem
+     */
     protected $_item;
 
     protected $_pk;
@@ -416,15 +417,58 @@ class KlearMatrix_Model_MatrixResponse
     protected function _getValueFromColumn($column, $result)
     {
         if ($column->isMultilang()) {
-            $rValue = array();
+            $response = array();
             foreach ($this->_columns->getLangs() as $_lang) {
-                $rValue[$_lang] = $result->{$column->getGetterName()}($_lang);
+                $response[$_lang] = $result->{$column->getGetterName()}($_lang);
             }
         } else {
-            $getterName = $column->getGetterName();
-            $rValue = $result->{$getterName}();
+
+            if ($GLOBALS['sf']) {
+                $type = $column->getType();
+                if ($type === 'multiselect') {
+
+                    $response = $this->_getMultiselectValueFromColumn($column, $result);
+
+                } else {
+                    $getterName = $column->getGetterName();
+                    $response = $result->{$getterName}();
+                }
+
+            } else {
+                $getterName = $column->getGetterName();
+                $response = $result->{$getterName}();
+            }
+
         }
-        return $rValue;
+        return $response;
+    }
+
+    /**
+     * @param $column
+     * @param $result
+     * @return mixed
+     */
+    protected function _getMultiselectValueFromColumn($column, $result)
+    {
+        $dataGateway = \Zend_Registry::get('data_gateway');
+
+        /**
+         * @var $adapter KlearMatrix_Model_Field_Multiselect_Mapper
+         */
+        $adapter = $column->getFieldConfig()->getAdapter();
+        $entityClass = $adapter->getRelationEntity();
+        $entityClassSegments = explode('\\', $entityClass);
+        $entityName = end($entityClassSegments);
+
+        $field = $entityName . '.' . $adapter->getRelationProperty();
+        $where = [
+            $field . ' = ' . $result->getId()
+        ];
+
+        return $dataGateway->findBy(
+            $adapter->getRelationEntity(),
+            $where
+        );
     }
 
     protected function _getCustomOptionsForResult($result)
@@ -656,5 +700,4 @@ class KlearMatrix_Model_MatrixResponse
 
         return $ret;
     }
-
 }

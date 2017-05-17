@@ -100,8 +100,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $tempFSystemNS = new Zend_Session_Namespace('File_Controller');
         $tempFSystemNS->{$result['filename']} = array(
-                                                    'path'=>$result['path'],
-                                                    'basename' => $result['basename']);
+            'path'=>$result['path'],
+            'basename' => $result['basename']
+        );
         $this->_clearOldFiles();
         $this->view->success = true;
         $this->view->code = $result['filename'];

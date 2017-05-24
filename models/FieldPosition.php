@@ -14,6 +14,7 @@ class KlearMatrix_Model_FieldPosition
     protected $_label;
     protected $_fields = array();
     protected $_colsPerRow = "auto";
+    protected $_collapsed = false;
 
     public function setConfig($config)
     {
@@ -27,10 +28,14 @@ class KlearMatrix_Model_FieldPosition
         if ($this->_config->getProperty("colsPerRow")) {
             $this->_colsPerRow = $this->_config->getProperty("colsPerRow");
         }
+        if ($this->_config->getProperty("collapsed")) {
+            $this->_collapsed = (boolean) $this->_config->getProperty("collapsed");
+        }
+
         if (!isset($this->_config->getRaw()->fields)) {
             throw new \Klear_Exception_Default('No config found for "fields"');
         }
-        
+
         $numberOfFields = 0;
 
         foreach ($this->_config->getRaw()->fields as $field => $active) {
@@ -61,6 +66,7 @@ class KlearMatrix_Model_FieldPosition
         return array(
             'colsPerRow'=>$this->_colsPerRow,
             'label'=>$this->_label,
+            'collapsed' => $this->_collapsed,
             'fields'=>$this->_fields
         );
     }

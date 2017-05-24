@@ -17,6 +17,11 @@ msgstr ""
 "X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: .\n"
 
+#: assets/js/klearMatrix.compiled.js:322
+#: assets/js/plugins/jquery.klearmatrix.edit.js:371
+msgid "Show more settings"
+msgstr "Configuración avanzada"
+
 #: controllers/CloneController.php:51 controllers/CloneController.php:131
 msgid "Record not found. Could not clone."
 msgstr "Elemento no encontrado. No es posible clonarlo."

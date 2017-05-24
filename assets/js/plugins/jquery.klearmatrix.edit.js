@@ -71,13 +71,18 @@
 
             $.console.info("[" + __namespace__ + "] _registerReDispatchSavers");
             var self = this;
+            var panel = $(self.element.klearModule("getPanel"));
 
             this.element.klearModule("option", "PreDispatchMethod", function() {
+                // Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
+
 
                 $.console.info("[" + __namespace__ + "] PreDispatchMethod exec");
-
-                // Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
+                var isCollapsed = panel.find('div.expand').length > 0;
                 this.savedValues = {};
+                this.savedStates = {
+                    'collapsed': isCollapsed
+                };
                 var _selfklear = this;
 
                 $("select.changed, input.changed, textarea.changed", self.options.theForm).not(".ignoreManualChange").each(function() {
@@ -91,6 +96,12 @@
 
                 if (!this.savedValues) {
                     return;
+                }
+
+                var hasSavesStates = (typeof this.savedStates !== 'undefined');
+                if (hasSavesStates && this.savedStates.collapsed === false) {
+                    panel.find('div.expand').click();
+                    this.savedStates.collapsed = true;
                 }
 
                 this.options.theForm = $("form", $(this.options.panel));
@@ -344,8 +355,33 @@
             this._initSavedValueHashes();
 
             if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
-                for (var i in this.options.data.fixedPositions) {
-                    this._joinFields(this.options.data.fixedPositions[i]);
+
+                var fixedPositions = this.options.data.fixedPositions;
+                var hasCollapsedFieldsets = false;
+                var hasVisibleFields;
+
+                for (var i in fixedPositions) {
+                    hasVisibleFields = this._joinFields(fixedPositions[i]);
+                    hasCollapsedFieldsets = hasCollapsedFieldsets
+                        || (hasVisibleFields && fixedPositions[i].collapsed);
+                }
+
+                if (hasCollapsedFieldsets) {
+
+                    var togglerText = $.translate("Show more settings");
+                    var icon = '<span class="ui-silk inline ui-silk-application-form-add"></span>';
+                    var toggler = $('<div class="expand"><p>'+ icon + ' ' + togglerText +'</p></div>');
+
+                    toggler.on('click', function () {
+                        $(this).remove();
+                        $(_self.klearModule("getPanel"))
+                            .find("form > fieldset > fieldset")
+                            .show();
+                    });
+
+                    $(this.element.klearModule("getPanel"))
+                        .find("form > fieldset")
+                        .append(toggler);
                 }
             }
 
@@ -1068,6 +1104,7 @@
             var $container = this.element.klearModule("getPanel");
             var $elements = [];
             var $field = null;
+
             for (var idx in fields) {
                 if (fields[idx]['field'].match(/^__empty/)) {
                     $field = $("<div class='container ui-widget-content' data-empty='" + fields[idx]['field'] + "' />");
@@ -1082,29 +1119,46 @@
                 $elements.push($field);
             }
             if ($elements.length == 0) {
-                return;
+                return false;
             }
 
             var widthPercent = Math.floor(100/fixedFields.colsPerRow) * 0.9;
-            var $superContainer = $("<fieldset />").addClass("superContainer ui-widget-content ui-corner-all");
+
+            var fieldsetClasses = 'superContainer ui-widget-content ui-corner-all';
+            if (fixedFields.collapsed) {
+                fieldsetClasses += ' collapsed';
+            }
+            var $superContainer = $("<fieldset />").addClass(fieldsetClasses);
             if (fixedFields.label) {
                 $("<legend>" + fixedFields.label + "</label>").addClass("ui-widget-content ui-corner-all").appendTo($superContainer);
             }
+
             if ($elements[0].data("empty") && $elements[1]) {
                 $elements[1].before($superContainer);
             } else {
             	$elements[0].before($superContainer);
             }
+
             $.each($elements, function() {
                 $(this).addClass("containerFixed").appendTo($superContainer);
                 var curPercent = widthPercent * $(this).data("numberWidth");
                 $(this).css({width: curPercent + '%'});
             });
-            // Elementos que necesiten ser "actualizados", despues de cambiar su contenedor
-            // De momento sólo se ha detectado los multiselect (que deben resizearse).
-            var toBerefreshedElements = ['select.multiselect'];
-            $(toBerefreshedElements.join(','), $superContainer).trigger("postmanualchange");
-        }
+
+            if (fixedFields.collapsed) {
+                $superContainer.hide();
+            }
+
+            this._refresh($superContainer);
+            return true;
+        },
+
+    _refresh: function ($superContainer) {
+        // Elementos que necesiten ser "actualizados", despues de cambiar su contenedor
+        // De momento sólo se ha detectado los multiselect (que deben resizearse).
+        var toBerefreshedElements = ['select.multiselect'];
+        $(toBerefreshedElements.join(','), $superContainer).trigger("postmanualchange");
+    }
     });
     $.widget.bridge("klearMatrixEdit", $.klearmatrix.edit);
 })(jQuery);

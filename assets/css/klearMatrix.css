@@ -216,6 +216,16 @@ dl.multiLanguage dd.copied span.copied {
     vertical-align: top;
 }
 
+.klearMatrix_form fieldset div.expand p {
+    cursor: pointer;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.klearMatrix_form fieldset div.expand p span.ui-silk {
+    vertical-align: bottom;
+}
+
 .klearMatrix_form fieldset.superContainer {
     padding:0.4em 0;
     margin: 1.4em 0 0.4em 0;

@@ -37,9 +37,11 @@
             $container.append($appliedTemplate);
             var self = this;
 
-            $container.one("focusin",function(e) {
+            $container.off('focusin').on('focusin', function(e) {
 
                 $.console.info("[" + __namespace__ + "] focusin " + self.options.data.title);
+                $(this).off('focusin');
+
                 self.element.klearModule("showOverlay");
 
                 e.preventDefault();
@@ -74,10 +76,10 @@
             var panel = $(self.element.klearModule("getPanel"));
 
             this.element.klearModule("option", "PreDispatchMethod", function() {
+
                 // Se ejecutará en el contexto de klear.module, el post dispatch será un klearmatrix.edit nuevo
-
-
                 $.console.info("[" + __namespace__ + "] PreDispatchMethod exec");
+
                 var isCollapsed = panel.find('div.expand').length > 0;
                 this.savedValues = {};
                 this.savedStates = {
@@ -225,7 +227,6 @@
                         post : postData
                     },
                     function(data) {
-
                         if (data.error) {
                             self.standardError(data.error);
                         } else {

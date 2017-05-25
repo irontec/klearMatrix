@@ -37,9 +37,10 @@
 
             var self = this;
 
-            $container.one("focusin", function(e) {
+            $container.off('focusin').on('focusin', function(e) {
 
-            	$.console.info("["+__namespace__+"] focusin " + self.options.data.title);
+                $.console.info("["+__namespace__+"] focusin " + self.options.data.title);
+                $(this).off('focusin');
 
                 self.element.klearModule("showOverlay");
 

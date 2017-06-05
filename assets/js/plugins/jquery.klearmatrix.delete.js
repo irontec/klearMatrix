@@ -134,7 +134,7 @@
                     var deleteDialogButton = $(".deleteDialogButton", $(this.element).parent());
 
                     $secureDeleteInput.on('keyup', function () {
-                        var isValid = ($(this).data('expected-value') === $(this).val());
+                        var isValid = ($(this).data('expected-value').toString() === $(this).val());
 
                         if (isValid) {
                             deleteDialogButton.trigger('enable');

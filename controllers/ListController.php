@@ -275,8 +275,23 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             }
 
             foreach ($order as $key => $val) {
-                $order[$key] .= ' '. $orderType;
-                $order[$key] = new \Zend_Db_Expr($order[$key]);
+
+                if ($GLOBALS['sf']) {
+                    unset($order[$key]);
+
+                    if (stripos($val, 'IDENTITY') || stripos($val, 'AS HIDDEN')) {
+                        $order[$val] = $orderType;
+                    } else {
+                        $key = $this->_item->getEntityName() . '.' . $val;
+                        $order[$key] = $orderType;
+                    }
+
+                } else {
+
+                    $order[$key] .= ' '. $orderType;
+                    $order[$key] = new \Zend_Db_Expr($order[$key]);
+                }
+
             }
 
         } else {

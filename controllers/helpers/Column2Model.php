@@ -96,6 +96,11 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
                 try {
                     if ($GLOBALS['sf']) {
 
+                        $field = Klear_Model_QueryHelper::replaceSelfReferences(
+                            $this->cleanIdentity($field),
+                            ''
+                        );
+
                         $setter = 'set' . ucfirst($field);
                         if (!method_exists($model, $setter)) {
                             $setter .= 'Id';
@@ -113,9 +118,20 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         }
     }
 
-
     public function direct($model, KlearMatrix_Model_Column $column)
     {
         return $this->column2Model($model, $column);
+    }
+
+
+    private function cleanIdentity($field)
+    {
+        preg_match('/identity\(([^ \)]+)\)/i', $field, $matches);
+
+        if (isset($matches[1])) {
+            return $matches[1];
+        }
+
+        return $field;
     }
 }

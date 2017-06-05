@@ -43,7 +43,11 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         $order = $this->_getRelatedOrder();
 
         $dataGateway = \Zend_Registry::get('data_gateway');
-        $results = $dataGateway->findBy($this->_related, $where, $order);
+        $results = $dataGateway->findBy(
+            $this->_related,
+            $where,
+            $order
+        );
 
         if ($results) {
 
@@ -166,12 +170,18 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 throw new Exception('Filters must implement KlearMatrix_Model_Field_Multiselect_Filter_Interface.');
             }
 
-            /**
-             * @todo
-             */
-            throw new \Exception('TODO');
-            return $this->_getFilterCondition($filter);
+            $where = $this->_getFilterCondition($filter);
+            if (!empty($where)) {
+                $entityNameSegments = explode('\\', $this->_related);
+                $where[0] = \Klear_Model_QueryHelper::replaceSelfReferences(
+                    $where[0],
+                    end($entityNameSegments)
+                );
+            }
+
+            return $where;
         }
+
         return null;
     }
 

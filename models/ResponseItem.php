@@ -642,8 +642,7 @@ class KlearMatrix_Model_ResponseItem
          * Si es una pantalla con filtro de ventana padre no mostramos el campo de filtrado
         */
         if ($this->isFilteredScreen()) {
-
-            $this->addFieldToBlackList($this->_filteredField);
+            $this->addFieldToBlackList(lcfirst($this->_filteredField) . 'Id');
         }
 
         /*
@@ -653,6 +652,12 @@ class KlearMatrix_Model_ResponseItem
         if ($this->hasForcedValues()) {
 
             foreach (array_keys($this->getForcedValues()) as $field) {
+
+                $field = Klear_Model_QueryHelper::replaceSelfReferences(
+                    $field,
+                    '',
+                    'Id'
+                );
 
                 $this->addFieldToBlackList($field);
             }
@@ -1033,7 +1038,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function getFilteredCondition($value)
     {
-        return $this->_getCondArray($value, $value, 'filtered');
+        return $this->_getCondArray(lcfirst($this->_filteredField), $value, 'filtered');
     }
 
     public function hasForcedValues()
@@ -1052,15 +1057,12 @@ class KlearMatrix_Model_ResponseItem
         return $forcedValueConds;
     }
 
-    protected function _prependFieldEntity($field)
+    protected function _setSelfReferences($field)
     {
-        $fieldTemplate = '%s';
-        if ($GLOBALS['sf']) {
-            $entityName = $this->getEntityName();
-            $fieldTemplate = ' IDENTITY('. $entityName .'.%s)';
-        }
-
-        return sprintf($fieldTemplate, $field);
+        return Klear_Model_QueryHelper::replaceSelfReferencesOrPrefix(
+            $field,
+            $this->getEntityName()
+        );
     }
 
 
@@ -1112,19 +1114,11 @@ class KlearMatrix_Model_ResponseItem
     {
         if ($GLOBALS['sf']) {
 
-            /**
-             * @todo field == $value on filtered conditions ¿?
-             */
-            if ($paramName == 'filtered') {
-
-                return [
-                    $field. ' = ' .$value,
-                    []
-                ];
+            $doctrineFld = $this->_setSelfReferences($field);
+            $namedParam = preg_replace('#identity\(([^\)]+)\)#i', '${1}', $field);
+            if (strpos($namedParam, '::') !== false) {
+                $namedParam = substr($namedParam, strpos($namedParam, '::') + 2);
             }
-
-            $doctrineFld = $this->_prependFieldEntity($field);
-            $namedParam = trim(str_replace('.', '', $field));
 
             if (is_null($value) || $value == 'NULL') {
                 return $doctrineFld . ' is NULL';

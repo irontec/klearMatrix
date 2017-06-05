@@ -11,7 +11,7 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
         $where = array();
 
         if ($responseItem->hasFilterClass()) {
-            $where[] = $responseItem->getFilterClassCondition();
+            $where += $responseItem->getFilterClassCondition();
         }
 
         if ($responseItem->hasRawCondition()) {
@@ -19,7 +19,12 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
         }
 
         if ($responseItem->isFilteredScreen()) {
-            $where[] = $responseItem->getFilteredCondition($responseItem->getRouteDispatcher()->getParam('pk'));
+            $pk = $responseItem->getRouteDispatcher()->getParam('pk');
+            if ($pk === 'error') {
+                $pk = 0;
+            }
+
+            $where[] = $responseItem->getFilteredCondition($pk);
         }
 
         if ($responseItem->hasForcedValues()) {
@@ -31,7 +36,6 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
         $whereProccessor = new KlearMatrix_Model_FilterProcessor;
         $whereProccessor
             ->setLogger($logger)
-            ->setModel($model)
             ->setResponseData($responseData)
             ->setResponseItem($responseItem)
             ->setRequest($request)
@@ -41,26 +45,36 @@ class KlearMatrix_Controller_Helper_CreateListWhere extends Zend_Controller_Acti
             $where[] = $whereProccessor->getCondition();
         }
 
-
         if (count($where) == 0) {
-
             $where = null;
-
         } else {
 
             $values = $expressions = array();
-
             foreach ($where as $condition) {
+
+                if (empty($condition)) {
+                    continue;
+                }
 
                 if (is_array($condition)) {
                     $expressions[] = $condition[0];
-                    $values += $condition[1];
+                    if (isset($condition[1])) {
+                        $values += $condition[1];
+                    }
                 } else {
                     $expressions[] = $condition;
                 }
             }
 
-            $where = array(implode(" AND ", $expressions), $values);
+            $parsedCondition = Klear_Model_QueryHelper::replaceSelfReferences(
+                implode(' AND ', $expressions),
+                $responseItem->getEntityName()
+            );
+
+            $where = array(
+                $parsedCondition,
+                $values
+            );
         }
 
         return $where;

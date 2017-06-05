@@ -29,7 +29,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
         }
 
         if ($value instanceof \Datetime) {
-            $value = $value->format('Y-m-d H:i:s');
+            $value = $value->format('H:i:s');
         }
 
         $time = new Iron_Time($value);

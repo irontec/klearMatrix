@@ -20,9 +20,23 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
 
     protected function _quoteIdentifier($fieldName)
     {
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        if ($dbAdapter) {
-           return $dbAdapter->quoteIdentifier($fieldName);
+        if ($GLOBALS['sf']) {
+
+            $dto = $this->_column->getModel();
+
+            $dtoClass = get_class($dto);
+            $entityClass = substr($dtoClass, 0, -3);
+            $entityClassSegments = explode('\\', $entityClass);
+            $entity = end($entityClassSegments);
+
+            return "IDENTITY($entity.". substr($fieldName, 0, -2) .")";
+
+        } else {
+
+            $dbAdapter = Zend_Db_Table::getDefaultAdapter();
+            if ($dbAdapter) {
+                return $dbAdapter->quoteIdentifier($fieldName);
+            }
         }
 
         return $fieldName;

@@ -22,16 +22,11 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     protected $_js = array(
     );
 
-    protected function _parseExtraAttrs(Zend_Config $extraConfig, $dataMapper)
+    protected function _parseExtraAttrs(Zend_Config $extraConfig)
     {
-        $model = $dataMapper->loadModel(false);
         $retAttrs = array();
         foreach ($extraConfig as $label => $field) {
-            if (!$varName = $model->columnNameToVar($field)) {
-                continue;
-            }
-
-            $retAttrs[$label] = 'get' . ucfirst($varName);
+            $retAttrs[$label] = 'get' . ucfirst($field);
         }
         return $retAttrs;
     }
@@ -64,7 +59,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
 
             $extraAttrs = $this->_config->getProperty('config')->extraDataAttributes;
-            $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs, $dataMapper);
+            $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs);
         }
 
         $where = $this->_getFilterWhere();
@@ -75,9 +70,29 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         $dataGateway = \Zend_Registry::get('data_gateway');
+
+        if (isset($where[0])) {
+            $where[0] = $this->_replaceSelfReferences($where[0]);
+        }
+
         $results = $dataGateway->findBy($entity, $where, $order);
-//        $results = $dataMapper->fetchList($where, $order);
         $this->_setOptions($results);
+    }
+
+    protected function _replaceSelfReferences($where)
+    {
+        return Klear_Model_QueryHelper::replaceSelfReferences(
+            $where,
+            $this->_getEntityName()
+        );
+    }
+
+    protected function _getEntityName()
+    {
+        $className = $this->_config->getProperty("config")->entity;;
+        $entitySegments = explode('\\', $className);
+
+        return end($entitySegments);
     }
 
     /**
@@ -301,12 +316,29 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $fieldName = $matches[1];
         }
 
-        $mapperName = $this->_config->getProperty("config")->mapperName;
-        $dataMapper = new $mapperName;
-        $results = $dataMapper->fetchList('', $fieldName);
+        if ($GLOBALS['sf']) {
+
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $entityClass = $this->_config->getProperty("config")->entity;
+            $entityClassSegments = explode('\\', $entityClass);
+            $entity = end($entityClassSegments);
+            $order = [];
+            foreach ($fieldName as $field) {
+                $key = $entity . '.' . $field;
+                $order[$key] = 'ASC';
+            }
+            $results = $dataGateway->findBy($entityClass, null, $order);
+
+        } else {
+
+            $mapperName = $this->_config->getProperty("config")->mapperName;
+            $dataMapper = new $mapperName;
+            $results = $dataMapper->fetchList('', $fieldName);
+
+        }
 
         foreach ($results as $result) {
-            $values[] = $result->getPrimaryKey();
+            $values[] = $result->getId();
         }
 
         if (! count($values)) {
@@ -314,11 +346,24 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         $priority = 1;
-        $response =  '(CASE '. $this->_quoteIdentifier($this->_column->getDbFieldName()) .' ';
-        foreach ($values as $posibleResult) {
-            $response .= " WHEN '" . $posibleResult . "' THEN " . $priority++;
+        $identifier =  $this->_quoteIdentifier($this->_column->getDbFieldName());
+
+        if ($GLOBALS['sf']) {
+
+            $response =  'CASE ';
+            foreach ($values as $possibleResult) {
+                $response .= " WHEN $identifier = '" . $possibleResult . "' THEN " . $priority++;
+            }
+            $response .= ' ELSE '. $priority .' END AS HIDDEN ORD';
+
+        } else {
+
+            $response =  'CASE '. $identifier;
+            foreach ($values as $possibleResult) {
+                $response .= " WHEN '" . $possibleResult . "' THEN " . $priority++;
+            }
+            $response .= ' END)';
         }
-        $response .= ' END)';
 
         return $response;
     }

@@ -6,12 +6,20 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
     const APPLY_TO_LIST_FILTERING = true;
 
     const DYNAMIC_DATA_LOADING = true;
-
-
     protected $_commandConfiguration;
 
+    /**
+     * @deprecated
+     */
     protected $_mapper;
+    /**
+     * @deprecated
+     */
     protected $_model;
+
+    protected $_dataGateway;
+
+    protected $_entity;
     protected $_pkField;
     protected $_labelField;
     protected $_fields;
@@ -30,10 +38,8 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
     {
         $mainRouter = $this->_request->getParam("mainRouter");
         $this->_commandConfiguration = $mainRouter->getCurrentCommand()->getConfig()->getRaw()->autocomplete;
-
-        $this->_mapperName = $this->_commandConfiguration->mapperName;
-        $this->_mapper = new $this->_mapperName;
-        $this->_model = $this->_mapper->loadModel(null);
+        $this->_entity = $this->_commandConfiguration->entity;
+        $this->_dataGateway = \Zend_Registry::get('data_gateway');
 
         $this->_labelField = $this->_commandConfiguration->label;
         $this->_pkField = $this->_model->getPrimaryKeyName();
@@ -55,20 +61,18 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             }
         }
 
-
-
         foreach ($this->_results as $record) {
 
             $replace = array();
             foreach ($this->_fields as $fieldName) {
-                $getter = 'get' . ucfirst($record->columnNameToVar($fieldName));
+                $getter = 'get' . ucfirst($fieldName);
                 $replace['%' . $fieldName . '%'] = $record->$getter();
             }
 
             $templatedValue = str_replace(array_keys($replace), $replace, $this->_fieldsTemplate);
 
-            $options["'".$record->getPrimaryKey()."'"] = array(
-                'id' => $record->getPrimaryKey(),
+            $options["'".$record->getId()."'"] = array(
+                'id' => $record->getId(),
                 'value' => strip_tags($templatedValue),
                 'label' => $templatedValue,
             );
@@ -87,16 +91,25 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
             if ($maxReached === true && count($this->_results) == $this->_limit) {
                 $this->_view->totalItems = $this->_view->translate("More than %d items found", $this->_limit);
-                $this->_view->totalItems .= ' ' . $this->_view->translate("(showing %d)", $this->_limit);
+                $this->_view->totalItems .= ' ' . $this->_view->translate("(showing %d)KamAccCdrsBrandList", $this->_limit);
             }
         }
 
         $this->_view->results = $options;
     }
 
+    protected function _getEntityName()
+    {
+        $entityClassSegments = explode('\\', $this->_entity);
+        return end($entityClassSegments);
+    }
+
     protected function _runReverse()
     {
-        $this->_results = $this->_mapper->findByField($this->_pkField, $this->_request->getParam("value"));
+        $this->_results = $this->_mapper->findByField(
+            $this->_pkField,
+            $this->_request->getParam("value")
+        );
         $this->_totalItems = sizeof($this->_results);
     }
 
@@ -113,10 +126,10 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         }
 
         if (isset($this->_commandConfiguration->order)) {
-            $order = $this->_commandConfiguration->order;
-            if (strpos($order, ',')) {
-                $order = explode(',', $order);
-            }
+            $order = $this->_commandConfiguration->order->toArray();
+//            if (strpos($order, ',')) {
+//                $order = explode(',', $order);
+//            }
         }
 
         $condition = '';
@@ -166,30 +179,45 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         }
 
         foreach ( $this->_fields as $field ) {
-            $query[] = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($field) . ' LIKE ?';
-            $stringLike = str_replace(" ", "%",$searchTerm);
+            $query[] = 'self::' . $field . ' LIKE :' . $field;
+            $stringLike = str_replace(' ', '%', $searchTerm);
             $params[] = $startParam . $stringLike . $endParam;
         }
 
         $query = '('. implode(" OR ", $query) .')';
         if (!$this->_commandConfiguration->ignoreWhereDefault) {
             $where =  array(
-                    $condition . $query,
-                    $params
+                $condition . $query,
+                $params
             );
         } else {
             $where =  $condition;
         }
 
-        $records = $this->_mapper->fetchList($where, $order, $this->_limit);
+        foreach ($where as $key => $value) {
+
+            if (!is_string($value)) {
+                continue;
+            }
+            $where[$key] = str_replace('self::', $this->_getEntityName() . '.', $value);
+        }
+
+        $records = $this->_dataGateway->findBy(
+            $this->_entity,
+            $where,
+            $order,
+            $this->_limit
+        );
+
+//        $records = $this->_mapper->fetchList($where, $order, $this->_limit);
 
         $this->_results = array();
 
         foreach ($records as $record) {
-            $this->_results[$record->getPrimaryKey()] = $record;
+            $this->_results[$record->getId()] = $record;
         }
 
-        $this->_totalItems = $this->_mapper->countByQuery($where);
+        $this->_totalItems = $this->_dataGateway->countBy($this->_entity, $where);
     }
 
     protected function _getFields()

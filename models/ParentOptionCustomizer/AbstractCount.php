@@ -85,7 +85,10 @@ abstract class KlearMatrix_Model_ParentOptionCustomizer_AbstractCount
         if ($GLOBALS['sf']) {
             $dataGateway = \Zend_Registry::get('data_gateway');
             $entityName = $item->getEntityClassName();
-            $resultCount = $dataGateway->countBy($entityName, $where);
+            $resultCount = $dataGateway->countBy(
+                $entityName,
+                $where
+            );
         } else if (!$GLOBALS['sf']) {
             $resultCount = $mapper->countByQuery($where);
         }

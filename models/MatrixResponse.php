@@ -419,7 +419,8 @@ class KlearMatrix_Model_MatrixResponse
         if ($column->isMultilang()) {
             $response = array();
             foreach ($this->_columns->getLangs() as $_lang) {
-                $response[$_lang] = $result->{$column->getGetterName()}($_lang);
+                $getterName = $column->getGetterName() . ucfirst($_lang);
+                $response[$_lang] = $result->{$getterName}();
             }
         } else {
 

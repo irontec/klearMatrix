@@ -426,8 +426,11 @@
                 switch(column.type){
 
                     case 'select':
-                        
+
                         var _curVal = values[column.id];
+                        if (typeof(_curVal) === 'boolean') {
+                            _curVal = _curVal ? 1 : 0;
+                        }
                         
                         var selectConfig = column.config;
                         

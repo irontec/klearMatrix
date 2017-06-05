@@ -153,10 +153,10 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
         if ($results) {
             foreach ($results as $dataModel) {
-                $this->_keys[] = $dataModel->getPrimaryKey();
+                $this->_keys[] = $dataModel->getId();
                 $this->_items[] = $this->_getItemValue($dataModel);
 
-                $this->_setValuesForExtraAttributes($dataModel, $dataModel->getPrimaryKey());
+                $this->_setValuesForExtraAttributes($dataModel, $dataModel->getId());
 
             }
         }
@@ -174,13 +174,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
     public function getValue($model)
     {
-        if (!$GLOBALS['sf']) {
-            $mapperName = $this->_config->getProperty("config")->mapperName;
-            $dataMapper = new $mapperName;
-        }
-
         if (isset($this->_config->getProperty('config')->extraDataAttributes)) {
-
             $extraAttrs = $this->_config->getProperty('config')->extraDataAttributes;
             $this->_extraDataAttributes = $this->_parseExtraAttrs($extraAttrs, $dataMapper);
         }
@@ -220,7 +214,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
         if ($GLOBALS['sf']) {
             $dataGateway = \Zend_Registry::get('data_gateway');
-            $entity = $this->_config->getProperty("config")->entityClass;
+            $entity = $this->_config->getProperty("config")->entity;
             $results = $dataGateway->findBy($entity, [$where]);
         } else if (!$GLOBALS['sf']) {
             $results = $dataMapper->fetchList($where, $order);
@@ -412,7 +406,11 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $dataModels = array();
         foreach ($results as $dataModel) {
 //             $currentLanguage = $dataModel->getCurrentLanguage();
-            $dataMlFields = array_keys($dataModel->getMultiLangColumnsList());
+
+            /**
+             * @todo
+             */
+            $dataMlFields = []; //array_keys($dataModel->getMultiLangColumnsList());
             $fieldsValues = array();
             foreach ($fields as $key => $value) {
 
@@ -420,25 +418,32 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
 
                 if (is_object($value)) {
 
-                    if (in_array($fieldName, $dataMlFields)) {
-                        $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName)).ucfirst($currentLanguage);
-                    } else {
-                        $getter = 'get' . ucfirst($dataModel->columnNameToVar($fieldName));
-                    }
-
                     $fieldConfig = new Klear_Model_ConfigParser();
                     $fieldConfig->setConfig($value);
 
-                    if ($fieldConfig->getProperty("mapperName")) {
-                        $mapperName = $fieldConfig->getProperty("mapperName");
+                    if (in_array($fieldName, $dataMlFields)) {
+                        $getter = 'get' . ucfirst($fieldName) . ucfirst($currentLanguage);
+                    } else if ($fieldConfig->getProperty("entity")) {
+                        $getter = 'get' . ucfirst($fieldName) . 'Id';
+                    } else {
+                        $getter = 'get' . ucfirst($fieldName);
+                    }
+
+                    if ($fieldConfig->getProperty("entity")) {
+                        $entityClass = $fieldConfig->getProperty("entity");
                         $id = $dataModel->$getter();
-                        $targetMapper = new $mapperName();
-                        $targetModel = $targetMapper->find($id);
+
+                        $dataGateway = \Zend_Registry::get('data_gateway');
+                        $targetModel = $dataGateway->find($entityClass, $id);
+
                         if (is_null($targetModel)) {
                             $fieldsValues[] = $id;
                             continue;
                         }
-                        $targetMlFields = array_keys($targetModel->getMultiLangColumnsList());
+                        /**
+                         * @todo
+                         */
+                        $targetMlFields = []; //array_keys($targetModel->getMultiLangColumnsList());
                         $mapperField = $fieldConfig->getProperty("field");
                         if (is_object($mapperField)) {
                             $pattern = $fieldConfig->getProperty("pattern");

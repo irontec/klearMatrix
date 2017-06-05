@@ -20,8 +20,8 @@ class KlearMatrix_Model_ModelSpecification
         $this->_config->setConfig($config);
 
         $this->_class = $this->_config->getProperty("class");
-        $this->_dto = $this->_config->getRequiredProperty("dto");
         $this->_entity = $this->_config->getRequiredProperty("entity");
+        $this->_dto = $this->_entity . 'DTO';
 
         if ($GLOBALS['sf']) {
             $this->_instance = new $this->_dto;
@@ -94,7 +94,7 @@ class KlearMatrix_Model_ModelSpecification
         $response = [];
         foreach ($this->getFields() as $fieldName => $spec) {
             if (isset($spec->isMultilang) && $spec->isMultilang) {
-                $response[] = $fieldName;
+                $response[$fieldName] = true;
             }
         }
 

@@ -1,24 +1,43 @@
-{{if (description)}}
-    <p>${$item.getTitle(description)}</p>
-{{else}}
-    <p><?php echo $this->translate('Do you want delete this record?'); ?></p>
-{{/if}}
+${( $data.secureDeleteValue = false ),''}
 
-{{each(idx,row) values}}
+{{if ($data.secureDelete && values.length > 1)}}
+    <p>
+        <?php echo $this->translate('Multiple choice delete is not allowed'); ?>
+        <input type="hidden" id="secure-delete-input" data-expected-value="forbidden" style="width:95%;" />
+    </p>
+{{else}}
+    {{if (description)}}
+    <p>${$item.getTitle(description)}</p>
+    {{else}}
+    <p><?php echo $this->translate('Do you want delete this record?'); ?></p>
+    {{/if}}
+    {{each(idx,row) values}}
     <p class="deleteable-item" data-id="${$item.getIndex(row,pk)}">
-    {{each(colIdx,column) columns}}
+        {{each(colIdx,column) columns}}
         {{if (column['default'])}}
-            ${name}:
-            <strong>{{html $item.getStringIndexFromColumn(row,column)}}</strong>
+        ${name}:
+        <strong>{{html $item.getStringIndexFromColumn(row,column)}}</strong>
+        {{if ($data && $data.secureDelete)}}
+        ${( $data.secureDeleteValue = $item.getStringIndexFromColumn(row,column) ),''}
         {{/if}}
-    {{/each}}
+        {{/if}}
+        {{/each}}
         <em>(#${$item.getIndex(row,pk)})</em>
     </p>
-{{/each}}
+    {{if ($data.secureDeleteValue)}}
+    <p class="secure-delete-item deleteable-item">
+        <?php echo $this->translate('Please type the item name, as shown in bold font above, <br />to continue'); ?>
+        <br />
+        <input type="text" id="secure-delete-input"  data-expected-value="${ $data.secureDeleteValue }" style="width:95%;" />
+    </p>
+    {{/if}}
+    {{/each}}
     <form class="klearMatrix_form autoclose-dialog">
-    <span class="action autoClose ">
-        <span>
-            <input type="checkbox" name="autoclose" {{if (autoClose)}} checked="checked"{{/if}}/><?php echo $this->translate('Close automatically'); ?>
-        </span>
-    </span>
+            <span class="action autoClose ">
+                <span>
+                    <input type="checkbox" name="autoclose" {{if (autoClose)}} checked="checked"{{/if}}/><?php echo $this->translate('Close automatically'); ?>
+                </span>
+            </span>
     </form>
+{{/if}}
+

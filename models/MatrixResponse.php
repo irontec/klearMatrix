@@ -28,6 +28,7 @@ class KlearMatrix_Model_MatrixResponse
     protected $_parentData = false;
 
     protected $_disableSave = false;
+    protected $_secureDelete = false;
     protected $_disableAddAnother = false;
     protected $_autoClose = false;
     protected $_fullWidth = false;
@@ -48,6 +49,7 @@ class KlearMatrix_Model_MatrixResponse
         'parentItem',
         'parentPk',
         'disableSave',
+        'secureDelete',
         'disableAddAnother',
         'autoClose',
         'fullWidth',
@@ -275,6 +277,13 @@ class KlearMatrix_Model_MatrixResponse
         return $this;
     }
 
+
+    public function setSecureDelete($secureDelete)
+    {
+        $this->_secureDelete = (bool) $secureDelete;
+        return $this;
+    }
+
     public function setDisableAddAnother($disableAddAnother)
     {
         $this->_disableAddAnother = $disableAddAnother;
@@ -448,6 +457,8 @@ class KlearMatrix_Model_MatrixResponse
 
     public function parseItemAttrs(KlearMatrix_Model_ResponseItem $item)
     {
+
+
         $this
             ->setTitle($item->getTitle())
             ->setDescription($item->getDescription())
@@ -456,6 +467,7 @@ class KlearMatrix_Model_MatrixResponse
             ->setActionMessages($item->getActionMessages())
             ->setDisableAddAnother($item->getDisableAddAnother())
             ->setDisableSave($item->getDisableSave())
+            ->setSecureDelete($item->getSecureDelete())
             ->setPreconfiguredFilters($item->getPreconfiguredFilters())
             ->setFixedPositions($item->getFixedPositions())
             ->setFullWidth($item->getFullWidth())

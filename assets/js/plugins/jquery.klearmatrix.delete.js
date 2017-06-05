@@ -20,7 +20,7 @@
             var $refParent = $(this.options.parent);
             var $self = $(this.element);
             var self = this;
-            
+
             var _ids = [];
             $(".deleteable-item",$(moduleDialogCaller)).each(function() {
                 _ids.push($(this).data("id"));
@@ -47,21 +47,21 @@
                         } else {
                             if (!$.isArray(data.pk)) data.pk = [data.pk];
                             var lastInterval, callback = null;
-                            
+
                             $.each(data.pk,function(idx,_pk) {
-                                
+
                                 if ($(self.options.caller).data("parentHolderSelector")) {
-                                    
+
                                     var $caller = $(self.options.caller);
                                     var item = self._resolveParentHolder($caller);
-                                    
+
                                     var callback = function() {
                                         $caller.parents("ul:eq(0)").parent().find(".ghostListCounter input").trigger("doSum");
                                     };
                                 } else {
                                     var item = "tr[data-id='"+_pk+"']";
                                 }
-                                
+
                                 $(item,$refParent.klearModule("getPanel")).slideUp(function() {
                                     if (typeof callback == 'function') callback();
                                     $(this).remove();
@@ -71,12 +71,10 @@
                                     },400);
                                 });
                             });
-                            
+
                             if (self.mustBeClosed) {
                                 $self.moduleDialog("close");
                             }
-
-
                         }
 
                         $self.moduleDialog("option","buttons",
@@ -103,26 +101,24 @@
             this.mustBeClosed = false;
 
             $(this.element).moduleDialog("option","buttons",
-                     [
-                          {
-                            text: $.translate("Cancel"),
-                            click: function() { $(this).moduleDialog("close"); }
-                        },
-                        {
-                            text: $.translate("Delete"),
-                            click: function() {
-                                self._doAction.apply(self,[this]);
-                            }
+                 [
+                      {
+                        text: $.translate("Cancel"),
+                        click: function() { $(this).moduleDialog("close"); }
+                    },
+                    {
+                        text: $.translate("Delete"),
+                        class: 'deleteDialogButton',
+                        click: function() {
+                            self._doAction.apply(self,[this]);
                         }
-                    ]
-
-                    );
-
+                    }
+                ]
+            );
 
             if (this.options.data && this.options.data.title) {
                 $(this.element).moduleDialog("updateTitle",this.options.data.title);
             }
-
 
             $(this.element).moduleDialog("updateContent",$appliedTemplate,function() {
 
@@ -131,6 +127,34 @@
                     .form()
                     .appendTo($(this.uiDialog).find(".ui-dialog-buttonpane"));
 
+                var $secureDeleteInput = $("#secure-delete-input", $(this.element));
+
+                if ($secureDeleteInput.length) {
+
+                    var deleteDialogButton = $(".deleteDialogButton", $(this.element).parent());
+
+                    $secureDeleteInput.on('keyup', function () {
+                        var isValid = ($(this).data('expected-value') === $(this).val());
+
+                        if (isValid) {
+                            deleteDialogButton.trigger('enable');
+                        } else {
+                            deleteDialogButton.trigger('disable');
+                        }
+                    });
+
+                    deleteDialogButton.on("disable", function () {
+                        $(this)
+                            .attr('disabled', 'disabled')
+                            .css({ opacity: 0.5 });
+                    }).on("enable", function () {
+                        $(this)
+                            .removeAttr('disabled')
+                            .css({ opacity: 1 });
+                    });
+
+                    deleteDialogButton.trigger('disable');
+                }
 
                 var $autoCloseCheckbox = $("input[name=autoclose]",$autoClose);
                 $autoCloseCheckbox.on('change',function(e) {
@@ -149,10 +173,10 @@
                     self.mustBeClosed = savedVal;
                     $autoCloseCheckbox.trigger('forceValue', savedVal);
                 }
-
             });
 
-        }
+        },
     });
 
 })(jQuery);
+

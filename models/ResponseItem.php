@@ -63,6 +63,8 @@ class KlearMatrix_Model_ResponseItem
     protected $_blacklist = array();
 
     protected $_disableSave = false;
+    protected $_secureDelete = false;
+
     protected $_disableAddAnother = false;
 
     protected $_showFilterForm = false;
@@ -126,6 +128,7 @@ class KlearMatrix_Model_ResponseItem
         '_actionMessages' => array('actionMessages', false),
         // disableSave >> en EditController evitamos "salvar"
         '_disableSave' => array('disableSave', false),
+        '_secureDelete' => array('secureDelete', false),
         '_fullWidth' => array('fullWidth', false),
         // disableAddAnother >> en NewController evitamos el botón de añadir otro.
         '_disableAddAnother' => array('disableAddAnother', false),
@@ -417,6 +420,11 @@ class KlearMatrix_Model_ResponseItem
     public function getDisableSave()
     {
         return $this->_disableSave;
+    }
+
+    public function getSecureDelete()
+    {
+        return $this->_secureDelete;
     }
 
     public function getFullWidth()

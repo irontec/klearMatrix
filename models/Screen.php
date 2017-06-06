@@ -51,7 +51,7 @@ class KlearMatrix_Model_Screen extends KlearMatrix_Model_ResponseItem
             $retValue = $this->_csv;
         }
 
-        return $this->_csv;
+        return $retValue;
     }
 
     public function getCsvParameters()

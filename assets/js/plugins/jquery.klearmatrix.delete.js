@@ -13,9 +13,7 @@
             this._super._create.apply(this);
         },
 
-
         _doAction : function(moduleDialogCaller) {
-
 
             var $refParent = $(this.options.parent);
             var $self = $(this.element);
@@ -66,9 +64,9 @@
                                     if (typeof callback == 'function') callback();
                                     $(this).remove();
                                     clearTimeout(lastInterval);
-                                    lastInterval = setTimeout(function(){
+                                    lastInterval = setTimeout(function() {
                                         $("th.multiItem", $refParent.klearModule("getPanel")).trigger('refreshButtons');
-                                    },400);
+                                    }, 400);
                                 });
                             });
 
@@ -128,13 +126,12 @@
                     .appendTo($(this.uiDialog).find(".ui-dialog-buttonpane"));
 
                 var $secureDeleteInput = $("#secure-delete-input", $(this.element));
-
                 if ($secureDeleteInput.length) {
 
                     var deleteDialogButton = $(".deleteDialogButton", $(this.element).parent());
+                    $secureDeleteInput.on('input', function () {
 
-                    $secureDeleteInput.on('keyup', function () {
-                        var isValid = ($(this).data('expected-value').toString() === $(this).val());
+                        var isValid = ($(this).attr('data-expected-value') === $(this).val());
 
                         if (isValid) {
                             deleteDialogButton.trigger('enable');
@@ -152,7 +149,6 @@
                             .removeAttr('disabled')
                             .css({ opacity: 1 });
                     });
-
                     deleteDialogButton.trigger('disable');
                 }
 

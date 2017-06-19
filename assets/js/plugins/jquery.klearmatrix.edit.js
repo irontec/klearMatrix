@@ -128,6 +128,8 @@
             $.console.info("[" + __namespace__ + "] _registerMainActionEvent");
             var self = this;
 
+            this.options.theForm.find('fieldset.collapsed').hide();
+
             this.options.theForm.on('submit', function(e) {
 
                 e.preventDefault();
@@ -679,7 +681,7 @@
                     })();
                 });
             }
-            
+
             $(".klearMatrix_file a.option.setNullFso").on("click",function(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -692,10 +694,8 @@
                     .data("fileDescription", $.translate("File will be deleted"))
                     .data('toBeRemoved', true)
                     .trigger("manualchange");
-                
-                
             });
-            
+
             $("input, textarea", this.options.theForm)
             .autoResize({
                 maxWidth : function() {
@@ -795,6 +795,7 @@
                 $buttonWrapper.append(input.after($('<label for="' + id + '" />').html($label.text()))).buttonset("refresh");
 
             });
+
             return this;
         },
 
@@ -1145,10 +1146,6 @@
                 var curPercent = widthPercent * $(this).data("numberWidth");
                 $(this).css({width: curPercent + '%'});
             });
-
-            if (fixedFields.collapsed) {
-                $superContainer.hide();
-            }
 
             this._refresh($superContainer);
             return true;

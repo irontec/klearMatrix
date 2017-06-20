@@ -496,11 +496,14 @@ form.klearMatrix_form.autoclose-dialog {
     margin: 0.2em 0 0.4em;
 }
 
-
+span.requiredField {
+    float: left;
+    margin: -0.1em 0.1em 0 0;
+}
 
 .fieldInfo-position-left {
-        float: left;
-        margin: -0.2em 0.2em 0 0;
+    float: left;
+    margin: -0.1em 0.1em 0 0;
 
 }
 .fieldInfo-position-right {

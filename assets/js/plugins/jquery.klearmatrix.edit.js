@@ -691,7 +691,7 @@
                 }
                 _hiddenField
                     .val('__NULL__')
-                    .data("fileDescription", $.translate("File will be deleted"))
+                    .data("fileDescription", $.translate("File will be deleted on save"))
                     .data('toBeRemoved', true)
                     .trigger("manualchange");
             });
@@ -713,8 +713,8 @@
             .eq(0).trigger("focusin").select().focus();
 
             //Mark required fields
-            var _required = $('<span title="' + $.translate("Required field") + '" class="ui-icon inline ui-icon-heart"></span>');
-            $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").before(_required.clone());
+            var _required = $('<span title="' + $.translate("Required field") + '" class="ui-icon inline ui-icon-heart requiredField"></span>');
+            $("input, textarea, select", this.options.theForm).filter("[required]").filter("[required]").parent().prepend(_required.clone());
 
             //Validate required select fields by regExp
             // We also map error types, so we get the correct error on the field
@@ -1086,7 +1086,7 @@
                     $(this).parent()
                     .append(
                         $("<p class='countdown' />")
-                        .css({'padding':'0 1.5em', 'font-size':'.8em'})
+                        .css({'padding':'0 5px', 'font-size':'.8em'})
                         .text(remaining + ' ' + $.translate('characters remaining'))
                     );
                 } else {

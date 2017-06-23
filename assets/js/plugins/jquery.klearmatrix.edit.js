@@ -93,7 +93,6 @@
             });
 
             this.element.klearModule("option", "PostDispatchMethod", function() {
-
                 $.console.info("[" + __namespace__ + "] PostDispatchMethod exec");
 
                 if (!this.savedValues) {
@@ -449,7 +448,8 @@
                         solution: 'html,flash',
                         supplied: "mp3",
                         oggSupport: false,
-                        wmode: "window"
+                        wmode: "window",
+                        preload: "auto"
                     });
                 });
             }

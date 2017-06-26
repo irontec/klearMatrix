@@ -449,7 +449,15 @@
                         supplied: "mp3",
                         oggSupport: false,
                         wmode: "window",
-                        preload: "auto"
+                        preload: "metadata"
+                    });
+
+                    _self.on("reDispatch", function () {
+                        item.jPlayer("destroy");
+                    });
+
+                    _self.on("destroy", function () {
+                        _self.off("reDispatch");
                     });
                 });
             }

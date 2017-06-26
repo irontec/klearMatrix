@@ -34,6 +34,8 @@
                 $.klearmatrix[this.options.moduleName].instances.splice(position, 1);
             }
 
+            element.trigger("destroy");
+
             // call the original destroy method since we overwrote it
             $.Widget.prototype.destroy.call( this );
         },

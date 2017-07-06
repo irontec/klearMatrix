@@ -364,8 +364,7 @@
 
                 for (var i in fixedPositions) {
                     hasVisibleFields = this._joinFields(fixedPositions[i]);
-                    hasCollapsedFieldsets = hasCollapsedFieldsets
-                        || (hasVisibleFields && fixedPositions[i].collapsed);
+                    hasCollapsedFieldsets = $(this.options.theForm).find('fieldset.collapsed').length > 0;
                 }
 
                 if (hasCollapsedFieldsets) {

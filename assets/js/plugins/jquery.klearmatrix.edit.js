@@ -359,14 +359,11 @@
             if (this.options.data.fixedPositions && this.options.data.fixedPositions.length) {
 
                 var fixedPositions = this.options.data.fixedPositions;
-                var hasCollapsedFieldsets = false;
-                var hasVisibleFields;
-
                 for (var i in fixedPositions) {
-                    hasVisibleFields = this._joinFields(fixedPositions[i]);
-                    hasCollapsedFieldsets = $(this.options.theForm).find('fieldset.collapsed').length > 0;
+                    this._joinFields(fixedPositions[i]);
                 }
 
+                var hasCollapsedFieldsets = $(this.options.theForm).find('fieldset.collapsed').length > 0;
                 if (hasCollapsedFieldsets) {
 
                     var togglerText = $.translate("Show more settings");

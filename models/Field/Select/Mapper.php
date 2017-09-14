@@ -316,26 +316,16 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $fieldName = $matches[1];
         }
 
-        if ($GLOBALS['sf']) {
-
-            $dataGateway = \Zend_Registry::get('data_gateway');
-            $entityClass = $this->_config->getProperty("config")->entity;
-            $entityClassSegments = explode('\\', $entityClass);
-            $entity = end($entityClassSegments);
-            $order = [];
-            foreach ($fieldName as $field) {
-                $key = $entity . '.' . $field;
-                $order[$key] = 'ASC';
-            }
-            $results = $dataGateway->findBy($entityClass, null, $order);
-
-        } else {
-
-            $mapperName = $this->_config->getProperty("config")->mapperName;
-            $dataMapper = new $mapperName;
-            $results = $dataMapper->fetchList('', $fieldName);
-
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $entityClass = $this->_config->getProperty("config")->entity;
+        $entityClassSegments = explode('\\', $entityClass);
+        $entity = end($entityClassSegments);
+        $order = [];
+        foreach ($fieldName as $field) {
+            $key = $entity . '.' . $field;
+            $order[$key] = 'ASC';
         }
+        $results = $dataGateway->findBy($entityClass, null, $order);
 
         foreach ($results as $result) {
             $values[] = $result->getId();
@@ -348,22 +338,11 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $priority = 1;
         $identifier =  $this->_quoteIdentifier($this->_column->getDbFieldName());
 
-        if ($GLOBALS['sf']) {
-
-            $response =  'CASE ';
-            foreach ($values as $possibleResult) {
-                $response .= " WHEN $identifier = '" . $possibleResult . "' THEN " . $priority++;
-            }
-            $response .= ' ELSE '. $priority .' END AS HIDDEN ORD';
-
-        } else {
-
-            $response =  'CASE '. $identifier;
-            foreach ($values as $possibleResult) {
-                $response .= " WHEN '" . $possibleResult . "' THEN " . $priority++;
-            }
-            $response .= ' END)';
+        $response =  'CASE ';
+        foreach ($values as $possibleResult) {
+            $response .= " WHEN $identifier = '" . $possibleResult . "' THEN " . $priority++;
         }
+        $response .= ' ELSE '. $priority .' END AS HIDDEN ORD';
 
         return $response;
     }

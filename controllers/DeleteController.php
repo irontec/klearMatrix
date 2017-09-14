@@ -29,28 +29,15 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        if ($GLOBALS['sf']) {
-            $dataGateway = \Zend_Registry::get('data_gateway');
-            $entity = $this->_item->getEntityClassName();
-        } else if (!$GLOBALS['sf']) {
-            $mapperName = $this->_item->getMapperName();
-            $mapper = new $mapperName;
-        }
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $entity = $this->_item->getEntityClassName();
 
         $pk = $this->_mainRouter->getParam("pk");
 
         if (is_array($pk)) {
-            if ($GLOBALS['sf']) {
-                $this->_helper->log('Delete for entity (not executed):' . $entity . ' > various PK('.implode(",", $pk).')');
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > various PK('.implode(",", $pk).')');
-            }
+            $this->_helper->log('Delete for entity (not executed):' . $entity . ' > various PK('.implode(",", $pk).')');
         } else {
-            if ($GLOBALS['sf']) {
-                $this->_helper->log('Delete for entity (not executed):' . $entity . ' > PK('.$pk.')');
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log('Delete for mapper (not executed):' . $mapperName . ' > PK('.$pk.')');
-            }
+            $this->_helper->log('Delete for entity (not executed):' . $entity . ' > PK('.$pk.')');
             $pk = array($pk);
         }
 
@@ -75,23 +62,11 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             $data->calculateParentData($this->_mainRouter, $parentScreenName, $pk);
         }
 
-        if ($GLOBALS['sf']) {
-            $entityName = $this->_item->getEntityName();
-            $where = [
-                $entityName . '.id in ('. implode(",", $pk) .')'
-            ];
-
-            $result = $dataGateway->findBy($entity, $where);
-
-        } else if (!$GLOBALS['sf']) {
-            $baseModel = $this->_item->getObjectInstance();
-            $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());
-            $result = $mapper->fetchList($primaryKeyFieldName . " in ('".implode("','", $pk)."')");
-
-            if (sizeof($result) != sizeof($pk)) {
-                throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
-            }
-        }
+        $entityName = $this->_item->getEntityName();
+        $where = [
+            $entityName . '.id in ('. implode(",", $pk) .')'
+        ];
+        $result = $dataGateway->findBy($entity, $where);
 
         $data->setResults($result);
         $data->fixResults($this->_item);
@@ -108,33 +83,22 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        if ($GLOBALS['sf']) {
-            $dataGateway = \Zend_Registry::get('data_gateway');
-            $entity = $this->_item->getEntityClassName();
-        } else if (!$GLOBALS['sf']) {
-            $mapperName = $this->_item->getMapperName();
-            $mapper = new $mapperName;
-        }
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $entity = $this->_item->getEntityClassName();
 
         $pk = $this->_mainRouter->getParam("pk");
 
         if (is_array($pk)) {
-            if ($GLOBALS['sf']) {
-                $this->_helper->log('Delete::delete action for entity:' . $entity . ' > various PK('.implode(',', $pk).')');
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > various PK('.implode(',', $pk).')');
-            }
+            $this->_helper->log('Delete::delete action for entity:' . $entity . ' > various PK('.implode(',', $pk).')');
         } else {
-            if ($GLOBALS['sf']) {
-                $this->_helper->log('Delete::delete action for mapper:' . $entity . ' > PK('.$pk.')');
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log('Delete::delete action for mapper:' . $mapperName . ' > PK('.$pk.')');
-            }
+            $this->_helper->log('Delete::delete action for mapper:' . $entity . ' > PK('.$pk.')');
             $pk = array($pk);
         }
 
         if ($GLOBALS['sf']) {
-
+            /**
+             * @todo multi id
+             */
             try {
                 $dataGateway->remove($entity, $pk);
             } catch (\Exception $e) {
@@ -144,6 +108,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
                 );
                 throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
             }
+
 
         } else if (!$GLOBALS['sf']) {
 
@@ -175,12 +140,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             }
         }
 
-        if ($GLOBALS['sf']) {
-            $this->_helper->log('model succesfully deleted for ' . $entity . ' > PK('.implode(',', $pk).')');
-        } else if (!$GLOBALS['sf']) {
-            $this->_helper->log('model succesfully deleted for ' . $mapperName . ' > PK('.implode(',', $pk).')');
-        }
-
+        $this->_helper->log('model succesfully deleted for ' . $entity . ' > PK('.implode(',', $pk).')');
         $data = array(
             'error' => false,
             'pk' => $pk,

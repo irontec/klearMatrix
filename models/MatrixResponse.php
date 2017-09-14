@@ -225,54 +225,33 @@ class KlearMatrix_Model_MatrixResponse
         $parentScreen->setRouteDispatcher($router);
         $parentScreen->setConfig($router->getConfig()->getScreenConfig($parentScreenName));
 
-        if (!$GLOBALS['sf']) {
-            /**
-             * @deprecated
-             */
-            $parentMapperName = $parentScreen->getMapperName();
-        }
-
         $parentColumns = $parentScreen->getVisibleColumns();
         $defaultParentCol = $parentColumns->getDefaultCol();
-
-        // Recuperamos mapper, para recuperar datos principales (default value)
-        if (!$GLOBALS['sf']) {
-            /**
-             * @deprecated
-             */
-            $parentMapper = \KlearMatrix_Model_Mapper_Factory::create($parentMapperName);
-        }
 
         $pk = $this->_parentId;
         if (false == $this->_parentId) {
             $pk = $this->_parentPk;
         }
 
-        if ($GLOBALS['sf']) {
+        $parentEntity = $parentScreen->getEntityClassName();
+        $entityName = $parentScreen->getEntityName();
+        $dataGateway = \Zend_Registry::get('data_gateway');
 
-            $parentEntity = $parentScreen->getEntityClassName();
-            $entityName = $parentScreen->getEntityName();
-            $dataGateway = \Zend_Registry::get('data_gateway');
-
-            if (is_array($pk)) {
-                $where = [
-                    $entityName .'.id in ('. implode(',', $pk) .')'
-                ];
-                $this->_parentData = $dataGateway->findBy($parentEntity, $where);
-                $this->_parentData = current($this->_parentData);
-            } else {
-               $this->_parentData = $dataGateway->find($parentEntity, $pk);
-            }
-
-        } else if (!$GLOBALS['sf']) {
-            /**
-             * @deprecated
-             */
-            $this->_parentData = $parentMapper->find($pk);
+        if (is_array($pk)) {
+            $where = [
+                $entityName .'.id in ('. implode(',', $pk) .')'
+            ];
+            $this->_parentData = $dataGateway->findBy($parentEntity, $where);
+            $this->_parentData = current($this->_parentData);
+        } else {
+           $this->_parentData = $dataGateway->find($parentEntity, $pk);
         }
 
         if ($this->_parentData) {
 
+            /**
+             * @todo fso handler
+             */
             $fsoImplemened = $GLOBALS['sf'] ? false : true;
             if ($fsoImplemened && in_array($defaultParentCol->getDbFieldName(), $this->_parentData->getFileObjects())) {
 
@@ -284,11 +263,7 @@ class KlearMatrix_Model_MatrixResponse
                 $getter = 'get' . $this->_parentData->columnNameToVar($specs['baseNameName']);
             } else {
                 try {
-                    if ($GLOBALS['sf']) {
-                        $getter = 'get' . ucfirst($defaultParentCol->getDbFieldName());
-                    } else {
-                        $getter = 'get' . $this->_parentData->columnNameToVar($defaultParentCol->getDbFieldName());
-                    }
+                    $getter = 'get' . ucfirst($defaultParentCol->getDbFieldName());
 
                 } catch (\Exception $e) {
                     throw new \Exception($defaultParentCol->getDbFieldName() . " is not a valid default column. Chech your modelName.yaml");
@@ -424,22 +399,15 @@ class KlearMatrix_Model_MatrixResponse
             }
         } else {
 
-            if ($GLOBALS['sf']) {
-                $type = $column->getType();
-                if ($type === 'multiselect') {
+            $type = $column->getType();
+            if ($type === 'multiselect') {
 
-                    $response = $this->_getMultiselectValueFromColumn($column, $result);
-
-                } else {
-                    $getterName = $column->getGetterName();
-                    $response = $result->{$getterName}();
-                }
+                $response = $this->_getMultiselectValueFromColumn($column, $result);
 
             } else {
                 $getterName = $column->getGetterName();
                 $response = $result->{$getterName}();
             }
-
         }
         return $response;
     }
@@ -510,13 +478,8 @@ class KlearMatrix_Model_MatrixResponse
         $_newResults = array();
 
         foreach ($this->_results as $result) {
-            $_newResult = array();
-
-            if ($result instanceof Core\Application\DataTransferObjectInterface && $GLOBALS['sf']) {
-//                $_newResults[] = $result->__toArray();
+            if ($result instanceof Core\Application\DataTransferObjectInterface) {
                 $_newResults[] = $this->resolveColumnValues($result, 'id');
-            } else if ((is_object($result)) && (get_class($result) == $screen->getModelName()) && !$GLOBALS['sf']) {
-                $_newResults[] = $this->resolveColumnValues($result, $primaryKeyName);
             } else {
                 $_newResults[] = $result;
             }
@@ -549,11 +512,7 @@ class KlearMatrix_Model_MatrixResponse
         }
 
         // Recuperamos también la clave primaria
-        if ($GLOBALS['sf']) {
-            $response[$primaryKeyName] = $result->getId();
-        } else if (!$GLOBALS['sf']) {
-            $response[$primaryKeyName] = $result->getPrimaryKey();
-        }
+        $response[$primaryKeyName] = $result->getId();
 
         $_customOptions = $this->_getCustomOptionsForResult($result);
         if (sizeof($_customOptions) > 0) {

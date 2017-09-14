@@ -169,25 +169,11 @@ class KlearMatrix_Model_ResponseItem
             }
         }
 
-        if ($GLOBALS['sf']) {
-
-            //Si hay modelFile, lo parseamos
-            if ($this->_entity) {
-                $this->_parseModelFile();
-            }
-
-        } else if (!$GLOBALS['sf']) {
-
-            //Si hay modelFile, lo parseamos
-            if ($this->_modelFile) {
-                $this->_parseModelFile();
-            }
-
-            //Si hay mapper, lo checkeamos a ver si es válido
-            if ($this->_mapper) {
-                $this->_checkClassesExist(array("_mapper"));
-            }
+        //Si hay modelFile, lo parseamos
+        if ($this->_entity) {
+            $this->_parseModelFile();
         }
+
         return $this;
     }
 
@@ -571,11 +557,7 @@ class KlearMatrix_Model_ResponseItem
         $this->_visibleColumns->addCols($ghostColumns);
 
         // Campos de la BBDD
-        if ($GLOBALS['sf']) {
-            $columns = $this->_getVisibleColumns(null, $ignoreBlackList);
-        } else if (!$GLOBALS['sf']) {
-            $columns = $this->_getVisibleColumns($modelInstance, $ignoreBlackList);
-        }
+        $columns = $this->_getVisibleColumns(null, $ignoreBlackList);
         $this->_visibleColumns->addCols($columns);
 
         // Tablas dependientes
@@ -609,18 +591,7 @@ class KlearMatrix_Model_ResponseItem
 
     protected function _poblateBlackList($model)
     {
-        if ($GLOBALS['sf']) {
-
-            $this->addFieldToBlackList('id');
-
-        } else if (!$GLOBALS['sf']) {
-
-            $pk = $model->getPrimaryKeyName();
-
-            // Si la clave primaria no está en la lista blanca no la mostramos
-            //TODO: comprobación de que no esté en el whitelist? sigue estando?
-            $this->addFieldToBlackList($pk);
-        }
+        $this->addFieldToBlackList('id');
 
         /*
          * LLenamos el array blacklist en base al fichero de configuración
@@ -771,11 +742,7 @@ class KlearMatrix_Model_ResponseItem
         foreach ($multiLangFields as $dbFieldName => $columnName) {
             $columnName; //Avoid PMD UnusedLocalVariable warning
             foreach ($availableLangsPerModel as $langIden) {
-                if ($GLOBALS['sf']) {
-                    $returnMultiLangFields[] = $dbFieldName . ucfirst($langIden);
-                } else if (!$GLOBALS['sf']) {
-                    $returnMultiLangFields[] = $dbFieldName . '_'. $langIden;
-                }
+                $returnMultiLangFields[] = $dbFieldName . ucfirst($langIden);
             }
         }
 
@@ -873,11 +840,7 @@ class KlearMatrix_Model_ResponseItem
         $model = $model;
 
         $columns = array();
-        if ($GLOBALS['sf']) {
-            $dbFieldNames = array_keys($this->_modelSpec->getFields());
-        } else if (!$GLOBALS['sf']) {
-            $dbFieldNames = array_keys($model->getColumnsList());
-        }
+        $dbFieldNames = array_keys($this->_modelSpec->getFields());
 
         /*
          * Iteramos sobre todos los campos
@@ -900,15 +863,10 @@ class KlearMatrix_Model_ResponseItem
 
             $column = $this->_createColumn($dbFieldName, $config);
 
-            if ($GLOBALS['sf']) {
-                $multiLangFields = $this->_getMultiLangColumnsList();
-                /**
-                 * @todo  put _getMultiLangColumnsList here and exec $column->markAsMultilang directly
-                 */
-            } else if (!$GLOBALS['sf']) {
-                $multiLangFields = $model->getMultiLangColumnsList();
-            }
-
+            $multiLangFields = $this->_getMultiLangColumnsList();
+            /**
+             * @todo  put _getMultiLangColumnsList here and exec $column->markAsMultilang directly
+             */
             if (isset($multiLangFields[$dbFieldName])) {
                 $column->markAsMultilang();
             }
@@ -1112,41 +1070,20 @@ class KlearMatrix_Model_ResponseItem
 
     public function _getCondArray($field, $value, $paramName = null)
     {
-        if ($GLOBALS['sf']) {
-
-            $doctrineFld = $this->_setSelfReferences($field);
-            $namedParam = preg_replace('#identity\(([^\)]+)\)#i', '${1}', $field);
-            if (strpos($namedParam, '::') !== false) {
-                $namedParam = substr($namedParam, strpos($namedParam, '::') + 2);
-            }
-
-            if (is_null($value) || $value == 'NULL') {
-                return $doctrineFld . ' is NULL';
-            }
-
-            return array(
-                $doctrineFld . ' = :' . $namedParam,
-                array($namedParam => $value)
-            );
-
-        } else if (!$GLOBALS['sf']) {
-
-
-            if (is_null($value) || $value == 'NULL') {
-                return $field . ' is NULL';
-            }
-
-            $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-
-            if ($dbAdapter) {
-                $field = $dbAdapter->quoteIdentifier($field);
-            }
-
-            return array(
-                $field . " = ? ",
-                array($value)
-            );
+        $doctrineFld = $this->_setSelfReferences($field);
+        $namedParam = preg_replace('#identity\(([^\)]+)\)#i', '${1}', $field);
+        if (strpos($namedParam, '::') !== false) {
+            $namedParam = substr($namedParam, strpos($namedParam, '::') + 2);
         }
+
+        if (is_null($value) || $value == 'NULL') {
+            return $doctrineFld . ' is NULL';
+        }
+
+        return array(
+            $doctrineFld . ' = :' . $namedParam,
+            array($namedParam => $value)
+        );
     }
 
     public function getForcedValues()
@@ -1367,11 +1304,7 @@ class KlearMatrix_Model_ResponseItem
      */
     public function getPkName()
     {
-        if ($GLOBALS['sf']) {
-            return 'id';
-        } else if (!$GLOBALS['sf']) {
-            return $this->_modelSpec->getInstance()->getPrimaryKeyName();
-        }
+        return 'id';
     }
 
     /**

@@ -182,11 +182,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $whereParts = array();
 
         if (isset($this->_config->getProperty('config')->filterField)) {
-            if ($GLOBALS['sf']) {
-                $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getId()."')";
-            } else if (!$GLOBALS['sf']) {
-                $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getPrimaryKey()."')";
-            }
+            $whereParts[] = "(".$this->_config->getProperty('config')->filterField." = '".$model->getId()."')";
         }
 
         if (isset($this->_config->getProperty('config')->forcedValues)) {
@@ -212,13 +208,9 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
             $order = $orderParts;
         }
 
-        if ($GLOBALS['sf']) {
-            $dataGateway = \Zend_Registry::get('data_gateway');
-            $entity = $this->_config->getProperty("config")->entity;
-            $results = $dataGateway->findBy($entity, [$where]);
-        } else if (!$GLOBALS['sf']) {
-            $results = $dataMapper->fetchList($where, $order);
-        }
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $entity = $this->_config->getProperty("config")->entity;
+        $results = $dataGateway->findBy($entity, [$where]);
 
         $this->_setOptions($results);
         $options = $this->_parseOptions();

@@ -23,36 +23,23 @@ class KlearMatrix_Model_ModelSpecification
         $this->_entity = $this->_config->getRequiredProperty("entity");
         $this->_dto = $this->_entity . 'DTO';
 
-        if ($GLOBALS['sf']) {
-            $this->_instance = new $this->_dto;
-        } else if (!$GLOBALS['sf']) {
-            $this->_instance = new $this->_class;
-        }
+        $this->_instance = new $this->_dto;
     }
 
     public function getInstance()
     {
-        if ($GLOBALS['sf']) {
+        $requestIntance = isset($this->_pk);
+        if (
+            $this->_instance &&
+            $this->_pk &&
+            $this->_instance->getId() == $this->_pk
+        ) {
+            $requestIntance = false;
+        }
 
-            $requestIntance = isset($this->_pk);
-            if (
-                $this->_instance &&
-                $this->_pk &&
-                $this->_instance->getId() == $this->_pk
-            ) {
-                $requestIntance = false;
-            }
-
-            if ($requestIntance) {
-                $dataGateway = \Zend_Registry::get('data_gateway');
-                $this->_instance = $dataGateway->find($this->_entity, $this->_pk);
-            }
-
-        } else if (!$GLOBALS['sf']) {
-            if ($this->_instance->getPrimaryKey() != $this->_pk) {
-
-                $this->_instance = $this->_instance->getMapper()->find($this->_pk);
-            }
+        if ($requestIntance) {
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $this->_instance = $dataGateway->find($this->_entity, $this->_pk);
         }
 
         return $this->_instance;
@@ -60,7 +47,7 @@ class KlearMatrix_Model_ModelSpecification
 
     public function getClassName()
     {
-        return $GLOBALS['sf'] ? $this->_dto : $this->_class;
+        return $this->_dto;
     }
 
     public function getEntityClassName()

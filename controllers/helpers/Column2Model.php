@@ -94,22 +94,18 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         if ($item->hasForcedValues()) {
             foreach ($item->getForcedValues() as $field => $value) {
                 try {
-                    if ($GLOBALS['sf']) {
 
-                        $field = Klear_Model_QueryHelper::replaceSelfReferences(
-                            $this->cleanIdentity($field),
-                            ''
-                        );
+                    $field = Klear_Model_QueryHelper::replaceSelfReferences(
+                        $this->cleanIdentity($field),
+                        ''
+                    );
 
-                        $setter = 'set' . ucfirst($field);
-                        if (!method_exists($model, $setter)) {
-                            $setter .= 'Id';
-                        }
-                        $model->{$setter}($value);
-                    } else if (!$GLOBALS['sf']) {
-                        $varName = $model->columnNameToVar($field);
-                        $model->{'set' . $varName}($value);
+                    $setter = 'set' . ucfirst($field);
+                    if (!method_exists($model, $setter)) {
+                        $setter .= 'Id';
                     }
+                    $model->{$setter}($value);
+
                 } catch (\Exception $e) {
                     // Nothing to do... condition not found in model... :S
                     // Debemos morir??

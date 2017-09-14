@@ -110,10 +110,6 @@ class KlearMatrix_Model_FilterProcessor
 
     protected function _generate()
     {
-        if (!isset($this->_model)  && !$GLOBALS['sf']) {
-            Throw new Exception("FilterProcessor not properly invocated");
-        }
-
         if ((!isset($this->_request)) || (!isset($this->_columns))) {
             Throw new Exception("FilterProcessor not properly invocated");
         }

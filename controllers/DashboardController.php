@@ -134,24 +134,9 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
     protected function _calculateForKlearMatrixList($moduleRouter, $subsection)
     {
         $_item = $moduleRouter->getCurrentItem();
-
-        if ($GLOBALS['sf']) {
-            $entity = $_item->getEntityClassName();
-            $dataGateway = \Zend_Registry::get('data_gateway');
-            $model = null;
-        } else if (!$GLOBALS['sf']) {
-
-            /**
-             * @deprecated
-             */
-            $_mapper = \KlearMatrix_Model_Mapper_Factory::create($_item->getMapperName());
-            /**
-             * @deprecated
-             */
-            $model = $_item->getObjectInstance();
-        }
-
-
+        $entity = $_item->getEntityClassName();
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $model = null;
         $fakeData = new KlearMatrix_Model_MatrixResponse();
 
         /**
@@ -159,16 +144,7 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
          * la condición para filtrar resultados en ListControllers
          */
         $where = $this->_helper->createListWhere(new KlearMatrix_Model_ColumnCollection(), $model, $fakeData, $_item);
-
-        if ($GLOBALS['sf']) {
-            $totalItems = $dataGateway->countBy($entity, $where);
-        } else if (!$GLOBALS['sf']) {
-            if (!$where) {
-                $totalItems = $_mapper->countAllRows($this->_item->getUseExplain());
-            } else {
-                $totalItems = $_mapper->countByQuery($where);
-            }
-        }
+        $totalItems = $dataGateway->countBy($entity, $where);
 
         return array(
                 'name' => $subsection->getName(),

@@ -51,7 +51,11 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             $filteredField = $this->_item->getFilterField();
 
             //TODO: Desgaretizar parentPk / parentId :S en todos los controllers --- muy complicado.
-            $parentPk = $this->_mainRouter->getParam("parentPk", false);
+            $parentPk = $this->_mainRouter->getParam(
+                'parentPk',
+                false
+            );
+
             if ($parentPk) {
                 //pantalla new desde un edit
                 $filteredValue = $parentPk;
@@ -63,7 +67,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             // recuperar mapper. Hacer fetchById y comprobar
             // que existe el parámetro recibido.
 
-            $filterFieldSetter = 'set' . $model->columnNameToVar($filteredField);
+            $filterFieldSetter = 'set' . ucfirst($filteredField) . 'Id';
             $model->{$filterFieldSetter}($filteredValue);
         }
 
@@ -95,10 +99,9 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 }
             }
 
-            $pk = isset($GLOBALS['sf']) ? $model->getId() :  $model->getPrimaryKey();
             $data = array(
                 'error' => false,
-                'pk' => $pk,
+                'pk' => $model->getId(),
                 'message' => $this->view->translate('Record successfully saved.') . $optsString
             );
         } catch (\Zend_Exception $exception) {
@@ -141,24 +144,8 @@ class KlearMatrix_NewController extends Zend_Controller_Action
     {
         try {
 
-            if ($GLOBALS['sf']) {
-                $dataGateway = \Zend_Registry::get('data_gateway');
-                $dataGateway->persist($this->_item->getEntityClassName(), $model);
-            } else if (!$GLOBALS['sf']) {
-
-                if (method_exists($model, 'saveRecursive')) {
-                    if ($hasDependant) {
-                        /**
-                         * @todo implement this in sf
-                         */
-                        $model->saveRecursive();
-                    } else {
-                        $model->save();
-                    }
-                } else {
-                    $model->save(false, $hasDependant);
-                }
-            }
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $dataGateway->persist($this->_item->getEntityClassName(), $model);
 
         } catch (\Zend_Exception $exception) {
             $displayErrors = ini_get("display_errors");

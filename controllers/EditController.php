@@ -35,50 +35,23 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
     public function saveAction()
     {
-
-        if ($GLOBALS['sf']) {
-
-            $entityName = $this->_item->getEntityClassName();
-
-        } else if (!$GLOBALS['sf']) {
-
-            /** @deprecated */
-            $mapperName = $this->_item->getMapperName();
-            /** @deprecated */
-            $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
-        }
-
-
+        $entityName = $this->_item->getEntityClassName();
 
         // En el método save ya viaja el pk recalculado desde la pantalla de edición.
         $this->_item->unsetCalculatedPk();
 
         $pk = $this->_item->getCurrentPk();
-
-        if ($GLOBALS['sf']) {
-            $this->_helper->log('edit::save action for entity:' . $entityName . ' > PK('.$pk.')');
-        } else if (!$GLOBALS['sf']) {
-            $this->_helper->log('edit::save action for mapper:' . $mapperName . ' > PK('.$pk.')');
-        }
-
+        $this->_helper->log('edit::save action for entity:' . $entityName . ' > PK('.$pk.')');
 
         // TODO: traducir mensaje?
-        if ($GLOBALS['sf']) {
-            $modelSpec = $this->_item->getModelSpec();
-            $model = $modelSpec->setPrimaryKey($pk)->getInstance();
-        } else if (!$GLOBALS['sf']) {
-            $model = $mapper->find($pk);
-            // TODO: traducir mensaje?
-            $modelSpec = $this->_item->getModelSpec();
-            $model = $modelSpec->setPrimaryKey($pk)->getInstance();
-        }
+        $modelSpec = $this->_item->getModelSpec();
+        $model = $modelSpec->setPrimaryKey($pk)->getInstance();
 
         if (!$model) {
-            if ($GLOBALS['sf']) {
-                $this->_helper->log('PK NOT found in edit::save for ' . $entityName . ' > PK('. $pk .')', Zend_Log::CRIT);
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
-            }
+            $this->_helper->log(
+                'PK NOT found in edit::save for ' . $entityName . ' > PK('. $pk .')',
+                Zend_Log::CRIT
+            );
 
             Throw new Zend_Exception($this->view->translate('Record not found.'));
         }
@@ -94,32 +67,20 @@ class KlearMatrix_EditController extends Zend_Controller_Action
             // el save deberá llevar "saveRecursive"
             $hasDependant = $hasDependant || $column->isDependant();
 
-            if ($hasDependant && $GLOBALS['sf']) {
+            if ($hasDependant) {
                 throw new \Exception('Confirm that this is working properly');
             }
         }
 
         try {
             $this->_save($model, $hasDependant);
-            if ($GLOBALS['sf']) {
-                $this->_helper->log(
-                    'model save succesfully for ' . $entityName . ' > PK('.$pk.')'
-                );
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log(
-                    'model save succesfully for ' . $mapperName . ' > PK('.$pk.')'
-                );
-            }
-
-            if ($GLOBALS['sf']) {
-                $pk = $model->getId();
-            } else if (!$GLOBALS['sf']) {
-                $pk = $model->getPrimaryKey();
-            }
+            $this->_helper->log(
+                'model save succesfully for ' . $entityName . ' > PK('.$pk.')'
+            );
 
             $data = array(
                 'error' => false,
-                'pk' => $pk,
+                'pk' => $model->getId(),
                 'message' => $this->view->translate('Record successfully saved.')
             );
         } catch (\Zend_Exception $exception) {
@@ -128,18 +89,10 @@ class KlearMatrix_EditController extends Zend_Controller_Action
                 'message'=> $exception->getMessage()
             );
 
-            if ($GLOBALS['sf']) {
-                $this->_helper->log(
-                    'Error saving in edit::save for ' . $entityName . ' > PK('.$pk.') ['.$exception->getMessage().']',
-                    Zend_Log::CRIT
-                );
-            } else if (!$GLOBALS['sf']) {
-                $this->_helper->log(
-                    'Error saving in edit::save for ' . $mapperName . ' > PK('.$pk.') ['.$exception->getMessage().']',
-                    Zend_Log::CRIT
-                );
-            }
-
+            $this->_helper->log(
+                'Error saving in edit::save for ' . $entityName . ' > PK('.$pk.') ['.$exception->getMessage().']',
+                Zend_Log::CRIT
+            );
         }
 
         $jsonResponse = new Klear_Model_SimpleResponse();
@@ -150,23 +103,12 @@ class KlearMatrix_EditController extends Zend_Controller_Action
     protected function _save($model, $hasDependant)
     {
         try {
-            if ($GLOBALS['sf']) {
 
-                $dataGateway = \Zend_Registry::get('data_gateway');
-                $dataGateway->update($this->_item->getEntityClassName(), $model);
-
-            } else if (!$GLOBALS['sf']) {
-                if (method_exists($model, 'saveRecursive')) {
-                    if ($hasDependant) {
-                        $model->saveRecursive();
-                    } else {
-                        $model->save();
-                    }
-                } else {
-                    $model->save(false, $hasDependant);
-                }
-            }
-
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $dataGateway->update(
+                $this->_item->getEntityClassName(),
+                $model
+            );
 
         } catch (\Zend_Exception $exception) {
             $this->_helper->log(
@@ -187,14 +129,8 @@ class KlearMatrix_EditController extends Zend_Controller_Action
         $mapperName = $this->_item->getMapperName();
 
         $this->_helper->log('Edit for mapper:' . $mapperName . ' > PK('.$pk.')');
-
-        if ($GLOBALS['sf']) {
-            $dataGateway = \Zend_Registry::get('data_gateway');
-            $model = $dataGateway->find($this->_item->getEntityClassName(), $pk);
-        } else {
-            $mapper = \KlearMatrix_Model_Mapper_Factory::create($mapperName);
-            $model = $mapper->find($pk);
-        }
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $model = $dataGateway->find($this->_item->getEntityClassName(), $pk);
 
         if (!$model) {
 

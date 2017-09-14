@@ -640,38 +640,12 @@ class KlearMatrix_Model_Column
             return $this->getFieldConfig()->getCustomGetterName();
         }
 
-        if ($this->isDependant()) {
-            return 'get' . ucfirst($this->getDbFieldName());
-        } else if ($GLOBALS['sf']) {
-            return 'get' . ucfirst($this->getDbFieldName());
-        } else if (!$GLOBALS['sf']) {
-            return 'get' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
-        }
+        return 'get' . ucfirst($this->getDbFieldName());
     }
 
     public function getSetterName($default = false)
     {
-        if ($GLOBALS['sf']) {
-
-            return 'set' . ucfirst($this->getDbFieldName());
-
-        } else if (!$GLOBALS['sf']) {
-
-
-            if ($this->isOption()) {
-                return false;
-            }
-
-            if (method_exists($this->getFieldConfig(), 'getCustomSetterName') && $default === false) {
-                return $this->getFieldConfig()->getCustomSetterName();
-            }
-
-            if ($this->isDependant()) {
-                return 'set' . ucfirst($this->getDbFieldName());
-            } else {
-                return 'set' . ucfirst($this->getModel()->columnNameToVar($this->getDbFieldName()));
-            }
-        }
+        return 'set' . ucfirst($this->getDbFieldName());
     }
 
     protected function _getDecoratorsConfig()

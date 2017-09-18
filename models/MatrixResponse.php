@@ -478,7 +478,8 @@ class KlearMatrix_Model_MatrixResponse
         $_newResults = array();
 
         foreach ($this->_results as $result) {
-            if ($result instanceof Core\Application\DataTransferObjectInterface) {
+            if ($result instanceof Ivoz\Core\Application\DataTransferObjectInterface) {
+//                $_newResults[] = $result->__toArray();
                 $_newResults[] = $this->resolveColumnValues($result, 'id');
             } else {
                 $_newResults[] = $result;

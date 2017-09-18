@@ -1,5 +1,12 @@
-klear-matrix (2.1.0) UNRELEASED; urgency=medium
+klear-matrix (3.0.0) UNRELEASED; urgency=medium
 
+  * Version bump to 3.0.0
+
+ -- Irontec OASIS Team <oasis@irontec.com>  Mon, 18 Sep 2017 14:53:37 +0200
+
+klear-matrix (2.1.0) unstable; urgency=medium
+
+  [ root ]
   * Initial release. 
 
- -- root <root@packages.irontec.com>  Mon, 07 Mar 2016 17:40:59 +0100
+ -- Irontec OASIS Team <oasis@irontec.com>  Mon, 18 Sep 2017 14:53:28 +0200

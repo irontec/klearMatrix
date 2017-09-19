@@ -204,7 +204,7 @@ class KlearMatrix_Model_MatrixResponse
         $this->_parentItem = $item->getFilterField();
         if (is_null($curScreenPK)) { // List|New
             $this->_parentPk = $router->getParam('pk', false);
-            if (false != $this->_parentPk) {
+            if (false !== $this->_parentPk) {
                 $this->_parentId = $this->_parentPk;
             } else {
                 $this->_parentId = $router->getParam('parentId', false);
@@ -478,8 +478,7 @@ class KlearMatrix_Model_MatrixResponse
         $_newResults = array();
 
         foreach ($this->_results as $result) {
-            if ($result instanceof Ivoz\Core\Application\DataTransferObjectInterface) {
-//                $_newResults[] = $result->__toArray();
+            if (is_object($result)) {
                 $_newResults[] = $this->resolveColumnValues($result, 'id');
             } else {
                 $_newResults[] = $result;

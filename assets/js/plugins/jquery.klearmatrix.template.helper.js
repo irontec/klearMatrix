@@ -236,7 +236,7 @@
             return false;
         },
         getIndex : function(values,idx) {
-            if (!values[idx]) {
+            if (values[idx] === undefined) {
                 return 'error';
             }
             return values[idx];

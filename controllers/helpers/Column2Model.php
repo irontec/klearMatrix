@@ -51,7 +51,12 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
 
         $this->_setForcedValues($model, $column);
         $setter = $column->getSetterName();
-        $value = $this->_retrieveValueForColumn($column, []);
+
+        $availableLanguages = Zend_Registry::get('SystemLanguages');
+        $value = $this->_retrieveValueForColumn(
+            $column,
+            array_keys($availableLanguages)
+        );
 
         // Avoid accidental DB data deletion. If we don't get the POST param, we don't touch the field
         if (is_null($value)) {
@@ -62,7 +67,7 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
 
         if ($column->isMultilang()) {
             foreach ($value as $lang => $_value) {
-                $model->$setter($_value, $lang);
+                $model->{$setter . $lang}($_value);
             }
             return;
         }

@@ -76,6 +76,15 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         $fieldConfig[$autoFilterKey] = implode("|", $autofilter);
         return $fieldConfig;
     }
+
+    public function prepareValue($value)
+    {
+        if (is_bool($value)) {
+            $value = intval($value);
+        }
+
+        return parent::prepareValue($value);
+    }
 }
 
 //EOF

@@ -32,6 +32,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
     protected function _init()
     {
         $this->_helper->viewRenderer->setNoRender(true);
+        $this->_dataGateway = \Zend_Registry::get('data_gateway');
     }
 
     public function run()
@@ -39,7 +40,6 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $mainRouter = $this->_request->getParam("mainRouter");
         $this->_commandConfiguration = $mainRouter->getCurrentCommand()->getConfig()->getRaw()->autocomplete;
         $this->_entity = $this->_commandConfiguration->entity;
-        $this->_dataGateway = \Zend_Registry::get('data_gateway');
 
         $this->_labelField = $this->_commandConfiguration->label;
         $this->_pkField = $this->_model->getPrimaryKeyName();
@@ -106,13 +106,15 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
     protected function _runReverse()
     {
-        $this->_results = $this->_mapper->findByField(
-            $this->_pkField,
-            $this->_request->getParam("value")
+        $where = $this->_getEntityName() . '.';
+        $where .= $this->_pkField . ' = ' . $this->_request->getParam("value");
+        $this->_results = $this->_dataGateway->findBy(
+            $this->_entity,
+            [$where]
         );
+
         $this->_totalItems = sizeof($this->_results);
     }
-
 
     protected function _run()
     {

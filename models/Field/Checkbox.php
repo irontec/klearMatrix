@@ -34,6 +34,16 @@ class KlearMatrix_Model_Field_Checkbox extends KlearMatrix_Model_Field_Abstract
     {
         return $this->_hasConfig();
     }
+
+    public function prepareValue($value)
+    {
+        return intval($value);
+    }
+
+    public function filterValue($value)
+    {
+        return intval($value);
+    }
 }
 
 //EOF

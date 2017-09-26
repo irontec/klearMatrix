@@ -67,7 +67,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             // recuperar mapper. Hacer fetchById y comprobar
             // que existe el parámetro recibido.
 
-            $filterFieldSetter = 'set' . ucfirst($filteredField) . 'Id';
+            $filterFieldSetter = 'set' . ucfirst($filteredField);
             $model->{$filterFieldSetter}($filteredValue);
         }
 
@@ -90,7 +90,7 @@ class KlearMatrix_NewController extends Zend_Controller_Action
                 $listLI = array();
                 $fieldOpts = $this->_getFieldOptions();
                 foreach ($fieldOpts as $opt) {
-                    $listLI[] = "<li><span data-id='".$model->getPrimaryKey()."'>".$opt->toAutoOption()."</span></li>";
+                    $listLI[] = "<li><span data-id='".$model->getId()."'>".$opt->toAutoOption()."</span></li>";
                 }
                 if (count($listLI)>0) {
                     $listUL = '<ul class="postActionOptionsListUL ui-state-highlight ui-corner-all">';

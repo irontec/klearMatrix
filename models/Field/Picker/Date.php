@@ -13,16 +13,11 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             return null;
         }
 
-        if ($value instanceof \Datetime) {
-            $value = $value->format('Y-m-d H:i:s');
+        if (!($value instanceof \Datetime)) {
+            return $value;
         }
 
-        $date = new Zend_Date();
-        $date->setTimeZone('UTC');
-        $date->setDate($value, 'yyyy-MM-dd');
-        $date->setHour(0)->setMinute(0)->setSecond(0);
-
-        return $date->toString($this->_getZendDateFormat());
+        return $value->format('Y-m-d');
     }
 
     public function filterValue($value)
@@ -31,11 +26,11 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             return null;
         }
 
-        $date = new Zend_Date();
-        $date->setTimeZone('UTC');
-        $date->setDate($value, $this->_getZendDateFormat());
-        $date->setHour(0)->setMinute(0)->setSecond(0);
+        $dateTime = new \Datetime(
+            $value
+        );
+        $dateTime->setTime(0,0,0);
 
-        return $date->toString(Zend_Date::ISO_8601);
+        return $dateTime;
     }
 }

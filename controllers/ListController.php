@@ -341,6 +341,11 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     //Exportamos los resultados a CSV
     public function exportCsv()
     {
+        /**
+         * @todo
+         */
+        throw new \Exception('Not migrated yet');
+
         $fields = $this->view->data['columns'];
         $values = $this->_normalizeValues($this->view->data['values']);
 

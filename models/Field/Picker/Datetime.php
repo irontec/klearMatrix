@@ -19,33 +19,27 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
             return null;
         }
 
-        if ($value instanceof \Datetime) {
-            $value = $value->format('Y-m-d H:i:s');
+        if (!($value instanceof \Datetime)) {
+            return $value;
         }
 
-        $date = new Zend_Date();
-        $date->setTimeZone('UTC');
-        $date->setDate(substr($value, 0, 10), 'yyyy-MM-dd');
-        $date->setTime(substr($value, -8), 'HH:mm:ss');
-        $date->setTimezone(date_default_timezone_get());
+        $value->setTimezone(
+            new \DateTimeZone(
+                date_default_timezone_get()
+            )
+        );
 
-        return $date->toString($this->_getZendDateTimeFormat());
+        return $value->format('Y-m-d H:i:s');
     }
 
     public function filterValue($value)
     {
-        if (empty($value)) {
-            return null;
-        }
+        $dateTime = new \Datetime(
+            $value
+        );
 
-        $date = new Zend_Date($value, $this->_getZendDateTimeFormat());
-        $date->setTimezone('UTC');
+        $dateTime->setTimezone(new \DateTimeZone('UTC'));
 
-        return $date->toString(Zend_Date::ISO_8601);
-    }
-
-    protected function _getZendDateTimeFormat()
-    {
-        return parent::_getZendDateFormat() . ' ' . $this->_getZendTimeFormat();
+        return $dateTime;
     }
 }

@@ -63,6 +63,9 @@ class KlearMatrix_Model_ResponseItem
 
     protected $_fixedPositions;
 
+    /**
+     * @var KlearMatrix_Model_ModelSpecification
+     */
     protected $_modelSpec;
 
     protected $_visibleColumns;
@@ -613,7 +616,7 @@ class KlearMatrix_Model_ResponseItem
          * Si es una pantalla con filtro de ventana padre no mostramos el campo de filtrado
         */
         if ($this->isFilteredScreen()) {
-            $this->addFieldToBlackList(lcfirst($this->_filteredField) . 'Id');
+            $this->addFieldToBlackList(lcfirst($this->getFilterField()));
         }
 
         /*
@@ -991,6 +994,12 @@ class KlearMatrix_Model_ResponseItem
 
     public function getFilterField()
     {
+        $dto = $this->_modelSpec->getInstance();
+        $fkGetter = 'get' . ucfirst($this->_filteredField) . 'Id';
+        if (method_exists($dto, $fkGetter)) {
+            return $this->_filteredField . 'Id';
+        }
+
         return $this->_filteredField;
     }
 

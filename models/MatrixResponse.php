@@ -263,7 +263,15 @@ class KlearMatrix_Model_MatrixResponse
                 $getter = 'get' . $this->_parentData->columnNameToVar($specs['baseNameName']);
             } else {
                 try {
-                    $getter = 'get' . ucfirst($defaultParentCol->getDbFieldName());
+
+                    if (!$defaultParentCol->isMultilang()) {
+                        $getter = 'get' . ucfirst($defaultParentCol->getDbFieldName());
+                    } else {
+                        $getter =
+                            'get'
+                            . ucfirst($defaultParentCol->getDbFieldName())
+                            . \Zend_Registry::get('defaultLang');
+                    }
 
                 } catch (\Exception $e) {
                     throw new \Exception($defaultParentCol->getDbFieldName() . " is not a valid default column. Chech your modelName.yaml");

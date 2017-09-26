@@ -14,7 +14,11 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 
     public function prepareValue($value)
     {
-        return $this->_formatTime($value);
+        if ($value instanceof \DateTime) {
+            return $value->format('H:i:s');
+        }
+
+        return $value;
     }
 
     public function filterValue($value)
@@ -24,15 +28,8 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 
     protected function _formatTime($value)
     {
-        if (empty($value)) {
-            return '';
-        }
-
-        if ($value instanceof \Datetime) {
-            $value = $value->format('H:i:s');
-        }
-
-        $time = new Iron_Time($value);
-        return $time->getFormattedString($this->_getSetting('timeFormat'));
+        return $value
+            ? new Datetime('0000-00-00 ' . $value)
+            : null;
     }
 }

@@ -16,6 +16,18 @@ class KlearMatrix_Model_Field_Number extends KlearMatrix_Model_Field_Abstract
         $this->_css = $this->_adapter->getExtraCss();
     }
 
+    /*
+     * Filtra (y adecua) el valor del campo antes del setter
+     *
+     */
+    public function filterValue($value)
+    {
+        if ($value === '') {
+            $value = null;
+        }
+
+        return parent::filterValue($value);
+    }
 }
 
 //EOF

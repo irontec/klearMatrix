@@ -33,14 +33,19 @@
     multiple
     name="${_elemName}[]"
     id="${_elemIden}"
+    value=""
 
 {{if (_decorators)}}
     data-decorator="true"
 {{/if}}
+class="
 {{if (!_decorators || (_decorators &&!_decorators.autocomplete))}}
-    class="multiselect"
+    multiselect
 {{/if}}
-
+{{if (_dataConfig.visualFilter)}}
+    visualFilter
+{{/if}}
+"
     {{each(idx,attrValue) _dataConfig.attributes}}
         ${idx}="${attrValue}"
     {{/each}}
@@ -65,6 +70,12 @@
                 {{each(extraDataLabel, extraDataVal) dataValue.data}}
                 data-${extraDataLabel}="${extraDataVal}"
                 {{/each}}
+            {{/if}}
+            {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.show[dataValue.key]) }}
+                data-show="{{each(idxField,showField) _dataConfig.visualFilter.show[dataValue.key]}} ${showField},{{/each}}"
+            {{/if}}
+            {{if (_dataConfig.visualFilter && _dataConfig.visualFilter.hide[dataValue.key]) }}
+                data-hide="{{each(idxField,hideField) _dataConfig.visualFilter.hide[dataValue.key]}} ${hideField},{{/each}}"
             {{/if}}
             value="${dataValue.key}">${dataValue.item}</option>
     {{/each}}

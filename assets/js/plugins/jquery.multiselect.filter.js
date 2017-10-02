@@ -86,6 +86,7 @@
                     .filter(function(){
                         if( !this.disabled && $.inArray(this.value, values) > -1 ){
                             _self._toggleState('selected', flag).call( this );
+                            $(this).trigger("manualchange.visualFilter", false);
                         }
                     });
             };

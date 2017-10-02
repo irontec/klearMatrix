@@ -372,9 +372,14 @@
 
                     toggler.on('click', function () {
                         $(this).remove();
-                        $(_self.klearModule("getPanel"))
-                            .find("form > fieldset > fieldset")
-                            .show();
+
+                        $(_self.klearModule("getPanel")).find("form > fieldset > fieldset").each(function () {
+
+                            $(this).show();
+                            if (!$(this).find("div.container:visible").length) {
+                                $(this).hide();
+                            }
+                        });
                     });
 
                     $(this.element.klearModule("getPanel"))
@@ -384,6 +389,7 @@
             }
 
             if ($("select.multiselect", this.options.theForm).length > 0) {
+
                 $("select.multiselect", this.options.theForm).multiselect({
                     container: this.element.klearModule('getPanel'),
                     selectedList: 4,
@@ -868,7 +874,107 @@
                 }
             };
 
-            $(".visualFilter", $container).on('manualchange.visualFilter', function(e, manual) {
+            function _resolveFieldFromName(val, $parent) {
+                var fName = $.trim(val);
+                if (fName == '') {
+                    return false;
+                }
+
+                // Es un campo vacío para fixedPosition
+                if (fName.match(/^__empty/)) {
+
+                    return $("div[data-empty=" + fName + "]", $parent) || false;
+                }
+
+                return $("label[rel='" + fName + "']:eq(0)", $parent).parents("div:eq(0)") || false;
+            };
+
+            function _showField(curOption, manual) {
+
+                if (!curOption.data("show")) {
+                    return;
+                }
+
+                $.each(curOption.data("show").split(","), function (i, val) {
+                    var field = _resolveFieldFromName(val, self.options.theForm);
+                    if (!field) {
+                        return;
+                    }
+                    if (manual) {
+                        field.show();
+                        checkSuperContainer.show(field);
+                    } else {
+                        //Cuando mostramos un campo, lanzamos el visualFilter si tiene
+                        //por si está relacionado con otro campo que debemos ocultar o mostrar
+                        field.slideDown('normal', function () {
+                            $(".visualFilter", field).trigger("manualchange.visualFilter", true);
+                            checkSuperContainer.show(field);
+
+                            field.find('select').each(function () {
+                                $(this).removeClass('novalidate');
+                                var selectBox = $(this).data("selectBoxIt");
+                                var selectBoxIsObjectAndRefreshIsCallable = (
+                                    (typeof selectBox == "object") &&
+                                    (selectBox.namespace == 'selectBox') &&
+                                    (typeof selectBox.refresh == 'function')
+                                );
+
+                                if (selectBoxIsObjectAndRefreshIsCallable) {
+                                    selectBox.refresh();
+                                }
+                            });
+                        })
+                            .not("div[data-empty]")
+                            .addClass("ui-state-highlight");
+
+                        setTimeout(function () {
+                            field.removeClass('ui-state-highlight');
+                        }, 1300);
+                    }
+
+                });
+            }
+
+            function _hideField(curOption, manual) {
+
+                if (!curOption.data("hide")) {
+                    return;
+                }
+
+                $.each(curOption.data("hide").split(","), function (i, val) {
+                    var field = _resolveFieldFromName(val, self.options.theForm);
+                    if (!field) {
+                        return;
+                    }
+                    field.find('select').each(function () {
+                        $(this).addClass('novalidate');
+                    });
+                    if (manual) {
+                        field.hide(1, function () {
+                            // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
+                            checkSuperContainer.hide($(this));
+                        });
+                    } else {
+                        //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
+                        field.slideUp(function () {
+                            checkSuperContainer.hide($(this));
+                        });
+                    }
+                });
+            }
+
+            function _applyVisualFilter(curOption, manual) {
+
+                if (curOption.data("show")) {
+                    _showField(curOption, manual);
+                }
+
+                if (curOption.data("hide")) {
+                    _hideField(curOption, manual);
+                }
+            }
+
+            $(".visualFilter", $container).not(".multiselect").on('manualchange.visualFilter', function(e, manual) {
                 //Si es manual y es un campo oculto no hacemos los filtros
                 //porque este campo oculto puede tener a su vez otros filtros
                 //y mostrar campos que no debería
@@ -879,98 +985,24 @@
                     return;
                 }
 
-                var curOption = null;
-
                 if ($(this).is("input:hidden")) {
-                    curOption = $(this);
-                } else {
-                    curOption = $("option[value=" + $(this).val() + "]", $(this));
+                    return _applyVisualFilter($(this), manual);
                 }
 
-                if (!curOption.data("show") && !curOption.data("hide")) {
-                    return;
+                _applyVisualFilter(
+                    $("option[value=" + $(this).val() + "]", $(this)),
+                    manual
+                );
+
+            }).trigger("manualchange.visualFilter", true);
+
+            $("select.multiselect.visualFilter option", $container).on('manualchange.visualFilter', function(e, manual) {
+                if (this.selected) {
+                    return _showField($(this));
                 }
 
-                var _resolveFieldFromName = function(val, $parent) {
-                    var fName = $.trim(val);
-                    if (fName == '') {
-                        return false;
-                    }
+                return _hideField($(this));
 
-                    // Es un campo vacío para fixedPosition
-                    if (fName.match(/^__empty/)) {
-
-                        return $("div[data-empty=" + fName + "]", $parent) || false;
-                    }
-
-                    return $("label[rel='" + fName + "']:eq(0)", $parent).parents("div:eq(0)") || false;
-                };
-
-                if (curOption.data("show")) {
-                	
-                    $.each(curOption.data("show").split(","),function(i, val) {
-                        var field = _resolveFieldFromName(val, self.options.theForm);
-                        if (!field) {
-                            return;
-                        }
-                        if (manual) {
-                            field.show();
-                            checkSuperContainer.show(field);
-                        } else {
-                            //Cuando mostramos un campo, lanzamos el visualFilter si tiene
-                            //por si está relacionado con otro campo que debemos ocultar o mostrar
-                            field.slideDown('normal', function(){
-                                $(".visualFilter", field).trigger("manualchange.visualFilter", true);
-                                checkSuperContainer.show(field);
-
-                                field.find('select').each(function () {
-                                    $(this).removeClass('novalidate');
-                                	var selectBox = $(this).data("selectBoxIt");
-                                	var selectBoxIsObjectAndRefreshIsCallable = (
-                                			(typeof selectBox == "object") &&  
-                                			(selectBox.namespace == 'selectBox') &&
-	                                        (typeof selectBox.refresh == 'function')
-                                    );
-                    		                                        
-                                	if (selectBoxIsObjectAndRefreshIsCallable) {
-                                		selectBox.refresh();
-                                	}
-                                });
-                            })
-                            .not("div[data-empty]")
-                            .addClass("ui-state-highlight");
-
-                            setTimeout(function() {
-                                field.removeClass('ui-state-highlight');
-                            }, 1300);
-                        }
-                        
-                    });
-                }
-
-                if (curOption.data("hide")) {
-
-                    $.each(curOption.data("hide").split(","),function(i, val) {
-                        var field = _resolveFieldFromName(val, self.options.theForm);
-                        if (!field) {
-                            return;
-                        }
-                        field.find('select').each(function () {
-                            $(this).addClass('novalidate');
-                        });
-                        if (manual) {
-                            field.hide(1,function() {
-                                // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
-                                checkSuperContainer.hide($(this));
-                            });
-                        } else {
-                            //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
-                            field.slideUp(function() {
-                                checkSuperContainer.hide($(this));
-                            });
-                        }
-                    });
-                }
             }).trigger("manualchange.visualFilter", true);
 
             $("select, input, textarea", this.options.theForm).not(".ignoreManualChange").on('manualchange', function(e) {

@@ -16,6 +16,10 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     protected $_extraDataAttributes = array();
     protected $_extraDataAttributesValues = array();
 
+    protected $_showOnSelect = array();
+    protected $_hideOnSelect = array();
+
+
     public function init()
     {
         $this->_parsedValues = new Klear_Model_ConfigParser;
@@ -75,6 +79,35 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
         }
     }
 
+    public function getConfig()
+    {
+        $visualFilter = $this->_getExtraConfigArray();
+        $config = $visualFilter + parent::getConfig();
+
+        return $config;
+    }
+
+    protected function _getExtraConfigArray()
+    {
+        $ret = array();
+
+        if (sizeof($this->_showOnSelect) || sizeof($this->_hideOnSelect)) {
+
+            $ret['visualFilter']['show'] = array();
+            $ret['visualFilter']['hide'] = array();
+
+            foreach ($this->_showOnSelect as $field => $fieldColection) {
+                $ret['visualFilter']['show'][$field] = $fieldColection->toArray();
+            }
+
+            foreach ($this->_hideOnSelect as $field => $fieldColection) {
+                $ret['visualFilter']['hide'][$field] = $fieldColection->toArray();
+            }
+        }
+
+        return $ret;
+    }
+
     protected function _setOptions($results)
     {
         if ($results) {
@@ -86,6 +119,26 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
             foreach ($results as $dataModel) {
                 $this->_setValuesForExtraAttributes($dataModel, $dataModel->{$keyGetter}());
+                $this->_initVisualFilter($dataModel);
+            }
+        }
+    }
+
+    public function _initVisualFilter($dataModel)
+    {
+        $visualFilter = $this->_config->config->get("visualFilter");
+
+        if ($visualFilter) {
+
+            foreach ($visualFilter as $identifier => $visualFilterSpec) {
+
+                $getter = 'get' . ucfirst($identifier);
+                $value = $dataModel->{$getter}();
+
+                if ($visualFilterSpec->{$value}) {
+                    $this->_showOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->show;
+                    $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->hide;
+                }
             }
         }
     }

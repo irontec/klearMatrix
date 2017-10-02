@@ -213,6 +213,7 @@ $.widget("ech.multiselect", {
 
     // updates the button text. call refresh() to rebuild
     update: function(){
+
         var o = this.options,
             $inputs = this.inputs,
             $checked = $inputs.filter(':checked'),
@@ -332,6 +333,7 @@ $.widget("ech.multiselect", {
                 }
             })
             .delegate('label', 'keydown.multiselect', function( e ){
+
                 e.preventDefault();
 
                 switch(e.which){
@@ -351,6 +353,7 @@ $.widget("ech.multiselect", {
                 }
             })
             .delegate('input[type="checkbox"], input[type="radio"]', 'click.multiselect', function( e ){
+
                 var $this = $(this),
                     val = this.value,
                     checked = this.checked,
@@ -373,6 +376,7 @@ $.widget("ech.multiselect", {
                 tags.each(function(){
                     if( this.value === val ){
                         this.selected = checked;
+                        $(this).trigger("manualchange.visualFilter", false);
                     } else if( !self.options.multiple ){
                         this.selected = false;
                     }
@@ -465,6 +469,7 @@ $.widget("ech.multiselect", {
     //
     // The context of this function should be a checkbox; do not proxy it.
     _toggleState: function( prop, flag ){
+
         return function(){
             if( !this.disabled ) {
                 this[ prop ] = flag;
@@ -479,6 +484,7 @@ $.widget("ech.multiselect", {
     },
 
     _toggleChecked: function( flag, group ){
+
         var $inputs = (group && group.length) ?  group : this.inputs,
             self = this;
 
@@ -512,6 +518,7 @@ $.widget("ech.multiselect", {
     },
 
     _toggleDisabled: function( flag ){
+
         this.button
             .attr({ 'disabled':flag, 'aria-disabled':flag })[ flag ? 'addClass' : 'removeClass' ]('ui-state-disabled');
 
@@ -673,6 +680,7 @@ $.widget("ech.multiselect", {
 
     // react to option changes after initialization
     _setOption: function( key, value ){
+
         var menu = this.menu;
 
         switch(key){

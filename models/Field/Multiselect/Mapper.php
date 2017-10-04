@@ -131,8 +131,8 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 $value = $dataModel->{$getter}();
 
                 if ($visualFilterSpec->{$value}) {
-                    $this->_showOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->show;
-                    $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->hide;
+                    $this->_showOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->toggle;
+                    $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->toggle;
                 }
             }
         }

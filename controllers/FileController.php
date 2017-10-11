@@ -55,7 +55,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $fileField = $this->_item->getConfigAttribute("mainColumn");
         $fileColumn = $this->_item->getColumn($fileField);
 
-        if (!$fileColumn->isFile()) {
+        if (!$fileColumn || !$fileColumn->isFile()) {
             throw new \KlearMatrix_Exception_File("Specified column's type must be a 'file'");
         }
 
@@ -64,7 +64,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
     protected function _processUpload($allowedExtensions, $sizeLimit)
     {
-
         $uploader = new Iron_QQUploader_FileUploader($allowedExtensions, $sizeLimit);
 
         return $uploader->handleUpload(
@@ -73,7 +72,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $this->_filePrefix . sha1(time() . rand(1000, 10000)),
                 ''
         );
-
     }
 
     public function uploadAction()
@@ -424,10 +422,9 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             }
         }
 
-        $this->_setFileFields();
-
-        $typeGetter = 'get' . $this->_fileFields['mimeName'];
-        $nameGetter = 'get' . $this->_fileFields['baseNameName'];
+        $fieldMame = $this->_item->getConfigAttribute("mainColumn") ;
+        $typeGetter = 'get' . $fieldMame . 'MimeType';
+        $nameGetter = 'get' . $fieldMame . 'BaseName';
 
         $mimeType = $this->_model->{$typeGetter}();
         $filename = $this->_model->{$nameGetter}();
@@ -520,12 +517,10 @@ class KlearMatrix_FileController extends Zend_Controller_Action
      */
     protected function _loadModel()
     {
-        $mapperName = $this->_item->getMapperName();
-        $mapper = new $mapperName;
         $this->_pk = $this->_mainRouter->getParam("pk");
-        $this->_model = $mapper->find($this->_pk);
-
-        return;
+        $this->_model = $this->_item->getObjectInstance(
+            $this->_pk
+        );
     }
 
     /**
@@ -544,15 +539,27 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     protected function _getFilePath()
     {
         $column = $this->_getFileColumn();
-        $fetchGetter = $column->getFieldConfig()->getFetchMethod($this->_item->getConfigAttribute("mainColumn"));
-        return $this->_model->{$fetchGetter}()->getFilePath();
+        $pathGetter =
+            'get'
+            . ucfirst($this->_item->getConfigAttribute("mainColumn"))
+            . 'Path';
+
+        return $this->_model->{$pathGetter}();
     }
 
+    /**
+     * @deprecated
+     */
     protected function _setFileFields()
     {
-        $fieldSpecsGetter = "get" . $this->_item->getConfigAttribute("mainColumn") . "Specs";
-        $this->_fileFields = $this->_model->{$fieldSpecsGetter}();
-        return;
+        throw new \Exception('Deprecated method _setFileFields');
+//        $fieldSpecsGetter =
+//            "get" .
+//            $this->_item->getConfigAttribute("mainColumn")
+//            . "Specs";
+//
+//        $this->_fileFields = $this->_model->{$fieldSpecsGetter}();
+//        return;
     }
 
 }

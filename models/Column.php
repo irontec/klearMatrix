@@ -202,6 +202,10 @@ class KlearMatrix_Model_Column
             $this->_type = 'text';
         }
 
+        if (strtolower($this->_type) === 'file') {
+            $this->markAsFile();
+        }
+
         $this->_dirty = $this->_config->getProperty("dirty");
 
         if ($this->_config->getProperty("options")) {

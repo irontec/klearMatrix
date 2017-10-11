@@ -27,13 +27,14 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
      */
     public function prepareValue($value)
     {
-        // Debemos devolver un array con size / mime / name del fichero
-        // value nos ha devuelto las specs del campo file
+        $sizeGetter = 'get' . $this->_column->getDbFieldName() . 'FileSize';
+        $mimeGetter = 'get' . $this->_column->getDbFieldName() . 'MimeType';
+        $nameGetter = 'get' . $this->_column->getDbFieldName() . 'BaseName';
 
         $ret = array(
-            'size' => $this->_column->getModel()->{'get' . ucfirst($value['sizeName'])}(),
-            'mime' => $this->_column->getModel()->{'get' . ucfirst($value['mimeName'])}(),
-            'name' => $this->_column->getModel()->{'get' . ucfirst($value['baseNameName'])}()
+            'size' => $this->_column->getModel()->{$sizeGetter}(),
+            'mime' => $this->_column->getModel()->{$mimeGetter}(),
+            'name' => $this->_column->getModel()->{$nameGetter}()
         );
 
         return $ret;
@@ -64,12 +65,12 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 
     public function getCustomGetterName()
     {
-        return 'get' . ucfirst($this->_column->getDbFieldName()) . 'Specs';
+        return 'get' . ucfirst($this->_column->getDbFieldName()) . 'Path';
     }
 
     public function getCustomSetterName()
     {
-        return 'put' . ucfirst($this->_column->getDbFieldName());
+        return 'put' . ucfirst($this->_column->getDbFieldName()) . 'Path';
     }
 
     public function getFetchMethod($dbFieldName)

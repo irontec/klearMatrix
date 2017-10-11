@@ -4,7 +4,7 @@
 class KlearMatrix_Model_Field_File_Preview_Mime extends KlearMatrix_Model_Field_File_Preview_Abstract
 {
     
-    public static function factory($filename)
+    public static function factory($filename, $mimeType = null)
     {
         $front = Zend_Controller_Front::getInstance();
         $path = $front->getModuleDirectory() .'/assets/bin/mimetype/';

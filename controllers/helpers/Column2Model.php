@@ -79,12 +79,14 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
 
         if ($column->isFile()) {
 
+            $pathSetter = $setter . 'Path';
             if (is_null($value)) {
-                $removeMethod = 'remove'. ucfirst($column->getDbFieldName());
-                $model->{$removeMethod}();
+                $model->{$pathSetter}(null);
             } else {
                 if ($value !== false && file_exists($value['path'])) {
-                    $model->$setter($value['path'], $value['basename']);
+                    $baseNameSetter = $setter . 'BaseName';
+                    $model->{$pathSetter}($value['path']);
+                    $model->{$baseNameSetter}($value['basename']);
                 }
             }
             return;

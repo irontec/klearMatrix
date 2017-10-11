@@ -7,23 +7,20 @@ abstract class KlearMatrix_Model_Field_File_Preview_Abstract
     protected $_crop = false;
     protected $_imagick;
 
-    
-
-    static function factory($fileName, $mimeType)
+    public static function factory($fileName, $mimeType)
     {
-        
         if (preg_match('/^image/i', $mimeType)) {
             return new KlearMatrix_Model_Field_File_Preview_Image();
         }
-    
+
         if (preg_match('/^application.*pdf/i', $mimeType)) {
             return new KlearMatrix_Model_Field_File_Preview_Pdf();
         }
-        
+
         if ($previewMime = KlearMatrix_Model_Field_File_Preview_Mime::factory($fileName)) {
             return $previewMime;
         }
-        
+
         return new KlearMatrix_Model_Field_File_Preview_Default();
     }
     
@@ -37,9 +34,8 @@ abstract class KlearMatrix_Model_Field_File_Preview_Abstract
         return;
     }
 
-    protected function _process() {
-        
-        
+    protected function _process()
+    {
         \Iron_Utils_PngFix::process($this->_imagick);
         
         if ($this->_crop === true) {
@@ -55,17 +51,19 @@ abstract class KlearMatrix_Model_Field_File_Preview_Abstract
         $this->_imagick = new Imagick($filename);
         $this->_process();
     }
+
     public function setBinary($binary)
     {
         $this->_imagick = new Imagick();
         $this->_imagick->readimageblob($binary);
         $this->_process();
     }
-    
-    public function getBinary() {
+
+    public function getBinary()
+    {
         return $this->_imagick->getimageblob();
     }
-    
+
     public function getMimeType()
     {
         return $this->_imagick->getimagemimetype();

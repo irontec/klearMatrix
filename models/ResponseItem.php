@@ -796,8 +796,11 @@ class KlearMatrix_Model_ResponseItem
 
                 if ($columnConfig) {
 
-                    $fieldSpecsGetter = "get" . $_fileCol . "Specs";
-                    $involvedFields = $model->{$fieldSpecsGetter}();
+                    $involvedFields = [
+                        $_fileCol . 'FileSize',
+                        $_fileCol . 'MimeType',
+                        $_fileCol . 'BaseName',
+                    ];
 
                     foreach ($blacklistSubfields as $blSubfield) {
                         if (isset($involvedFields[$blSubfield])) {
@@ -807,9 +810,7 @@ class KlearMatrix_Model_ResponseItem
                         }
                     }
 
-                    // FIXME: Aquí nos estamos saltando un posible ignoreBlackList...
                     if (isset($this->_blacklist[$_fileCol])) {
-
                         continue;
                     }
 
@@ -916,6 +917,19 @@ class KlearMatrix_Model_ResponseItem
     }
 
 
+    private function getDtoVars($model)
+    {
+        $response = [];
+        $modelReflection = new ReflectionClass($model);
+        $reflectionProperties = $modelReflection->getProperties();
+
+        foreach ($reflectionProperties as $reflectionProperty) {
+            $response[] = $reflectionProperty->getName();
+        }
+
+        return $response;
+    }
+
     /**
      * Recuperar y crear una objeto tipo Column
      * @param unknown_type $columnName
@@ -923,28 +937,13 @@ class KlearMatrix_Model_ResponseItem
     public function getColumn($columnName)
     {
         $model = $this->getObjectInstance();
+        $columnList = $this->getDtoVars($model);
 
-        $columnList = $model->getColumnsList();
-        if (isset($columnList[$columnName])) {
+        if (in_array($columnName, $columnList)) {
 
             $column = $this->_createColumn($columnName, $this->_modelSpec->getField($columnName));
 
             return $column;
-        }
-
-        foreach ($model->getDependentList() as $dependantConfig) {
-
-            if ($columnName == $dependantConfig['table_name']) {
-
-                $columnConfig = $this->_modelSpec->getField($dependantConfig['table_name']);
-                if (!$columnConfig) {
-
-                    return false;
-                }
-
-                $column = $this->_createDependantColumn($columnConfig, $dependantConfig);
-                return $column;
-            }
         }
 
         // TODO: Cambiar esto, deberíamos estar seguros de que getFileObjects existe.
@@ -1319,8 +1318,12 @@ class KlearMatrix_Model_ResponseItem
     /**
      * gateway hacia modelo específico, para devolver la instancia del objeto "vacío"
      */
-    public function getObjectInstance()
+    public function getObjectInstance($id = null)
     {
+        if ($id) {
+            $this->_modelSpec->setPrimaryKey($id);
+        }
+
         return $this->_modelSpec->getInstance();
     }
 

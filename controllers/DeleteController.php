@@ -96,9 +96,6 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
         }
 
         if ($GLOBALS['sf']) {
-            /**
-             * @todo multi id
-             */
             try {
                 $dataGateway->remove($entity, $pk);
             } catch (\Exception $e) {

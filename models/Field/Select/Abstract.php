@@ -71,7 +71,11 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
             }
 
             foreach ($this->_hideOnSelect as $field => $fieldColection) {
-                $ret['visualFilter']['hide'][$field] = $fieldColection->toArray();
+                // Avoid hiding fields present in show section
+                $ret['visualFilter']['hide'][$field] = array_diff(
+                    $fieldColection->toArray(),
+                    $ret['visualFilter']['show'][$field]
+                );
             }
         }
 

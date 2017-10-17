@@ -182,28 +182,21 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
             if (!$this->_model) {
                 $this->_helper->log(
-                    'Model not found for '. $this->_item->getMapperName() . ' >> PK(' .$this->_pk .')',
+                    'Unable to instantiate model with PK(' . $this->_pk .')',
                     Zend_Log::ERR
                 );
                 throw new Zend_Exception("Requested column not found.");
             }
 
-            $this->_setFileFields();
+            $fieldName = $this->_item->getConfigAttribute("mainColumn");
+            $fldGetter = 'get' . ucFirst($fieldName);
+            $nameGetter = $fldGetter . 'BaseName';
+            $pathGetter = $fldGetter . 'Path';
 
             if ((bool)$this->_request->getParam("download")) {
 
-                $nameGetter = 'get' . $this->_fileFields['baseNameName'];
-
                 $this->_helper->log('Sending file to Client: ('.$this->_model->{$nameGetter}().')');
-
-                $file = $this->_getFilePath();
-                $isRaw = false;
-
-                if (!file_exists($file)) {
-                    //SOAP compatibility mode
-                    $file = $this->_getBinary();
-                    $isRaw = true;
-                }
+                $filePath = $this->_model->{$pathGetter}();
 
                 $partialDownload = $this->_item->getConfigAttribute("partialDownload") === true;
                 $rangeRequested = array_key_exists('HTTP_RANGE', $_SERVER) ? true : false;
@@ -213,16 +206,16 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
                 if ($partialDownload) {
                     $this->_helper->sendPartialFileToClient(
-                        $file,
+                        $filePath,
                         array('filename' => $this->_model->{$nameGetter}()),
-                        $isRaw
+                        false
                     );
 
                 } else {
                     $this->_helper->sendFileToClient(
-                        $file,
+                        $filePath,
                         array('filename' => $this->_model->{$nameGetter}()),
-                        $isRaw
+                        false
                     );
                 }
 
@@ -232,9 +225,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 return;
             }
 
-            $nameGetter = 'get' . $fileFields['baseNameName'];
-            $sizeGetter = 'get' . $fileFields['sizeName'];
-            $mimeGetter = 'get' . $fileFields['mimeName'];
+            $sizeGetter = $fldGetter . 'FileSize';
 
             $data = array(
                     'pk'=>$this->_pk,
@@ -260,7 +251,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $this->_helper->log('Error Downloading; request not from XHR.', Zend_Log::ERR);
 
                 throw new Zend_Controller_Action_Exception('File not found.', 404);
-                return;
             }
 
             $this->_helper->log('Error Downloading; ('.$e->getMessage().')', Zend_Log::ERR);
@@ -535,6 +525,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
     /**
      * Recuperar la ruta del fichero
+     * @deprecated
      */
     protected function _getFilePath()
     {
@@ -546,20 +537,4 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         return $this->_model->{$pathGetter}();
     }
-
-    /**
-     * @deprecated
-     */
-    protected function _setFileFields()
-    {
-        throw new \Exception('Deprecated method _setFileFields');
-//        $fieldSpecsGetter =
-//            "get" .
-//            $this->_item->getConfigAttribute("mainColumn")
-//            . "Specs";
-//
-//        $this->_fileFields = $this->_model->{$fieldSpecsGetter}();
-//        return;
-    }
-
 }

@@ -80,9 +80,22 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         if ($column->isFile()) {
 
             $pathSetter = $setter . 'Path';
+            $nameSetter = $setter . 'BaseName';
+            $fileSizeSetter = $setter . 'FileSize';
+            $mimeTypeSetter = $setter . 'MimeType';
+
             if (is_null($value)) {
+
+                //$value is null if file has been marked to be removed
+
                 $model->{$pathSetter}(null);
+                $model->{$nameSetter}(null);
+                $model->{$fileSizeSetter}(null);
+                $model->{$mimeTypeSetter}(null);
             } else {
+
+                //$value is false if it has no changed
+
                 if ($value !== false && file_exists($value['path'])) {
                     $baseNameSetter = $setter . 'BaseName';
                     $model->{$pathSetter}($value['path']);

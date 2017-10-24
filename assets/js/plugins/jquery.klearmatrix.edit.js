@@ -998,10 +998,10 @@
 
             $("select.multiselect.visualFilter option", $container).on('manualchange.visualFilter', function(e, manual) {
                 if (this.selected) {
-                    return _showField($(this));
+                    return _showField($(this), manual);
                 }
 
-                return _hideField($(this));
+                return _hideField($(this), manual);
 
             }).trigger("manualchange.visualFilter", true);
 

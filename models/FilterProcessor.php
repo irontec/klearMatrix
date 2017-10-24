@@ -269,11 +269,8 @@ class KlearMatrix_Model_FilterProcessor
         return $searchFields;
     }
 
-
-
     protected function _getPostSearchFields()
     {
-
         $searchFields = $this->_request->getPost("searchFields");
         if (is_array($searchFields)) {
 
@@ -281,6 +278,10 @@ class KlearMatrix_Model_FilterProcessor
 
                 if (empty($val)) {
                     unset($searchFields[$key]);
+                } else if (is_array($val)) {
+                    array_walk($searchFields[$key], function (&$value) {
+                        $value = \urldecode($value);
+                    });
                 }
             }
 
@@ -291,7 +292,6 @@ class KlearMatrix_Model_FilterProcessor
 
         return $searchFields;
     }
-
 
     public function isFilteredRequest()
     {

@@ -19,7 +19,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
     protected $_showOnSelect = array();
     protected $_hideOnSelect = array();
 
-
     public function init()
     {
         $this->_parsedValues = new Klear_Model_ConfigParser;
@@ -136,8 +135,8 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                 $value = $dataModel->{$getter}();
 
                 if ($visualFilterSpec->{$value}) {
-                    $this->_showOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->show;
-                    $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $visualFilterSpec->{$value}->hide;
+                    $this->_showOnSelect[$dataModel->getId()] = $visualFilterSpec->{$value}->toggle;
+                    $this->_hideOnSelect[$dataModel->getId()] = $visualFilterSpec->{$value}->toggle;
                 }
             }
         }
@@ -489,7 +488,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             return '';
         }
 
-        return $originalModel->getPrimaryKeyName() . ' in (' . implode(',', $returnIds). ')';
+        return 'id in (' . implode(',', $returnIds). ')';
     }
 
     public function _toArray()

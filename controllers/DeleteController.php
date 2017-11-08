@@ -95,46 +95,14 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
             $pk = array($pk);
         }
 
-        if ($GLOBALS['sf']) {
-            try {
-                $dataGateway->remove($entity, $pk);
-            } catch (\Exception $e) {
-                $this->_helper->log(
-                    'Error deleting model for ' . $entity . ' > PK('. $e->getCode() .')',
-                    Zend_Log::ERR
-                );
-                throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
-            }
-
-
-        } else if (!$GLOBALS['sf']) {
-
-            $baseModel = $this->_item->getObjectInstance();
-            $primaryKeyFieldName = $mapper->getDbTable()->getAdapter()->quoteIdentifier($baseModel->getPrimaryKeyName());
-            $results = $mapper->fetchList($primaryKeyFieldName . " in ('".implode("','", $pk)."')");
-
-            try {
-                if (!is_array($results) || sizeof($results) == 0) {
-                    $this->_helper->log(
-                        'Error deleting model for ' . $mapperName . ' > PK('.$pk.')',
-                        Zend_Log::ERR
-                    );
-                    throw new Klear_Exception_Default($this->view->translate('Record not found. Could not delete.'));
-                }
-
-                foreach ($results as $obj) {
-                    if (!$obj->delete()) {
-                        throw new Exception('Unknown error');
-                    }
-                }
-
-            } catch (Exception $e) {
-                $this->_helper->log(
-                    'Error deleting model for ' . $mapperName . ' > PK('.$obj->getPrimaryKey().')',
-                    Zend_Log::ERR
-                );
-                throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
-            }
+        try {
+            $dataGateway->remove($entity, $pk);
+        } catch (\Exception $e) {
+            $this->_helper->log(
+                'Error deleting model for ' . $entity . ' > PK('. $e->getCode() .')',
+                Zend_Log::ERR
+            );
+            throw new Klear_Exception_Default($this->view->translate('Could not delete record: ') . $e->getMessage());
         }
 
         $this->_helper->log('model succesfully deleted for ' . $entity . ' > PK('.implode(',', $pk).')');

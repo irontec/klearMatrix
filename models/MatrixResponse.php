@@ -249,33 +249,19 @@ class KlearMatrix_Model_MatrixResponse
 
         if ($this->_parentData) {
 
-            /**
-             * @todo fso handler
-             */
-            $fsoImplemened = $GLOBALS['sf'] ? false : true;
-            if ($fsoImplemened && in_array($defaultParentCol->getDbFieldName(), $this->_parentData->getFileObjects())) {
+            try {
 
-                /**
-                 * @todo implement FSO in DTOs
-                 */
-                $specsGetter = 'get' . ucfirst($defaultParentCol->getDbFieldName()) . 'Specs';
-                $specs = $this->_parentData->$specsGetter();
-                $getter = 'get' . $this->_parentData->columnNameToVar($specs['baseNameName']);
-            } else {
-                try {
-
-                    if (!$defaultParentCol->isMultilang()) {
-                        $getter = 'get' . ucfirst($defaultParentCol->getDbFieldName());
-                    } else {
-                        $getter =
-                            'get'
-                            . ucfirst($defaultParentCol->getDbFieldName())
-                            . \Zend_Registry::get('defaultLang');
-                    }
-
-                } catch (\Exception $e) {
-                    throw new \Exception($defaultParentCol->getDbFieldName() . " is not a valid default column. Chech your modelName.yaml");
+                if (!$defaultParentCol->isMultilang()) {
+                    $getter = 'get' . ucfirst($defaultParentCol->getDbFieldName());
+                } else {
+                    $getter =
+                        'get'
+                        . ucfirst($defaultParentCol->getDbFieldName())
+                        . \Zend_Registry::get('defaultLang');
                 }
+
+            } catch (\Exception $e) {
+                throw new \Exception($defaultParentCol->getDbFieldName() . " is not a valid default column. Chech your modelName.yaml");
             }
 
             $this->_parentIden = $this->_parentData->$getter();

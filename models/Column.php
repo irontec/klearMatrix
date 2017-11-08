@@ -522,48 +522,29 @@ class KlearMatrix_Model_Column
       $fieldValues = array();
       foreach ($searchFields as $searchField) {
             $cont = 1;
-            $quotedSearchField = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($searchField);
+            $quotedSearchField = 'self::' . str_replace('_', '.', $searchField);
             foreach ($values as $_val) {
 
-                $template = ":" . $searchField . $cont ;
+                $template =  preg_replace('/[^A-Za-z]/', '', $searchField) . $cont ;
                 if ($_val === '__null__') {
                     $_val = 'NULL';
                 }
                 //Para los select tipo mapper no hacemos like, porque son Ids
                 if ($this->_isMapperSelect()) {
-                    if ($this->namedParamsAreSupported()) {
-                        if ($_val == 'NULL' || $_val == 'NOT NULL') {
-                            $comparisons[] = $quotedSearchField . ' is ' . $_val;
-                        } else {
-                            $comparisons[] = $quotedSearchField . ' = ' . $template;
-                            $fieldValues[$template] = $_val;
-                        }
+                    if ($_val == 'NULL' || $_val == 'NOT NULL') {
+                        $comparisons[] = $quotedSearchField . ' is ' . $_val;
                     } else {
-                        if ($_val == 'NULL' || $_val == 'NOT NULL') {
-                            $comparisons[] = $quotedSearchField . ' is ' . $_val;
-                        } else {
-                            $comparisons[] = $quotedSearchField . ' = ?';
-                            $fieldValues[] = $_val;
-                        }
+                        $comparisons[] = $quotedSearchField . ' = :' . $template;
+                        $fieldValues[$template] = $_val;
                     }
                 } else {
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
-                    if ($this->namedParamsAreSupported()) {
-                        if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
-                            $searchOperator = ' IS';
-                            $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
-                        } else {
-                            $comparisons[] =  $quotedSearchField. $searchOperator . ' ' . $template;
-                            $fieldValues[$template] = $this->_formatValue($_val);
-                        }
+                    if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
+                        $searchOperator = ' IS';
+                        $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
                     } else {
-                        if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
-                            $searchOperator = ' IS';
-                            $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
-                        } else {
-                            $comparisons[] = $quotedSearchField . $searchOperator . ' ?';
-                            $fieldValues[] = $this->_formatValue($_val);
-                        }
+                        $comparisons[] =  $quotedSearchField. $searchOperator . ' :' . $template;
+                        $fieldValues[$template] = $this->_formatValue($_val);
                     }
                 }
                 $cont++;
@@ -571,8 +552,8 @@ class KlearMatrix_Model_Column
         }
 
         return array(
-                '(' . implode(' or ', $comparisons). ')',
-                $fieldValues
+            '(' . implode(' or ', $comparisons). ')',
+            $fieldValues
         );
     }
 
@@ -610,26 +591,8 @@ class KlearMatrix_Model_Column
                && $this->_config->getProperty("source")->data == 'mapper';
     }
 
-    public function namedParamsAreSupported()
-    {
-        /*
-         * Si no tiene $dbAdapter damos por hecho que es una petición SOAP
-         * y usamos un namedParameter porque MasterLogic lo espera así
-         * TODO: Molaría sacar esto de aquí porque es específico de Euskaltel
-         * TODO: Seguro? no depende sólo ed PDO/MySQLi?
-         */
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        return !$dbAdapter || $dbAdapter->supportsParameters('named');
-    }
-
     protected function _getStringSearchOperatorByDbAdapter()
     {
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        $dbAdapterClass = get_class($dbAdapter);
-
-        if ($dbAdapterClass == 'Zend_Db_Adapter_Pdo_Pgsql') {
-           return ' ILIKE';
-        }
         return ' LIKE';
     }
 
@@ -644,12 +607,23 @@ class KlearMatrix_Model_Column
             return $this->getFieldConfig()->getCustomGetterName();
         }
 
-        return 'get' . ucfirst($this->getDbFieldName());
+        $fldName = str_replace(
+            '_',
+            '',
+            $this->getDbFieldName()
+        );
+
+        return 'get' . ucfirst($fldName);
     }
 
     public function getSetterName($default = false)
     {
-        return 'set' . ucfirst($this->getDbFieldName());
+        $fldName = str_replace(
+            '_',
+            '',
+            $this->getDbFieldName()
+        );
+        return 'set' . ucfirst($fldName);
     }
 
     protected function _getDecoratorsConfig()

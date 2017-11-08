@@ -176,7 +176,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             $selfClassName = get_class($this);
             $classBasePath = substr($selfClassName, 0, strrpos($selfClassName, '_') + 1);
             $decoratorClassBaseName = $classBasePath . 'Decorator_';
-
             $decorators = $this->_column->getKlearConfig()->getRaw()->decorators;
 
             foreach ($decorators as $decoratorName => $decorator) {
@@ -188,7 +187,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
                     && defined($decoratorClassName . '::DYNAMIC_DATA_LOADING')
                     && $decoratorClassName::DYNAMIC_DATA_LOADING
                 ) {
-
                     $this->_loadJsDependencies($decoratorName);
                     return true;
                 }
@@ -412,11 +410,6 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
      */
     public function getCustomSearchCondition($values, $searchOps)
     {
-        /**
-         * @todo
-         */
-        throw new \Exception('TODO');
-
         $dataIds = array();
         // Comprobamos que los Ids que nos llegan desde el buscador, estén en los Ids disponibles
         // Cuando el campo va acompañado de un decorator autocomplete no disponemos de las ids, damos fe
@@ -430,65 +423,27 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
             return '';
         }
 
-        $relationMapperName = $this->_relation;
-        $relationMapper = new $relationMapperName;
-        $relationModel = $relationMapper->loadModel(null);
+        $entityClassSegments = explode('\\', $this->_relation);
+        $entityName =  end($entityClassSegments);;
+        $where = $entityName . '.' . $this->_relatedProperty . ' in ('.implode(',', $dataIds).')';
 
-        $dataMapperName = $this->_related;
-        $dataMapper = new $dataMapperName;
-        $tableRelatedName = $dataMapper->getDbTable()->getTableName();
-
-        // Campo relacionado con la tabla de data, el que tengo que filtrar por los valores que llegan en values
-        $dataColumnName = $relationModel->getColumnForParentTable($tableRelatedName, $this->_relationProperty);
-
-        $originalModel = $this->_column->getModel();
-        $originalMapper = $originalModel->getMapper();
-
-        // Si el mapper tiene el método getTableName, se consulta (EKT)
-        // Si no, se tira directamente de DbTable? - quizás es mejor que tenga ese método siempre ó excepción?
-        if (method_exists($originalMapper, 'getTableName')) {
-            $originalTableName = $originalMapper->getTableName();
-        } else {
-            $originalTableName = $originalMapper->getDbTable()->getTableName();
-        }
-
-        $originalColumnName = null;
-
-        // Necesitamos el nombre del modelo (relación con la tbala principal) en la tabla de relación
-        $parents = $relationModel->getParentList();
-        foreach ($parents as $parentData) {
-            // El campo no tiene que ser el "otro" (para n-m de una misma tabla...
-            if (
-                (strtolower($parentData['table_name']) == strtolower($originalTableName))
-                && ($parentData['property'] != $dataColumnName)
-            ) {
-                $originalColumnName = $parentData['property'];
-                break;
-            }
-        }
-
-        if (is_null($originalColumnName)) {
-            return '';
-        }
-
-        // Campo relacionado con la tabla principal en la tabla de relación
-        $idColumnName = $relationModel->getColumnForParentTable($originalTableName, $originalColumnName);
-
-        // Instanciamos mapper de relacion, para conseguir todos los IDs de
-        $mapper = new $relationMapperName;
-        $relationModels = $mapper->fetchList($dataColumnName . ' in ('.implode(',', $dataIds).')');
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        $relationModels = $dataGateway->findBy(
+            $this->_relation,
+            [$where]
+        );
 
         $returnIds = array();
-        $getter = 'get' . ucfirst($idColumnName);
+        $getter = 'get' . ucfirst($this->_relationProperty) . 'Id';
         foreach ($relationModels as $relModel) {
-            $returnIds[] = $relModel->$getter();
+            $returnIds[] = $relModel->{$getter}();
         }
 
         if (sizeof($returnIds) == 0) {
             return '';
         }
 
-        return 'id in (' . implode(',', $returnIds). ')';
+        return 'self::id in (' . implode(',', $returnIds). ')';
     }
 
     public function _toArray()

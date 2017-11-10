@@ -128,13 +128,14 @@ class KlearMatrix_Model_Field_Select_Themes extends KlearMatrix_Model_Field_Sele
 
         $availableThemesConfig = new Zend_Config_Yaml($themeFile, $env);
         $availableThemesIrontec = $availableThemesConfig->get("multicdn")->get("irontec")->get("themes");
-        $availableThemesGoogleapis = $availableThemesConfig->get("multicdn")->get("googleapis")->get("themes");
+        $availableJqueryThemes = $availableThemesConfig->get("multicdn")->get("jquery")->get("themes");
+
         $totalAvailableThemes = array();
         foreach ($availableThemesIrontec as $themeName) {
             $themeConfig = new Zend_Config(array("title" => ucfirst($themeName)));
             $totalAvailableThemes[$themeName]= $themeConfig;
         }
-        foreach ($availableThemesGoogleapis as $themeName) {
+        foreach ($availableJqueryThemes as $themeName) {
             $themeConfig = new Zend_Config(array("title" => ucfirst($themeName)));
             $totalAvailableThemes[$themeName]= $themeConfig;
         }

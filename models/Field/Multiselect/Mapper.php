@@ -357,7 +357,7 @@ class KlearMatrix_Model_Field_Multiselect_Mapper extends KlearMatrix_Model_Field
 
                 $relationModel = $relationModelReflectionClass
                     ->newInstanceWithoutConstructor()
-                    ->createDTO();
+                    ->createDto();
 
                 $relationModel->{$relatedPropertySetter}($idRelated);
                 $retRelations[] = $relationModel;

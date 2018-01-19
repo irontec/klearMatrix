@@ -88,6 +88,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
             $this->_helper->log('new file uploaded (' .$result['basename'].')');
 
         } catch(Exception $e) {
+
             $this->_helper->log(
                 'Error uploading File [' . $e->getCode() . '] (' . $e->getMessage() . ')',
                 Zend_Log::ERR

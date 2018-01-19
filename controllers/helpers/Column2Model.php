@@ -1,4 +1,5 @@
 <?php
+
 class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_Helper_Abstract
 {
 
@@ -122,7 +123,7 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
 
                     $field = preg_replace('/[^A-Za-z]/', '', $field);
                     $setter = 'set' . ucfirst($field);
-                    if (!method_exists($model, $setter)) {
+                    if (method_exists($model, $setter . 'Id')) {
                         $setter .= 'Id';
                     }
                     $model->{$setter}($value);

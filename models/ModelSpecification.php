@@ -21,7 +21,7 @@ class KlearMatrix_Model_ModelSpecification
 
         $this->_class = $this->_config->getProperty("class");
         $this->_entity = $this->_config->getRequiredProperty("entity");
-        $this->_dto = $this->_entity . 'DTO';
+        $this->_dto = $this->_entity . 'Dto';
 
         $this->_instance = new $this->_dto;
     }

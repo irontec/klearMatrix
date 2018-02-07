@@ -56,6 +56,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
     );
 
     protected $_dateFormats = array(
+        'sql' => 'yy-mm-dd',
         'af' => 'dd/mm/yy',
         'ar' => 'dd/mm/yy',
         'ar-DZ' => 'dd/mm/yy',
@@ -212,7 +213,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
     protected function _setPickerDateFormat()
     {
         if ($this->_getSetting('dateFormat') === null) {
-            $this->_setSetting('dateFormat', $this->_dateFormats[$this->_jqLocale]);
+            $this->_setSetting('dateFormat', $this->_dateFormats['sql']);
         }
     }
 

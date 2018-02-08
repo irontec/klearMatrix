@@ -23,23 +23,51 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
             return $value;
         }
 
+        $format = $this->toPhpFormat(
+            $this->_getSetting('dateFormat'),
+            $this->_getSetting('timeFormat')
+        );
+
         $value->setTimezone(
             new \DateTimeZone(
                 date_default_timezone_get()
             )
         );
 
-        return $value->format('Y-m-d H:i:s');
+        return $value->format($format);
     }
 
     public function filterValue($value)
     {
-        $dateTime = new \Datetime(
+        $format = $this->toPhpFormat(
+            $this->_getSetting('dateFormat'),
+            $this->_getSetting('timeFormat')
+        );
+
+        $dateTime = \DateTime::createFromFormat(
+            $format,
             $value
         );
 
         $dateTime->setTimezone(new \DateTimeZone('UTC'));
 
         return $dateTime;
+    }
+
+    private function toPhpFormat(string $dateFormat, string $timeFormat)
+    {
+        $dateFormat = str_replace(
+            ['yy', 'mm', 'dd'],
+            ['Y',  'm',  'd'],
+            $dateFormat
+        );
+
+        $timeFormat = str_replace(
+            ['hh', 'mm', 'ss'],
+            ['H',  'i',  's'],
+            $timeFormat
+        );
+
+        return $dateFormat . ' ' . $timeFormat;
     }
 }

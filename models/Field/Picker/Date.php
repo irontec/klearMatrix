@@ -17,7 +17,8 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             return $value;
         }
 
-        return $value->format('Y-m-d');
+        $format = $this->toPhpFormat($this->_getSetting('dateFormat'));
+        return $value->format($format);
     }
 
     public function filterValue($value)
@@ -26,11 +27,22 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             return null;
         }
 
-        $dateTime = new \Datetime(
+        $format = $this->toPhpFormat($this->_getSetting('dateFormat'));
+        $dateTime = \DateTime::createFromFormat(
+            $format,
             $value
         );
         $dateTime->setTime(0,0,0);
 
         return $dateTime;
+    }
+
+    private function toPhpFormat(string $format)
+    {
+        return str_replace(
+            ['yy', 'mm', 'dd'],
+            ['Y', 'm', 'd'],
+            $format
+        );
     }
 }

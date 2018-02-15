@@ -20,13 +20,18 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
 
     protected function _quoteIdentifier($fieldName)
     {
+        $entity = $this->getEntityName();
+
+        return "$entity.". substr($fieldName, 0, -2);
+    }
+
+    protected function getEntityName()
+    {
         $dto = $this->_column->getModel();
         $dtoClass = get_class($dto);
         $entityClass = substr($dtoClass, 0, -3);
         $entityClassSegments = explode('\\', $entityClass);
-        $entity = end($entityClassSegments);
-
-        return "IDENTITY($entity.". substr($fieldName, 0, -2) .")";
+        return end($entityClassSegments);
     }
 
     public function setConfig(Zend_Config $config)

@@ -17,6 +17,12 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             return $value;
         }
 
+        $value->setTimezone(
+            new \DateTimeZone(
+                date_default_timezone_get()
+            )
+        );
+
         $format = $this->toPhpFormat($this->_getSetting('dateFormat'));
         return $value->format($format);
     }
@@ -32,6 +38,7 @@ class KlearMatrix_Model_Field_Picker_Date extends KlearMatrix_Model_Field_Picker
             $format,
             $value
         );
+
         $dateTime->setTime(0,0,0);
 
         return $dateTime;

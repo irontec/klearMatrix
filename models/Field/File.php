@@ -42,11 +42,7 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 
     public function getCustomOrderField()
     {
-        $model = $this->_column->getModel();
-        $getter = $this->getCustomGetterName();
-        $fields = $model->$getter();
-
-        return $model->varNameToColumn($fields['baseNameName']);
+        return $this->_column->getDbFieldName() . '.' .'baseName';
     }
 
     public function getCustomSearchField()

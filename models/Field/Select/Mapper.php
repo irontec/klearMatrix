@@ -299,17 +299,24 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     {
         $values = array();
 
-        $fieldName = $this->_config->getProperty('config')->fieldName;
+        $config = $this->_config->getProperty('config');
+        $fieldName = [];
 
-        if (is_object($fieldName)) {
+        if ($config->order) {
+            $order = $config->order->toArray();
+
+            foreach ($order as $key => $value) {
+                $fieldName[] = substr($key, strpos($key, '.') + 1);
+            }
+
+        } else if (is_object($config->fieldName)) {
 
             $fieldConfig = new Klear_Model_ConfigParser();
-            $fieldConfig->setConfig($fieldName);
+            $fieldConfig->setConfig($config->fieldName);
             $template = $fieldConfig->getProperty("template");
             preg_match_all('/%(.*)%/U', $template, $matches);
 
             if (!count($matches[1])) {
-
                 return $this->_quoteIdentifier($this->_column->getDbFieldName());
             }
 
@@ -332,7 +339,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         if (! count($values)) {
-            return $this->_quoteIdentifier($this->_column->getDbFieldName());
+            return substr($this->_column->getDbFieldName(), 0, -2);
         }
 
         $priority = 1;

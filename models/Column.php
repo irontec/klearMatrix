@@ -326,12 +326,12 @@ class KlearMatrix_Model_Column
             $currentLanguage = $siteLanguage->getLanguage();
 
             if (in_array($currentLanguage, $langs)) {
-                return $this->_dbFieldName."_".$currentLanguage;
+                return $this->_dbFieldName.".".$currentLanguage;
             }
 
             $orderFields = array();
             foreach ($langs as $lang) {
-                $orderFields[] = $this->_dbFieldName."_".$lang;
+                $orderFields[] = $this->_dbFieldName.".".$lang;
             }
             return $orderFields;
         }
@@ -608,7 +608,7 @@ class KlearMatrix_Model_Column
         }
 
         $fldName = str_replace(
-            '_',
+            '.',
             '',
             $this->getDbFieldName()
         );

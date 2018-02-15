@@ -124,7 +124,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             throw new \Exception('Not implemented yet');
             $results = $this->_mapper->fetchListToArray($where, $order, $count, $offset);
         } else {
-
             $entity = $this->_item->getEntityClassName();
             $dataGateway = \Zend_Registry::get('data_gateway');
             $results = $dataGateway->findBy($entity, $where, $order, $count, $offset);
@@ -264,7 +263,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             foreach ($order as $key => $val) {
 
                 unset($order[$key]);
-                if (stripos($val, 'IDENTITY') || stripos($val, 'AS HIDDEN')) {
+                if (stripos($val, 'IDENTITY') || stripos($val, 'AS HIDDEN') || $val{0} === '(') {
                     $order[$val] = $orderType;
                 } else {
                     $key = $this->_item->getEntityName() . '.' . $val;

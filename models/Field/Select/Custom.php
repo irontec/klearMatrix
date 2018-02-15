@@ -103,11 +103,11 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
         }
 
         $priority = 1;
-        $response =  '(CASE '. $this->_column->getDbFieldName() .' ';
+        $response =  'CASE '. $this->_column->getDbFieldName() .' ';
         foreach ($keys as $posibleResult) {
             $response .= " WHEN '" . $posibleResult . "' THEN " . $priority++;
         }
-        $response .= ' END)';
+        $response .= ' ELSE '. $priority .' END AS HIDDEN ORD';
 
         return $response;
     }

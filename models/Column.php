@@ -629,7 +629,7 @@ class KlearMatrix_Model_Column
     public function getSetterName($default = false)
     {
         $fldName = str_replace(
-            '_',
+            '.',
             '',
             $this->getDbFieldName()
         );

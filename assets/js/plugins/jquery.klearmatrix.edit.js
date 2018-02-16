@@ -1147,7 +1147,7 @@
                 if (fields[idx]['field'].match(/^__empty/)) {
                     $field = $("<div class='container ui-widget-content' data-empty='" + fields[idx]['field'] + "' />");
                 } else {
-                    $field = $("label[rel=" + fields[idx]['field'] + "]", $container).parents(".container:eq(0)");
+                    $field = $("label[rel='" + fields[idx]['field'] + "']", $container).parents(".container:eq(0)");
                     if ($field.length != 1) {
                         continue;
                     }

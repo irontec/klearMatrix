@@ -332,6 +332,10 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $key = $entity . '.' . $field;
             $order[$key] = 'ASC';
         }
+
+        /**
+         * @todo optimize this query, we just need the ids here
+         */
         $results = $dataGateway->findBy($entityClass, null, $order);
 
         foreach ($results as $result) {
@@ -339,11 +343,11 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         if (! count($values)) {
-            return substr($this->_column->getDbFieldName(), 0, -2);
+            return $this->_column->getModelAttributeName();
         }
 
         $priority = 1;
-        $identifier =  $this->_quoteIdentifier($this->_column->getDbFieldName());
+        $identifier =  $this->_quoteIdentifier($this->_column->getModelAttributeName());
 
         $response =  'CASE ';
         foreach ($values as $possibleResult) {

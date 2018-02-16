@@ -2,6 +2,7 @@
 class KlearMatrix_Model_Column
 {
     protected $_dbFieldName;
+    protected $_modelAttributeName;
     protected $_publicName;
     protected $_isDefault = false;
     protected $_isReadonly = false;
@@ -49,6 +50,11 @@ class KlearMatrix_Model_Column
     public function setDbFieldName($name)
     {
         $this->_dbFieldName = $name;
+    }
+
+    public function setModelAttributeName($name)
+    {
+        $this->_modelAttributeName = $name;
     }
 
     public function setPublicName($name)
@@ -138,7 +144,6 @@ class KlearMatrix_Model_Column
 
     public function setConfig(Zend_Config $config)
     {
-
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
@@ -362,6 +367,11 @@ class KlearMatrix_Model_Column
         return $this->_dbFieldName;
     }
 
+    public function getModelAttributeName()
+    {
+        return $this->_modelAttributeName;
+    }
+
     public function getType()
     {
         return $this->_type;
@@ -500,7 +510,7 @@ class KlearMatrix_Model_Column
         if (method_exists($this->getFieldConfig(), 'getCustomSearchField')) {
             $searchField = $this->getFieldConfig()->getCustomSearchField();
         } else {
-            $searchField = $this->_dbFieldName;
+            $searchField = $this->_modelAttributeName ?? $this->_dbFieldName;
         }
 
         if ($this->isMultilang()) {

@@ -485,15 +485,46 @@ class KlearMatrix_Model_ResponseItem
     {
         $column = new KlearMatrix_Model_Column;
         $column->setDbFieldName($name);
+
+        $modelAttributeName = $name;
+        if ($this->isForeignkey($config)) {
+            $modelAttributeName = substr($modelAttributeName, 0, -2);
+        }
+        $column->setModelAttributeName($modelAttributeName);
+
         $column->setRouteDispatcher($this->_routeDispatcher);
         $column->setModel($this->getObjectInstance());
 
         if ($config) {
-
             $column->setConfig($config);
         }
 
         return $column;
+    }
+
+
+    protected function isForeignkey(\Zend_Config $config)
+    {
+        $config = $config->toArray();
+
+        if (!isset($config['type'])) {
+            return false;
+        }
+
+        if ($config['type'] !== 'select') {
+            return false;
+        }
+
+        if (!isset($config['source'])) {
+            return false;
+        }
+
+        if (!isset($config['source']['data'])) {
+            return false;
+        }
+
+        return $config['source']['data'] === 'mapper';
+
     }
 
     protected function _createFileColumn($config, $fileColumn)

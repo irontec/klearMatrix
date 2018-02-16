@@ -20,9 +20,7 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
 
     protected function _quoteIdentifier($fieldName)
     {
-        $entity = $this->getEntityName();
-
-        return "$entity.". substr($fieldName, 0, -2);
+        return $this->getEntityName() . '.' . $fieldName;
     }
 
     protected function getEntityName()

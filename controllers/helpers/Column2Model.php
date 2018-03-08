@@ -13,7 +13,12 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
         $request = $this->getRequest();
 
         if (!$column->isMultilang()) {
-            return $this->_autoTrim($column, $request->getPost($column->getDbFieldName()));
+            return $this->_autoTrim(
+                $column,
+                $request->getPost(
+                    str_replace('.', '_', $column->getDbFieldName())
+                )
+            );
         }
 
         $value = array();

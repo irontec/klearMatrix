@@ -660,8 +660,7 @@ class KlearMatrix_Model_ResponseItem
 
                 $field = Klear_Model_QueryHelper::replaceSelfReferences(
                     $field,
-                    '',
-                    'Id'
+                    ''
                 );
 
                 $this->addFieldToBlackList($field);
@@ -1024,12 +1023,6 @@ class KlearMatrix_Model_ResponseItem
 
     public function getFilterField()
     {
-        $dto = $this->_modelSpec->getInstance();
-        $fkGetter = 'get' . ucfirst($this->_filteredField) . 'Id';
-        if (method_exists($dto, $fkGetter)) {
-            return $this->_filteredField . 'Id';
-        }
-
         return $this->_filteredField;
     }
 

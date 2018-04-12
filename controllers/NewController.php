@@ -57,17 +57,12 @@ class KlearMatrix_NewController extends Zend_Controller_Action
             );
 
             if ($parentPk) {
-                //pantalla new desde un edit
                 $filteredValue = $parentPk;
             } else {
                 $filteredValue = $this->_mainRouter->getParam($filteredField);
             }
 
-            // TODO: Para el screename del parent,
-            // recuperar mapper. Hacer fetchById y comprobar
-            // que existe el parámetro recibido.
-
-            $filterFieldSetter = 'set' . ucfirst($filteredField);
+            $filterFieldSetter = 'set' . ucfirst($filteredField) . 'Id';
             $model->{$filterFieldSetter}($filteredValue);
         }
 

@@ -398,6 +398,9 @@ class KlearMatrix_Model_MatrixResponse
 
                 $response = $this->_getMultiselectValueFromColumn($column, $result);
 
+            } else if ($column->isSelectMapperFieldType()) {
+                $getterName = $column->getGetterName() . 'Id';
+                $response = $result->{$getterName}();
             } else {
                 $getterName = $column->getGetterName();
                 $response = $result->{$getterName}();

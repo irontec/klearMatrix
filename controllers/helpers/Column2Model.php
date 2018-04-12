@@ -111,6 +111,11 @@ class KlearMatrix_Controller_Helper_Column2Model extends Zend_Controller_Action_
             return;
         }
 
+        if ($column->isSelectMapperFieldType()) {
+            $model->{$setter . 'Id'}($value);
+            return;
+        }
+
         $model->$setter($value);
     }
 

@@ -137,6 +137,13 @@ class KlearMatrix_Model_Column
         return $this->_isFile;
     }
 
+    public function isSelectMapperFieldType()
+    {
+        return
+            $this->_type === 'select'
+            && $this->_fieldConfig->hasMapperAdapter();
+    }
+
     public function isDirty()
     {
         return $this->_dirty;

@@ -16,6 +16,11 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
         $this->_css = $this->_adapter->getExtraCss();
     }
 
+    public function getAdapter()
+    {
+        return $this->_adapter;
+    }
+
     public function getCustomSearchCondition($values, $searchOps)
     {
         $searchField = $this->_column->getDbFieldName();

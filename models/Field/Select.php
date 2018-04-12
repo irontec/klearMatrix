@@ -19,6 +19,11 @@ class KlearMatrix_Model_Field_Select extends KlearMatrix_Model_Field_Abstract
         $this->_js = $this->_adapter->getExtraJavascript();
     }
 
+    public function hasMapperAdapter()
+    {
+        return ($this->_adapter instanceof KlearMatrix_Model_Field_Select_Mapper);
+    }
+
     protected function _filterValue($value)
     {
         if ($value == '__NULL__') {

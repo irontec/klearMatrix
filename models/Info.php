@@ -8,7 +8,9 @@ class KlearMatrix_Model_Info
         'position' => 'left',
         'icon' => 'help',
         'text' => '',
-        'label' => ''
+        'label' => '',
+        'href' => '',
+        'target' => '_blank'
     );
 
 

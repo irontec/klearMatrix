@@ -8,7 +8,16 @@ fieldInfo-${info.type}
 fieldInfo-position-${info.position}
 "
 data-title="${info.text}"
-></span>{{if (info.label)}} ${info.label} {{/if}}
+></span>
+    {{if (info.href)}}
+        <a href="${info.href}" target="${info.target}" class="info-link">
+    {{/if}}
+    {{if (info.label)}}
+        ${info.label}
+    {{/if}}
+    {{if (info.href)}}
+        </a>
+    {{/if}}
 </div>
 {{/if}}
 

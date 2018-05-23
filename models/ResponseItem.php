@@ -485,12 +485,7 @@ class KlearMatrix_Model_ResponseItem
     {
         $column = new KlearMatrix_Model_Column;
         $column->setDbFieldName($name);
-
-        $modelAttributeName = $name;
-        if ($this->isForeignkey($config)) {
-            $modelAttributeName = substr($modelAttributeName, 0, -2);
-        }
-        $column->setModelAttributeName($modelAttributeName);
+        $column->setModelAttributeName($name);
 
         $column->setRouteDispatcher($this->_routeDispatcher);
         $column->setModel($this->getObjectInstance());

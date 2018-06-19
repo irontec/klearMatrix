@@ -113,30 +113,33 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $csvParams = $this->_item->getCsvParameters();
         $config = $this->_item->getConfig();
+
+        $entity = $this->_item->getEntityClassName();
+        $dataGateway = \Zend_Registry::get('data_gateway');
+
         if ($config->getProperty("rawSelect")) {
+            throw new \Exception('Not implemented yet');
             $result = $this->_getRawSelectResults($config, $where, $order, $count, $offset);
             $results = $result["results"];
             $rawCount = $result["rawCount"];
 
         } else if ($this->_contextParam == "csv" && isset($csvParams["rawValues"]) && $csvParams["rawValues"]) {
 
-            //@todo use $dataGateway
             throw new \Exception('Not implemented yet');
             $results = $this->_mapper->fetchListToArray($where, $order, $count, $offset);
-        } else {
-            $entity = $this->_item->getEntityClassName();
-            $dataGateway = \Zend_Registry::get('data_gateway');
+        } else if ($count) {
+
             $results = $dataGateway->findBy($entity, $where, $order, $count, $offset);
+            $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
+
+        } else {
+            $results = $dataGateway->findAllBy($entity, $where, $order);
         }
 
-        $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
-
-        if (is_array($results)) {
+        if ($results instanceof \Iterator || is_array($results)) {
             if ($config->getProperty("rawSelect")) {
                 $totalItems = $rawCount;
             } else {
-
-                $dataGateway = \Zend_Registry::get('data_gateway');
                 $totalItems = $dataGateway->countBy($entity, $where);
             }
             if (!is_null($count) && !is_null($offset)) {
@@ -340,11 +343,6 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     //Exportamos los resultados a CSV
     public function exportCsv()
     {
-        /**
-         * @todo
-         */
-        throw new \Exception('Not migrated yet');
-
         $fields = $this->view->data['columns'];
         $values = $this->_normalizeValues($this->view->data['values']);
 

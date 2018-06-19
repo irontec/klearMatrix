@@ -466,9 +466,7 @@ class KlearMatrix_Model_MatrixResponse
      */
     public function fixResults(KlearMatrix_Model_ResponseItem $screen)
     {
-        $primaryKeyName = $screen->getPkName();
-
-        if (!is_array($this->_results)) {
+        if (!$this->_results instanceof \Iterator && !is_array($this->_results)) {
             $this->_results = array($this->_results);
         }
 

@@ -134,6 +134,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         } else {
             $results = $dataGateway->findAllBy($entity, $where, $order);
+            set_time_limit(0);
         }
 
         if ($results instanceof \Iterator || is_array($results)) {

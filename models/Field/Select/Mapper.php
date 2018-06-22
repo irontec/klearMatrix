@@ -260,13 +260,18 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
                     }
                 }
 
-                $getter = 'get' . ucfirst($dataModel->columnNameToVar($key));
+                $getter = 'get' . ucfirst($key);
                 $value = $dataModel->$getter();
 
                 if ($config->$value) {
 
-                    $this->_showOnSelect[$dataModel->getPrimaryKey()] = $config->$value->show;
-                    $this->_hideOnSelect[$dataModel->getPrimaryKey()] = $config->$value->hide;
+                    $this->_showOnSelect[$dataModel->getId()] = $config->$value->show;
+                    $this->_hideOnSelect[$dataModel->getId()] = $config->$value->hide;
+
+                } else if ($config->__default__) {
+
+                    $this->_showOnSelect[$dataModel->getId()] = $config->__default__->show;
+                    $this->_hideOnSelect[$dataModel->getId()] = $config->__default__->hide;
                 }
             }
         }

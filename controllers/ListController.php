@@ -121,13 +121,15 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         } else if ($this->_contextParam == "csv" && isset($csvParams["rawValues"]) && $csvParams["rawValues"]) {
             $results = $this->_mapper->fetchListToArray($where, $order, $count, $offset);
-        } else {
+        } else if ($count) {
             $results = $this->_mapper->fetchList($where, $order, $count, $offset);
+            $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
+        } else {
+            // Export context
+            $results = $this->_fetchAllGenerator($where, $order);
         }
 
-        $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
-
-        if (is_array($results)) {
+        if ($results instanceof \Iterator || is_array($results)) {
             if ($config->getProperty("rawSelect")) {
                 $totalItems = $rawCount;
             } else {
@@ -181,6 +183,26 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
         $jsonResponse->setData($this->_helper->hookedDataForScreen($this->_item, 'setData', $data));
         $jsonResponse->attachView($this->_helper->hookedDataForScreen($this->_item, 'attachView', $this->view));
+    }
+
+    protected function _fetchAllGenerator($where, $order)
+    {
+        $limit = 50;
+        $currentPage = 1;
+        $continue =  true;
+
+        while ($continue) {
+
+            $offset = ($currentPage - 1) * $limit;
+
+            $results = $this->_mapper->fetchList($where, $order, $limit, $offset);
+            $continue = count($results) === $limit;
+            $currentPage++;
+
+            foreach ($results as $result) {
+                yield $result;
+            }
+        }
     }
 
     protected function _getItemsPerPage()

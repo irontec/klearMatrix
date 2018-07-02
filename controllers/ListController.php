@@ -126,6 +126,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $this->_helper->log(sizeof($results) . ' elements return by fetchList for:' . $this->_mapperName);
         } else {
             // Export context
+            set_time_limit(0);
             $results = $this->_fetchAllGenerator($where, $order);
         }
 
@@ -187,7 +188,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
     protected function _fetchAllGenerator($where, $order)
     {
-        $limit = 50;
+        $limit = 1500;
         $currentPage = 1;
         $continue =  true;
 

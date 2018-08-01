@@ -107,7 +107,12 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
     protected function _runReverse()
     {
         $where = $this->_getEntityName() . '.';
-        $where .= 'id' . ' IN (' . implode(',', $this->_request->getParam("value")) . ')';
+        $paramValue = $this->_request->getParam("value");
+        if (is_array($paramValue)) {
+            $where .= 'id IN (' . implode(',', $paramValue) . ')';
+        } else {
+            $where .= 'id = ' . $paramValue;
+        }
         $this->_results = $this->_dataGateway->findBy(
             $this->_entity,
             [$where]

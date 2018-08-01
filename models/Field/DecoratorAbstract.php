@@ -90,20 +90,14 @@ abstract class KlearMatrix_Model_Field_DecoratorAbstract
 
     public function loadDependencies()
     {
+        $dataGateway = \Zend_Registry::get('data_gateway');
+
         $this->_mainRouter = $this->_request->getUserParam("mainRouter");
         $this->_item = $this->_mainRouter->getCurrentItem();
-
-        $mapperName = $this->_item->getMapperName();
-        $mapper = new $mapperName;
         $this->_pk = $this->_mainRouter->getParam("pk", false);
 
-        if (false === $this->_pk) {
-
-            $this->_model = $mapper->loadModel(null);
-
-        } else {
-
-            $this->_model = $mapper->find($this->_pk);
+        if ($this->_pk) {
+            $this->_model = $dataGateway->find($this->_item->getEntityClassName(), $this->_pk);
         }
 
         $this->_init();

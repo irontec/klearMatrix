@@ -35,7 +35,7 @@ class KlearMatrix_Model_Field_Multiselect_Decorator_Autocomplete extends KlearMa
         $this->_model = $this->_mapper->loadModel(null);
 
         $this->_labelField = $this->_commandConfiguration->label;
-        $this->_pkField = $this->_model->getPrimaryKeyName();
+        $this->_pkField = $this->_model->getId();
         $this->_fields = $this->_getFields();
         $this->_fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
 

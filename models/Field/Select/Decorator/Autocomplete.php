@@ -42,7 +42,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         $this->_entity = $this->_commandConfiguration->entity;
 
         $this->_labelField = $this->_commandConfiguration->label;
-        $this->_pkField = $this->_model->getPrimaryKeyName();
+        $this->_pkField = 'Id';
         $this->_fields = $this->_getFields();
         $this->_fieldsTemplate = Klear_Model_Gettext::gettextCheck($this->_getFieldsTemplate());
 
@@ -65,7 +65,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
             $replace = array();
             foreach ($this->_fields as $fieldName) {
-                $getter = 'get' . ucfirst($fieldName);
+                $getter = 'get' . ucfirst(str_replace('.', '', $fieldName));
                 $replace['%' . $fieldName . '%'] = $record->$getter();
             }
 
@@ -107,7 +107,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
     protected function _runReverse()
     {
         $where = $this->_getEntityName() . '.';
-        $where .= $this->_pkField . ' = ' . $this->_request->getParam("value");
+        $where .= 'id' . ' IN (' . implode(',', $this->_request->getParam("value")) . ')';
         $this->_results = $this->_dataGateway->findBy(
             $this->_entity,
             [$where]
@@ -146,7 +146,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             }
             $filter->setRouteDispatcher($this->_request->getParam("mainRouter"));
 
-            $condition = $filter->getCondition();
+            $condition = implode(' AND ', $filter->getCondition());
 
             if (!$this->_commandConfiguration->ignoreWhereDefault) {
                 $condition .= ' AND ';
@@ -181,9 +181,10 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
         }
 
         foreach ( $this->_fields as $field ) {
-            $query[] = 'self::' . $field . ' LIKE :' . $field;
+            $cleanFldName = str_replace('.', '', $field);
+            $query[] = 'self::' . $field . ' LIKE :' . $cleanFldName;
             $stringLike = str_replace(' ', '%', $searchTerm);
-            $params[] = $startParam . $stringLike . $endParam;
+            $params[$cleanFldName] = $startParam . $stringLike . $endParam;
         }
 
         $query = '('. implode(" OR ", $query) .')';

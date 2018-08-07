@@ -900,8 +900,9 @@
                     if (!field) {
                         return;
                     }
+
                     if (manual) {
-                        field.show();
+                        field.stop(true, true).show();
                         checkSuperContainer.show(field);
                     } else {
                         //Cuando mostramos un campo, lanzamos el visualFilter si tiene
@@ -924,8 +925,8 @@
                                 }
                             });
                         })
-                            .not("div[data-empty]")
-                            .addClass("ui-state-highlight");
+                        .not("div[data-empty]")
+                        .addClass("ui-state-highlight");
 
                         setTimeout(function () {
                             field.removeClass('ui-state-highlight');
@@ -941,16 +942,26 @@
                     return;
                 }
 
+                var selectedOptions = $(curOption.parent()).find('option[data-show]:selected').not(curOption);
+
                 $.each(curOption.data("hide").split(","), function (i, val) {
                     var field = _resolveFieldFromName(val, self.options.theForm);
+
                     if (!field) {
                         return;
                     }
+
+                    var shownByOthers = selectedOptions.filter("*[data-show*='"+ val.trim() +"']");
+
+                    if (shownByOthers.length > 0) {
+                        return;
+                    }
+
                     field.find('select').each(function () {
                         $(this).addClass('novalidate');
                     });
                     if (manual) {
-                        field.hide(1, function () {
+                        field.stop(true, true).hide(1, function () {
                             // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
                             checkSuperContainer.hide($(this));
                         });
@@ -997,6 +1008,7 @@
             }).trigger("manualchange.visualFilter", true);
 
             $("select.multiselect.visualFilter option", $container).on('manualchange.visualFilter', function(e, manual) {
+
                 if (this.selected) {
                     return _showField($(this), manual);
                 }

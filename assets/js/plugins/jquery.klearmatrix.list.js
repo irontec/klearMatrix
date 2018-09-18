@@ -1,22 +1,22 @@
 ;(function load($) {
 
-    if (!$.klear.checkDeps(['$.klearmatrix.module','$.ui.form'],load)) {
+    if (!$.klear.checkDeps(['$.klearmatrix.module', '$.ui.form'], load)) {
         return;
     }
 
     var __namespace__ = "klearmatrix.list";
 
-    $.widget("klearmatrix.list", $.klearmatrix.module,  {
+    $.widget("klearmatrix.list", $.klearmatrix.module, {
         options: {
-            data : null,
+            data: null,
             moduleName: 'list'
         },
         _intervals: {},
         _super: $.klearmatrix.module.prototype,
-        _create : function() {
+        _create: function () {
             this._super._create.apply(this);
         },
-        _init: function() {
+        _init: function () {
 
             this.options.data.title = this.options.data.title || this.options.title;
 
@@ -29,7 +29,7 @@
                 ._registerFieldsEvents()
                 ._registerEvents();
         },
-        destroy: function() {
+        destroy: function () {
 
             this._clearInterval();
             this._super.destroy.apply(this);
@@ -42,43 +42,43 @@
                 }
             }
         },
-        _applyDecorators : function() {
+        _applyDecorators: function () {
 
             var self = this.element;
             var _self = this;
 
             $container = $(this.element.klearModule("getPanel"));
 
-            $(".generalOptionsToolbar .action, .generalOptionsToolbar a",$container).button();
+            $(".generalOptionsToolbar .action, .generalOptionsToolbar a", $container).button();
 
-            if ($("td.multilang",$container).length>0) {
+            if ($("td.multilang", $container).length > 0) {
 
-                var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title",$.translate("Field available in multi-language"));
+                var $mlSelector = $("<span>").addClass("ui-silk ui-silk-comments mlTag").attr("title", $.translate("Field available in multi-language"));
 
-                $("td.multilang",$container).each(function() {
+                $("td.multilang", $container).each(function () {
                     $(this).prepend($mlSelector.clone().tooltip());
                 });
             }
 
-            $("caption span.extraCaptionInfo input",$container)
+            $("caption span.extraCaptionInfo input", $container)
                 .spinner()
-                .on('keydown',function(e) {
+                .on('keydown', function (e) {
 
                     if (e.keyCode == 13) {
                         $(this).trigger('fireit');
                     }
                 })
-                .on('fireit',function() {
+                .on('fireit', function () {
                     var _count = parseInt($(this).val());
-                    var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                    var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
                     if (!_dispatchOptions.post) _dispatchOptions.post = {};
 
-                    $.extend(_dispatchOptions.post,{
-                        count : _count
+                    $.extend(_dispatchOptions.post, {
+                        count: _count
                     });
 
                     $(self)
-                        .klearModule("option","dispatchOptions",_dispatchOptions)
+                        .klearModule("option", "dispatchOptions", _dispatchOptions)
                         .klearModule("reDispatch");
 
                 });
@@ -86,29 +86,29 @@
 
             return this;
         },
-        _registerEvents : function() {
+        _registerEvents: function () {
             var self = this.element;
             var _self = this;
             var panel = this.element.klearModule("getPanel");
 
             var tr = $('table.kMatrix tr', panel);
 
-            $("td", tr).on('mouseenter mouseleave',function() {
+            $("td", tr).on('mouseenter mouseleave', function () {
 
                 $("td:not(.options)", $(this).parent('tr')).toggleClass("ui-state-highlight");
 
-                if (!$(this).is(".options") && $("a.option.default", $(this).parent('tr')).length>0) {
+                if (!$(this).is(".options") && $("a.option.default", $(this).parent('tr')).length > 0) {
                     $(this).parent('tr').toggleClass("pointer");
                     $("a.option.default", $(this).parent('tr')).toggleClass("ui-state-active");
                 }
 
-            }).on('mouseup',function(e) {
+            }).on('mouseup', function (e) {
                 // Haciendo toda la tupla clickable para la default option
                 e.stopPropagation();
                 e.preventDefault();
                 if (document.getSelection() &&
-                    document.getSelection().toString() != '' && 
-                    $(document.getSelection().focusNode).parents("table.kMatrix").length ==1) {
+                    document.getSelection().toString() != '' &&
+                    $(document.getSelection().focusNode).parents("table.kMatrix").length == 1) {
                     return;
                 }
 
@@ -117,41 +117,41 @@
                 }
 
                 if ($(this).hasClass("multiItem")) {
-                    var $chkBox = $("input:checkbox",$(this));
+                    var $chkBox = $("input:checkbox", $(this));
                     $chkBox.prop('checked', !($chkBox.is(':checked')));
                     return;
                 }
                 // Modificador SHIFT + MultiItem => toggle checkbox
-                if (e.shiftKey && $("td.multiItem",$(this).parent("tr")).length > 0) {
-                    $("td.multiItem",$(this).parent("tr")).trigger("mouseup");
+                if (e.shiftKey && $("td.multiItem", $(this).parent("tr")).length > 0) {
+                    $("td.multiItem", $(this).parent("tr")).trigger("mouseup");
                     // Pequeño hack para deseleccionar el texto.
-                    if ( document.selection ) {
+                    if (document.selection) {
                         document.selection.empty();
-                    } else if ( window.getSelection ) {
+                    } else if (window.getSelection) {
                         window.getSelection().removeAllRanges();
                     }
                     return;
                 }
 
-                $.klear.checkNoFocusEvent(e, $(panel).parent(),$("a.option.default", $(this).parent('tr')));
+                $.klear.checkNoFocusEvent(e, $(panel).parent(), $("a.option.default", $(this).parent('tr')));
 
                 var $optionAnchor = $("a.option.default", $(this).parent('tr'));
-                var event = ($optionAnchor.is(".screen"))? "mouseup":"click";
+                var event = ($optionAnchor.is(".screen")) ? "mouseup" : "click";
                 $optionAnchor.trigger(event);
 
             });
 
-            $('a._fieldOption', panel).on('mouseenter',function(e) {
+            $('a._fieldOption', panel).on('mouseenter', function (e) {
                 if ($(this).data("relatedtab")) {
                     $(this).data("relatedtab").klearModule("highlightOn");
                 }
-            }).on('mouseleave',function(e) {
+            }).on('mouseleave', function (e) {
                 if ($(this).data("relatedtab")) {
                     $(this).data("relatedtab").klearModule("highlightOff");
                 }
             });
 
-            $(".paginator a",panel).on('click',function(e) {
+            $(".paginator a", panel).on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -161,24 +161,26 @@
 
                 if (!_dispatchOptions.post) _dispatchOptions.post = {};
 
-                $.extend(_dispatchOptions.post,{
-                    page : targetPage
+                $.extend(_dispatchOptions.post, {
+                    page: targetPage
                 });
 
                 $(self)
-                    .klearModule("option","dispatchOptions",_dispatchOptions)
+                    .klearModule("option", "dispatchOptions", _dispatchOptions)
                     .klearModule("reDispatch");
 
             });
 
             // REFRESCAR EL LISTADO
-            var myTime = $('.generalOptionsToolbar .refresh',panel).data("auto-refresh");
+            var myTime = $('.generalOptionsToolbar .refresh', panel).data("auto-refresh");
             var iden = $(panel).attr("id");
             this._clearInterval();
 
-            if(myTime){
-                $('.generalOptionsToolbar .refresh',panel).hide();
-                this._intervals[iden] = setInterval(function() {contadorRefresh()}, 1000);
+            if (myTime) {
+                $('.generalOptionsToolbar .refresh', panel).hide();
+                this._intervals[iden] = setInterval(function () {
+                    contadorRefresh()
+                }, 1000);
             }
 
             function myInterval() {
@@ -188,11 +190,11 @@
 
             function contadorRefresh() {
 
-                var numTime = parseInt($('.generalOptionsToolbar .refresh:eq(0) .count',panel).html());
+                var numTime = parseInt($('.generalOptionsToolbar .refresh:eq(0) .count', panel).html());
                 var newTime = numTime - 1;
 
                 if (numTime == 16) {
-                    $('.generalOptionsToolbar .refresh',panel).fadeIn();
+                    $('.generalOptionsToolbar .refresh', panel).fadeIn();
                 }
 
                 if (numTime == 1) {
@@ -201,123 +203,125 @@
                     return;
                 }
 
-                $('.generalOptionsToolbar .refresh .count',panel).html(newTime);
+                $('.generalOptionsToolbar .refresh .count', panel).html(newTime);
             }
 
             // DETENER EL REFRESCO DEL LISTADO
-            $('.generalOptionsToolbar .refresh',panel).on('click',function(e) {
+            $('.generalOptionsToolbar .refresh', panel).on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 // DETENER
                 clearInterval(_self._intervals[iden]);
 
-                $('.generalOptionsToolbar .refresh',panel).fadeOut();
-                $('.generalOptionsToolbar .refresh .count',panel).text(myTime);
+                $('.generalOptionsToolbar .refresh', panel).fadeOut();
+                $('.generalOptionsToolbar .refresh .count', panel).text(myTime);
 
-                _self._intervals[iden] = setInterval(function() {contadorRefresh()}, 1000);
+                _self._intervals[iden] = setInterval(function () {
+                    contadorRefresh()
+                }, 1000);
             });
 
             // Orden de columnas
-            $("th:not(.notSortable)",panel).on("click",function(e) {
+            $("th:not(.notSortable)", panel).on("click", function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 var targetOrder = $(this).data("field");
-                var orderType = $("span.asc",$(this)).length>0? 'desc':'asc';
+                var orderType = $("span.asc", $(this)).length > 0 ? 'desc' : 'asc';
 
-                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 if (!_dispatchOptions.post) _dispatchOptions.post = {};
 
-                $.extend(_dispatchOptions.post,{
+                $.extend(_dispatchOptions.post, {
                     order: targetOrder,
                     orderType: orderType,
                     page: 1
                 });
 
                 $(self)
-                    .klearModule("option","dispatchOptions",_dispatchOptions)
+                    .klearModule("option", "dispatchOptions", _dispatchOptions)
                     .klearModule("reDispatch");
-            }).css("cursor","pointer");
+            }).css("cursor", "pointer");
 
-            $("th.multiItem", panel).on("mouseup",function(e) {
+            $("th.multiItem", panel).on("mouseup", function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                var $chkBox = $("input:checkbox",$(this));
+                var $chkBox = $("input:checkbox", $(this));
                 var targetValue = !($chkBox.is(':checked'));
                 $(".multiItem input:checkbox", panel).prop('checked', targetValue);
                 return;
-            }).css("cursor","pointer");
+            }).css("cursor", "pointer");
 
-            $(".multiItem input:checkbox", panel).on("click",function(e) {
+            $(".multiItem input:checkbox", panel).on("click", function (e) {
                 e.preventDefault();
             });
 
-            $("th:not(.notSortable) span.filter",panel).on("click",function(e) {
+            $("th:not(.notSortable) span.filter", panel).on("click", function (e) {
                 e.stopPropagation();
                 e.preventDefault();
             });
 
-            $("th.multiItem", panel).on('refreshButtons',function(e) {
+            $("th.multiItem", panel).on('refreshButtons', function (e) {
                 var numberOfChecks = $("td.multiItem input:checked", panel).length;
 //                var disabled = (numberOfChecks == 0);
-                $("a._generalOption[data-multiitem]", panel).each(function() {
-                	if ($(this).data("alwaysenabled") === true) {
-                		var disabled = false;
-                	} else {
-                		var disabled = (numberOfChecks == 0);
-                	}
+                $("a._generalOption[data-multiitem]", panel).each(function () {
+                    if ($(this).data("alwaysenabled") === true) {
+                        var disabled = false;
+                    } else {
+                        var disabled = (numberOfChecks == 0);
+                    }
                     $(this).button("option", "disabled", disabled);
                     if (numberOfChecks > 0) {
-                        $("sup",$(this)).html('('+numberOfChecks+')');
+                        $("sup", $(this)).html('(' + numberOfChecks + ')');
                     } else {
-                        $("sup",$(this)).html('');
+                        $("sup", $(this)).html('');
                     }
                 });
                 var headChecked = (numberOfChecks == $("td.multiItem input:checkbox", panel).length);
                 $("th.multiItem input:checkbox", panel).prop('checked', headChecked);
             });
 
-            $(".multiItem", panel).on('mouseup',function() {
+            $(".multiItem", panel).on('mouseup', function () {
                 $("th.multiItem", panel).trigger('refreshButtons');
             });
 
             $("th.multiItem", panel).trigger('refreshButtons');
 
 
-            $("span.mlTag",panel).on("click",function(e) {
+            $("span.mlTag", panel).on("click", function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 var $td = $(this).parent("td");
-                var shown = $("div.multilangValue:not(.selected)",$td).is(":visible");
+                var shown = $("div.multilangValue:not(.selected)", $td).is(":visible");
 
-                $("div.multilangValue:not(.selected)",$td).slideToggle();
+                $("div.multilangValue:not(.selected)", $td).slideToggle();
 
                 if (shown) {
-                    $(".langIden",$td).animate({opacity:'0'});
+                    $(".langIden", $td).animate({opacity: '0'});
                 } else {
-                    $(".langIden",$td).animate({opacity:'.5'});
+                    $(".langIden", $td).animate({opacity: '.5'});
                 }
 
-            }).on('mouseup',function(e) {
+            }).on('mouseup', function (e) {
                 // Paramos el evento mouseup, para no llegar al tr
                 e.preventDefault();
                 e.stopPropagation();
             });
 
 
-            var $applyFilters = $("input[name=applyFilters]",panel);
+            var $applyFilters = $("input[name=applyFilters]", panel);
 
-            $(".klearMatrixFiltering span.addTerm",panel).on('click',function(e,noNewValue) {
+            $(".klearMatrixFiltering span.addTerm", panel).on('click', function (e, noNewValue) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 var $holder = $(this).parents(".klearMatrixFiltering");
-                var $_term = $("input.term",$holder);
-                var $_field = $("select[name=searchField]",$holder);
+                var $_term = $("input.term", $holder);
+                var $_field = $("select[name=searchField]", $holder);
 
-                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 var fieldName = $_field.val();
 
@@ -330,31 +334,31 @@
 
                 if (noNewValue !== true) {
 
-                    if ( (($_term.data('autocomplete')) && (!$_term.data('idItem')) ) ||
-                            ($_term.val() == '') ) {
+                    if ((($_term.data('autocomplete')) && (!$_term.data('idItem')) ) ||
+                        ($_term.val() == '')) {
 
-                            $(this).parents(".filterItem:eq(0)").effect("shake",{times: 3},60);
-                            return;
+                        $(this).parents(".filterItem:eq(0)").effect("shake", {times: 3}, 60);
+                        return;
                     }
 
 
-                    $_term.attr("disabled","disabled");
-                    $_field.attr("disabled","disabled");
-                    var _newVal = ($_term.data('autocomplete'))? $_term.data('idItem') : $_term.val();
+                    $_term.attr("disabled", "disabled");
+                    $_field.attr("disabled", "disabled");
+                    var _newVal = ($_term.data('autocomplete')) ? $_term.data('idItem') : $_term.val();
                     _dispatchOptions.post.searchFields[fieldName].push(_newVal);
 
                     var _searchOp = 'eq';
-                    if ($("select[name=searchOption]",$holder).parent("span").is(":visible")) {
-                        _searchOp = $("select[name=searchOption]",$holder).val();
+                    if ($("select[name=searchOption]", $holder).parent("span").is(":visible")) {
+                        _searchOp = $("select[name=searchOption]", $holder).val();
                     }
 
                     _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
 
                 }
 
-                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
+                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked", panel).length;
 
-                if ( $applyFilters.length > 0 ) {
+                if ($applyFilters.length > 0) {
                     _dispatchOptions.post.applySearchFilters = ( $applyFilters.is(':checked') ) ? 1 : 0;
                 } else {
                     _dispatchOptions.post.applySearchFilters = 1;
@@ -362,55 +366,55 @@
                 _dispatchOptions.post.page = 1;
 
                 $(self)
-                    .klearModule("option","dispatchOptions",_dispatchOptions)
+                    .klearModule("option", "dispatchOptions", _dispatchOptions)
                     .klearModule("reDispatch");
 
 
             });
 
-            $(".klearMatrixFiltering",panel).on('keydown','input.term',function(e) {
+            $(".klearMatrixFiltering", panel).on('keydown', 'input.term', function (e) {
 
                 if (e.keyCode == 13) {
                     // Wait for select event to happed (autocomplete)
                     var $target = $(this);
-                    setTimeout(function() {
-                        $("span.addTerm",$target.parents(".klearMatrixFiltering")).trigger("click");
-                    },10);
+                    setTimeout(function () {
+                        $("span.addTerm", $target.parents(".klearMatrixFiltering")).trigger("click");
+                    }, 10);
                     e.preventDefault();
                     e.stopPropagation();
                 }
             });
 
-            $(".klearMatrixFiltering input[name=addFilters]",panel).on('change',function(e) {
+            $(".klearMatrixFiltering input[name=addFilters]", panel).on('change', function (e) {
 
-                if ($(".klearMatrixFiltering .filteredFields .field",panel).length<=1) {
+                if ($(".klearMatrixFiltering .filteredFields .field", panel).length <= 1) {
                     return;
                 }
 
-                $("span.addTerm",panel).trigger("click",true);
+                $("span.addTerm", panel).trigger("click", true);
             });
 
-            $applyFilters.on('change',function(e) {
+            $applyFilters.on('change', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                $("span.addTerm",panel).trigger("click",true);
+                $("span.addTerm", panel).trigger("click", true);
             });
 
-            $(".klearMatrixFiltering .filteredFields",panel).on('click','.ui-silk-cancel',function(e) {
+            $(".klearMatrixFiltering .filteredFields", panel).on('click', '.ui-silk-cancel', function (e) {
 
                 var fieldName = $(this).parents("span.field:eq(0)").data("field");
                 var idxToRemove = $(this).data("idx");
-                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 if (!_dispatchOptions.post.searchFields[fieldName]) {
                     return;
                 }
-                _dispatchOptions.post.searchFields[fieldName].splice(idxToRemove,1);
-                _dispatchOptions.post.searchOps[fieldName].splice(idxToRemove,1);
+                _dispatchOptions.post.searchFields[fieldName].splice(idxToRemove, 1);
+                _dispatchOptions.post.searchOps[fieldName].splice(idxToRemove, 1);
                 _dispatchOptions.post.page = 1;
 
                 $(self)
-                    .klearModule("option","dispatchOptions",_dispatchOptions)
+                    .klearModule("option", "dispatchOptions", _dispatchOptions)
                     .klearModule("reDispatch");
 
             });
@@ -419,7 +423,7 @@
 
                 e.stopPropagation();
                 e.preventDefault();
-                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 _dispatchOptions.post = _dispatchOptions.post || {};
                 _dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
@@ -438,52 +442,52 @@
                 _dispatchOptions.post.searchFields[fieldName].push(_newVal);
                 _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
 
-                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked",panel).length;
+                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked", panel).length;
                 _dispatchOptions.post.page = 1;
 
                 $(self)
-                    .klearModule("option","dispatchOptions",_dispatchOptions)
+                    .klearModule("option", "dispatchOptions", _dispatchOptions)
                     .klearModule("reDispatch");
 
             });
 
             //Ocultamos botones preconfigurados que estén en activo en este momento
-            $("p.filteredFields span.field",panel).each(function() {
+            $("p.filteredFields span.field", panel).each(function () {
 
                 var $spanValues = $("span.content", $(this));
                 var fieldName = $(this).data("field");
 
-                $("button.preconfigureFilters", panel).filter(function() {
+                $("button.preconfigureFilters", panel).filter(function () {
 
                     if (!$(this).data('field') ||
-                            $(this).data('field') != fieldName ||
-                                !$(this).data('value')) {
+                        $(this).data('field') != fieldName ||
+                        !$(this).data('value')) {
                         return false;
                     }
 
                     var candidateValue = $(this).data('value');
 
-                    return $spanValues.filter(function() {
-                        return (candidateValue == $(this).data("value"));
-                    }).length > 0;
+                    return $spanValues.filter(function () {
+                            return (candidateValue == $(this).data("value"));
+                        }).length > 0;
 
                 }).button("disable");
 
             });
 
-            $(".klearMatrixFilteringForm",panel).form();
+            $(".klearMatrixFilteringForm", panel).form();
 
             var currentPlugin = false;
-            var originalSearchField = $(".klearMatrixFiltering input.term",panel).clone();
+            var originalSearchField = $(".klearMatrixFiltering input.term", panel).clone();
 
-            $(".klearMatrixFiltering select[name=searchField]",panel).on('manualchange.searchValues',function(e, manual) {
+            $(".klearMatrixFiltering select[name=searchField]", panel).on('manualchange.searchValues', function (e, manual) {
 
                 var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns, $(this).val());
 
                 var availableValues = {};
-                var $container = $(".klearMatrixFiltering",panel);
-                var searchField = $("input.term",$container);
-                var searchOption = $("span.searchOption",$container);
+                var $container = $(".klearMatrixFiltering", panel);
+                var searchField = $("input.term", $container);
+                var searchOption = $("span.searchOption", $container);
 
                 if (false !== currentPlugin) {
 
@@ -513,9 +517,9 @@
 
                 if (column.search.info) {
                     $("<span />")
-                        .attr("class","infoShow ui-silk ui-silk-help inline")
-                        .prependTo($(".filterItem",$container))
-                        .on('click', function(e){
+                        .attr("class", "infoShow ui-silk ui-silk-help inline")
+                        .prependTo($(".filterItem", $container))
+                        .on('click', function (e) {
                             if ($('div.infoDiv').is(':visible')) {
                                 $('div.infoDiv').slideUp('fast');
                             } else {
@@ -523,35 +527,35 @@
                             }
                         });
 
-                    $("<div>"+column.search.info+"</div>")
-                        .attr("class","infoDiv hidden")
-                        .prependTo($(".filterItem",$container));
+                    $("<div>" + column.search.info + "</div>")
+                        .attr("class", "infoDiv hidden")
+                        .prependTo($(".filterItem", $container));
                 }
 
-                switch(true) {
+                switch (true) {
                     // un select!
                     case  (column.type == 'select'):
                     case  (column.type == 'multiselect'):
                         var _availableValues = $.klearmatrix.template.helper.getValuesFromSelectColumn(column);
 
                         var sourcedata = [];
-                        $.each(_availableValues,function(i,val) {
-                            sourcedata.push({label:val,id:i});
+                        $.each(_availableValues, function (i, val) {
+                            sourcedata.push({label: val, id: i});
                         });
 
                         searchField.autocomplete({
                             minLength: 0,
                             source: sourcedata,
-                            select: function(event, ui) {
-                                searchField.val( ui.item.label );
-                                searchField.data('idItem',ui.item.id);
+                            select: function (event, ui) {
+                                searchField.val(ui.item.label);
+                                searchField.data('idItem', ui.item.id);
                                 return false;
                             }
-                        }).data( "autocomplete" )._renderItem = function( ul, item ) {
-                            return $( "<li></li>" )
-                                .data( "item.autocomplete", item )
-                                .append( "<a>" + item.label + "</a>" )
-                                .appendTo( ul );
+                        }).data("autocomplete")._renderItem = function (ul, item) {
+                            return $("<li></li>")
+                                .data("item.autocomplete", item)
+                                .append("<a>" + item.label + "</a>")
+                                .appendTo(ul);
                         };
                         currentPlugin = 'autocomplete';
 
@@ -562,18 +566,18 @@
                         var _pluginName = column.config['plugin'];
                         currentPlugin = _pluginName;
                         var _settings = column.config['settings'] || {};
-                           searchField[_pluginName](_settings);
-                           break;
+                        searchField[_pluginName](_settings);
+                        break;
 
                     case (column.search.plugin && typeof column.search.plugin == 'string'):
                         var _pluginName = column.config['plugin'];
                         currentPlugin = column.search.plugin;
                         var _settings = column.search.settings || {};
-                           searchField[column.search.plugin](_settings);
+                        searchField[column.search.plugin](_settings);
                         break;
                     default:
 
-                    break;
+                        break;
                 }
 
                 if (manual !== true && !$(searchField).hasClass("hasDatepicker")) {
@@ -582,48 +586,48 @@
 
             }).trigger('manualchange.searchValues', true);
 
-            $(".klearMatrixFiltering select[name=searchField]",panel).trigger("manualchange");
+            $(".klearMatrixFiltering select[name=searchField]", panel).trigger("manualchange");
 
-            var $filteredFields = $(".klearMatrixFiltering .filteredFields",panel);
-            $(".klearMatrixFiltering .title",panel).on('click',function(e,i) {
+            var $filteredFields = $(".klearMatrixFiltering .filteredFields", panel);
+            $(".klearMatrixFiltering .title", panel).on('click', function (e, i) {
                 var $searchForm = $(this).parents("form:eq(0)");
                 var target = ".filterItem";
 
-                if ( $applyFilters.is(':checked') == false
-                    && $filteredFields.find('.field').length > 0 ) {
+                if ($applyFilters.is(':checked') == false
+                    && $filteredFields.find('.field').length > 0) {
 
                     target = ".filteredFields";
 
                 }
 
                 if ($searchForm.hasClass("not-loaded")) {
-                    $(target,$searchForm).slideDown(function() {
+                    $(target, $searchForm).slideDown(function () {
                         $searchForm.removeClass("not-loaded");
                     });
                 } else {
-                    $(target,$searchForm).slideUp(function() {
+                    $(target, $searchForm).slideUp(function () {
                         $searchForm.addClass("not-loaded");
                     });
                 }
             });
 
-            if ( $applyFilters.is(':checked') == false
-                    && $filteredFields.find('.field').length > 0 ) {
+            if ($applyFilters.is(':checked') == false
+                && $filteredFields.find('.field').length > 0) {
 
-                $filteredFields.css('opacity','0.5');
+                $filteredFields.css('opacity', '0.5');
                 $filteredFields.unbind('click');
                 $('.preconfiguredFilters, .filterItem', panel).hide();
 
-                $(".klearMatrixFilteringForm:eq(0)",panel).addClass('not-loaded');
+                $(".klearMatrixFilteringForm:eq(0)", panel).addClass('not-loaded');
 
             }
 
             //Exportar a CSV el listado
-            $("a.option.csv", panel).on('click', function(event) {
+            $("a.option.csv", panel).on('click', function (event) {
                 event.preventDefault();
                 event.stopPropagation();
 
-                var _dispatchOptions = $(self).klearModule("option","dispatchOptions");
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 if (!_dispatchOptions.post) {
 
@@ -636,39 +640,39 @@
 
 
                 var reqOpts = {
-                        file: $(self).klearModule("option","file"),
-                        type: 'screen',
-                        screen: _self.options.data.screen,
-                        post: _tmpOptions,
-                        external: true
-                        
-                    };
+                    file: $(self).klearModule("option", "file"),
+                    type: 'screen',
+                    screen: _self.options.data.screen,
+                    post: _tmpOptions,
+                    external: true
+
+                };
 
 
-                if (_dispatchOptions.pk!=undefined) {
+                if (_dispatchOptions.pk != undefined) {
                     reqOpts.pk = _dispatchOptions.pk;
                     reqOpts.screen = _dispatchOptions.screen;
                 }
                 var $button = $(this);
                 $button.button("option", "disabled", true);
-                $("span.ui-silk",$button).addClass("spining");
+                $("span.ui-silk", $button).addClass("spining");
                 var curTitle = $button.attr("title");
-                $button.attr("title",$.translate("Loading content")).tooltip();
-                
-                $.klear.request(reqOpts,function() {
-                	$button.button("option", "disabled", false);
+                $button.attr("title", $.translate("Loading content")).tooltip();
+
+                $.klear.request(reqOpts, function () {
+                    $button.button("option", "disabled", false);
                     $button.tooltip('close').attr("title", curTitle).tooltip();
-                    $("span.ui-silk",$button).removeClass("spining");
-                },function() {
-                     $(self).klearModule("showDialogError", $.translate("Error download CSV file.") + '<br />' + $.translate("Please contact administrator."),
+                    $("span.ui-silk", $button).removeClass("spining");
+                }, function () {
+                    $(self).klearModule("showDialogError", $.translate("Error download CSV file.") + '<br />' + $.translate("Please contact administrator."),
                         {
                             title: $.translate("Error")
                         }
                     );
-                    
+
                     $button.button("option", "disabled", false);
                     $button.tooltip('close').attr("title", curTitle).tooltip();
-                    $("span.ui-silk",$button).removeClass("spining");
+                    $("span.ui-silk", $button).removeClass("spining");
                 });
             });
 
@@ -678,19 +682,19 @@
 
             $("span.autocomplete", panel).each(function () {
 
-                var identifier = $(self).klearModule("option","file") + "_" + $(this).data("command");
-                if (! autocompleteEntities[identifier] ) {
+                var identifier = $(self).klearModule("option", "file") + "_" + $(this).data("command");
+                if (!autocompleteEntities[identifier]) {
 
                     var _post = $(this).data();
                     _post.value = new Array;
 
                     var requestData = {
-                            file: $(self).klearModule("option","file"),
-                            type : 'command',
-                            post: _post
+                        file: $(self).klearModule("option", "file"),
+                        type: 'command',
+                        post: _post
                     };
 
-                    if (! $(this).data('command')) {
+                    if (!$(this).data('command')) {
                         $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command");
                         requestData['command'] = $(this).data('fielddecorator') + "_command";
                     }
@@ -710,17 +714,17 @@
 
                 var _url = request.action;
                 _url += '&' + $.param(request.data);
-                $.getJSON( _url , function( data, status, xhr ) {
+                $.getJSON(_url, function (data, status, xhr) {
                     $.each(nodes[idx], function () {
 
                         var currentNode = $(this);
-                        var currentNodeData = data.results["'"+currentNode.attr("data-value")+"'"];
+                        var currentNodeData = data.results["'" + currentNode.attr("data-value") + "'"];
                         if (!currentNodeData) {
                             return;
                         }
 
                         var results = new Array();
-                        if (Object.prototype.toString.call( currentNodeData ) === '[object Array]') {
+                        if (Object.prototype.toString.call(currentNodeData) === '[object Array]') {
                             for (var key in currentNodeData) {
                                 results.push(currentNodeData[key].label);
                             }

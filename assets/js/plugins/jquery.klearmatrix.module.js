@@ -1,4 +1,4 @@
-;(function($) {
+;(function ($) {
 
     var __namespace__ = "klearmatrix.module";
 
@@ -6,7 +6,7 @@
         options: {
             moduleName: 'module'
         },
-        _create: function(){
+        _create: function () {
 
             if (!this.instances) {
                 $.extend($.klearmatrix[this.options.moduleName], {
@@ -16,52 +16,52 @@
             $.klearmatrix[this.options.moduleName].instances.push(this.element);
         },
 
-        _getOtherInstances: function(){
+        _getOtherInstances: function () {
 
             var element = this.element;
 
-            return $.grep($.klearmatrix[this.options.moduleName].instances, function(el){
+            return $.grep($.klearmatrix[this.options.moduleName].instances, function (el) {
                 return el !== element;
             });
         },
-        destroy: function(){
+        destroy: function () {
             // remove this instance from $.klearmatrix.mywidget.instances
             var element = this.element,
-            position = $.inArray(element, $.klearmatrix[this.options.moduleName].instances);
+                position = $.inArray(element, $.klearmatrix[this.options.moduleName].instances);
 
             // if this instance was found, splice it off
-            if(position > -1){
+            if (position > -1) {
                 $.klearmatrix[this.options.moduleName].instances.splice(position, 1);
             }
 
             element.trigger("destroy");
 
             // call the original destroy method since we overwrote it
-            $.Widget.prototype.destroy.call( this );
+            $.Widget.prototype.destroy.call(this);
         },
-        _setOptions: function() {
+        _setOptions: function () {
             $.Widget.prototype._setOptions.apply(this, arguments);
         },
-        _setOption: function(key, value) {
+        _setOption: function (key, value) {
             $.Widget.prototype._setOption.apply(this, arguments);
         },
-        _parseDefaultItems : function() {
+        _parseDefaultItems: function () {
 
             if (!this.options.data.title) {
                 return;
             }
 
-            this.options.data.title =  $.klearmatrix.template.helper._parseDefaultValues({
+            this.options.data.title = $.klearmatrix.template.helper._parseDefaultValues({
                 title: this.options.data.title,
-                replaceParentPerItem : false,
-                defaultLang : this.options.data.defaultLang,
+                replaceParentPerItem: false,
+                defaultLang: this.options.data.defaultLang,
                 parentIden: this.options.data.parentIden,
                 columns: this.options.data.columns,
                 values: this.options.data.values,
                 idx: 0
             });
         },
-        getData : function(value) {
+        getData: function (value) {
 
             if (this.options.data[value]) {
                 return this.options.data[value];
@@ -69,7 +69,7 @@
 
             return this.options.data;
         },
-        _loadTemplate : function(tmplName) {
+        _loadTemplate: function (tmplName) {
 
             var $tmplObj = $.tmpl(
                 tmplName,
@@ -86,16 +86,16 @@
             return $tmplObj;
 
         },
-        _getClearText : function($items) {
+        _getClearText: function ($items) {
             var retValues = [];
-            $items.each(function() {
+            $items.each(function () {
 
                 if (!$(this).is(".multilang")) {
                     retValues.push($(this).contents().first().text());
                     return;
                 }
 
-                if ($(".multilangValue", $(this)).length>0) {
+                if ($(".multilangValue", $(this)).length > 0) {
                     if ($(".selected", $(this)).length == 1) {
                         retValues.push($(".selected", $(this)).contents().first().text());
                     } else {
@@ -107,7 +107,7 @@
             return retValues.join(' ');
         },
 
-        _resolveParentHolder : function(element) {
+        _resolveParentHolder: function (element) {
 
             if ($(element).data("multiitem")) {
                 return $("td.multiItem input:checked");
@@ -140,28 +140,28 @@
                     break;
                 default:
                     throw 'no parentHolder found for option';
-                break;
+                    break;
             }
         },
         /*
          * Eventos comunes en todos los controladores para campos
          */
-        _registerFieldsEvents : function() {
+        _registerFieldsEvents: function () {
 
             var self = this;
             var _self = this.element;
 
-            if ($(".fieldDecorator",_self.klearModule("getPanel")).length > 0) {
+            if ($(".fieldDecorator", _self.klearModule("getPanel")).length > 0) {
 
-                $(".fieldDecorator",_self.klearModule("getPanel")).each(function() {
+                $(".fieldDecorator", _self.klearModule("getPanel")).each(function () {
 
                     var _post = $(this).data();
-                    $.extend(_post, {value : $("#" + $(this).attr("rel")).val()});
+                    $.extend(_post, {value: $("#" + $(this).attr("rel")).val()});
 
-                    var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
+                    var parentSelector = (self.options.moduleName == 'list') ? "tr:eq(0)" : "form:eq(0)";
 
                     var _targetCommand = '';
-                    if (! $(this).data('command')) {
+                    if (!$(this).data('command')) {
                         _targetCommand = $(this).data('fielddecorator') + "_command";
                         $.console.log("ATENCIÓN: El atributo command no está configurado. Se utiliza el valor por defecto: " + $(this).data('fielddecorator') + "_command");
                     } else {
@@ -169,21 +169,21 @@
                     }
 
                     var requestData = {
-                        file: _self.klearModule("option","file"),
+                        file: _self.klearModule("option", "file"),
                         pk: $(this).parents(parentSelector).data("id"),
-                        type : 'command',
+                        type: 'command',
                         post: _post,
-                        command : _targetCommand
+                        command: _targetCommand
                     };
 
                     var request = $.klear.buildRequest(requestData);
 
                     var _url = request.action; //encodeURI()
-                     _url += '&' + $.param(request.data);
+                    _url += '&' + $.param(request.data);
 
-                     $(this).attr("href", _url).html($(this).data("fielddecoratort"));
+                    $(this).attr("href", _url).html($(this).data("fielddecoratort"));
 
-                    if ($.fn["klearmatrix."+ $(this).data('field') + $(this).data('fielddecorator')]) {
+                    if ($.fn["klearmatrix." + $(this).data('field') + $(this).data('fielddecorator')]) {
 
                         var methodName = $(this).data('field') + $(this).data('fielddecorator');
                         $(this)[methodName]({"parent": self});
@@ -191,64 +191,68 @@
                 });
             }
 
-            if ($(".filePreview",_self.klearModule("getPanel")).length>0) {
-                 $(".filePreview",_self.klearModule("getPanel")).each(function() {
+            if ($(".filePreview", _self.klearModule("getPanel")).length > 0) {
+                $(".filePreview", _self.klearModule("getPanel")).each(function () {
 
-                     var _post;
+                    var _post;
 
-                     if ($(this).data("filename")) {
-                         _post = {filename:$(this).data("filename")};
-                     } else {
-                         _post = {filename:$(this).parent("span:eq(0)").data("filename")};
-                     }
-                     var _validData = ['width','height','crop'];
-                     var $self = $(this);
-                     var imageAttribs = '';
-                     $.each(_validData,function(i,value) {
-                         if ($self.data(value)) {
-                             _post[value] = $self.data(value);
-                         }
+                    if ($(this).data("filename")) {
+                        _post = {filename: $(this).data("filename")};
+                    } else {
+                        _post = {filename: $(this).parent("span:eq(0)").data("filename")};
+                    }
+                    var _validData = ['width', 'height', 'crop'];
+                    var $self = $(this);
+                    var imageAttribs = '';
+                    $.each(_validData, function (i, value) {
+                        if ($self.data(value)) {
+                            _post[value] = $self.data(value);
+                        }
 
-                     });
-                     var parentSelector = (self.options.moduleName == 'list')? "tr:eq(0)":"form:eq(0)";
+                    });
+                    var parentSelector = (self.options.moduleName == 'list') ? "tr:eq(0)" : "form:eq(0)";
 
-                     var requestData = {
-                             file: _self.klearModule("option","file"),
-                             pk: $(this).parents(parentSelector).data("id"),
-                             type : 'command',
-                             post: _post,
-                             command : $(this).data('command')
-                     };
+                    var requestData = {
+                        file: _self.klearModule("option", "file"),
+                        pk: $(this).parents(parentSelector).data("id"),
+                        type: 'command',
+                        post: _post,
+                        command: $(this).data('command')
+                    };
 
-                     var item = $("<img class=\"imgFilePreviewList\" "+imageAttribs+" />");
+                    var item = $("<img class=\"imgFilePreviewList\" " + imageAttribs + " />");
 
-                     var request = $.klear.buildRequest(requestData);
-                     var _url = request.action; //encodeURI()
-                     _url += '&' + $.param(request.data);
-                     item.attr("src", _url);
-                     $(this).replaceWith(item);
+                    var request = $.klear.buildRequest(requestData);
+                    var _url = request.action; //encodeURI()
+                    _url += '&' + $.param(request.data);
+                    item.attr("src", _url);
+                    $(this).replaceWith(item);
                 });
             }
 
-            if ($(".fieldInfo-tooltip",_self.klearModule("getPanel")).length>0) {
-                $(".fieldInfo-tooltip",_self.klearModule("getPanel")).tooltip({
-                    'content': function(){return $el.attr('data-title');}
+            if ($(".fieldInfo-tooltip", _self.klearModule("getPanel")).length > 0) {
+                $(".fieldInfo-tooltip", _self.klearModule("getPanel")).tooltip({
+                    'content': function () {
+                        return $el.attr('data-title');
+                    }
                 });
             }
 
-            if ($(".tooltip",_self.klearModule("getPanel")).length>0) {
-                $(".tooltip",_self.klearModule("getPanel")).tooltip({
-                    'content': function(){return $(this).attr('data-title');}
+            if ($(".tooltip", _self.klearModule("getPanel")).length > 0) {
+                $(".tooltip", _self.klearModule("getPanel")).tooltip({
+                    'content': function () {
+                        return $(this).attr('data-title');
+                    }
                 });
             }
 
-            if ($("input.auto, textarea.auto",_self.klearModule("getPanel")).length > 0) {
-                $("input.auto, textarea.auto",_self.klearModule("getPanel")).each(function() {
+            if ($("input.auto, textarea.auto", _self.klearModule("getPanel")).length > 0) {
+                $("input.auto, textarea.auto", _self.klearModule("getPanel")).each(function () {
                     if ($(this).data("plugin")) {
 
                         var pluginSettings = {};
 
-                        $.each($(this).data(),function(idx, value) {
+                        $.each($(this).data(), function (idx, value) {
                             if (idx.match(/setting-*/)) {
 
                                 idx = idx.replace('setting', '');
@@ -267,9 +271,9 @@
                                 if (this.count > 20) {
                                     return;
                                 }
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     lazyPluginLoad(target, pluginName, settings);
-                                },50);
+                                }, 50);
                             }
 
                             if (target[pluginName]) {
@@ -288,19 +292,19 @@
             return this;
         },
 
-        _registerBaseEvents : function() {
+        _registerBaseEvents: function () {
 
             var self = this.element;
             var _self = this;
 
             $(self.klearModule("getPanel"))
                 .off('click.closeTab')
-                .on('click.closeTab', '.closeTab', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+                .on('click.closeTab', '.closeTab', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                self.klearModule("close");
-            });
+                    self.klearModule("close");
+                });
 
             this._resolveAutoOption();
             this._doGhostList();
@@ -311,7 +315,7 @@
                 $viewPort = $($(this.options.parent).klearModule("getPanel"));
             }
             if ($('select[imgPreview]') !== undefined && $('select[imgPreview]').length > 0) {
-                $('select[imgPreview]').on('change', function() {
+                $('select[imgPreview]').on('change', function () {
                     _self._imgPreviewChange($(this));
                 });
             }
@@ -326,16 +330,16 @@
                     noneSelectedText: $.translate("Select an option"),
                     selectedText: $.translate("# selected"),
                     position: {
-                          my: 'center',
-                          at: 'center'
-                     }
+                        my: 'center',
+                        at: 'center'
+                    }
                 }).multiselectfilter();
             }
 
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
-                .selectBoxIt({theme: "jqueryui",autoWidth: false, viewport: $viewPort})
+                .selectBoxIt({theme: "jqueryui", autoWidth: false, viewport: $viewPort})
                 .add($('input[type=hidden].readOnlySelectField', $viewPort))
-                .on("change",function() {
+                .on("change", function () {
 
                     var isReadOnlyHiddenInput = (this.nodeName.toLowerCase() == "input");
 
@@ -344,8 +348,8 @@
 
                         var cssClasses2Keep = $(this).data("target-for-change").attr("class");
                         $(this).selectBoxIt({autoWidth: true})
-                        .data("resizeTrick",true)
-                        .data("selectBoxIt").refresh(function () {
+                            .data("resizeTrick", true)
+                            .data("selectBoxIt").refresh(function () {
                             this.dropdown.addClass(cssClasses2Keep);
                         });
                     }
@@ -362,47 +366,47 @@
                             _filterData = _configData.split(":")[1];
                             _targetValue = $(this).val();
 
-                            $field = $("select[name="+_fieldToBeFiltered+"]",$(this).parents("form:eq(0)"));
+                            $field = $("select[name=" + _fieldToBeFiltered + "]", $(this).parents("form:eq(0)"));
                             var $targetComboId = $field.attr("id");
 
                             if ($targetComboId) {
                                 $targetComboId = "hiddenComboValues" + $targetComboId;
                             }
 
-                        	$field.data("olds", $field.val());
+                            $field.data("olds", $field.val());
                             $holder = $("#" + $targetComboId);
-                            
+
                             if ($holder.length < 1) {
-                                $holder = $("<select class='hidden' id='"+ $targetComboId +"' />");
+                                $holder = $("<select class='hidden' id='" + $targetComboId + "' />");
                                 $(this).parents("form:eq(0)").append($holder);
                             } else {
                                 $holder.children('option').appendTo($field);
                                 $field.val($field.data("olds"));
-                                
+
                                 var originalValue = $field.data("preload");
-                                var originalValueOption = $field.find("option[value="+ originalValue +"]");
+                                var originalValueOption = $field.find("option[value=" + originalValue + "]");
                                 if (originalValue && originalValueOption) {
-                                	originalValueOption.prop("selected", true);
+                                    originalValueOption.prop("selected", true);
                                 } else {
-                                	$field.find("option:eq(0)").prop("selected", true);
+                                    $field.find("option:eq(0)").prop("selected", true);
                                 }
                             }
                             $parent = $field.parents(".container:eq(0)");
-                            $parent.css("opacity",'0.5');
+                            $parent.css("opacity", '0.5');
                             selectBox = $field.data("selectBoxIt");
 
-                            var filterCriterion = "[value=__NULL__],[data-"+_filterData+"="+_targetValue+"]";
-                            var filteredOptionElements = $("option",$field).not(filterCriterion);
+                            var filterCriterion = "[value=__NULL__],[data-" + _filterData + "=" + _targetValue + "]";
+                            var filteredOptionElements = $("option", $field).not(filterCriterion);
                             filteredOptionElements.appendTo($holder);
                             if (typeof selectBox !== "undefined") {
                                 selectBox.refresh();
                                 selectBox.dropdown.trigger("click");
-                                selectBox.close();                                
-                            } else if (typeof $field.multiselect !== "undefined"){
-                            	$field.multiselect("refresh");
+                                selectBox.close();
+                            } else if (typeof $field.multiselect !== "undefined") {
+                                $field.multiselect("refresh");
                             }
 
-                            $parent.css({'opacity':1});
+                            $parent.css({'opacity': 1});
                             $(this).trigger("manualchange");
                         }
                     } else {
@@ -419,7 +423,7 @@
                     }
                     $(this).trigger("blur.selectBoxIt");
                 })
-                .on('open', function() {
+                .on('open', function () {
 
                     // Fix sólo para dialogos!
                     if (!_self.options.parent) {
@@ -432,184 +436,184 @@
                         }
                         $(parent)
                             .data("prevOverflow", $(parent).css("overflow"))
-                            .css("overflow","visible");
+                            .css("overflow", "visible");
                     }
 
-                }).on('close', function() {
+                }).on('close', function () {
 
-                    // Fix sólo para dialogos!
-                    if (!_self.options.parent) {
-                        return;
+                // Fix sólo para dialogos!
+                if (!_self.options.parent) {
+                    return;
+                }
+
+                var $_parents = $(this).parents("div").toArray();
+                while (parent = $_parents.shift()) {
+                    if (!$(parent).data("prevOverflow")) {
+                        break;
                     }
+                    $(parent).css("overflow", $(parent).data("prevOverflow"));
+                }
+            })
+                .each(function () {
 
-                    var $_parents = $(this).parents("div").toArray();
-                    while (parent = $_parents.shift()) {
-                        if (!$(parent).data("prevOverflow")) {
-                            break;
-                        }
-                        $(parent).css("overflow",$(parent).data("prevOverflow"));
-                    }
-                })
-                .each(function() {
-
-                    $(this).data("target-for-change",$(this).next("span").children("span:eq(0)"));
+                    $(this).data("target-for-change", $(this).next("span").children("span:eq(0)"));
                     if ($(this).is("[data-autofilter-select-by-data]")) {
                         $(this).trigger("change");
                     }
                 });
 
             $('a.option.screen', this.element.klearModule("getPanel"))
-            .off('mouseup.screenOption')
-            .on('mouseup.screenOption', function(e) {
+                .off('mouseup.screenOption')
+                .on('mouseup.screenOption', function (e) {
 
-                e.preventDefault();
-                e.stopPropagation();
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                var _menuLink = $(this);
+                    var _menuLink = $(this);
 
-                if (_self.options.parent) {
-                    self = _self.options.parent;
-                }
+                    if (_self.options.parent) {
+                        self = _self.options.parent;
+                    }
 
-                var _container = self.klearModule("getContainer");
-                var _file = self.klearModule("option", "file");
+                    var _container = self.klearModule("getContainer");
+                    var _file = self.klearModule("option", "file");
 
-                if (_menuLink.data("externalfile")) {
-                    _file= _menuLink.data("externalfile");
-                }
+                    if (_menuLink.data("externalfile")) {
+                        _file = _menuLink.data("externalfile");
+                    }
 
-                var _screen = _menuLink.data("screen");
-                var _iden = "#tabs-" + _file;
+                    var _screen = _menuLink.data("screen");
+                    var _iden = "#tabs-" + _file;
 
-                if (!_menuLink.data("externalremovescreen")) {
-                    _iden += '_' + _screen;
-                }
+                    if (!_menuLink.data("externalremovescreen")) {
+                        _iden += '_' + _screen;
+                    }
 
-                var _parentHolder = _self._resolveParentHolder(this);
+                    var _parentHolder = _self._resolveParentHolder(this);
 
-                if (!_menuLink.data("externalnoiden")) {
+                    if (!_menuLink.data("externalnoiden")) {
 
-                    if (_menuLink.data("multiinstance")) {
-                        _iden += '_' + Math.round(Math.random(1000, 9999)*100000);
-                    } else {
-                        if (_menuLink.data("externalid")) {
-                            _iden += '_' + _menuLink.data("externalid");
+                        if (_menuLink.data("multiinstance")) {
+                            _iden += '_' + Math.round(Math.random(1000, 9999) * 100000);
                         } else {
-                            _iden += '_' + _parentHolder.data("id");
+                            if (_menuLink.data("externalid")) {
+                                _iden += '_' + _menuLink.data("externalid");
+                            } else {
+                                _iden += '_' + _parentHolder.data("id");
+                            }
                         }
                     }
-                }
 
-                var _curPk = _parentHolder.data("id");
+                    var _curPk = _parentHolder.data("id");
 
-                if (_menuLink.data("externalname")) {
-                    var _field = _menuLink.parent().find("[name='"+_menuLink.data("externalname")+"']");
-                    if (_field.length >0) {
-                        _curPk = _field.val();
+                    if (_menuLink.data("externalname")) {
+                        var _field = _menuLink.parent().find("[name='" + _menuLink.data("externalname") + "']");
+                        if (_field.length > 0) {
+                            _curPk = _field.val();
+                        }
                     }
-                }
-                if (_menuLink.data("externalid")) {
-                    _curPk = _menuLink.data("externalid");
-                }
-
-                // Seteamos el valor para dispatchOptions
-                var _dispatchOptions = {
-                    post : {
-                        callerScreen : _self.options.data.screen
+                    if (_menuLink.data("externalid")) {
+                        _curPk = _menuLink.data("externalid");
                     }
-                };
 
-                if (!_menuLink.data("externalremovescreen")) {
-                    _dispatchOptions['screen'] = _menuLink.data("screen");
-                }
+                    // Seteamos el valor para dispatchOptions
+                    var _dispatchOptions = {
+                        post: {
+                            callerScreen: _self.options.data.screen
+                        }
+                    };
 
-                if (!_menuLink.data("externalnoiden")) {
-                    _dispatchOptions ['pk'] = _curPk;
-                }
+                    if (!_menuLink.data("externalremovescreen")) {
+                        _dispatchOptions['screen'] = _menuLink.data("screen");
+                    }
 
-                var _searchOps = false;
+                    if (!_menuLink.data("externalnoiden")) {
+                        _dispatchOptions ['pk'] = _curPk;
+                    }
 
-                // de momento "damos por hecho" que serán campos select, y llevan implícito un 'eq';
-                if (_menuLink.data("externalsearchby")) {
-                    _searchOps = {searchFields : {}, searchOps : {}};
-                    var _searchField = _menuLink.data("externalsearchby");
-                    _searchOps['searchFields'][_searchField] = [_curPk];
-                    _searchOps['searchOps'][_searchField] = ['eq'];
-                }
+                    var _searchOps = false;
 
-                $.extend(_dispatchOptions['post'], _searchOps);
+                    // de momento "damos por hecho" que serán campos select, y llevan implícito un 'eq';
+                    if (_menuLink.data("externalsearchby")) {
+                        _searchOps = {searchFields: {}, searchOps: {}};
+                        var _searchField = _menuLink.data("externalsearchby");
+                        _searchOps['searchFields'][_searchField] = [_curPk];
+                        _searchOps['searchOps'][_searchField] = ['eq'];
+                    }
 
-                var tabTitle;
-                if (_menuLink.data("externaltitle")) {
-                    tabTitle = _menuLink.data("externaltitle");
-                } else {
-                    tabTitle = _menuLink.tooltip("close").attr("title");
-                }
+                    $.extend(_dispatchOptions['post'], _searchOps);
 
-                if ($(this).hasClass("_fieldOption")) {
-                    _menuLink.addClass("ui-state-highlight");
-                }
+                    var tabTitle;
+                    if (_menuLink.data("externaltitle")) {
+                        tabTitle = _menuLink.data("externaltitle");
+                    } else {
+                        tabTitle = _menuLink.tooltip("close").attr("title");
+                    }
 
-                // Si el tab ya está abierto
-                if ($(_iden).length > 0) {
+                    if ($(this).hasClass("_fieldOption")) {
+                        _menuLink.addClass("ui-state-highlight");
+                    }
 
-                    $selTabLi = _container
-                                    .tabs('select', _iden)
-                                    .find(".ui-tabs-selected:eq(0)");
+                    // Si el tab ya está abierto
+                    if ($(_iden).length > 0) {
 
-                    if (_searchOps !== false) {
-                        $selTabLi
+                        $selTabLi = _container
+                            .tabs('select', _iden)
+                            .find(".ui-tabs-selected:eq(0)");
+
+                        if (_searchOps !== false) {
+                            $selTabLi
+                                .klearModule("option", "dispatchOptions", _dispatchOptions)
+                                .klearModule("reDispatch");
+                        }
+
+                        $selTabLi.klearModule("updateTitle", tabTitle);
+
+                        return;
+                    }
+
+                    var _newIndex = self.klearModule("option", "tabIndex") + 1;
+
+                    _container.one("tabspostadd", function (event, ui) {
+
+                        var $tabLi = $(ui.tab).parent("li");
+
+                        // Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
+                        $tabLi.klearModule("option", "menuLink", _menuLink);
+                        $tabLi.klearModule("option", "parentScreen", self);
+                        $tabLi.klearModule("updateTitle", tabTitle);
+
+                        // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
+                        $tabLi.klearModule("option", "file", _file);
+
+                        // Si la pantalla llamante tiene condición (parentId -- en data --
+                        // enviarlos a la nueva pantalla
+                        if (_self.options.data.parentId) {
+                            _dispatchOptions.post.parentId = _self.options.data.parentId;
+                            _dispatchOptions.post.parentScreen = _self.options.data.parentScreen;
+                        }
+
+                        // highlight on hover
+                        _menuLink.data("relatedtab", $tabLi);
+
+                        $tabLi
                             .klearModule("option", "dispatchOptions", _dispatchOptions)
-                            .klearModule("reDispatch");
-                    }
+                            .klearModule("reload");
+                    });
 
-                    $selTabLi.klearModule("updateTitle", tabTitle);
+                    // Klear open in background
+                    $.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(), $(this));
+                    _container.tabs("add", _iden, tabTitle, _newIndex);
 
-                    return;
-                }
-
-                var _newIndex = self.klearModule("option", "tabIndex")+1;
-
-                _container.one( "tabspostadd", function(event, ui) {
-
-                    var $tabLi = $(ui.tab).parent("li");
-
-                    // Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
-                    $tabLi.klearModule("option", "menuLink", _menuLink);
-                    $tabLi.klearModule("option", "parentScreen", self);
-                    $tabLi.klearModule("updateTitle", tabTitle);
-
-                    // Actualizamos el file, al del padre (En el constructor se pasa "sucio")
-                    $tabLi.klearModule("option", "file", _file);
-
-                    // Si la pantalla llamante tiene condición (parentId -- en data --
-                    // enviarlos a la nueva pantalla
-                    if (_self.options.data.parentId) {
-                        _dispatchOptions.post.parentId = _self.options.data.parentId;
-                        _dispatchOptions.post.parentScreen = _self.options.data.parentScreen;
-                    }
-
-                    // highlight on hover
-                    _menuLink.data("relatedtab", $tabLi);
-
-                    $tabLi
-                        .klearModule("option", "dispatchOptions", _dispatchOptions)
-                        .klearModule("reload");
-                });
-
-                // Klear open in background
-                $.klear.checkNoFocusEvent(e, $(self.klearModule("getPanel")).parent(), $(this));
-                _container.tabs( "add", _iden, tabTitle, _newIndex);
-
-            }).off('click.screenOption')
-                .on('click.screenOption', function(e) {
-                // Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
-                e.preventDefault();
-                e.stopPropagation();
-            }).filter("[data-shortcut]").each(function() {
+                }).off('click.screenOption')
+                .on('click.screenOption', function (e) {
+                    // Paramos el evento click, que salta junto con mouseup al hacer click con botón izquierdo
+                    e.preventDefault();
+                    e.stopPropagation();
+                }).filter("[data-shortcut]").each(function () {
                 var $option = $(this);
                 var keyCode = $(this).data("shortcut").toUpperCase().charCodeAt(0);
-                self.klearModule("registerShortcut",keyCode,function() {
+                self.klearModule("registerShortcut", keyCode, function () {
                     $option.trigger("mouseup.screenOption");
                 });
             });
@@ -619,93 +623,104 @@
              */
 
             $('a.option.dialog', this.element.klearModule("getPanel"))
-            .off('click.dialogOption')
-            .on('click.dialogOption', function(e, data) {
+                .off('click.dialogOption')
+                .on('click.dialogOption', function (e, data) {
 
-                e.preventDefault();
-                e.stopPropagation();
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                var external = data && data.external || false;
+                    var external = data && data.external || false;
 
-                if (_self.options.parent) {
-                    self = _self.options.parent;
-                }
+                    if (_self.options.parent) {
+                        self = _self.options.parent;
+                    }
 
-                var _parentHolder = _self._resolveParentHolder(this);
+                    var _parentHolder = _self._resolveParentHolder(this);
 
-                var curPK = _parentHolder.data("id");
+                    var curPK = _parentHolder.data("id");
 
-                if ($(_parentHolder).length > 1) {
-                    curPK = [];
-                    $(_parentHolder).each(function() {
-                       curPK.push($(this).data("id"));
-                    });
-                }
+                    if ($(_parentHolder).length > 1) {
+                        curPK = [];
+                        $(_parentHolder).each(function () {
+                            curPK.push($(this).data("id"));
+                        });
+                    }
 
-                var $caller = $(this);
+                    var $caller = $(this);
 
-                $(self).klearModule("showDialog",
+                    $(self).klearModule("showDialog",
                         '<br />',
                         {
                             title: $(this).attr("title") || '',
-                            template : '<div class="ui-widget">{{html text}}</div>',
+                            template: '<div class="ui-widget">{{html text}}</div>',
                             width: 'auto'
                         });
 
-                var $_dialog = $(self).klearModule("getModuleDialog");
-                $(self).moduleDialog("setAsLoading");
-                $_dialog.data("dialogName", $(this).data("dialog"));
-                var _postData = {
-                    callerScreen : _self.options.data.screen
-                };
+                    var $_dialog = $(self).klearModule("getModuleDialog");
+                    $(self).moduleDialog("setAsLoading");
+                    $_dialog.data("dialogName", $(this).data("dialog"));
+                    var _postData = {
+                        callerScreen: _self.options.data.screen
+                    };
 
-                // Si la pantalla llamante tiene condición (parentId -- en data --
-                // enviarlos a la nueva pantalla
+                    // Si la pantalla llamante tiene condición (parentId -- en data --
+                    // enviarlos a la nueva pantalla
 
-                if (_self.options.data.parentId) {
-                    _postData.parentId = _self.options.data.parentId;
-                    _postData.parentScreen = _self.options.data.parentScreen;
-                }
-
-                if (data && typeof data.params != undefined) {
-                    $.extend(_postData, data.params);
-                }
-
-                if ($(this).data("params")) {
-                    $.extend(_postData, $(this).data("params"));
-                }
-
-                $.klear.request(
-                    {
-                        file: self.klearModule("option", "file"),
-                        type: 'dialog',
-                        dialog : $_dialog.data("dialogName"),
-                        pk : curPK,
-                        post: _postData,
-                        external: external
-                    },
-                    function(response) {
-                        if (external) {
-                            $_dialog.moduleDialog("close");
-                        } else {
-                            $_dialog[response.plugin]({data : response.data, parent: self, caller: $caller});
-                        }
-                    },
-                    function() {
-                        console.log(arguments);
+                    if (_self.options.data.parentId) {
+                        _postData.parentId = _self.options.data.parentId;
+                        _postData.parentScreen = _self.options.data.parentScreen;
                     }
-                );
-            })
-            .off('mouseup.dialogOption')
-            .on('mouseup.dialogOption', function(e) {
-                // Paramos el evento mouseup, para no llegar al tr
-                e.preventDefault();
-                e.stopPropagation();
-            })
-            .filter("[data-shortcut]").each(function() {
+
+                    if (data && typeof data.params != undefined) {
+                        $.extend(_postData, data.params);
+                    }
+
+                    if ($(this).data("params")) {
+                        $.extend(_postData, $(this).data("params"));
+                    }
+
+                    var _combinedReqData = {};
+                    $.extend(
+                        _combinedReqData,
+                        $(self).klearModule("option", "dispatchOptions").post
+                    );
+
+                    $.extend(
+                        _combinedReqData,
+                        _postData
+                    );
+
+                    $.klear.request(
+                        {
+                            file: self.klearModule("option", "file"),
+                            type: 'dialog',
+                            dialog: $_dialog.data("dialogName"),
+                            pk: curPK,
+                            post: _combinedReqData,
+                            external: external
+                        },
+                        function (response) {
+                            if (external) {
+                                $_dialog.moduleDialog("close");
+                            } else {
+                                $_dialog[response.plugin]({data: response.data, parent: self, caller: $caller});
+                            }
+                        },
+                        function () {
+                            console.log(arguments);
+                        }
+                    );
+                })
+                .off('mouseup.dialogOption')
+                .on('mouseup.dialogOption', function (e) {
+                    // Paramos el evento mouseup, para no llegar al tr
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                .filter("[data-shortcut]").each(function () {
                 var $option = $(this);
                 var keyCode = $(this).data("shortcut").toUpperCase().charCodeAt(0);
-                self.klearModule("registerShortcut",keyCode,function() {
+                self.klearModule("registerShortcut", keyCode, function () {
                     $option.trigger("click.dialogOption");
                 });
             });
@@ -716,116 +731,119 @@
              */
 
             $('a.option.command', this.element.klearModule("getPanel"))
-            .off('mouseup.commandOption')
-            .on('mouseup.commandOption',function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            })
-            .off('click.commandOption')
-            .on('click.commandOption', function(e, data) {
+                .off('mouseup.commandOption')
+                .on('mouseup.commandOption', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                .off('click.commandOption')
+                .on('click.commandOption', function (e, data) {
 
-                e.preventDefault();
-                e.stopPropagation();
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                var selfCommand = $(this);
+                    var selfCommand = $(this);
 
-                var external = data && data.external || false;
-                external = selfCommand.data("external")? true: external;
+                    var external = data && data.external || false;
+                    external = selfCommand.data("external") ? true : external;
 
-                if (_self.options.parent) {
-                    self = _self.options.parent;
-                }
-
-                var _parentHolder = _self._resolveParentHolder(this);
-
-                var _postData = {
-                    callerScreen : _self.options.data.screen
-                };
-
-                // Si la pantalla llamante tiene condición (parentId -- en data --
-                // enviarlos a la nueva pantalla
-                if (_self.options.data.parentId) {
-                    _postData.parentId = _self.options.data.parentId;
-                    _postData.parentScreen = _self.options.data.parentScreen;
-                }
-
-                if (data && typeof data.params != undefined) {
-                    $.extend(_postData, data.params);
-                }
-
-                var _file = $(self).klearModule("option", "file");
-
-                var disabledTime = selfCommand.data('disabledtime') || null;
-                if (disabledTime) {
-
-                    selfCommand.button("option", "disabled", "disabled");
-                    window.setTimeout(function(){
-                        selfCommand.button("option", "disabled", false);
-                    }, disabledTime);
-                }
-
-                $.klear.request(
-                    {
-                        file: _file,
-                        type: 'command',
-                        command : selfCommand.data("command"),
-                        pk : _parentHolder.data("id"),
-                        post: _postData,
-                        external: external
-                    },
-                    function(response) {
-                    },
-                    function() {
-                        console.log(arguments);
+                    if (_self.options.parent) {
+                        self = _self.options.parent;
                     }
-                );
 
-            }).filter("[data-shortcut]").each(function() {
+                    var _parentHolder = _self._resolveParentHolder(this);
+
+                    var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
+
+                    var _postData = {
+                        callerScreen: _self.options.data.screen,
+                        post: _dispatchOptions.post || {}
+                    };
+
+                    // Si la pantalla llamante tiene condición (parentId -- en data --
+                    // enviarlos a la nueva pantalla
+                    if (_self.options.data.parentId) {
+                        _postData.parentId = _self.options.data.parentId;
+                        _postData.parentScreen = _self.options.data.parentScreen;
+                    }
+
+                    if (data && typeof data.params != undefined) {
+                        $.extend(_postData, data.params);
+                    }
+
+                    var _file = $(self).klearModule("option", "file");
+
+                    var disabledTime = selfCommand.data('disabledtime') || null;
+                    if (disabledTime) {
+
+                        selfCommand.button("option", "disabled", "disabled");
+                        window.setTimeout(function () {
+                            selfCommand.button("option", "disabled", false);
+                        }, disabledTime);
+                    }
+
+                    $.klear.request(
+                        {
+                            file: _file,
+                            type: 'command',
+                            command: selfCommand.data("command"),
+                            pk: _parentHolder.data("id"),
+                            post: _postData,
+                            external: external
+                        },
+                        function (response) {
+                        },
+                        function () {
+                            console.log(arguments);
+                        }
+                    );
+
+                }).filter("[data-shortcut]").each(function () {
                 var $option = $(this);
                 var keyCode = $(this).data("shortcut").toUpperCase().charCodeAt(0);
-                self.klearModule("registerShortcut",keyCode,function() {
+                self.klearModule("registerShortcut", keyCode, function () {
                     $option.trigger("click.commandOption");
                 });
             });
-              
+
 
             $("a[title]:not(.fieldInfo-box),span[title]", this.element.klearModule("getPanel")).tooltip();
 
-            $(".fieldInfo-box", this.element.klearModule("getPanel")).toggle(function(){
+            $(".fieldInfo-box", this.element.klearModule("getPanel")).toggle(function () {
 
-                var $self = $(this);
+                    var $self = $(this);
 
-                var $box = $self.parent().find('.fieldInfo-boxinfo');
-                if ($box.length<=0) {
-                    $box = $('<div />', {
-                        'class' : 'fieldInfo-boxinfo ui-state-highlight ui-corner-all',
-                        html: '<p>' + $self.data('title') + '</p>'
+                    var $box = $self.parent().find('.fieldInfo-boxinfo');
+                    if ($box.length <= 0) {
+                        $box = $('<div />', {
+                            'class': 'fieldInfo-boxinfo ui-state-highlight ui-corner-all',
+                            html: '<p>' + $self.data('title') + '</p>'
+                        });
+                        $box.hide();
+                        $self.parent().prepend($box);
+                    }
+                    $box.slideDown('slow');
+                },
+                function () {
+
+                    var $box = $(this).parent().find('.fieldInfo-boxinfo:eq(0)');
+                    $box.slideUp('slow', function () {
+                        $(this).remove();
                     });
-                    $box.hide();
-                    $self.parent().prepend($box);
-                }
-                $box.slideDown('slow');
-            },
-            function(){
-
-                var $box = $(this).parent().find('.fieldInfo-boxinfo:eq(0)');
-                $box.slideUp('slow', function(){
-                    $(this).remove();
                 });
-            });
 
             return this;
         },
         _imgPreviewChange: function (element) {
-            
+
             var newValue = element.val();
             var imgPreview = element.parent('div.container').find('div.select-img-preview img');
             var path = element.attr('imgpreview');
-            
+
             imgPreview.attr('src', path + newValue);
-            
+
         },
-        standardError : function(data) {
+        standardError: function (data) {
             var self = this;
             var $_dialog = $(self.element).klearModule("getModuleDialog");
             var $message = $('<div><div class="dialogMessage">' + data.message + '</div></div>');
@@ -833,16 +851,16 @@
             $_dialog.moduleDialog(
                 "option",
                 "buttons",
-                 [
+                [
                     {
                         text: $.translate("Close"),
-                        click: function() {
+                        click: function () {
                             $_dialog.moduleDialog("close");
                         }
                     }
                 ]
             );
-            var _extraCode  = '';
+            var _extraCode = '';
 
             if (typeof data.exceptionCode != 'undefined') {
                 var errorDesc = $.klear.fetchErrorByCode(data.exceptionCode);
@@ -859,20 +877,20 @@
                 $message.append($showTrace).append($trace);
 
                 $trace.hide();
-                $showTrace.on('click', function(e) {
+                $showTrace.on('click', function (e) {
                     e.preventDefault();
                     $trace.toggle();
                     $_dialog.moduleDialog('option', 'width', 800);
                 });
             }
 
-            $_dialog.moduleDialog("option", "title", $.translate("Error")  + _extraCode);
+            $_dialog.moduleDialog("option", "title", $.translate("Error") + _extraCode);
             $_dialog.moduleDialog("updateContent", $message);
         },
 
-        _resolveAutoOption : function() {
+        _resolveAutoOption: function () {
             var $container = $(this.element).klearModule("getContainer");
-            $("span.autoOption",$container).each(function() {
+            $("span.autoOption", $container).each(function () {
                 var dataValues = $(this).data();
                 var entity = null;
                 var fieldValue = null;
@@ -880,16 +898,16 @@
                 $(this).replaceWith($.klearmatrix.template.helper.option2HTML(dataValues, 'Field', entity, fieldValue));
             });
         },
-        _doGhostList : function() {
+        _doGhostList: function () {
             var $container = $(this.element).klearModule("getContainer");
 
-            $("ul.ghostList", $container).each(function() {
+            $("ul.ghostList", $container).each(function () {
 
                 $optionHolder = $(this).next(".ghostListOptions");
                 $optionHolder.hide();
-                $futureOptions = $(".opClone",$(this));
+                $futureOptions = $(".opClone", $(this));
 
-                $("a",$optionHolder).each(function() {
+                $("a", $optionHolder).each(function () {
                     var link = false;
                     if ($(this).hasClass("screen")) {
                         link = $(this).data("screen");
@@ -902,49 +920,49 @@
                     }
 
                     var optString = $("<div />").append($(this)).html();
-                    $futureOptions.filter("[data-link='"+link+"']").replaceWith(optString);
+                    $futureOptions.filter("[data-link='" + link + "']").replaceWith(optString);
                 });
             });
 
-            $(".ghostListCounter input",$container)
-            .off('doSum')
-            .on('doSum',function() {
-                var $parent = $(this).parent();
-                $("span.counter", $parent).html($parent.next("ul.ghostList").find("li:visible").length);
-            })
-            .off('keyup.ghostfilter')
-            .on('keyup.ghostfilter',function() {
-                var $items =  $(this).parent().next("ul.ghostList").find("li");
-                $items.show();
-                if ($(this).val() == "") {
+            $(".ghostListCounter input", $container)
+                .off('doSum')
+                .on('doSum', function () {
+                    var $parent = $(this).parent();
+                    $("span.counter", $parent).html($parent.next("ul.ghostList").find("li:visible").length);
+                })
+                .off('keyup.ghostfilter')
+                .on('keyup.ghostfilter', function () {
+                    var $items = $(this).parent().next("ul.ghostList").find("li");
+                    $items.show();
+                    if ($(this).val() == "") {
+                        $(this).trigger("doSum");
+                        return;
+                    }
+                    $items.not(":contains(" + $(this).val() + ")").hide();
                     $(this).trigger("doSum");
-                    return;
-                }
-                $items.not(":contains("+$(this).val()+")").hide();
-                $(this).trigger("doSum");
 
-            })
-            .trigger('keyup.ghostfilter');
-            $(".ghostTableCounter input",$container)
-            .off('doSum')
-            .on('doSum',function() {
+                })
+                .trigger('keyup.ghostfilter');
+            $(".ghostTableCounter input", $container)
+                .off('doSum')
+                .on('doSum', function () {
 
-                var $parent = $(this).parent();
-                $("span.counter", $parent).html($parent.next("div.ghostTableContainer").find("tr.hideable:visible").length);
-            })
-            .off('keyup.ghostfilter')
-            .on('keyup.ghostfilter',function() {
-                var $items =  $(this).parent().next("div.ghostTableContainer").find("tr.hideable");
-                $items.show();
-                if ($(this).val() == "") {
+                    var $parent = $(this).parent();
+                    $("span.counter", $parent).html($parent.next("div.ghostTableContainer").find("tr.hideable:visible").length);
+                })
+                .off('keyup.ghostfilter')
+                .on('keyup.ghostfilter', function () {
+                    var $items = $(this).parent().next("div.ghostTableContainer").find("tr.hideable");
+                    $items.show();
+                    if ($(this).val() == "") {
+                        $(this).trigger("doSum");
+                        return;
+                    }
+                    $items.not(":contains(" + $(this).val() + ")").hide();
                     $(this).trigger("doSum");
-                    return;
-                }
-                $items.not(":contains("+$(this).val()+")").hide();
-                $(this).trigger("doSum");
 
-            })
-            .trigger('keyup.ghostfilter');
+                })
+                .trigger('keyup.ghostfilter');
         }
     });
 

@@ -41,16 +41,8 @@ class KlearMatrix_Model_Field_Picker extends KlearMatrix_Model_Field_Abstract
                 }
             }
 
-            if ($this->_column->namedParamsAreSupported()) {
-
-                $vals[] = $searchField .' '.$op.' '. $template;
-                $_fieldValues[$template] = $this->filterValue($_val);
-
-            } else {
-
-                $vals[] = $searchField . ' ' . $op .' ?';
-                $_fieldValues[] = $this->filterValue($_val);
-            }
+            $vals[] = 'self::' . $searchField .' '.$op.' '. $template;
+            $_fieldValues[$template] = $this->filterValue($_val);
 
             $cont++;
 

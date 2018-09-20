@@ -134,9 +134,6 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         if (isset($this->_commandConfiguration->order)) {
             $order = $this->_commandConfiguration->order->toArray();
-//            if (strpos($order, ',')) {
-//                $order = explode(',', $order);
-//            }
         }
 
         $condition = '';
@@ -163,47 +160,83 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             }
         }
 
-        $query = array();
-        $params = array();
+        if ($this->_commandConfiguration->fullTemplateMatch) {
 
-        $startParam = "%";
-        $endParam = "%";
-        if ($this->_commandConfiguration->matchAt) {
-            switch ($this->_commandConfiguration->matchAt) {
-                case "start":
-                    $startParam = "";
-                    $endParam = "%";
-                    break;
-                case "end":
-                    $startParam = "%";
-                    $endParam = "";
-                    break;
-                default:
-                    $startParam = "%";
-                    $endParam = "%";
-                    break;
+            $where =  [
+                $condition,
+                []
+            ];
+
+            $template = $this->_commandConfiguration->fieldName->template;
+            foreach ($this->_fields as $field) {
+                $template = str_replace(
+                    '%'. $field .'%',
+                    '[::explode::]self::' . $field . '[::explode::]',
+                    $template
+                );
+            }
+
+            $template = array_filter(
+                explode('[::explode::]', $template),
+                function ($term) {
+                    return (!empty($term));
+                }
+            );
+
+            foreach ($template as $key => $value) {
+                if (strpos($value, 'self::') !== false) {
+                    continue;
+                }
+                $template[$key] = "'$value'";
+            }
+
+            $where[0] .= ' CONCAT(' . implode(',', $template) . ') like :searchTerm';
+            $where[1]['searchTerm'] = '%' . $searchTerm . '%';
+
+        } else {
+
+            $query = array();
+            $params = array();
+
+            $startParam = "%";
+            $endParam = "%";
+
+            if ($this->_commandConfiguration->matchAt) {
+                switch ($this->_commandConfiguration->matchAt) {
+                    case "start":
+                        $startParam = "";
+                        $endParam = "%";
+                        break;
+                    case "end":
+                        $startParam = "%";
+                        $endParam = "";
+                        break;
+                    default:
+                        $startParam = "%";
+                        $endParam = "%";
+                        break;
+                }
+            }
+
+            foreach ( $this->_fields as $field ) {
+                $cleanFldName = str_replace('.', '', $field);
+                $query[] = 'self::' . $field . ' LIKE :' . $cleanFldName;
+                $stringLike = str_replace(' ', '%', $searchTerm);
+                $params[$cleanFldName] = $startParam . $stringLike . $endParam;
+            }
+
+            $query = '('. implode(" OR ", $query) .')';
+            if (!$this->_commandConfiguration->ignoreWhereDefault) {
+                $where =  array(
+                    $condition . $query,
+                    $params
+                );
+            } else {
+                $where =  $condition;
             }
         }
 
-        foreach ( $this->_fields as $field ) {
-            $cleanFldName = str_replace('.', '', $field);
-            $query[] = 'self::' . $field . ' LIKE :' . $cleanFldName;
-            $stringLike = str_replace(' ', '%', $searchTerm);
-            $params[$cleanFldName] = $startParam . $stringLike . $endParam;
-        }
-
-        $query = '('. implode(" OR ", $query) .')';
-        if (!$this->_commandConfiguration->ignoreWhereDefault) {
-            $where =  array(
-                $condition . $query,
-                $params
-            );
-        } else {
-            $where =  $condition;
-        }
-
         foreach ($where as $key => $value) {
-
             if (!is_string($value)) {
                 continue;
             }
@@ -216,8 +249,6 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
             $order,
             $this->_limit
         );
-
-//        $records = $this->_mapper->fetchList($where, $order, $this->_limit);
 
         $this->_results = array();
 
@@ -238,6 +269,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
+
         return $fieldConfig->getProperty("fields");
     }
 
@@ -251,6 +283,7 @@ class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_
 
         $fieldConfig = new Klear_Model_ConfigParser();
         $fieldConfig->setConfig($fieldName);
+
         return $fieldConfig->getProperty("template");
     }
 }

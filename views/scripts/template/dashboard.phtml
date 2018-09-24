@@ -7,20 +7,47 @@
 <legend class="ui-state-active  ui-corner-all">${section.name}</legend>
     <ul>
         {{each(idx2,subsection) section.subsects}}
+        {{if (subsection.subsects && subsection.subsects.length > 0)}}
+        <li class="submenu">
+            <h3>
+                <span class="ui-silk inline ${subsection['class']}"></span>
+                <span class="textnode">${subsection.name}</span>
+            </h3>
+            <div>
+                <ul>
+                    {{each(subidx,subsubsection) subsection.subsects}}
+                    <li>
+                        {{if (subsubsection.file)}}
+                        <a class="subsection" href="?" id="target-${subsubsection.file}" >
+                            {{/if}}
+                            {{if (subsubsection['class'])}}
+                            <span class="ui-silk inline ${subsubsection['class']}"></span>
+                            {{/if}}
+                            ${subsubsection.name}
+                            {{if (subsubsection.file)}}
+                        </a>
+                        {{/if}}
+                        <strong>${subsubsection.subtitle}</strong>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </li>
+        {{else}}
         <li>
-{{if (subsection.file)}}
+            {{if (subsection.file)}}
             <a class="subsection" href="?" id="target-${subsection.file}" >
-{{/if}}
-{{if (subsection['class'])}}
-            <span class="ui-silk inline ${subsection['class']}"></span>
-{{/if}}
-            ${subsection.name}
-{{if (subsection.file)}}
+                {{/if}}
+                {{if (subsection['class'])}}
+                <span class="ui-silk inline ${subsection['class']}"></span>
+                {{/if}}
+                ${subsection.name}
+                {{if (subsection.file)}}
             </a>
-{{/if}}
+            {{/if}}
             <strong>${subsection.subtitle}</strong>
-            </li>
-
+        </li>
+        {{/if}}
     {{/each}}
     </ul>
 </fieldset>

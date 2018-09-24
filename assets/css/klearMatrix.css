@@ -565,7 +565,13 @@ div.klearMatrixDashboard fieldset ul {
     list-style:none;
 }
 
-div.klearMatrixDashboard fieldset a, div.klearMatrixDashboard fieldset a:active, div.klearMatrixDashboard fieldset a:hover {
+div.klearMatrixDashboard fieldset ul li.submenu ul {
+    padding-left: 20px;
+}
+
+div.klearMatrixDashboard fieldset a,
+div.klearMatrixDashboard fieldset a:active,
+div.klearMatrixDashboard fieldset a:hover {
     text-decoration:none;
 }
 div.klearMatrixDashboard fieldset li strong {

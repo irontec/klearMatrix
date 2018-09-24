@@ -67,60 +67,15 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
         $data['sections'] = array();
 
         foreach ($menuConfig as $section) {
-            $sectionTmp = array(
-                    'name' => $section->getName(),
-                    'meta' => $section->getMeta(),
-                    'subsects' => array()
+
+            $sectionTmp = $this->parseSection(
+                $section,
+                $sectionsBlackList
             );
-
-            foreach ($section as $subsection) {
-
-                $file = $subsection->getMainFile();
-
-                $sectionConfig = new Klear_Model_SectionConfig;
-                $sectionConfig->setFile($file);
-                if (!$sectionConfig->isValid()) {
-                    continue;
-                }
-
-                if (in_array($file, $sectionsBlackList)) {
-                    continue;
-                }
-
-                // Nos devuelve el configurador del módulo concreto instanciado.
-                $moduleConfig = $sectionConfig->factoryModuleConfig();
-                $moduleRouter = $moduleConfig->buildRouterConfig();
-                $moduleRouter->resolveDispatch();
-
-                if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class")) {
-                    $dashElementClassName = $moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class");
-                    $dashSection = new $dashElementClassName;
-                    $dashSection->setConfig($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard"));
-                    $dashSection->setItem($moduleRouter->getCurrentItem());
-                    $sectionTmp['subsects'][] = array(
-                            'name' => $dashSection->getName(),
-                            'class' => $dashSection->getClass(),
-                            'file' => $dashSection->getFile(),
-                            'subtitle' => $dashSection->getSubTitle()
-                    );
-
-                    continue;
-                }
-
-                /*
-                 * Para KlearMatrix List, se calcula automáticamente.
-                 */
-                if (($moduleRouter->getModuleName() == "klearMatrix") &&
-                        ($moduleRouter->getControllerName() == "list") ) {
-                    $sectionTmp['subsects'][] = $this->_calculateForKlearMatrixList($moduleRouter, $subsection);
-                    continue;
-                }
-            }
 
             if (sizeof($sectionTmp['subsects'])>0) {
                 $data['sections'][] = $sectionTmp;
             }
-
         }
 
         $jsonResponse = KlearMatrix_Model_DispatchResponseFactory::build();
@@ -152,5 +107,77 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 'file' => $subsection->getMainFile(),
                 'subtitle' => $totalItems
         );
+    }
+
+    /**
+     * @param $section
+     * @param $sectionsBlackList
+     * @return array
+     */
+    protected function parseSection($section, $sectionsBlackList): array
+    {
+        $sectionTmp = array(
+            'name' => $section->getName(),
+            'class' => $section->getClass(),
+            'meta' => $section->getMeta(),
+            'subsects' => array()
+        );
+
+        foreach ($section->getSubsections() as $subsection) {
+
+            if ($subsection->hasSubsections()) {
+                $break = 1;
+                $sectionTmp['subsects'][] = $this->parseSection(
+                    $subsection,
+                    $sectionsBlackList
+                );
+
+                continue;
+            }
+
+            $file = $subsection->getMainFile();
+
+            $sectionConfig = new Klear_Model_SectionConfig;
+            $sectionConfig->setFile($file);
+            if (!$sectionConfig->isValid()) {
+                continue;
+            }
+
+            if (in_array($file, $sectionsBlackList)) {
+                continue;
+            }
+
+            // Nos devuelve el configurador del módulo concreto instanciado.
+            $moduleConfig = $sectionConfig->factoryModuleConfig();
+            $moduleRouter = $moduleConfig->buildRouterConfig();
+            $moduleRouter->resolveDispatch();
+
+            if ($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class")) {
+                $dashElementClassName = $moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard->class");
+                $dashSection = new $dashElementClassName;
+                $dashSection->setConfig($moduleRouter->getCurrentItem()->getRawConfigAttribute("dashboard"));
+                $dashSection->setItem($moduleRouter->getCurrentItem());
+                $sectionTmp['subsects'][] = array(
+                    'name' => $dashSection->getName(),
+                    'class' => $dashSection->getClass(),
+                    'file' => $dashSection->getFile(),
+                    'subtitle' => $dashSection->getSubTitle()
+                );
+
+                continue;
+            }
+
+            /*
+             * Para KlearMatrix List, se calcula automáticamente.
+             */
+            if (($moduleRouter->getModuleName() == "klearMatrix") &&
+                ($moduleRouter->getControllerName() == "list")
+            ) {
+                $sectionTmp['subsects'][] = $this->_calculateForKlearMatrixList($moduleRouter, $subsection);
+                continue;
+            }
+        }
+
+        return $sectionTmp;
     }
 }

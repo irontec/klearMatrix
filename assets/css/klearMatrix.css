@@ -565,6 +565,18 @@ div.klearMatrixDashboard fieldset ul {
     list-style:none;
 }
 
+div.klearMatrixDashboard fieldset ul li.submenu {
+    padding: 0 0 5px;
+}
+
+div.klearMatrixDashboard fieldset ul li.submenu h3 span {
+    color: #333;
+}
+
+div.klearMatrixDashboard fieldset ul li.submenu ul {
+    padding-left: 20px;
+}
+
 div.klearMatrixDashboard fieldset ul li.submenu ul {
     padding-left: 20px;
 }

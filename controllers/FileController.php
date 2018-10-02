@@ -41,6 +41,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $this->_helper->ContextSwitch()
             ->addActionContext('download', 'json')
+            ->addActionContext('zip-and-download', 'json')
             ->addActionContext('delete', 'json')
             ->addActionContext('upload', 'json')
             ->addActionContext('free-upload', 'json')
@@ -168,6 +169,50 @@ class KlearMatrix_FileController extends Zend_Controller_Action
     {
         $this->getRequest()->setParam("download", true);
         return $this->downloadAction();
+    }
+
+    public function zipAndDownloadAction()
+    {
+        $this->_pk = $this->_mainRouter->getParam("pk");
+        if (!is_array($this->_pk)) {
+            $this->_pk = [$this->_pk];
+        }
+        $tmpZipFile = tempnam("/tmp", "klearZip") . '.zip';
+        $zip = new \ZipArchive();
+        $success = $zip->open($tmpZipFile, \ZipArchive::CREATE);
+        if (!$success) {
+            throw new \Exception('Unable to open zip file');
+        }
+
+        $dataGateway = \Zend_Registry::get('data_gateway');
+        foreach ($this->_pk as $pk) {
+
+            $this->_model = $dataGateway->find(
+                $this->_item->getEntityClassName(),
+                $pk
+            );
+            if (!$this->_model) {
+                $this->_helper->log(
+                    'Model not found for '. $this->_item->getEntityClassName() . ' >> PK(' .$pk .')',
+                    Zend_Log::ERR
+                );
+                throw new Zend_Exception("Requested column not found.");
+            }
+            $column = $this->_getFileColumn();
+            $mainColumn = $this->_item->getConfigAttribute("mainColumn");
+            $fetchGetter = $column->getFieldConfig()->getFetchMethod($mainColumn);
+            $baseNameGetter = 'get' . ucfirst($mainColumn) . 'BaseName';
+            $filePath = $this->_model->{$fetchGetter}();
+            $fileBaseName = $this->_model->{$baseNameGetter}();
+            $zip->addFile($filePath, './' . $fileBaseName);
+        }
+        $zip->close();
+        $this->_helper->sendFileToClient(
+            $tmpZipFile,
+            array('filename' => $mainColumn . '.zip'),
+            false
+        );
+        unlink($tmpZipFile);
     }
 
     /**

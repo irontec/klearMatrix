@@ -130,7 +130,7 @@ class KlearMatrix_Model_Field_File_Fso
 
     public function getFetchMethod($dbName)
     {
-        return 'fetch' . $dbName;
+        return 'get' . ucfirst($dbName) . 'Path';
     }
 
     public function getExtraJavascript()

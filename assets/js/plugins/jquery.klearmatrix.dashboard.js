@@ -79,7 +79,14 @@
                 wrapper.css({ boxWidth : '300px'});
             }
 
-            wrapper.css({'column-width' : '300px'});
+            wrapper.css({
+                'column-width' : '300px',
+                'display': 'flex',
+                'flex-direction': 'row',
+                'justify-content': 'flex-start',
+                'align-items': 'flex-start',
+                'flex-wrap': 'nowrap'
+            });
 
             for (prefix in css3VendorPrefixes) {
 
@@ -92,7 +99,7 @@
             if (boxWidth != box.width()) {
 
                 boxes.removeClass("legacy");
-                boxes.css({'width': '85%'});
+                boxes.css({'width': '85%', 'flex-basis': '275px'});
             }
 
             return this;

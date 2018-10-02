@@ -752,6 +752,13 @@
                     }
 
                     var _parentHolder = _self._resolveParentHolder(this);
+                    var curPK = _parentHolder.data("id");
+                    if ($(_parentHolder).length > 1) {
+                        curPK = [];
+                        $(_parentHolder).each(function() {
+                            curPK.push($(this).data("id"));
+                        });
+                    }
 
                     var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
@@ -787,7 +794,7 @@
                             file: _file,
                             type: 'command',
                             command: selfCommand.data("command"),
-                            pk: _parentHolder.data("id"),
+                            pk: curPK,
                             post: _postData,
                             external: external
                         },

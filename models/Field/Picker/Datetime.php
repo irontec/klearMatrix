@@ -39,6 +39,10 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
 
     public function filterValue($value)
     {
+        if (!$value) {
+            return;
+        }
+
         $format = $this->toPhpFormat(
             $this->_getSetting('dateFormat'),
             $this->_getSetting('timeFormat')
@@ -48,6 +52,14 @@ class KlearMatrix_Model_Field_Picker_Datetime extends KlearMatrix_Model_Field_Pi
             $format,
             $value
         );
+
+        if (!$dateTime) {
+            // Filters use mysql format
+            $dateTime = \DateTime::createFromFormat(
+                'Y-m-d H:i:s',
+                $value
+            );
+        }
 
         $dateTime->setTimezone(new \DateTimeZone('UTC'));
 

@@ -341,10 +341,19 @@
                         return;
                     }
 
-
                     $_term.attr("disabled", "disabled");
                     $_field.attr("disabled", "disabled");
+
+                    var isDatePicker = $_term.hasClass('hasDatepicker');
+                    if (isDatePicker) {
+                        var currentFormat = $_term.datepicker("option", 'dateFormat');
+                        $_term.datepicker("option", 'dateFormat', 'yy-mm-dd');
+                    }
                     var _newVal = ($_term.data('autocomplete')) ? $_term.data('idItem') : $_term.val();
+                    if (isDatePicker) {
+                        $_term.datepicker("option", 'dateFormat', currentFormat);
+                    }
+
                     _dispatchOptions.post.searchFields[fieldName].push(_newVal);
 
                     var _searchOp = 'eq';

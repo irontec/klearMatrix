@@ -272,13 +272,16 @@ class KlearMatrix_Model_FilterProcessor
     protected function _getPostSearchFields()
     {
         $searchFields = $this->_request->getPost("searchFields");
+        $isAjaxRequest = $this->_request->getHeader('X-Requested-With') === 'XMLHttpRequest';
+
         if (is_array($searchFields)) {
 
             foreach ($searchFields as $key => $val) {
 
                 if (empty($val)) {
                     unset($searchFields[$key]);
-                } else if (is_array($val)) {
+                } else if (is_array($val) && !$isAjaxRequest) {
+                    //This is only necessary on values sent through iframes
                     array_walk($searchFields[$key], function (&$value) {
                         $value = \urldecode($value);
                     });

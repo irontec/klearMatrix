@@ -729,7 +729,7 @@
             //Validate required select fields by regExp
             // We also map error types, so we get the correct error on the field
             $("select[required]", this.options.theForm).not("[pattern]")
-            .attr("pattern", "[^__NULL__].{0,}")
+            .attr("pattern", "^(?!^__NULL__$).*$")
             .data("errorTypeMap", {'patternMismatch': 'valueMissing'});
 
             $("div.expandable", this.options.theForm).each(function() {

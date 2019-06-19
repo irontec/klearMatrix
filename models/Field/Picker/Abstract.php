@@ -22,6 +22,7 @@ abstract class KlearMatrix_Model_Field_Picker_Abstract
         'currentText' ,
         'dateFormat' ,
         'timeFormat' ,
+        'isDateTime' ,
         'dayNames' ,
         'dayNamesMin' ,
         'dayNamesShort' ,

@@ -470,6 +470,7 @@
                     e.stopPropagation();
 
                     var _menuLink = $(this);
+                    var _controller = _menuLink.data('controller');
 
                     if (_self.options.parent) {
                         self = _self.options.parent;
@@ -577,6 +578,7 @@
                     _container.one("tabspostadd", function (event, ui) {
 
                         var $tabLi = $(ui.tab).parent("li");
+                        $tabLi.data('controller', _controller)
 
                         // Seteamos como menuLink <- enlace "generador", el enlace que lanza el evento
                         $tabLi.klearModule("option", "menuLink", _menuLink);

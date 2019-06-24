@@ -788,7 +788,6 @@
         },
         option2HTML : function(option, from, idx, fieldValue)
         {
-
             var mainTitle = '',
                 buttonLabel = false,
                 classes = [],
@@ -823,9 +822,7 @@
 	                externalData['attributes'].push('externalid');
 	                externalData['values'].push(fieldValue);
             	}
-
         	}
-
 
             switch(from) {
 
@@ -913,6 +910,7 @@
             }
             var optionData = {
                     classes : classes.join(' '),
+                    controller: option.controller || '',
                     type : option.type,
                     icon: option.icon,
                     optionIndex : this.getIndex(option, option.type),

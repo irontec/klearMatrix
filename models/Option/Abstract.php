@@ -5,6 +5,7 @@ abstract class KlearMatrix_Model_Option_Abstract
     protected $_class;
     protected $_title;
     protected $_default = false;
+    protected $_controller = '';
 
     protected $_label = true;
     protected $_labelOnEdit = true;
@@ -54,7 +55,8 @@ abstract class KlearMatrix_Model_Option_Abstract
             'showOnlyOnNotNull',
             'showOnlyOnNull',
             'parentHolderSelector',
-            'from'
+            'from',
+            'controller'
     );
 
     public function setConfig(Zend_Config $config)
@@ -62,8 +64,8 @@ abstract class KlearMatrix_Model_Option_Abstract
         $this->_config = new Klear_Model_ConfigParser;
         $this->_config->setConfig($config);
 
+        $this->_controller = $this->_config->getProperty("controller");
         $this->_class = $this->_config->getProperty("class");
-
 
         $this->_title = $this->_config->getProperty("title");
 

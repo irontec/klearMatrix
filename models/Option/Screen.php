@@ -81,14 +81,11 @@ class KlearMatrix_Model_Option_Screen extends KlearMatrix_Model_Option_Abstract
 
     public function toArray()
     {
-
         $ret = $this->_prepareArray();
 
         $ret['screen'] = $this->_name;
         $ret['type'] = 'screen';
         $ret['multiInstance'] = $this->_multiInstance;
-
-
 
         if (!is_null($this->_externalConfig)) {
             $ret['externalOption'] = true;

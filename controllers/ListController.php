@@ -266,6 +266,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
             foreach ($order as $key => $val) {
 
+                if (is_callable($val)) {
+                    continue;
+                }
+
                 unset($order[$key]);
                 if (stripos($val, 'IDENTITY') || stripos($val, 'AS HIDDEN') || $val{0} === '(') {
                     $order[$val] = $orderType;

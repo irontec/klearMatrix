@@ -299,7 +299,6 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         return $ret;
     }
 
-    //Hace la ordenación en el mapper por el campo o campos que se van a mostrar y devuelve los ids ordenados
     public function getCustomOrderField()
     {
         $values = array();
@@ -335,7 +334,26 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $order = [];
         foreach ($fieldName as $field) {
             $key = $entity . '.' . $field;
-            $order[$key] = 'ASC';
+            $orderType = $this->_column->getRouteDispatcher()->getParam('orderType') ?? 'ASC';
+            $order[$key] = strtoupper($orderType);
+        }
+
+        $candidateNum = intval(
+            $dataGateway->countBy($entityClass)
+        );
+
+        if ($candidateNum > 100) {
+            return function (\Doctrine\ORM\QueryBuilder $qb) use ($entity, $order) {
+
+                $self = $this->_column->getRouteDispatcher()->getCurrentScreen()->getEntityName();
+
+                $qb->leftJoin(
+                    $self . '.' . $this->_column->getDbFieldName(),
+                    $entity
+                );
+
+                $qb->orderBy(key($order), current($order));
+            };
         }
 
         /**

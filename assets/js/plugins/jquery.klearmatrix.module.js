@@ -638,7 +638,9 @@
                 if ($(_parentHolder).length > 1) {
                     curPK = [];
                     $(_parentHolder).each(function() {
-                       curPK.push($(this).data("id"));
+                        if ($(this).is(':visible')) {
+                            curPK.push($(this).data("id"));
+                        }
                     });
                 }
 

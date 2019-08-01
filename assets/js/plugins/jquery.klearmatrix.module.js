@@ -107,10 +107,10 @@
             return retValues.join(' ');
         },
 
-        _resolveParentHolder: function (element) {
+        _resolveParentHolder: function (element, context) {
 
             if ($(element).data("multiitem")) {
-                return $("td.multiItem input:checked");
+                return $("td.multiItem input:checked", context);
             }
 
             if ($(element).data("parentHolderSelector")) {
@@ -490,7 +490,10 @@
                         _iden += '_' + _screen;
                     }
 
-                    var _parentHolder = _self._resolveParentHolder(this);
+                    var _parentHolder = _self._resolveParentHolder(
+                        this,
+                        self.klearModule("getPanel")
+                    );
 
                     if (!_menuLink.data("externalnoiden")) {
 
@@ -637,7 +640,10 @@
                         self = _self.options.parent;
                     }
 
-                    var _parentHolder = _self._resolveParentHolder(this);
+                    var _parentHolder = _self._resolveParentHolder(
+                        this,
+                        self.klearModule("getPanel")
+                    );
 
                     var curPK = _parentHolder.data("id");
 
@@ -753,7 +759,11 @@
                         self = _self.options.parent;
                     }
 
-                    var _parentHolder = _self._resolveParentHolder(this);
+                    var _parentHolder = _self._resolveParentHolder(
+                        this,
+                        self.klearModule("getPanel")
+                    );
+
                     var curPK = _parentHolder.data("id");
                     if ($(_parentHolder).length > 1) {
                         curPK = [];

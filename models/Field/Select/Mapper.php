@@ -71,9 +71,17 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $where = $this->_getFilterWhere();
         $limit = null;
 
+        /*
+         * Fixed php memory exhausted on Mapper
+         * There was a bug where you get a PHP Memory exhausted error when trying to delete a row from a large data table
+         * as it was getting the entire table using "fetchList" to just get the column fields and mapper.
+         */
         $manualCondition = $this->_config->getProperty('config')->rawCondition;
         if (empty($manualCondition)) {
             $where = is_null($where) || empty($where) ? '1' : $where;
+
+            // we use limit 2 instead of 1 because otherwise the return type we get
+            // is an object or assoc array and the method requires an index based array
             $limit = 2;
         }
 

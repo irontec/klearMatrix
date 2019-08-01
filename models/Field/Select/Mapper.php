@@ -69,9 +69,16 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         }
 
         $where = $this->_getFilterWhere();
+        $limit = null;
+
+        $manualCondition = $this->_config->getProperty('config')->rawCondition;
+        if (empty($manualCondition)) {
+            $where = is_null($where) || empty($where) ? '1' : $where;
+            $limit = 2;
+        }
 
         $order = $this->_config->getProperty('config')->order;
-        $results = $dataMapper->fetchList($where, $order);
+        $results = $dataMapper->fetchList($where, $order, $limit);
         $this->_setOptions($results);
     }
 

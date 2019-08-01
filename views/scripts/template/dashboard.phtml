@@ -17,6 +17,7 @@
                 <ul>
                     {{each(subidx,subsubsection) subsection.subsects}}
                     <li>
+                        <strong>${subsubsection.subtitle}</strong>
                         {{if (subsubsection.file)}}
                         <a class="subsection" href="?" id="target-${subsubsection.file}" >
                             {{/if}}
@@ -27,7 +28,6 @@
                             {{if (subsubsection.file)}}
                         </a>
                         {{/if}}
-                        <strong>${subsubsection.subtitle}</strong>
                     </li>
                     {{/each}}
                 </ul>
@@ -35,6 +35,7 @@
         </li>
         {{else}}
         <li>
+            <strong>${subsection.subtitle}</strong>
             {{if (subsection.file)}}
             <a class="subsection" href="?" id="target-${subsection.file}" >
                 {{/if}}
@@ -45,7 +46,6 @@
                 {{if (subsection.file)}}
             </a>
             {{/if}}
-            <strong>${subsection.subtitle}</strong>
         </li>
         {{/if}}
     {{/each}}

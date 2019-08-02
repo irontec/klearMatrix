@@ -22,6 +22,9 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
     protected $_js = array(
     );
 
+    protected $initialized = false;
+    protected $optionsCriteria = [];
+
     protected function _parseExtraAttrs(Zend_Config $extraConfig)
     {
         $retAttrs = array();
@@ -69,7 +72,21 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $order = $order->toArray();
         }
 
+        $this->optionsCriteria = [
+            $entity,
+            $where,
+            $order
+        ];
+    }
+
+    protected function initOptions()
+    {
+        if ($this->initialized) {
+            return;
+        }
+
         $dataGateway = \Zend_Registry::get('data_gateway');
+        list($entity, $where, $order) = $this->optionsCriteria;
 
         if (isset($where[0])) {
             $where[0] = $this->_replaceSelfReferences($where[0]);
@@ -77,6 +94,8 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
         $results = $dataGateway->findBy($entity, $where, $order);
         $this->_setOptions($results);
+
+        $this->initialized = true;
     }
 
     protected function _replaceSelfReferences($where)
@@ -284,6 +303,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
      */
     protected function _toArray()
     {
+        $this->initOptions();
         $ret = array();
 
         foreach ($this as $key => $value) {

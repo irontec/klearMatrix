@@ -85,7 +85,12 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             return;
         }
 
+        if (empty($this->optionsCriteria)) {
+            return;
+        }
+
         $dataGateway = \Zend_Registry::get('data_gateway');
+
         list($entity, $where, $order) = $this->optionsCriteria;
 
         if (isset($where[0])) {

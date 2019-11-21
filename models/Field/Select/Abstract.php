@@ -62,6 +62,10 @@ abstract class KlearMatrix_Model_Field_Select_Abstract implements IteratorAggreg
 
     protected function _getExtraConfigArray()
     {
+        if (method_exists($this, 'initOptions')){
+            $this->initOptions();
+        }
+
         $ret = array();
 
         if (sizeof($this->_showOnSelect) || sizeof($this->_hideOnSelect)) {

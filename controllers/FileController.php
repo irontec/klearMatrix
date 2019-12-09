@@ -267,6 +267,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
                 $response = Zend_Controller_Front::getInstance()->getResponse();
                 $response->clearHeaders();
+                $response->clearRawHeaders();
 
                 return;
             }

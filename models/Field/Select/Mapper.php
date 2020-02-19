@@ -82,7 +82,10 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
 
             // we use limit 2 instead of 1 because otherwise the return type we get
             // is an object or assoc array and the method requires an index based array
-            $limit = 2;
+            /**
+             * TODO: Nikox check this. The selects are only showing 2 options
+             */
+            // $limit = 2;
         }
 
         $order = $this->_config->getProperty('config')->order;

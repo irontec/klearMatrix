@@ -359,7 +359,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         $order = [];
         foreach ($fieldName as $field) {
             $key = $entity . '.' . $field;
-            $orderType = $this->_column->getRouteDispatcher()->getParam('orderType') ?? 'ASC';
+            $orderType = $this->_column->getRouteDispatcher()->getParam('orderType', false) ?? 'ASC';
             $order[$key] = strtoupper($orderType);
         }
 

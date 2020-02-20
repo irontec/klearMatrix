@@ -316,6 +316,10 @@ class KlearMatrix_ListController extends Zend_Controller_Action
 
                 if ($orderConfig->getProperty('type')) {
                     foreach ($order as $key => $val) {
+                        if (is_callable($val)) {
+                            continue;
+                        }
+
                         $order[$key] .= ' '. $orderConfig->getProperty('type');
                     }
                 }

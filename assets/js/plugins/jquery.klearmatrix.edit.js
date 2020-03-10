@@ -897,6 +897,7 @@
 
                 $.each(curOption.data("show").split(","), function (i, val) {
                     var field = _resolveFieldFromName(val, self.options.theForm);
+
                     if (!field) {
                         return;
                     }
@@ -904,6 +905,7 @@
                     if (manual) {
                         field.stop(true, true).show();
                         checkSuperContainer.show(field);
+                        $(".visualFilter", field).trigger("manualchange.visualFilter", true);
                     } else {
                         //Cuando mostramos un campo, lanzamos el visualFilter si tiene
                         //por si está relacionado con otro campo que debemos ocultar o mostrar

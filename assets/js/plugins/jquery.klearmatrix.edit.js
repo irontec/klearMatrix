@@ -863,13 +863,15 @@
                 _getFieldSet : function($field) {
                     return $field.parents("fieldset.superContainer:eq(0)");
                 },
-                show : function($f) {
-                    this._getFieldSet($f).slideDown();
+                show : function($f, duration) {
+                    duration = duration || 800;
+                    this._getFieldSet($f).slideDown(duration);
                 },
-                hide : function($f) {
+                hide : function($f, duration) {
                     $fSet = this._getFieldSet($f);
                     if ($(".container:visible", $fSet).length == 0) {
-                        $fSet.slideUp();
+                        duration = duration || 800;
+                        $fSet.slideUp(duration);
                     }
                 }
             };
@@ -889,7 +891,9 @@
                 return $("label[rel='" + fName + "']:eq(0)", $parent).parents("div:eq(0)") || false;
             };
 
-            function _showField(curOption, manual) {
+            function _showField(curOption, manual, propagate) {
+
+                propagate = typeof propagate !== 'undefined' ?  propagate : true;
 
                 if (!curOption.data("show")) {
                     return;
@@ -902,15 +906,24 @@
                         return;
                     }
 
+                    field.find("select, input, textarea").removeProp("disabled");
                     if (manual) {
-                        field.stop(true, true).show();
-                        checkSuperContainer.show(field);
-                        $(".visualFilter", field).trigger("manualchange.visualFilter", true);
+
+                        field.stop(true, true);
+                        field.parents("fieldset.superContainer:eq(0)").stop(true, true);
+
+                        field.show(0);
+                        checkSuperContainer.show(field, 0);
+
+                        if (propagate) {
+                            $(".visualFilter", field).trigger("manualchange.visualFilter", [true, false]);
+                        }
+
                     } else {
                         //Cuando mostramos un campo, lanzamos el visualFilter si tiene
                         //por si está relacionado con otro campo que debemos ocultar o mostrar
                         field.slideDown('normal', function () {
-                            $(".visualFilter", field).trigger("manualchange.visualFilter", true);
+                            $(".visualFilter", field).trigger("manualchange.visualFilter", [true, true]);
                             checkSuperContainer.show(field);
 
                             field.find('select').each(function () {
@@ -934,7 +947,6 @@
                             field.removeClass('ui-state-highlight');
                         }, 1300);
                     }
-
                 });
             }
 
@@ -962,11 +974,18 @@
                     field.find('select').each(function () {
                         $(this).addClass('novalidate');
                     });
+
+                    field.find("select, input, textarea").prop("disabled", true);
                     if (manual) {
-                        field.stop(true, true).hide(1, function () {
+
+                        field.stop(true, true);
+                        field.parents("fieldset.superContainer:eq(0)").stop(true, true);
+
+                        field.hide(0).hide(1, function () {
                             // Si estamos en manual (en el trigger inicial), le damos tiempo a montarse al SuperContainer
-                            checkSuperContainer.hide($(this));
+                            checkSuperContainer.hide($(this), 0);
                         });
+
                     } else {
                         //Aquí no hace falta lanzar el visualFilter porque aunque se oculta, el valor no cambia
                         field.slideUp(function () {
@@ -976,18 +995,31 @@
                 });
             }
 
-            function _applyVisualFilter(curOption, manual) {
+            function _applyVisualFilter(curOption, manual, propagate) {
 
-                if (curOption.data("show")) {
-                    _showField(curOption, manual);
-                }
+                propagate = typeof propagate !== 'undefined' ?  propagate : true;
 
                 if (curOption.data("hide")) {
                     _hideField(curOption, manual);
                 }
+
+                if (curOption.data("show")) {
+                    _showField(curOption, manual, propagate);
+                }
             }
 
-            $(".visualFilter", $container).not(".multiselect").on('manualchange.visualFilter', function(e, manual) {
+            var selects = $(".visualFilter", $container).not(".multiselect").filter("select");
+            var selectsName = [];
+
+            selects.map(function (pos, el) {
+                selectsName.push($(el).attr("name"))
+            });
+
+            $(".visualFilter", $container).not(".multiselect").on('manualchange.visualFilter', function(e, manual, propagate) {
+
+                manual = typeof manual !== 'undefined' ?  manual : false;
+                propagate = typeof propagate !== 'undefined' ?  propagate : true;
+
                 //Si es manual y es un campo oculto no hacemos los filtros
                 //porque este campo oculto puede tener a su vez otros filtros
                 //y mostrar campos que no debería
@@ -999,15 +1031,25 @@
                 }
 
                 if ($(this).is("input:hidden")) {
-                    return _applyVisualFilter($(this), manual);
+                    return _applyVisualFilter($(this), manual, propagate);
+                }
+
+                if (manual && $(this).is(":hidden") === 0) {
+                    return;
+                }
+
+                if ($(this).prop("tagName") !== 'SELECT') {
+                    return;
                 }
 
                 _applyVisualFilter(
                     $("option[value=" + $(this).val() + "]", $(this)),
-                    manual
+                    manual,
+                    propagate
                 );
 
-            }).trigger("manualchange.visualFilter", true);
+            });
+            selects.trigger("manualchange.visualFilter", [true, true]);
 
             $("select.multiselect.visualFilter option", $container).on('manualchange.visualFilter', function(e, manual) {
 
@@ -1017,7 +1059,7 @@
 
                 return _hideField($(this), manual);
 
-            }).trigger("manualchange.visualFilter", true);
+            }).trigger("manualchange.visualFilter", [true, true]);
 
             $("select, input, textarea", this.options.theForm).not(".ignoreManualChange").on('manualchange', function(e) {
 

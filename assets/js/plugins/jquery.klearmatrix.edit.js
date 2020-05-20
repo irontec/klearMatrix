@@ -906,7 +906,14 @@
                         return;
                     }
 
-                    field.find("select, input, textarea").removeProp("disabled");
+                    var fieldInput = field.find("select, input, textarea");
+                    fieldInput.removeProp("disabled");
+
+                    var spinnerInput = fieldInput.filter(function() {
+                        return $(this).data("plugin") === 'spinner';
+                    });
+                    spinnerInput.spinner( "enable" );
+
                     if (manual) {
 
                         field.stop(true, true);

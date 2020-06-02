@@ -907,7 +907,7 @@
                     }
 
                     var fieldInput = field.find("select, input, textarea");
-                    fieldInput.removeProp("disabled");
+                    fieldInput.not('.ui-state-disabled').removeProp("disabled");
 
                     var spinnerInput = fieldInput.filter(function() {
                         return $(this).data("plugin") === 'spinner';

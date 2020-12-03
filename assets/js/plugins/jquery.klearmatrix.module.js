@@ -337,7 +337,7 @@
             }
 
             $('select:not(.multiselect, .notcombo, [data-decorator])', $viewPort)
-                .selectBoxIt({theme: "jqueryui", autoWidth: false, viewport: $viewPort})
+                .selectBoxIt({theme: "jqueryui", autoWidth: false, viewport: $viewPort, nativeMousedown: true})
                 .add($('input[type=hidden].readOnlySelectField', $viewPort))
                 .on("change", function () {
 

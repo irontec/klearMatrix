@@ -313,6 +313,25 @@
 
             var $applyFilters = $("input[name=applyFilters]", panel);
 
+            $(".klearMatrixFiltering p.applyFilters a", panel).on('click', function (e, noNewValue) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
+                _dispatchOptions.post = _dispatchOptions.post || {};
+                if ($applyFilters.length > 0) {
+                    _dispatchOptions.post.applySearchFilters = ( $applyFilters.is(':checked') ) ? 1 : 0;
+                } else {
+                    _dispatchOptions.post.applySearchFilters = 1;
+                }
+                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked", panel).length;
+                _dispatchOptions.post.page = 1;
+
+                $(self)
+                    .klearModule("option", "dispatchOptions", _dispatchOptions)
+                    .klearModule("reDispatch");
+            });
+
             $(".klearMatrixFiltering span.addTerm", panel).on('click', function (e, noNewValue) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -324,6 +343,8 @@
                 var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
 
                 var fieldName = $_field.val();
+                var fieldNameStr = $("option:selected", $_field).text();
+                fieldNameStr = fieldNameStr.charAt(0).toUpperCase() + fieldNameStr.slice(1);
 
                 _dispatchOptions.post = _dispatchOptions.post || {};
                 _dispatchOptions.post.searchFields = _dispatchOptions.post.searchFields || {};
@@ -341,15 +362,15 @@
                         return;
                     }
 
-                    $_term.attr("disabled", "disabled");
-                    $_field.attr("disabled", "disabled");
-
                     var isDatePicker = $_term.hasClass('hasDatepicker');
                     if (isDatePicker) {
                         var currentFormat = $_term.datepicker("option", 'dateFormat');
                         $_term.datepicker("option", 'dateFormat', 'yy-mm-dd');
                     }
+
                     var _newVal = ($_term.data('autocomplete')) ? $_term.data('idItem') : $_term.val();
+                    var _newValStr = $_term.val();
+
                     if (isDatePicker) {
                         $_term.datepicker("option", 'dateFormat', currentFormat);
                     }
@@ -362,22 +383,34 @@
                     }
 
                     _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
-
                 }
 
-                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked", panel).length;
+                var searchAttr = $("span.field[data-field=" + fieldName + "]");
+                var valueTpl =
+                    '<span class="ui-widget-content ui-corner-all content" data-value="a" data-op="' + _searchOp + '">'
+                        + '<span data-idx="0" class="ui-silk inline ui-silk-cancel removable"></span>'
+                        + _newValStr
+                    + '</span>';
 
-                if ($applyFilters.length > 0) {
-                    _dispatchOptions.post.applySearchFilters = ( $applyFilters.is(':checked') ) ? 1 : 0;
+                if (searchAttr.length) {
+                    searchAttr.append(
+                        $(valueTpl)
+                    );
                 } else {
-                    _dispatchOptions.post.applySearchFilters = 1;
+                    var searchTpl = $(
+                        '<span data-field="' + fieldName + '" class="field">'
+                        + '<strong>' + fieldNameStr + '</strong>:'
+                            + valueTpl
+                        + '</span>'
+                    );
+
+                    $('p.filteredFields', $holder).append(
+                        searchTpl
+                    );
                 }
-                _dispatchOptions.post.page = 1;
 
-                $(self)
-                    .klearModule("option", "dispatchOptions", _dispatchOptions)
-                    .klearModule("reDispatch");
-
+                $_term.val('');
+                $_field.val('');
 
             });
 
@@ -396,17 +429,15 @@
 
             $(".klearMatrixFiltering input[name=addFilters]", panel).on('change', function (e) {
 
-                if ($(".klearMatrixFiltering .filteredFields .field", panel).length <= 1) {
-                    return;
-                }
-
-                $("span.addTerm", panel).trigger("click", true);
+                var _dispatchOptions = $(self).klearModule("option", "dispatchOptions");
+                _dispatchOptions.post = _dispatchOptions.post || {};
+                _dispatchOptions.post.searchAddModifier = $("input[name=addFilters]:checked", panel).length;
             });
 
             $applyFilters.on('change', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                $("span.addTerm", panel).trigger("click", true);
+                $("p.applyFilters a", panel).trigger("click", true);
             });
 
             $(".klearMatrixFiltering .filteredFields", panel).on('click', '.ui-silk-cancel', function (e) {
@@ -422,10 +453,12 @@
                 _dispatchOptions.post.searchOps[fieldName].splice(idxToRemove, 1);
                 _dispatchOptions.post.page = 1;
 
-                $(self)
-                    .klearModule("option", "dispatchOptions", _dispatchOptions)
-                    .klearModule("reDispatch");
-
+                var container = $(this).parents("span.field");
+                if (container.children("span").length > 1) {
+                    $(this).parent().remove();
+                } else {
+                    container.remove();
+                }
             });
 
             $("button.preconfigureFilters", panel).button().on('click', function (e) {
@@ -600,29 +633,29 @@
             var $filteredFields = $(".klearMatrixFiltering .filteredFields", panel);
             $(".klearMatrixFiltering .title", panel).on('click', function (e, i) {
                 var $searchForm = $(this).parents("form:eq(0)");
-                var target = ".filterItem";
+                var filterItem = ".filterItem";
+                var applyButton = $('p.applyFilters', $searchForm.parent());
 
                 if ($applyFilters.is(':checked') == false
                     && $filteredFields.find('.field').length > 0) {
-
-                    target = ".filteredFields";
-
+                    filterItem = ".filteredFields";
                 }
 
                 if ($searchForm.hasClass("not-loaded")) {
-                    $(target, $searchForm).slideDown(function () {
+                    $(filterItem, $searchForm).slideDown(function () {
                         $searchForm.removeClass("not-loaded");
                     });
+                    applyButton.slideDown();
                 } else {
-                    $(target, $searchForm).slideUp(function () {
+                    $(filterItem, $searchForm, applyButton).slideUp(function () {
                         $searchForm.addClass("not-loaded");
                     });
+                    applyButton.slideUp();
                 }
             });
 
             if ($applyFilters.is(':checked') == false
                 && $filteredFields.find('.field').length > 0) {
-
                 $filteredFields.css('opacity', '0.5');
                 $filteredFields.unbind('click');
                 $('.preconfiguredFilters, .filterItem', panel).hide();

@@ -2,7 +2,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 18:47+0100\n"
 "PO-Revision-Date: 2012-05-03 18:47+0100\n"
 "Last-Translator: Lander Ontoria <lander@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
@@ -18,111 +17,399 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: controllers/FileController.php:148
+msgid "# of # selected"
+msgstr ""
+
+msgid "# selected"
+msgstr ""
+
+msgid "%H:%M:%S"
+msgstr ""
+
+msgid "%Y-%m-%d"
+msgstr ""
+
+#, php-format
+msgid "%d items found"
+msgstr ""
+
+#, php-format
+msgid "%s successfully cloned"
+msgstr ""
+
+#, php-format
+msgid "%s successfully deleted"
+msgstr ""
+
+#, php-format
+msgid "(%d) %s successfully deleted"
+msgstr ""
+
+#, php-format
+msgid "(%s) %s successfully updated"
+msgstr ""
+
+msgid "(Aproximated values)"
+msgstr ""
+
+#, php-format
+msgid "(showing %d)"
+msgstr ""
+
+#, php-format
+msgid "(showing %d)KamAccCdrsBrandList"
+msgstr ""
+
+msgid ")"
+msgstr ""
+
+msgid "."
+msgstr ""
+
+msgid "Add another record"
+msgstr ""
+
+msgid "Aplicar estilos al elemento seleccionado"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Attention!"
+msgstr ""
+
+msgid "Auto-copied field"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
-#: controllers/FileController.php:151
+msgid "Change password"
+msgstr ""
+
+msgid "Channel:"
+msgstr ""
+
+msgid "Clone"
+msgstr ""
+
+#, php-format
+msgid "Clone %s"
+msgstr ""
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Close automatically"
+msgstr ""
+
+msgid "Close automatically after save"
+msgstr ""
+
+msgid "Close the screen?"
+msgstr ""
+
+msgid "Could not clone record: "
+msgstr ""
+
+msgid "Could not delete record: "
+msgstr ""
+
+msgid "Custom..."
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+#, php-format
+msgid "Delete %s"
+msgstr ""
+
+msgid "Do you want delete this record?"
+msgstr ""
+
+#, php-format
+msgid "Do you want to clone this %s?"
+msgstr ""
+
+#, php-format
+msgid "Do you want to delete this %s?"
+msgstr ""
+
+#, php-format
+msgid "Do you want to update \"%s\"?"
+msgstr ""
+
 msgid "Download"
 msgstr ""
 
-#: controllers/FileController.php:170
+msgid "ERROR"
+msgstr ""
+
+msgid "Edit again"
+msgstr ""
+
+msgid "Element not found. Cannot edit."
+msgstr ""
+
+msgid "Email not valid."
+msgstr ""
+
+msgid "Enable filters"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Error download CSV file."
+msgstr ""
+
+#, php-format
+msgid "Error preparing deleting.<br />(%s)"
+msgstr ""
+
 #, php-format
 msgid "Error preparing download.<br />(%s)"
 msgstr ""
 
-#: views/scripts/template/list.phtml:3
-msgid "Filter fields"
+msgid "Error saving record"
 msgstr ""
 
-#: views/scripts/template/list.phtml:14
-msgid "Returns records that satisfy any of filters"
+msgid "Error: Form submit field collision."
 msgstr ""
 
-#: views/scripts/template/list.phtml:14
-msgid "Add all filters"
+msgid "Error: No form element found."
 msgstr ""
 
-#: views/scripts/template/new.phtml:22
-#: views/scripts/template/edit.phtml:25
-msgid "Close"
-msgstr "Close"
-
-#: views/scripts/template/new.phtml:23
-#: views/scripts/template/edit.phtml:26
-msgid "Save"
+msgid "Export to CSV"
 msgstr ""
 
-#: views/scripts/template/new.phtml:24
-#: views/scripts/template/edit.phtml:27
-msgid "Close automatically after save"
-msgstr ""
-
-#: views/scripts/template/delete.phtml:4
-msgid "Do you want delete this record?"
-msgstr ""
-
-#: views/scripts/template/fields/file.phtml:7
-msgid "Not available"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.delete.js:81
-msgid "Delete"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.new.js:88
-msgid "Add another record"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.list.js:39
 msgid "Field available in multi-language"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:139
-msgid "Edit again"
+msgid "Field is not a valid URL."
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:190
-msgid "# of # selected"
+msgid "File will be deleted on save"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:191
-msgid "Select all"
+msgid "Filter fields"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:192
-msgid "Unselect all"
+msgid "Galería de imágenes"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.edit.js:193
-msgid "Select an option"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.edit.js:194
-msgid "# selected"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.edit.js:312
-msgid "Upload File"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.edit.js:363
-msgid "There is unsaved content."
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.edit.js:365
-msgid "Close the screen?"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.edit.js:367
-msgid "Attention!"
-msgstr ""
-
-#: assets/js/plugins/jquery.klearmatrix.edit.js:377
 msgid "Ignore changes and close"
 msgstr ""
 
-#: assets/js/plugins/jquery.klearmatrix.template.helper.js:223
+msgid "Image uploading..."
+msgstr ""
+
+msgid "Invalid IP Address"
+msgstr ""
+
+msgid "Loading content"
+msgstr ""
+
+msgid "MapperName not found in yaml"
+msgstr ""
+
+#, php-format
+msgid "More than %d items found"
+msgstr ""
+
+msgid "Multiple choice delete is not allowed"
+msgstr ""
+
+msgid "Ningún estilo aplicable a este elemento"
+msgstr ""
+
+msgid "No color"
+msgstr ""
+
+msgid "No misspellings found."
+msgstr ""
+
+msgid "No templates defined."
+msgstr ""
+
+msgid "Not available"
+msgstr ""
+
+msgid "PK "
+msgstr ""
+
+msgid ""
+"Paste is now in plain text mode. Contents will now be pasted as plain text "
+"until you toggle this option off."
+msgstr ""
+
+msgid "Please contact administrator."
+msgstr ""
+
+msgid ""
+"Please type the item name, as shown in bold font above, <br />to continue"
+msgstr ""
+
+msgid "Record"
+msgstr ""
+
+msgid "Record not found."
+msgstr ""
+
+msgid "Record not found. Could not Mass Update."
+msgstr ""
+
+msgid "Record not found. Could not clone."
+msgstr ""
+
+msgid "Record successfully saved."
+msgstr ""
+
+msgid "Records"
+msgstr ""
+
+msgid "Records per page:"
+msgstr ""
+
+msgid "Required field"
+msgstr ""
+
+msgid "Returns records that satisfy any of filters"
+msgstr ""
+
+msgid ""
+"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press "
+"ALT-0 for help"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Search shortcuts"
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+msgid "Select an option"
+msgstr ""
+
+msgid "Server response wasn't proper JSON."
+msgstr ""
+
+msgid "Show more settings"
+msgstr ""
+
+msgid "Stop refresh"
+msgstr ""
+
+msgid ""
+"The files are being uploaded, if you leave now the upload will be cancelled."
+msgstr ""
+
+msgid "The spelling service was not found: ("
+msgstr ""
+
 msgid "There are not associated elements"
 msgstr ""
 
+msgid "There is unsaved content."
+msgstr ""
+
+msgid "Title:"
+msgstr ""
+
+msgid "Total: "
+msgstr ""
+
+msgid "Unselect all"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+#, php-format
+msgid "Update %s"
+msgstr ""
+
+msgid "Upload File"
+msgstr ""
+
+msgid "You have unsaved changes are you sure you want to navigate away?"
+msgstr ""
+
+msgid ""
+"Your browser doesn't support direct access to the clipboard. Please use the "
+"Ctrl+X/C/V keyboard shortcuts instead."
+msgstr ""
+
+#, php-format
+msgid "and %s more"
+msgstr ""
+
+msgid "characters remaining"
+msgstr ""
+
+msgid "contains"
+msgstr ""
+
+msgid "ends with"
+msgstr ""
+
+msgid "equals"
+msgstr ""
+
+msgid "file"
+msgstr ""
+
+msgid "greater than"
+msgstr ""
+
+msgid "invalid pattern"
+msgstr ""
+
+msgid "less than"
+msgstr ""
+
+msgid "range overflow"
+msgstr ""
+
+msgid "range underflow"
+msgstr ""
+
+msgid "record"
+msgstr ""
+
+msgid "starts with"
+msgstr ""
+
+msgid "step mismatch"
+msgstr ""
+
+msgid "the value is too long"
+msgstr ""
+
+msgid "this is a required field"
+msgstr ""
+
+msgid "type mismatched"
+msgstr ""
+
+msgid "undefined error"
+msgstr ""
+
+msgid "value"
+msgstr ""
+
+msgid "{file} has invalid extension. Only {extensions} are allowed."
+msgstr ""
+
+msgid "{file} is empty, please select files again without it."
+msgstr ""
+
+msgid "{file} is too large, maximum file size is {sizeLimit}."
+msgstr ""
+
+msgid "{file} is too small, minimum file size is {minSizeLimit}."
+msgstr ""

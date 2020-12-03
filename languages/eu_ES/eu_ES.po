@@ -2,7 +2,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KlearMatrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-10 11:19+0100\n"
 "PO-Revision-Date: 2014-09-10 11:19+0100\n"
 "Last-Translator: Victor <victor@irontec.com>\n"
 "Language-Team: Irontec-Klear <lander+klear@irontec.com>\n"
@@ -17,452 +16,427 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: controllers/MassUpdateController.php:141
-msgid "Record not found. Could not Mass Update."
-msgstr "Ez da sarrerarik aurkitu. Ezin da eguneratu."
+msgid "# of # selected"
+msgstr "# #-tik aukeratuta"
 
-#: controllers/MassUpdateController.php:155
-#, php-format
-msgid "Do you want to update \"%s\"?"
-msgstr "%s eguneratu?"
+msgid "# selected"
+msgstr "# aukeratuta"
 
-#: controllers/MassUpdateController.php:175
-#, php-format
-msgid "and %s more"
-msgstr "eta %s gehiago"
+msgid "%H:%M:%S"
+msgstr "%H:%M:%S"
 
-#: controllers/MassUpdateController.php:184
-#, php-format
-msgid "Update %s"
-msgstr "%s eguneratu"
+msgid "%Y-%m-%d"
+msgstr "%Y-%m-%d"
 
-#: controllers/MassUpdateController.php:195
-#: controllers/CloneController.php:82
-#: controllers/FileController.php:204
-msgid "Cancel"
-msgstr "Utzi"
-
-#: controllers/MassUpdateController.php:198
-msgid "Update"
-msgstr "Eguneratu"
-
-#: controllers/MassUpdateController.php:308
-#, php-format
-msgid "(%s) %s successfully updated"
-msgstr "(%s) %s eguneratu dira"
-
-#: controllers/MassUpdateController.php:310
-msgid "Records"
-msgstr "Sarrerak"
-
-#: controllers/MassUpdateController.php:318
-#: controllers/CloneController.php:164
-msgid "Close"
-msgstr "Itxi"
-
-#: controllers/DashboardController.php:48
-#: controllers/GooglechartsController.php:326
-msgid "(Aproximated values)"
-msgstr "(Gutxi gorabeherako balioak)"
-
-#: controllers/CloneController.php:42
-#: controllers/CloneController.php:113
-msgid "Record not found. Could not clone."
-msgstr "Ez da sarrerarik aurkitu. Ezin da bikoiztu."
-
-#: controllers/CloneController.php:58
-#, php-format
-msgid "Do you want to clone this %s?"
-msgstr "%s hau bikoiztu?"
-
-#: controllers/CloneController.php:59
-#: controllers/CloneController.php:71
-msgid "record"
-msgstr "sarrera"
-
-#: controllers/CloneController.php:64
-msgid "Title:"
-msgstr "Tituloa:"
-
-#: controllers/CloneController.php:70
-#, php-format
-msgid "Clone %s"
-msgstr "%s bikoiztu"
-
-#: controllers/CloneController.php:78
-msgid "Clone"
-msgstr "Bikoiztu"
-
-#: controllers/CloneController.php:146
-msgid "Could not clone record: "
-msgstr "Sarrera ezin da bikoiztu:"
-
-#: controllers/CloneController.php:155
-#, php-format
-msgid "%s successfully cloned"
-msgstr "%s bikoiztu da"
-
-#: controllers/CloneController.php:156
-#: controllers/DeleteController.php:134
-msgid "Record"
-msgstr "Sarrera"
-
-#: controllers/FileController.php:207
-msgid "Download"
-msgstr "Jaitsi"
-
-#: controllers/FileController.php:230
-#, php-format
-msgid "Error preparing download.<br />(%s)"
-msgstr "Errorea jaitsiera prestatzen.<br />(%s)"
-
-#: controllers/NewController.php:103
-#: controllers/EditController.php:79
-msgid "Record successfully saved."
-msgstr "Sarrera gorde da."
-
-#: controllers/EditController.php:57
-msgid "Record not found."
-msgstr "Ez da sarrerarik aurkitu."
-
-#: controllers/EditController.php:114
-msgid "Error saving record"
-msgstr "Sarrera gordetzen errorea gertatu da"
-
-#: controllers/EditController.php:131
-msgid "Element not found. Cannot edit."
-msgstr "Ez da sarrerarik aurkitu. Ezin da editatu."
-
-#: controllers/DeleteController.php:62
-#: controllers/DeleteController.php:102
-msgid "Record not found. Could not delete."
-msgstr "Ez da sarrerarik aurkitu. Ezin da ezabatu."
-
-#: controllers/DeleteController.php:116
-msgid "Could not delete record: "
-msgstr "Ezin da sarrera ezabatu:"
-
-#: controllers/DeleteController.php:132
-#, php-format
-msgid "(%d) %s successfully deleted"
-msgstr "(%d) %s ezabatu da"
-
-#: controllers/GooglechartsController.php:51
-msgid "MapperName not found in yaml"
-msgstr ""
-
-#: controllers/GooglechartsController.php:58
-msgid "PK "
-msgstr ""
-
-#: models/Field/Ip.php:87
-msgid "Invalid IP Address"
-msgstr ""
-
-#: models/Field/Html5/Url.php:20
-msgid "Field is not a valid URL."
-msgstr "Eremua ez da URL egokia"
-
-#: models/Field/Html5/Email.php:38
-msgid "Email not valid."
-msgstr "Emaila ez da egokia."
-
-#: models/Field/Select/Decorator/Autocomplete.php:66
-#: models/Field/Multiselect/Decorator/Autocomplete.php:72
 #, php-format
 msgid "%d items found"
 msgstr "%d sarrera aurkitu dira"
 
-#: models/Field/Select/Decorator/Autocomplete.php:70
-#: models/Field/Multiselect/Decorator/Autocomplete.php:76
+#, php-format
+msgid "%s successfully cloned"
+msgstr "%s bikoiztu da"
+
+#, fuzzy, php-format
+msgid "%s successfully deleted"
+msgstr "(%d) %s ezabatu da"
+
+#, php-format
+msgid "(%d) %s successfully deleted"
+msgstr "(%d) %s ezabatu da"
+
+#, php-format
+msgid "(%s) %s successfully updated"
+msgstr "(%s) %s eguneratu dira"
+
+msgid "(Aproximated values)"
+msgstr "(Gutxi gorabeherako balioak)"
+
 #, php-format
 msgid "(showing %d)"
 msgstr "(%d erakusten)"
 
-#: views/scripts/template/edit.phtml:22
-#: views/scripts/template/edit.phtml:90
-#: views/scripts/template/new.phtml:20
-#: views/scripts/template/new.phtml:88
-msgid "Save"
-msgstr "Gorde"
-
-#: views/scripts/template/edit.phtml:23
-#: views/scripts/template/edit.phtml:91
-#: views/scripts/template/new.phtml:21
-#: views/scripts/template/new.phtml:89
-msgid "Close automatically after save"
-msgstr "Automatikoki itxi gorde ostean"
-
-#: views/scripts/template/delete.phtml:4
-msgid "Do you want delete this record?"
-msgstr "Erregistro hau ezabatu?"
-
-#: views/scripts/template/delete.phtml:21
-msgid "Close automatically"
-msgstr "Automatikoki itxi gorde ostean"
-
-#: views/scripts/template/list.phtml:19
-msgid "Search shortcuts"
-msgstr "Bilaketa konbinazioak"
-
-#: views/scripts/template/list.phtml:24
-msgid "Filter fields"
-msgstr "Eremu iragazketa"
-
-#: views/scripts/template/list.phtml:26
-#: views/scripts/template/list.phtml:72
-msgid "Returns records that satisfy any of filters"
-msgstr "Edozein iragazki betetzen duten erregistroak itzultzen ditu"
-
-#: views/scripts/template/list.phtml:27
-msgid "Apply filters"
-msgstr "Iragazki guztiak gehitu"
-
-#: views/scripts/template/list.phtml:38
-msgid "less than"
-msgstr "txikiagoa"
-
-#: views/scripts/template/list.phtml:39
-msgid "equals"
-msgstr "berdina"
-
-#: views/scripts/template/list.phtml:40
-msgid "greater than"
-msgstr "handiagoa"
-
-#: views/scripts/template/list.phtml:73
-msgid "Add all filters"
-msgstr "Iragazki guztiak gehitu"
-
-#: views/scripts/template/list.phtml:123
-#: views/scripts/template/list.phtml:249
-msgid "Export to CSV"
-msgstr "CSV moduan jaitsi"
-
-#: views/scripts/template/list.phtml:129
-#: views/scripts/template/list.phtml:255
-msgid "Stop refresh"
+#, php-format
+msgid "(showing %d)KamAccCdrsBrandList"
 msgstr ""
 
-#: views/scripts/template/list.phtml:148
-msgid "Total: "
-msgstr "Guztira: "
-
-#: views/scripts/template/list.phtml:150
-msgid "Records per page:"
-msgstr "Sarrera horrialdeko"
-
-#: views/scripts/template/fields/file.phtml:25
-msgid "Not available"
-msgstr "Ez dago eskuragarri"
-
-#: views/scripts/template/fields/video.phtml:55
-#: views/scripts/template/fields/video.phtml:74
-msgid "Channel:"
-msgstr "Kanala:"
-
-#: views/scripts/template/fields/password.phtml:1
-msgid "Change password"
-msgstr "Pasahitza aldatu"
-
-#: assets/js/klearMatrix.compiled.js:233
-#: assets/js/klearMatrix.compiled.js:310
-#: assets/js/plugins/jquery.klearmatrix.module.js:319
-msgid "# of # selected"
-msgstr "# #-tik aukeratuta"
-
-#: assets/js/klearMatrix.compiled.js:233
-#: assets/js/klearMatrix.compiled.js:310
-#: assets/js/plugins/jquery.klearmatrix.module.js:320
-msgid "Select all"
-msgstr "Danak aukeratu"
-
-#: assets/js/klearMatrix.compiled.js:233
-#: assets/js/klearMatrix.compiled.js:310
-#: assets/js/plugins/jquery.klearmatrix.module.js:321
-msgid "Unselect all"
-msgstr "Danak desaukeratu"
-
-#: assets/js/klearMatrix.compiled.js:233
-#: assets/js/klearMatrix.compiled.js:311
-#: assets/js/plugins/jquery.klearmatrix.module.js:322
-msgid "Select an option"
-msgstr "Aukeratu"
-
-#: assets/js/klearMatrix.compiled.js:233
-#: assets/js/klearMatrix.compiled.js:311
-#: assets/js/plugins/jquery.klearmatrix.module.js:323
-msgid "# selected"
-msgstr "# aukeratuta"
-
-#: assets/js/klearMatrix.compiled.js:248
-#: assets/js/plugins/jquery.klearmatrix.module.js:803
-msgid "Error"
-msgstr "Errorea"
-
-#: assets/js/klearMatrix.compiled.js:265
-msgid "There are not associated elements"
-msgstr "Ez daude loturiko elementuak"
-
-#: assets/js/klearMatrix.compiled.js:276
-#: assets/js/plugins/jquery.klearmatrix.list.js:44
-msgid "Field available in multi-language"
-msgstr "Eremuak hainbat hizkuntzetan eskugai"
-
-#: assets/js/klearMatrix.compiled.js:298
-msgid "undefined error"
-msgstr "Errore ezezaguna"
-
-#: assets/js/klearMatrix.compiled.js:298
-msgid "invalid pattern"
-msgstr "patroi ezegokia"
-
-#: assets/js/klearMatrix.compiled.js:298
-msgid "range overflow"
-msgstr "_eu_range overflow"
-
-#: assets/js/klearMatrix.compiled.js:298
-msgid "range underflow"
-msgstr "_eu_range underflow"
-
-#: assets/js/klearMatrix.compiled.js:299
-msgid "step mismatch"
-msgstr "_eu_step mismatch"
-
-#: assets/js/klearMatrix.compiled.js:299
-msgid "the value is too long"
-msgstr "_eu_the value is too long"
-
-#: assets/js/klearMatrix.compiled.js:299
-msgid "type mismatched"
-msgstr "_eu_type mismatched"
-
-#: assets/js/klearMatrix.compiled.js:299
-msgid "this is a required field"
-msgstr "_eu_this is a required field"
-
-#: assets/js/klearMatrix.compiled.js:306
-msgid "Edit again"
-msgstr "Berriro editatu"
-
-#: assets/js/klearMatrix.compiled.js:316
-msgid "{file} has invalid extension. Only {extensions} are allowed."
-msgstr "_eu_{file} has invalid extension. Only {extensions} are allowed."
-
-#: assets/js/klearMatrix.compiled.js:316
-msgid "{file} is too large, maximum file size is {sizeLimit}."
-msgstr "_eu_{file} is too large, maximum file size is {sizeLimit}."
-
-#: assets/js/klearMatrix.compiled.js:316
-msgid "{file} is too small, minimum file size is {minSizeLimit}."
-msgstr "_eu_{file} is too small, minimum file size is {minSizeLimit}."
-
-#: assets/js/klearMatrix.compiled.js:316
-msgid "{file} is empty, please select files again without it."
-msgstr "_eu_{file} is empty, please select files again without it."
-
-#: assets/js/klearMatrix.compiled.js:316
-msgid "The files are being uploaded, if you leave now the upload will be cancelled."
-msgstr "_eu_The files are being uploaded, if you leave now the upload will be cancelled."
-
-#: assets/js/klearMatrix.compiled.js:317
-msgid "Upload File"
-msgstr "Fitxategia gehitu"
-
-#: assets/js/klearMatrix.compiled.js:318
-#: assets/js/klearMatrix.compiled.js:320
-msgid "ERROR"
-msgstr "ERROREA"
-
-#: assets/js/klearMatrix.compiled.js:321
-msgid "Required field"
-msgstr "Derrigorrezko eremua"
-
-#: assets/js/klearMatrix.compiled.js:325
-msgid "There is unsaved content."
-msgstr "Gorde ez diren edukiak daude."
-
-#: assets/js/klearMatrix.compiled.js:325
-msgid "Close the screen?"
-msgstr "Pantaila itxi?"
-
-#: assets/js/klearMatrix.compiled.js:325
-msgid "Attention!"
-msgstr "Adi!"
-
-#: assets/js/klearMatrix.compiled.js:325
-msgid "Ignore changes and close"
-msgstr "Ezikusi aldaketak eta itxi"
-
-#: assets/js/klearMatrix.compiled.js:330
-msgid "Auto-copied field"
-msgstr "Eremu auto kopiatua"
-
-#: assets/js/klearMatrix.compiled.js:334
-msgid "characters remaining"
-msgstr "karaktere gelditzen dira"
-
-#: assets/js/klearMatrix.compiled.js:340
-#: assets/js/plugins/jquery.klearmatrix.new.js:137
-msgid "Add another record"
-msgstr "Beste erregistro bat gehitu"
-
-#: assets/js/plugins/jquery.klearmatrix.delete.js:112
-msgid "Delete"
-msgstr "Ezabatu"
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:18016
-msgid "Your browser doesn't support direct access to the clipboard. "
+msgid ")"
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:26381
-msgid "Rich Text Area. Press ALT-F9 for menu. "
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:27949
-msgid "Text"
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.js:27951
-msgid "Raw string"
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.min.js:8
-msgid "Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help"
-msgstr ""
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:15
-msgid "You have unsaved changes are you sure you want to navigate away?"
-msgstr "Gorderik gabeko aldaketak daukazuz, nabigatzen jarraitu nahi duzu ala ere?"
-
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:19
 msgid "."
 msgstr ""
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:30
-msgid "%Y-%m-%d"
-msgstr "%Y-%m-%d"
+msgid "Add another record"
+msgstr "Beste erregistro bat gehitu"
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/tinymce.full.min.js:30
-msgid "%H:%M:%S"
-msgstr "%H:%M:%S"
+msgid "Aplicar estilos al elemento seleccionado"
+msgstr "Aukeratutako elementuari estiloak aplikatu"
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/kleargallery/plugin.min.js:9
+msgid "Apply"
+msgstr ""
+
+msgid "Attention!"
+msgstr "Adi!"
+
+msgid "Auto-copied field"
+msgstr "Eremu auto kopiatua"
+
+msgid "Cancel"
+msgstr "Utzi"
+
+msgid "Change password"
+msgstr "Pasahitza aldatu"
+
+msgid "Channel:"
+msgstr "Kanala:"
+
+msgid "Clone"
+msgstr "Bikoiztu"
+
+#, php-format
+msgid "Clone %s"
+msgstr "%s bikoiztu"
+
+msgid "Close"
+msgstr "Itxi"
+
+msgid "Close automatically"
+msgstr "Automatikoki itxi gorde ostean"
+
+msgid "Close automatically after save"
+msgstr "Automatikoki itxi gorde ostean"
+
+msgid "Close the screen?"
+msgstr "Pantaila itxi?"
+
+msgid "Could not clone record: "
+msgstr "Sarrera ezin da bikoiztu:"
+
+msgid "Could not delete record: "
+msgstr "Ezin da sarrera ezabatu:"
+
+msgid "Custom..."
+msgstr ""
+
+msgid "Delete"
+msgstr "Ezabatu"
+
+#, fuzzy, php-format
+msgid "Delete %s"
+msgstr "Ezabatu"
+
+msgid "Do you want delete this record?"
+msgstr "Erregistro hau ezabatu?"
+
+#, php-format
+msgid "Do you want to clone this %s?"
+msgstr "%s hau bikoiztu?"
+
+#, fuzzy, php-format
+msgid "Do you want to delete this %s?"
+msgstr "%s hau bikoiztu?"
+
+#, php-format
+msgid "Do you want to update \"%s\"?"
+msgstr "%s eguneratu?"
+
+msgid "Download"
+msgstr "Jaitsi"
+
+msgid "ERROR"
+msgstr "ERROREA"
+
+msgid "Edit again"
+msgstr "Berriro editatu"
+
+msgid "Element not found. Cannot edit."
+msgstr "Ez da sarrerarik aurkitu. Ezin da editatu."
+
+msgid "Email not valid."
+msgstr "Emaila ez da egokia."
+
+#, fuzzy
+msgid "Enable filters"
+msgstr "Iragazki guztiak gehitu"
+
+msgid "Error"
+msgstr "Errorea"
+
+msgid "Error download CSV file."
+msgstr ""
+
+#, fuzzy, php-format
+msgid "Error preparing deleting.<br />(%s)"
+msgstr "Errorea jaitsiera prestatzen.<br />(%s)"
+
+#, php-format
+msgid "Error preparing download.<br />(%s)"
+msgstr "Errorea jaitsiera prestatzen.<br />(%s)"
+
+msgid "Error saving record"
+msgstr "Sarrera gordetzen errorea gertatu da"
+
+msgid "Error: Form submit field collision."
+msgstr ""
+
+msgid "Error: No form element found."
+msgstr ""
+
+msgid "Export to CSV"
+msgstr "CSV moduan jaitsi"
+
+msgid "Field available in multi-language"
+msgstr "Eremuak hainbat hizkuntzetan eskugai"
+
+msgid "Field is not a valid URL."
+msgstr "Eremua ez da URL egokia"
+
+msgid "File will be deleted on save"
+msgstr ""
+
+msgid "Filter fields"
+msgstr "Eremu iragazketa"
+
 msgid "Galería de imágenes"
 msgstr "Irudi galeria"
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/editable_selects.js:19
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/compat3x/utils/editable_selects.js:19
-msgid "value"
-msgstr "value"
+msgid "Ignore changes and close"
+msgstr "Ezikusi aldaketak eta itxi"
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:16
+msgid "Image uploading..."
+msgstr ""
+
+msgid "Invalid IP Address"
+msgstr ""
+
+msgid "Loading content"
+msgstr ""
+
+msgid "MapperName not found in yaml"
+msgstr ""
+
+#, fuzzy, php-format
+msgid "More than %d items found"
+msgstr "%d sarrera aurkitu dira"
+
+msgid "Multiple choice delete is not allowed"
+msgstr ""
+
 msgid "Ningún estilo aplicable a este elemento"
 msgstr "Elementu honentzako ez dago estilorik"
 
-#: assets/js/plugins/tinymce/jscripts/tinymce/plugins/estilos/plugin.min.js:56
-msgid "Aplicar estilos al elemento seleccionado"
-msgstr "Aukeratutako elementuari estiloak aplikatu"
+msgid "No color"
+msgstr ""
+
+msgid "No misspellings found."
+msgstr ""
+
+msgid "No templates defined."
+msgstr ""
+
+msgid "Not available"
+msgstr "Ez dago eskuragarri"
+
+msgid "PK "
+msgstr ""
+
+msgid ""
+"Paste is now in plain text mode. Contents will now be pasted as plain text "
+"until you toggle this option off."
+msgstr ""
+
+msgid "Please contact administrator."
+msgstr ""
+
+msgid ""
+"Please type the item name, as shown in bold font above, <br />to continue"
+msgstr ""
+
+msgid "Record"
+msgstr "Sarrera"
+
+msgid "Record not found."
+msgstr "Ez da sarrerarik aurkitu."
+
+msgid "Record not found. Could not Mass Update."
+msgstr "Ez da sarrerarik aurkitu. Ezin da eguneratu."
+
+msgid "Record not found. Could not clone."
+msgstr "Ez da sarrerarik aurkitu. Ezin da bikoiztu."
+
+msgid "Record successfully saved."
+msgstr "Sarrera gorde da."
+
+msgid "Records"
+msgstr "Sarrerak"
+
+msgid "Records per page:"
+msgstr "Sarrera horrialdeko"
+
+msgid "Required field"
+msgstr "Derrigorrezko eremua"
+
+msgid "Returns records that satisfy any of filters"
+msgstr "Edozein iragazki betetzen duten erregistroak itzultzen ditu"
+
+msgid ""
+"Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press "
+"ALT-0 for help"
+msgstr ""
+
+msgid "Save"
+msgstr "Gorde"
+
+msgid "Search shortcuts"
+msgstr "Bilaketa konbinazioak"
+
+msgid "Select all"
+msgstr "Danak aukeratu"
+
+msgid "Select an option"
+msgstr "Aukeratu"
+
+msgid "Server response wasn't proper JSON."
+msgstr ""
+
+msgid "Show more settings"
+msgstr ""
+
+msgid "Stop refresh"
+msgstr ""
+
+msgid ""
+"The files are being uploaded, if you leave now the upload will be cancelled."
+msgstr ""
+"_eu_The files are being uploaded, if you leave now the upload will be "
+"cancelled."
+
+msgid "The spelling service was not found: ("
+msgstr ""
+
+msgid "There are not associated elements"
+msgstr "Ez daude loturiko elementuak"
+
+msgid "There is unsaved content."
+msgstr "Gorde ez diren edukiak daude."
+
+msgid "Title:"
+msgstr "Tituloa:"
+
+msgid "Total: "
+msgstr "Guztira: "
+
+msgid "Unselect all"
+msgstr "Danak desaukeratu"
+
+msgid "Update"
+msgstr "Eguneratu"
+
+#, php-format
+msgid "Update %s"
+msgstr "%s eguneratu"
+
+msgid "Upload File"
+msgstr "Fitxategia gehitu"
+
+msgid "You have unsaved changes are you sure you want to navigate away?"
+msgstr ""
+"Gorderik gabeko aldaketak daukazuz, nabigatzen jarraitu nahi duzu ala ere?"
+
+msgid ""
+"Your browser doesn't support direct access to the clipboard. Please use the "
+"Ctrl+X/C/V keyboard shortcuts instead."
+msgstr ""
+
+#, php-format
+msgid "and %s more"
+msgstr "eta %s gehiago"
+
+msgid "characters remaining"
+msgstr "karaktere gelditzen dira"
+
+msgid "contains"
+msgstr ""
+
+msgid "ends with"
+msgstr ""
+
+msgid "equals"
+msgstr "berdina"
+
+msgid "file"
+msgstr ""
+
+msgid "greater than"
+msgstr "handiagoa"
+
+msgid "invalid pattern"
+msgstr "patroi ezegokia"
+
+msgid "less than"
+msgstr "txikiagoa"
+
+msgid "range overflow"
+msgstr "_eu_range overflow"
+
+msgid "range underflow"
+msgstr "_eu_range underflow"
+
+msgid "record"
+msgstr "sarrera"
+
+msgid "starts with"
+msgstr ""
+
+msgid "step mismatch"
+msgstr "_eu_step mismatch"
+
+msgid "the value is too long"
+msgstr "_eu_the value is too long"
+
+msgid "this is a required field"
+msgstr "_eu_this is a required field"
+
+msgid "type mismatched"
+msgstr "_eu_type mismatched"
+
+msgid "undefined error"
+msgstr "Errore ezezaguna"
+
+msgid "value"
+msgstr "value"
+
+msgid "{file} has invalid extension. Only {extensions} are allowed."
+msgstr "_eu_{file} has invalid extension. Only {extensions} are allowed."
+
+msgid "{file} is empty, please select files again without it."
+msgstr "_eu_{file} is empty, please select files again without it."
+
+msgid "{file} is too large, maximum file size is {sizeLimit}."
+msgstr "_eu_{file} is too large, maximum file size is {sizeLimit}."
+
+msgid "{file} is too small, minimum file size is {minSizeLimit}."
+msgstr "_eu_{file} is too small, minimum file size is {minSizeLimit}."
+
+#~ msgid "Apply filters"
+#~ msgstr "Iragazki guztiak gehitu"
+
+#~ msgid "Campo auto-copiado"
+#~ msgstr "_eu_Campo auto-copiado"
+
+#~ msgid "Campo obligatorio"
+#~ msgstr "_eu_Campo obligatorio"
+
+#~ msgid "Canal de"
+#~ msgstr "_eu_Canal de"
+
+#~ msgid "El registro no se encuentra almacenado."
+#~ msgstr "_eu_El registro no se encuentra almacenado."
+
+#~ msgid "Modificar contraseña"
+#~ msgstr "_eu_Modificar contraseña"
+
+#~ msgid "Record not found. Could not delete."
+#~ msgstr "Ez da sarrerarik aurkitu. Ezin da ezabatu."
 
 #~ msgid "Registro eliminado correctamente"
 #~ msgstr "_eu_Registro eliminado correctamente"
@@ -470,38 +444,23 @@ msgstr "Aukeratutako elementuari estiloak aplikatu"
 #~ msgid "Registro salvado correctamente."
 #~ msgstr "_eu_Registro salvado correctamente."
 
-#~ msgid "El registro no se encuentra almacenado."
-#~ msgstr "_eu_El registro no se encuentra almacenado."
-
 #~ msgid "Registros"
 #~ msgstr "lerro"
 
 #~ msgid "Registros por página:"
 #~ msgstr "Lerro orriko: "
 
-#~ msgid "Modificar contraseña"
-#~ msgstr "_eu_Modificar contraseña"
-
-#~ msgid "Canal de"
-#~ msgstr "_eu_Canal de"
-
-#~ msgid "Campo obligatorio"
-#~ msgstr "_eu_Campo obligatorio"
-
-#~ msgid "Campo auto-copiado"
-#~ msgstr "_eu_Campo auto-copiado"
-
-#~ msgid "media_dlg."
-#~ msgstr "_eu_media_dlg."
-
-#~ msgid "paste.plaintext_mode_sticky"
-#~ msgstr "_eu_paste.plaintext_mode_sticky"
-
-#~ msgid "paste.plaintext_mode"
-#~ msgstr "_eu_paste.plaintext_mode"
-
 #~ msgid "advanced.path"
 #~ msgstr "_eu_advanced.path"
 
 #~ msgid "advanced_dlg.charmap_usage"
 #~ msgstr "_eu_advanced_dlg.charmap_usage"
+
+#~ msgid "media_dlg."
+#~ msgstr "_eu_media_dlg."
+
+#~ msgid "paste.plaintext_mode"
+#~ msgstr "_eu_paste.plaintext_mode"
+
+#~ msgid "paste.plaintext_mode_sticky"
+#~ msgstr "_eu_paste.plaintext_mode_sticky"

@@ -409,11 +409,11 @@ class KlearMatrix_Model_Column
 
     protected function _parseSearchSpecsOptions()
     {
-
         $this->_searchSpecs = array(
             'options' => null,
             'plugin' => null,
-            'info' => null
+            'info' => null,
+            'as' => null
         );
 
         $searchConfig = new Klear_Model_ConfigParser();
@@ -431,6 +431,9 @@ class KlearMatrix_Model_Column
             $this->setSearchSpec("info", $searchConfig->getProperty("info"));
         }
 
+        if ($searchConfig->getProperty("as")) {
+            $this->setSearchSpec("as", $searchConfig->getProperty("as"));
+        }
     }
 
     public function setSearchSpec($name, $value)
@@ -509,7 +512,7 @@ class KlearMatrix_Model_Column
 
         $searchFields = $this->_getSearchFields($langs);
 
-        return $this->_getConditions($searchFields, $values);
+        return $this->_getConditions($searchFields, $values, $searchOps);
     }
 
     protected function _getSearchFields($langs)
@@ -534,13 +537,13 @@ class KlearMatrix_Model_Column
         return $searchFields;
     }
 
-    protected function _getConditions($searchFields, $values)
+    protected function _getConditions($searchFields, $values, $searchOps)
     {
       $fieldValues = array();
       foreach ($searchFields as $searchField) {
             $cont = 1;
             $quotedSearchField = 'self::' . str_replace('_', '.', $searchField);
-            foreach ($values as $_val) {
+            foreach ($values as $k => $_val) {
 
                 $template =  preg_replace('/[^A-Za-z]/', '', $searchField) . $cont ;
                 if ($_val === '__null__') {
@@ -555,13 +558,13 @@ class KlearMatrix_Model_Column
                         $fieldValues[$template] = $_val;
                     }
                 } else {
-                    $searchOperator = $this->_getStringSearchOperatorByDbAdapter();
+                    $searchOperator = $this->_getStringSearchOperatorByDbAdapter($searchOps[$k]);
                     if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
                         $searchOperator = ' IS';
                         $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
                     } else {
                         $comparisons[] =  $quotedSearchField. $searchOperator . ' :' . $template;
-                        $fieldValues[$template] = $this->_formatValue($_val);
+                        $fieldValues[$template] = $this->_formatValue($_val, $searchOps[$k]);
                     }
                 }
                 $cont++;
@@ -569,35 +572,32 @@ class KlearMatrix_Model_Column
         }
 
         return array(
-            '(' . implode(' or ', $comparisons). ')',
+            '(' . implode(' AND ', $comparisons). ')',
             $fieldValues
         );
     }
 
-    protected function _formatValue($val)
+    protected function _formatValue($val, $searchOp = null)
     {
         $startCond = "%";
         $endCond = "%";
-        if ($this->getKlearConfig() && $this->getKlearConfig()->getProperty("searchAt")) {
-            switch ($this->getKlearConfig()->getProperty("searchAt")) {
-                case "start":
-                    $startCond = "";
-                    $endCond = "%";
-                    break;
-                case "end":
-                    $startCond = "%";
-                    $endCond = "";
-                    break;
-                case "strict":
-                    $startCond = "";
-                    $endCond = "";
-                    break;
-                default:
-                    $startCond = "%";
-                    $endCond = "%";
-                    break;
-            }
+
+        switch ($searchOp)
+        {
+            case 'eq':
+            case 'exact':
+            case 'gt':
+            case 'lt':
+                $startCond = "";
+                $endCond = "";
+            case 'startsWith':
+                $startCond = "";
+                break;
+            case 'endsWith':
+                $endCond = "";
+                break;
         }
+
         return $startCond.$val.$endCond;
     }
 
@@ -608,8 +608,23 @@ class KlearMatrix_Model_Column
                && $this->_config->getProperty("source")->data == 'mapper';
     }
 
-    protected function _getStringSearchOperatorByDbAdapter()
+    /**
+     * @param string | null $searchOp
+     * @return string
+     */
+    protected function _getStringSearchOperatorByDbAdapter($searchOp = null)
     {
+        switch ($searchOp)
+        {
+            case 'eq':
+            case 'exact':
+                return ' = ';
+            case 'gt':
+                return ' > ';
+            case 'lt':
+                return ' < ';
+        }
+
         return ' LIKE';
     }
 

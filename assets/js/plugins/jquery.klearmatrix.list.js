@@ -354,10 +354,10 @@
                 _dispatchOptions.post.searchOps[fieldName] = _dispatchOptions.post.searchOps[fieldName] || [];
 
                 if (noNewValue !== true) {
-
-                    if ((($_term.data('autocomplete')) && (!$_term.data('idItem')) ) ||
-                        ($_term.val() == '')) {
-
+                    if (
+                        (($_term.data('autocomplete')) && (!$_term.data('idItem')) )
+                        || ($_term.val() == '')
+                    ) {
                         $(this).parents(".filterItem:eq(0)").effect("shake", {times: 3}, 60);
                         return;
                     }
@@ -378,8 +378,24 @@
                     _dispatchOptions.post.searchFields[fieldName].push(_newVal);
 
                     var _searchOp = 'eq';
-                    if ($("select[name=searchOption]", $holder).parent("span").is(":visible")) {
-                        _searchOp = $("select[name=searchOption]", $holder).val();
+                    var _searchOpStr = '';
+                    var _searchModifier = $('select.modifier:enabled');
+                    if (_searchModifier.length) {
+                        _searchOp = _searchModifier.val();
+                    }
+
+                    switch (_searchOp) {
+                        case 'eq':
+                        case 'exact':
+                            break;
+                        case 'lt':
+                            _searchOpStr = '&lt;'
+                            break;
+                        case 'gt':
+                            _searchOpStr = '&gt;'
+                            break;
+                        default:
+                            _searchOpStr = $("option:selected", _searchModifier).text();;
                     }
 
                     _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
@@ -388,6 +404,7 @@
                 var searchAttr = $("span.field[data-field=" + fieldName + "]");
                 var valueTpl =
                     '<span class="ui-widget-content ui-corner-all content" data-value="a" data-op="' + _searchOp + '">'
+                        + '<strong>' + _searchOpStr + '</strong>'
                         + '<span data-idx="0" class="ui-silk inline ui-silk-cancel removable"></span>'
                         + _newValStr
                     + '</span>';
@@ -410,8 +427,6 @@
                 }
 
                 $_term.val('');
-                $_field.val('');
-
             });
 
             $(".klearMatrixFiltering", panel).on('keydown', 'input.term', function (e) {
@@ -437,7 +452,7 @@
             $applyFilters.on('change', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                $("p.applyFilters a", panel).trigger("click", true);
+                $("p.searchNow a", panel).trigger("click", true);
             });
 
             $(".klearMatrixFiltering .filteredFields", panel).on('click', '.ui-silk-cancel', function (e) {
@@ -525,11 +540,14 @@
             $(".klearMatrixFiltering select[name=searchField]", panel).on('manualchange.searchValues', function (e, manual) {
 
                 var column = $.klearmatrix.template.helper.getColumn(_self.options.data.columns, $(this).val());
-
-                var availableValues = {};
                 var $container = $(".klearMatrixFiltering", panel);
                 var searchField = $("input.term", $container);
                 var searchOption = $("span.searchOption", $container);
+                var searchSelector = $("select[name=searchOption]", $container);
+                var stringSearchOption = $("span.stringSearchOption", $container);
+                var stringSearchSelector = $("select[name=stringSearchOption]", $container);
+                var numericSearchOption = $("span.numericSearchOption", $container);
+                var numericSearchSelector = $("select[name=numericSearchOption]", $container);
 
                 if (false !== currentPlugin) {
 
@@ -543,15 +561,52 @@
 
                 column.search = column.search || {};
 
-                //TODO: Determinar cuando mostrar el searchOption (=/</>) desde el controlador
-                if (column.config && column.config['plugin'] && column.config['plugin'].match(/date|time/g)) {
-                    column.search.options = true;
+                if (column.config && column.config['values']) {
+                    column.search.options = null;
+                } else if (column.config && column.config['plugin'] && column.config['plugin'].match(/date|time/g)) {
+                    column.search.options = 'time';
+                } else if (column.search && column.search['as'] && column.search['as'] === 'numeric') {
+                    column.search.options = 'numeric';
+                } else {
+                    column.search.options = 'string';
                 }
 
-                if (column.search.options) {
+                if (column.search.options === 'time') {
+                    searchSelector.prop('disabled', false);
                     searchOption.show();
-                } else {
+
+                    stringSearchSelector.prop('disabled', 'disabled');
+                    stringSearchOption.hide();
+
+                    numericSearchSelector.prop('disabled', 'disabled');
+                    numericSearchOption.hide();
+                } else if (column.search.options === 'string') {
+                    stringSearchSelector.prop('disabled', false);
+                    stringSearchOption.show();
+
+                    searchSelector.prop('disabled', 'disabled');
                     searchOption.hide();
+
+                    numericSearchSelector.prop('disabled', 'disabled');
+                    numericSearchOption.hide();
+                } else if (column.search.options === 'numeric') {
+                    numericSearchSelector.prop('disabled', false);
+                    numericSearchOption.show();
+
+                    searchSelector.prop('disabled', 'disabled');
+                    searchOption.hide();
+
+                    stringSearchSelector.prop('disabled', 'disabled');
+                    stringSearchOption.hide();
+                } else {
+                    searchSelector.prop('disabled', 'disabled');
+                    searchOption.hide();
+
+                    stringSearchSelector.prop('disabled', 'disabled');
+                    stringSearchOption.hide();
+
+                    numericSearchSelector.prop('disabled', 'disabled');
+                    numericSearchOption.hide();
                 }
 
                 $container.find("span.infoShow").remove();
@@ -634,7 +689,7 @@
             $(".klearMatrixFiltering .title", panel).on('click', function (e, i) {
                 var $searchForm = $(this).parents("form:eq(0)");
                 var filterItem = ".filterItem";
-                var applyButton = $('p.applyFilters', $searchForm.parent());
+                var applyButton = $('p.searchNow', $searchForm.parent());
 
                 if ($applyFilters.is(':checked') == false
                     && $filteredFields.find('.field').length > 0) {
@@ -659,9 +714,9 @@
                 $filteredFields.css('opacity', '0.5');
                 $filteredFields.unbind('click');
                 $('.preconfiguredFilters, .filterItem', panel).hide();
+                $('.preconfiguredFilters, .searchNow', panel).hide();
 
                 $(".klearMatrixFilteringForm:eq(0)", panel).addClass('not-loaded');
-
             }
 
             //Exportar a CSV el listado

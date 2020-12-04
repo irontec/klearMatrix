@@ -443,10 +443,6 @@ form.klearMatrix_form.autoclose-dialog {
     cursor:pointer;
  }
 
- .klearMatrixFiltering .addToggle {
-     padding-top:.8em;
-     display:inline-block;
- }
  .klearMatrixFiltering .disabled {
     cursor:default;
  }

@@ -379,7 +379,7 @@
 
                     var _searchOp = 'eq';
                     var _searchOpStr = '';
-                    var _searchModifier = $('select.modifier:enabled');
+                    var _searchModifier = $('select.modifier:enabled', $holder);
                     if (_searchModifier.length) {
                         _searchOp = _searchModifier.val();
                     }
@@ -401,7 +401,7 @@
                     _dispatchOptions.post.searchOps[fieldName].push(_searchOp);
                 }
 
-                var searchAttr = $("span.field[data-field=" + fieldName + "]");
+                var searchAttr = $("span.field[data-field=" + fieldName + "]", $holder);
                 var valueTpl =
                     '<span class="ui-widget-content ui-corner-all content" data-value="a" data-op="' + _searchOp + '">'
                         + '<strong>' + _searchOpStr + '</strong>'

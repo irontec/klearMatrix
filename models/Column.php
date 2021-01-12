@@ -572,7 +572,7 @@ class KlearMatrix_Model_Column
         }
 
         return array(
-            '(' . implode(' AND ', $comparisons). ')',
+            '(' . implode(' OR ', $comparisons). ')',
             $fieldValues
         );
     }

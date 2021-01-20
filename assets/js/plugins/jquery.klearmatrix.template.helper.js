@@ -385,6 +385,7 @@
 
                 break;
             }
+
             if (typeof idx != 'undefined') {
                 return this.cleanValue(idx);
             } else {

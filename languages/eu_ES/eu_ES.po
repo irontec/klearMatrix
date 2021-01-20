@@ -357,6 +357,9 @@ msgstr "karaktere gelditzen dira"
 msgid "contains"
 msgstr ""
 
+msgid "empty"
+msgstr ""
+
 msgid "ends with"
 msgstr ""
 
@@ -372,8 +375,14 @@ msgstr "handiagoa"
 msgid "invalid pattern"
 msgstr "patroi ezegokia"
 
+msgid "is"
+msgstr ""
+
 msgid "less than"
 msgstr "txikiagoa"
+
+msgid "not empty"
+msgstr ""
 
 msgid "range overflow"
 msgstr "_eu_range overflow"

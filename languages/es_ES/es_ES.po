@@ -360,6 +360,9 @@ msgstr "caracteres pendientes"
 msgid "contains"
 msgstr "contiene"
 
+msgid "empty"
+msgstr "vacío"
+
 msgid "ends with"
 msgstr "termina en"
 
@@ -376,8 +379,14 @@ msgstr "mayor"
 msgid "invalid pattern"
 msgstr "Formato de campo inválido"
 
+msgid "is"
+msgstr "está"
+
 msgid "less than"
 msgstr "menor"
+
+msgid "not empty"
+msgstr "asignado"
 
 msgid "range overflow"
 msgstr "Valor por debajo del rango"

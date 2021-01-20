@@ -559,7 +559,15 @@ class KlearMatrix_Model_Column
                     }
                 } else {
                     $searchOperator = $this->_getStringSearchOperatorByDbAdapter($searchOps[$k]);
-                    if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
+
+                    if (strtolower(trim($searchOperator)) == 'is') {
+                        $_val = $_val == 'false'
+                            ? 'NULL'
+                            : 'NOT NULL';
+
+                        $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
+
+                    } else if (($_val == 'NULL' || $_val == 'NOT NULL') && $searchOperator == ' LIKE') {
                         $searchOperator = ' IS';
                         $comparisons[] =  $quotedSearchField . $searchOperator . ' ' . $_val;
                     } else {
@@ -571,8 +579,12 @@ class KlearMatrix_Model_Column
             }
         }
 
+        $join = count($searchFields) > 1
+            ? ' OR ' // multilang columns
+            : ' AND ';
+
         return array(
-            '(' . implode(' OR ', $comparisons). ')',
+            '(' . implode($join, $comparisons). ')',
             $fieldValues
         );
     }
@@ -586,6 +598,7 @@ class KlearMatrix_Model_Column
         {
             case 'eq':
             case 'exact':
+            case 'exists':
             case 'gt':
             case 'lt':
                 $startCond = "";
@@ -616,6 +629,8 @@ class KlearMatrix_Model_Column
     {
         switch ($searchOp)
         {
+            case 'exists':
+                return ' IS ';
             case 'eq':
             case 'exact':
                 return ' = ';

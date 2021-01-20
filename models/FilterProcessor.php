@@ -164,7 +164,6 @@ class KlearMatrix_Model_FilterProcessor
 
         $searchOps = $this->_getSearchOps();
 
-
         $this->_log('Search arguments found for: ');
 
         foreach ($searchFields as $field => $values) {

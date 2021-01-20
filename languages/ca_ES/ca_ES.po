@@ -354,6 +354,9 @@ msgstr ""
 msgid "contains"
 msgstr ""
 
+msgid "empty"
+msgstr ""
+
 msgid "ends with"
 msgstr ""
 
@@ -369,7 +372,13 @@ msgstr ""
 msgid "invalid pattern"
 msgstr ""
 
+msgid "is"
+msgstr ""
+
 msgid "less than"
+msgstr ""
+
+msgid "not empty"
 msgstr ""
 
 msgid "range overflow"

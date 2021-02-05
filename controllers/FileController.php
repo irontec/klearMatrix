@@ -468,13 +468,22 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
         $preview = new stdClass();
         if ($useCache) {
-            $filePath = $this->_getFilePath();
-            $cache = $this->_getFileCache($filePath);
-            $cachedPreview = $cache->load($cacheKey);
+            try {
+                $filePath = $this->_getFilePath();
+                $cache = $this->_getFileCache($filePath);
+                $cachedPreview = $cache->load($cacheKey);
 
-            if ($cachedPreview) {
-                $preview->binary = $cachedPreview->binary;
-                $preview->type = $cachedPreview->type;
+                if ($cachedPreview) {
+                    $preview->binary = $cachedPreview->binary;
+                    $preview->type = $cachedPreview->type;
+                }
+            } catch (\Exception $e) {
+                $this->_helper->log('Unable to load file from cache:  ' . $e->getMessage());
+                $response = Zend_Controller_Front::getInstance()->getResponse();
+                $response->setHttpResponseCode(404);
+                $response->sendHeaders();
+                $response->sendResponse();
+                exit;
             }
         }
 
@@ -491,7 +500,6 @@ class KlearMatrix_FileController extends Zend_Controller_Action
                 $cache->save($preview, $cacheKey);
             }
         }
-
 
         $this->_helper->log('Sending file to Client: ('.$filename.')');
         $this->_helper->sendFileToClient(

@@ -86,20 +86,24 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
         $jsonResponse->attachView($this->view);
     }
 
-    protected function _calculateForKlearMatrixList($moduleRouter, $subsection)
+    protected function _calculateForKlearMatrixList($moduleRouter, $subsection, $countRows = true)
     {
-        $_item = $moduleRouter->getCurrentItem();
-        $entity = $_item->getEntityClassName();
-        $dataGateway = \Zend_Registry::get('data_gateway');
-        $model = null;
-        $fakeData = new KlearMatrix_Model_MatrixResponse();
+        $totalItems = null;
+        if ($countRows) {
 
-        /**
-         * El primer paramétro de createListWhere solamente se usa para construir
-         * la condición para filtrar resultados en ListControllers
-         */
-        $where = $this->_helper->createListWhere(new KlearMatrix_Model_ColumnCollection(), $model, $fakeData, $_item);
-        $totalItems = $dataGateway->countBy($entity, $where);
+            $_item = $moduleRouter->getCurrentItem();
+            $entity = $_item->getEntityClassName();
+            $dataGateway = \Zend_Registry::get('data_gateway');
+            $model = null;
+            $fakeData = new KlearMatrix_Model_MatrixResponse();
+
+            /**
+             * El primer paramétro de createListWhere solamente se usa para construir
+             * la condición para filtrar resultados en ListControllers
+             */
+            $where = $this->_helper->createListWhere(new KlearMatrix_Model_ColumnCollection(), $model, $fakeData, $_item);
+            $totalItems = $dataGateway->countBy($entity, $where);
+        }
 
         return array(
                 'name' => $subsection->getName(),
@@ -167,15 +171,16 @@ class KlearMatrix_DashboardController extends Zend_Controller_Action
                 continue;
             }
 
-            /*
-             * Para KlearMatrix List, se calcula automáticamente.
-             */
-            if (($moduleRouter->getModuleName() == "klearMatrix") &&
-                ($moduleRouter->getControllerName() == "list")
-            ) {
-                $sectionTmp['subsects'][] = $this->_calculateForKlearMatrixList($moduleRouter, $subsection);
-                continue;
-            }
+            $countRows =
+                ($moduleRouter->getModuleName() == "klearMatrix")
+                && ($moduleRouter->getControllerName() == "list")
+                && $subsection->shouldCountRows();
+
+            $sectionTmp['subsects'][] = $this->_calculateForKlearMatrixList(
+                $moduleRouter,
+                $subsection,
+                $countRows
+            );
         }
 
         return $sectionTmp;

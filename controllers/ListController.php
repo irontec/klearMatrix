@@ -271,7 +271,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
                 }
 
                 unset($order[$key]);
-                if (stripos($val, 'IDENTITY') || stripos($val, 'AS HIDDEN') || $val{0} === '(') {
+                if (stripos($val, 'IDENTITY') || stripos($val, 'AS HIDDEN') || substr($val, 0, 1) === '(') {
                     $order[$val] = $orderType;
                 } else {
                     $key = $this->_item->getEntityName() . '.' . $val;

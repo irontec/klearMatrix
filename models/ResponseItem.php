@@ -294,7 +294,7 @@ class KlearMatrix_Model_ResponseItem
     public function getModelName()
     {
         $className = $this->_modelSpec->getClassName();
-        if ($className{0} == '\\') {
+        if (substr($className, 0 , 1) == '\\') {
             $className = substr($className, 1);
         }
         return $className;
@@ -1028,7 +1028,11 @@ class KlearMatrix_Model_ResponseItem
 
     public function hasForcedValues()
     {
-        return sizeof($this->_forcedValues) > 0;
+        if (is_array($this->_forcedValues) || $this->_forcedValues instanceof \Zend_Config) {
+            return sizeof($this->_forcedValues) > 0;
+        }
+
+        return false;
     }
 
     public function getForcedValuesConditions()

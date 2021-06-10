@@ -92,6 +92,7 @@
                 }
 
             } else {
+
                 if (column.properties && column.properties.defaultValue !== null) {
                     _value = column.properties.defaultValue;
                     
@@ -147,10 +148,14 @@
                     return  attribute;
                 },
                 drawSelected : function(attribute, value) {
+
                     var text = $("<div>" + value +"</div>").text();
-                    if (attribute == text) {
+                    attribute += ""; // Cast to string
+
+                    if (attribute === text) {
                         return 'selected="selected"';
                     }
+
                     return '';
                 },
                 formatSizeForFile : function(file) {

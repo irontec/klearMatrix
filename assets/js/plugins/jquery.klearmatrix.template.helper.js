@@ -84,6 +84,14 @@
 
                 } else {
 
+                    if (
+                        this._checkNull(value)
+                        && this.data.defaultValues
+                        && this.data.defaultValues[column.id]
+                    ) {
+                        value = this.data.defaultValues[column.id];
+                    }
+
                     if (this._checkNull(value)) {
                         _value = ifNullValue;
                     } else {
@@ -97,7 +105,7 @@
                     _value = column.properties.defaultValue;
                     
                 } else if (this.data.defaultValues) {
-                    
+
                     // Soporte para defaultValues especificado por pantalla "New"
                     var columnIden = column.id || false;
                     if (this.data.defaultValues[columnIden]) {

@@ -29,7 +29,7 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
     protected function _formatTime($value)
     {
         return $value
-            ? new Datetime('0000-00-00 ' . $value)
+            ? new Datetime('1970-01-01 ' . $value)
             : null;
     }
 }

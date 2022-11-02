@@ -28,8 +28,14 @@ class KlearMatrix_Model_Field_Picker_Time extends KlearMatrix_Model_Field_Picker
 
     protected function _formatTime($value)
     {
-        return $value
-            ? new Datetime('1970-01-01 ' . $value)
-            : null;
+        if (!$value) {
+            return null;
+        }
+
+        return \DateTime::createFromFormat(
+            'H:i:s',
+            $value,
+            new \DateTimeZone('UTC')
+        );
     }
 }

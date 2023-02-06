@@ -1,4 +1,5 @@
 <?php
+
 class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_Abstract
 {
     protected $_config;
@@ -528,7 +529,7 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                 $tr .= '<td class="ui-widget-content default">'.$value.'</td>';
             }
 
-            if (count($options) > 0) {
+            if ((is_countable($options) ? count($options) : 0) > 0) {
                 $tr .= '<td class="ui-widget-content options">';
                 foreach ($options as $option) {
                     $filterClassName = $option->getConfig()->getProperty("filterClass");
@@ -552,7 +553,5 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
         $table .= '</div>';
 
         return $table;
-
     }
-
 }

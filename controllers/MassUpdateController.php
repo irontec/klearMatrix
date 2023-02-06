@@ -111,6 +111,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        $column = null;
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
@@ -168,7 +169,7 @@ class KlearMatrix_MassUpdateController extends Zend_Controller_Action
                 $item->{$defaultGetter}().' <em>(#'.$item->getPrimaryKey().')</em></p>';
 
         }
-        $totalEls = count($this->_results);
+        $totalEls = is_countable($this->_results) ? count($this->_results) : 0;
         if ($totalEls>$showLimit) {
             $countEls = $totalEls-$showLimit;
             $message .= ' <p class="updateable-item"> ' .

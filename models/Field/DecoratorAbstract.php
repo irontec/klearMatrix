@@ -1,9 +1,10 @@
 <?php
+
 abstract class KlearMatrix_Model_Field_DecoratorAbstract
 {
-    const APPLY_TO_FORMS = true;
-    const APPLY_TO_LISTS = false;
-    const APPLY_TO_LIST_FILTERING = false;
+    public const APPLY_TO_FORMS = true;
+    public const APPLY_TO_LISTS = false;
+    public const APPLY_TO_LIST_FILTERING = false;
 
     /**
      * Route Dispatcher desde klear/index/dispatch
@@ -111,5 +112,4 @@ abstract class KlearMatrix_Model_Field_DecoratorAbstract
         return $this;
     }
 }
-
 //EOF

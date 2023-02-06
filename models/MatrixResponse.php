@@ -1,12 +1,11 @@
 <?php
+
 /**
 * Clase respuesta MatrixResponse para peticiones desde klear.request.js
 * @author jabi
 */
-
 class KlearMatrix_Model_MatrixResponse
 {
-
     protected $_columns;
     protected $_results;
     protected $_fieldOptions = false;
@@ -512,9 +511,9 @@ class KlearMatrix_Model_MatrixResponse
     {
         $ret = array();
         if (isset($this->_columns)){
-	        $ret['langs'] = $this->_columns->getLangs();
-	        $ret['defaultLang'] = $this->_columns->getDefaultLang();
-	        $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
+            $ret['langs'] = $this->_columns->getLangs();
+            $ret['defaultLang'] = $this->_columns->getDefaultLang();
+            $ret['langDefinitions'] = $this->_columns->getLangDefinitions();
         }
         return $ret;
     }
@@ -579,7 +578,7 @@ class KlearMatrix_Model_MatrixResponse
             $ret['csv'] = true;
         }
 
-        if (false !== $this->_paginator && count($this->_paginator) > 1) {
+        if (false !== $this->_paginator && (is_countable($this->_paginator) ? count($this->_paginator) : 0) > 1) {
             $ret['paginator'] = (array)$this->_paginator->getPages();
         }
 

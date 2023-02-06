@@ -197,7 +197,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
             $offset = ($currentPage - 1) * $limit;
 
             $results = $this->_mapper->fetchList($where, $order, $limit, $offset);
-            $continue = count($results) === $limit;
+            $continue = (is_countable($results) ? count($results) : 0) === $limit;
             $currentPage++;
 
             foreach ($results as $result) {
@@ -460,7 +460,7 @@ class KlearMatrix_ListController extends Zend_Controller_Action
     protected function _normalizeValues($tmpValues)
     {
         $values = array();
-        $valuesSize = count($tmpValues);
+        $valuesSize = is_countable($tmpValues) ? count($tmpValues) : 0;
         $csvParams = $this->_item->getCsvParameters();
 
         for ($i = 0; $i < $valuesSize; $i++) {

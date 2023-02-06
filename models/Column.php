@@ -515,8 +515,9 @@ class KlearMatrix_Model_Column
 
     protected function _getConditions($searchFields, $values)
     {
-      $fieldValues = array();
-      foreach ($searchFields as $searchField) {
+        $comparisons = [];
+        $fieldValues = array();
+        foreach ($searchFields as $searchField) {
             $cont = 1;
             $quotedSearchField = Zend_Db_Table::getDefaultAdapter()->quoteIdentifier($searchField);
             foreach ($values as $_val) {
@@ -621,10 +622,10 @@ class KlearMatrix_Model_Column
     protected function _getStringSearchOperatorByDbAdapter()
     {
         $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        $dbAdapterClass = get_class($dbAdapter);
+        $dbAdapterClass = $dbAdapter !== null ? get_class($dbAdapter) : self::class;
 
         if ($dbAdapterClass == 'Zend_Db_Adapter_Pdo_Pgsql') {
-           return ' ILIKE';
+            return ' ILIKE';
         }
         return ' LIKE';
     }
@@ -790,7 +791,4 @@ class KlearMatrix_Model_Column
 
         return $ret;
     }
-
-
-
 }

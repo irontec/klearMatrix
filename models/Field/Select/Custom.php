@@ -97,8 +97,7 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
             $keys = array_keys($values);
         }
 
-        if (!count($keys)) {
-
+        if (!(is_countable($keys) ? count($keys) : 0)) {
             return $this->_column->getDbFieldName();
         }
 
@@ -151,7 +150,5 @@ class KlearMatrix_Model_Field_Select_Custom extends KlearMatrix_Model_Field_Sele
 
         $this->_js += $jsDependencies;
     }
-
 }
-
 //EOF

@@ -30,6 +30,7 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
     public function indexAction()
     {
 
+        $mapperName = null;
         $id = $this->getParam("pk");
         $parentId = $this->getParam("parentId");
         if($id){
@@ -332,6 +333,7 @@ class KlearMatrix_GooglechartsController extends Zend_Controller_Action
 
     protected function _dashboard($config)
     {
+        $data = [];
         $data['title'] = Klear_Model_Gettext::gettextCheck($config->title);
 
         if ($config->useExplain) {

@@ -85,7 +85,7 @@ class KlearMatrix_Model_Option_Loader
 
     protected function _getFieldsOptionsConfig($type)
     {
-        return $this->getFieldsOptionsConfig($type, $this->_parentConfig);
+        return static::getFieldsOptionsConfig($type, $this->_parentConfig);
     }
 
     protected function _parseOptionsConfigs($configs, $type)

@@ -6,7 +6,7 @@
  */
 class KlearMatrix_Model_RouteDispatcher
 {
-    const module = 'klearMatrix';
+    public const module = 'klearMatrix';
 
     /**
      * @var KlearMatrix_Model_Screen

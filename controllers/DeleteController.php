@@ -85,6 +85,7 @@ class KlearMatrix_DeleteController extends Zend_Controller_Action
 
     public function deleteAction()
     {
+        $obj = null;
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 

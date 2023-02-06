@@ -89,8 +89,7 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
             $keys = array_keys($values);
         }
 
-        if (!count($keys)) {
-
+        if (!(is_countable($keys) ? count($keys) : 0)) {
             return $this->_quoteIdentifier($this->_column->getDbFieldName());
         }
 
@@ -103,7 +102,5 @@ class KlearMatrix_Model_Field_Select_Inline extends KlearMatrix_Model_Field_Sele
 
         return $response;
     }
-
 }
-
 //EOF

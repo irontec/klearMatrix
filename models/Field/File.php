@@ -1,10 +1,10 @@
 <?php
+
 /**
  *
 * @author jabi
 *
 */
-
 class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 {
     /**
@@ -83,11 +83,11 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
 
             return false;
         }
-        
+
         if (strtolower($value) == '__null__') {
             return null;
         }
-        
+
         $tempFSystemNS = new Zend_Session_Namespace('File_Controller');
         if (isset($tempFSystemNS->{$value})) {
 
@@ -99,5 +99,4 @@ class KlearMatrix_Model_Field_File extends KlearMatrix_Model_Field_Abstract
         return false;
     }
 }
-
 //EOF

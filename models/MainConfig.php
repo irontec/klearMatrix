@@ -7,8 +7,7 @@
 */
 class KlearMatrix_Model_MainConfig
 {
-
-    const module = 'klearMatrix';
+    public const module = 'klearMatrix';
 
     protected $_config;
     protected $_configPath;
@@ -164,5 +163,4 @@ class KlearMatrix_Model_MainConfig
         $router->setConfig($this);
         return $router;
     }
-
 }

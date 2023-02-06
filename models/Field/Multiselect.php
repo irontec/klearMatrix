@@ -1,17 +1,17 @@
 <?php
+
 class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstract
 {
-
     protected $_adapter;
 
     protected $_js = array(
-       "/js/plugins/jquery.multiselect.filter.js",
-       "/js/plugins/jquery.multiselect.js"
+        "/js/plugins/jquery.multiselect.filter.js",
+        "/js/plugins/jquery.multiselect.js"
     );
 
     protected $_css = array(
-       "/css/jquery.multiselect.css",
-       "/css/jquery.multiselect.filter.css"
+        "/css/jquery.multiselect.css",
+        "/css/jquery.multiselect.filter.css"
     );
 
     protected function _init()
@@ -22,7 +22,7 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
 
         $this->_adapter = new $adapterClassName($sourceConfig, $this->_column);
         $this->_isSortable = false;
-        
+
         if ($this->_adapter->getExtraJavascript()) {
             $this->_js = $this->_adapter->getExtraJavascript();
         }
@@ -70,5 +70,4 @@ class KlearMatrix_Model_Field_Multiselect extends KlearMatrix_Model_Field_Abstra
         return $this->_adapter;
     }
 }
-
 //EOF

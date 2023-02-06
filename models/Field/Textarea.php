@@ -1,7 +1,7 @@
 <?php
+
 class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
 {
-
     protected $_adapter;
 
     protected function _init()
@@ -17,16 +17,15 @@ class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
             $this->_css = $this->_adapter->getExtraCss();
         }
     }
-    
+
     protected function _cleanHtmlComments($value)
     {
         $value = $this->_filterValue($value);
         return preg_replace('/(<!--.*-->)/Uis', '', $value);
     }
-    
+
     public function filterValue($value)
     {
-         
         // Por defecto siempre vamos a eliminar comentarios HTML de campos textarea.
         // salvo si cleanupHTMLComments === false en la configuración del campo.
         $cleanupHTMLComments = $this->_config->getRaw()->cleaupHTMLComments;
@@ -38,7 +37,7 @@ class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
         if ($cleanComments === false) {
             return parent::filterValue($value);
         }
-         
+
         if ($this->_column->isMultilang()) {
 
             $retValue = array();
@@ -51,8 +50,6 @@ class KlearMatrix_Model_Field_Textarea extends KlearMatrix_Model_Field_Abstract
         }
 
         return $retValue;
-         
-     }
+    }
 }
-
 //EOF

@@ -71,7 +71,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         return $uploader->handleUpload(
                 sys_get_temp_dir(),
                 false,
-                $this->_filePrefix . sha1(time() . rand(1000, 10000)),
+                $this->_filePrefix . sha1(time() . random_int(1000, 10000)),
                 ''
         );
 
@@ -173,6 +173,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
 
     public function zipAndDownloadAction()
     {
+        $mainColumn = null;
         $mapperName = $this->_item->getMapperName();
         $mapper = new $mapperName;
 
@@ -227,6 +228,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
      */
     public function downloadAction()
     {
+        $fileFields = [];
         try {
             $this->_loadModel();
 

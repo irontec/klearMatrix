@@ -1,25 +1,24 @@
 <?php
+
 class KlearMatrix_Model_Field_Html5_Email extends KlearMatrix_Model_Field_Html5_Abstract
 {
-
     public function init()
     {
         $this->_settings = array(
-                "type" => "text",
-                "class" => "h5-email"
-                );
+            "type" => "text",
+            "class" => "h5-email"
+        );
     }
 
     public function filterValue($value)
     {
-
         if ($this->_config->getProperty("checkEmail")) {
 
             $check = (bool)$this->_config->getProperty("checkEmail");
 
             if ($check && $value != "") {
 
-                list(, $host) = explode('@', $value);
+                [, $host] = explode('@', $value);
 
                 $mxhosts = array();
                 if (false !== getmxrr($host, $mxhosts) || gethostbyname($host) !== $host) {
@@ -43,7 +42,5 @@ class KlearMatrix_Model_Field_Html5_Email extends KlearMatrix_Model_Field_Html5_
         }
 
         return $value;
-
     }
-
 }

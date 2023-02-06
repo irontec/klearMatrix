@@ -1,12 +1,12 @@
 <?php
+
 class KlearMatrix_Model_Field_Password_Blowfish extends KlearMatrix_Model_Field_Password_Abstract
 {
-
     protected function _salt()
     {
         $salt = "";
         for ($i = 0; $i < 22; $i++) {
-            $salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1);
+            $salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", random_int(0, 63), 1);
         }
         return $salt;
     }
@@ -19,5 +19,4 @@ class KlearMatrix_Model_Field_Password_Blowfish extends KlearMatrix_Model_Field_
 
         return $ret;
     }
-
 }

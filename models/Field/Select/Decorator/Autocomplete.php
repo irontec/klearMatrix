@@ -1,12 +1,12 @@
 <?php
+
 class KlearMatrix_Model_Field_Select_Decorator_Autocomplete extends KlearMatrix_Model_Field_DecoratorAbstract
 {
     //Por ahora se gestiona desde template.helper.js [getValuesFromSelectColumn()] y list.js
-    const APPLY_TO_LISTS = false;
-    const APPLY_TO_LIST_FILTERING = true;
+    public const APPLY_TO_LISTS = false;
+    public const APPLY_TO_LIST_FILTERING = true;
 
-    const DYNAMIC_DATA_LOADING = true;
-
+    public const DYNAMIC_DATA_LOADING = true;
 
     protected $_commandConfiguration;
 

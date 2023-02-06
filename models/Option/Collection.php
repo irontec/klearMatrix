@@ -2,12 +2,12 @@
 
 class KlearMatrix_Model_Option_Collection implements \IteratorAggregate
 {
-    const DEFAULT_PLACEMENT = 'bottom';
+    public const DEFAULT_PLACEMENT = 'bottom';
 
     protected $_opts = array();
     protected $_title;
 
-    private $_acceptedValues = array('top', 'bottom', 'both');
+    private array $_acceptedValues = array('top', 'bottom', 'both');
 
     protected $_optionsPlacement;
 

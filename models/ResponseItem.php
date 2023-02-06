@@ -1,12 +1,12 @@
 <?php
+
 /**
  * De esta clase extienden Screen, Dialog y Command
  * @author jabi
  */
-
 class KlearMatrix_Model_ResponseItem
 {
-    const module = 'klearMatrix';
+    public const module = 'klearMatrix';
 
     protected $_item;
     protected $_config;
@@ -283,7 +283,7 @@ class KlearMatrix_Model_ResponseItem
     public function getModelName()
     {
         $className = $this->_modelSpec->getClassName();
-        if ($className{0} == '\\') {
+        if ($className[0] == '\\') {
             $className = substr($className, 1);
         }
         return $className;
@@ -519,7 +519,7 @@ class KlearMatrix_Model_ResponseItem
         * que idiomas tienen los modelos disponibles
         */
         $availableLangsPerModel = $modelInstance->getAvailableLangs();
-        if (count($availableLangsPerModel) > 0) {
+        if ((is_countable($availableLangsPerModel) ? count($availableLangsPerModel) : 0) > 0) {
             $this->_visibleColumns->setLangs($availableLangsPerModel);
         }
 
@@ -952,7 +952,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function hasForcedValues()
     {
-        return sizeof($this->_forcedValues) > 0;
+        return (is_array($this->_forcedValues) && count($this->_forcedValues) > 0);
     }
 
     public function getForcedValuesConditions()
@@ -961,7 +961,7 @@ class KlearMatrix_Model_ResponseItem
 
         foreach ($this->_forcedValues as $field => $value) {
             //FIXME: Aquí se confía demasiado en el rand, podrían repetirse valores...
-            $valConstant = 'v' . rand(1000, 9999);
+            $valConstant = 'v' . random_int(1000, 9999);
             $forcedValueConds[] = $this->_getCondArray($field, $value, $valConstant);
         }
 
@@ -1146,6 +1146,7 @@ class KlearMatrix_Model_ResponseItem
      */
     public function getScreenOptions()
     {
+        $generalOptions = null;
         $KlearMatrixOptionLoader = new KlearMatrix_Model_Option_Loader();
 
         if ( (!$this->_config->exists("options")) || ($this->_config->getRaw()->options == '') ) {

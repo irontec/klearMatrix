@@ -93,8 +93,7 @@ class KlearMatrix_Model_Field_Select_Themes extends KlearMatrix_Model_Field_Sele
             $keys = array_keys($values);
         }
 
-        if (!count($keys)) {
-
+        if (!(is_countable($keys) ? count($keys) : 0)) {
             return $this->_quoteIdentifier($this->_column->getDbFieldName());
         }
 
@@ -113,10 +112,10 @@ class KlearMatrix_Model_Field_Select_Themes extends KlearMatrix_Model_Field_Sele
         $front = Zend_Controller_Front::getInstance();
 
         $themeFile = array(
-                $front->getModuleDirectory('klear'),
-                'assets',
-                'css',
-                'jquery-ui-themes.yaml'
+            $front->getModuleDirectory('klear'),
+            'assets',
+            'css',
+            'jquery-ui-themes.yaml'
         );
         $themeFile = implode(DIRECTORY_SEPARATOR, $themeFile);
 
@@ -141,7 +140,5 @@ class KlearMatrix_Model_Field_Select_Themes extends KlearMatrix_Model_Field_Sele
         }
         return new Zend_Config($totalAvailableThemes);
     }
-
 }
-
 //EOF

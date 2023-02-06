@@ -1,4 +1,5 @@
 <?php
+
 class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Select_Abstract
 {
     protected $_showOnSelect = array();
@@ -306,8 +307,7 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
             $template = $fieldConfig->getProperty("template");
             preg_match_all('/%(.*)%/U', $template, $matches);
 
-            if (!count($matches[1])) {
-
+            if (!(is_countable($matches[1]) ? count($matches[1]) : 0)) {
                 return $this->_quoteIdentifier($this->_column->getDbFieldName());
             }
 
@@ -336,5 +336,4 @@ class KlearMatrix_Model_Field_Select_Mapper extends KlearMatrix_Model_Field_Sele
         return $response;
     }
 }
-
 //EOF

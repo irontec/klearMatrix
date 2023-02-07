@@ -98,9 +98,7 @@ abstract class KlearMatrix_Model_Field_Abstract
 
     protected function _initSortable()
     {
-        if (is_object($this->_config)
-                           && $this->_config->exists("sortable")) {
-
+        if (is_object($this->_config) && $this->_config->exists("sortable")) {
             $this->_isSortable =(bool)$this->_config->getProperty('sortable');
         }
 
@@ -350,5 +348,4 @@ abstract class KlearMatrix_Model_Field_Abstract
         return false;
     }
 }
-
 //EOF

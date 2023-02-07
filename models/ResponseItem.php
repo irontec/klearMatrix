@@ -952,7 +952,7 @@ class KlearMatrix_Model_ResponseItem
 
     public function hasForcedValues()
     {
-        return (is_array($this->_forcedValues) && count($this->_forcedValues) > 0);
+        return is_array($this->_forcedValues) && count($this->_forcedValues) > 0;
     }
 
     public function getForcedValuesConditions()

@@ -90,8 +90,12 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         $this->_columns = array_merge($cols, $this->_columns);
     }
 
-    public function setReadOnly($readOnlyFields = array(), $model)
+    public function setReadOnly($readOnlyFields, $model)
     {
+        if (is_null($readOnlyFields)) {
+            $readOnlyFields = [];
+        }
+
         foreach ($readOnlyFields as $fieldName => $value) {
 
             if (isset($this->_columns[$fieldName])) {
@@ -281,7 +285,6 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         return array_shift($allLangs);
     }
 
-
     public function clear()
     {
         $this->_columns = array();
@@ -300,11 +303,9 @@ class KlearMatrix_Model_ColumnCollection implements IteratorAggregate
         return $this->_columns[$this->_optionColumnsIdx];
     }
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->_columns);
     }
-
 }
-
 //EOF

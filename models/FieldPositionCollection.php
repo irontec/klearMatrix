@@ -2,16 +2,17 @@
 
 class KlearMatrix_Model_FieldPositionCollection implements \IteratorAggregate
 {
-    protected $_positions = array();
+    protected $_msgs = [];
+    protected $_positions = [];
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->_msgs);
     }
 
     public function count()
     {
-        return sizeof($this->_positions);
+        return count($this->_positions);
     }
     public function addPosition(KlearMatrix_Model_FieldPosition $pos)
     {
@@ -20,7 +21,7 @@ class KlearMatrix_Model_FieldPositionCollection implements \IteratorAggregate
 
     public function toArray()
     {
-        $retArray = array();
+        $retArray = [];
 
         foreach ($this->_positions as $pos) {
             $retArray[] = $pos->toArray();

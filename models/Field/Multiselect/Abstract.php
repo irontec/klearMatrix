@@ -75,7 +75,7 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
      */
     abstract public function getCustomSearchCondition($values, $searchOps);
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         $parentArray = array();
         if (is_array($this->_keys) && is_array($this->_items)) {
@@ -90,5 +90,4 @@ abstract class KlearMatrix_Model_Field_Multiselect_Abstract implements IteratorA
         return $this->_js;
     }
 }
-
 //EOF

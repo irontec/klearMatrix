@@ -78,7 +78,7 @@ class KlearMatrix_Model_Option_Collection implements \IteratorAggregate
         return $retArray;
     }
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->_opts);
     }

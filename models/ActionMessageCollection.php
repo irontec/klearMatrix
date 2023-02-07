@@ -2,11 +2,10 @@
 
 class KlearMatrix_Model_ActionMessageCollection implements \IteratorAggregate
 {
-    protected $_msgs = array();
+    protected $_msgs = [];
     protected $_position;
 
-
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->_msgs);
     }
@@ -17,19 +16,17 @@ class KlearMatrix_Model_ActionMessageCollection implements \IteratorAggregate
     }
     public function addMessage(KlearMatrix_Model_ActionMessage $msg)
     {
-
         $this->_msgs[] = $msg;
     }
 
     public function toArray()
     {
-        $retArray = array();
+        $retArray = [];
 
         foreach ($this->_msgs as $msg) {
             $type = $msg->getType();
 
-            if ( !isset($retArray[$type]) ) {
-
+            if (!isset($retArray[$type])) {
                 $retArray[$msg->getType()] = array();
             }
 

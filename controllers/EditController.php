@@ -54,7 +54,7 @@ class KlearMatrix_EditController extends Zend_Controller_Action
 
         if (!$model) {
             $this->_helper->log('PK NOT found in edit::save for ' . $mapperName . ' > PK('.$pk.')', Zend_Log::CRIT);
-            Throw new Zend_Exception($this->view->translate('Record not found.'));
+            throw new Zend_Exception($this->view->translate('Record not found.'));
         }
 
         $columns = $this->_item->getVisibleColumns(false, $model);

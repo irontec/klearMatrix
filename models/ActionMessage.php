@@ -43,7 +43,7 @@ class KlearMatrix_Model_ActionMessage
                    return $this;
         }
 
-        Throw new Exception('Invalid Type for message');
+        throw new Exception('Invalid Type for message');
 
     }
 
@@ -60,10 +60,10 @@ class KlearMatrix_Model_ActionMessage
 
         $this->_title = $this->_config->getProperty("title");
         $this->_message = $this->_config->getProperty("message");
-        
+
         $this->_title = Klear_Model_Gettext::gettextCheck($this->_title);
         $this->_message = Klear_Model_Gettext::gettextCheck($this->_message);
-        
+
         $_actions = $this->_config->getRaw()->actions;
 
 
@@ -79,7 +79,7 @@ class KlearMatrix_Model_ActionMessage
            if (!$aAction['label']) {
                $aAction['label'] = $idx;
            }
-           
+
            $aAction['label'] = Klear_Model_Gettext::gettextCheck($aAction['label']);
 
            $this->_action[]= $aAction;

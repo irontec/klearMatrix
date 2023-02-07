@@ -15,7 +15,7 @@ class KlearMatrix_Model_Field_File_Decorator_Preview extends KlearMatrix_Model_F
 
             if (!$this->_model) {
 
-                Throw new Exception("file not exists");
+                throw new Exception("file not exists");
             }
 
             $this->_setFileFields();
@@ -33,7 +33,7 @@ class KlearMatrix_Model_Field_File_Decorator_Preview extends KlearMatrix_Model_F
                     $previewElement->setBinary($this->_getBinary());
                     break;
                 default:
-                    Throw new Exception("file type not valid");
+                    throw new Exception("file type not valid");
                     break;
             }
 

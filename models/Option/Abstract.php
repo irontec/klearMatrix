@@ -30,7 +30,6 @@ abstract class KlearMatrix_Model_Option_Abstract
 
     protected $_alwaysEnabled = false;
 
-
     /**
      * Especifica si una opción debe sustituir parent con item a la hora ed dibujar el título
      * Se hará automáticamente para opciones con module: klearMatrix y controller: list
@@ -72,7 +71,7 @@ abstract class KlearMatrix_Model_Option_Abstract
         $this->_setLabelOnList($this->_config->getProperty("labelOnList"));
         $this->_setLabelOnPostAction($this->_config->getProperty("labelOnPostAction"));
 
-        $this->_shortcut = substr($this->_config->getProperty("shortcutOption"), 0, 1);
+        $this->_shortcut = substr((string) $this->_config->getProperty("shortcutOption"), 0, 1);
 
         $this->_multiItem = (bool)$this->_config->getProperty("multiItem");
         $this->_showOnlyOnNotNull = (bool)$this->_config->getProperty("optionShowOnlyOnNotNull");
@@ -178,7 +177,7 @@ abstract class KlearMatrix_Model_Option_Abstract
 
         if (!class_exists($className)) {
 
-            $className = 'KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst($className);
+            $className = 'KlearMatrix_Model_ParentOptionCustomizer_' . ucfirst((string) $className);
 
             if (!class_exists($className)) {
 
@@ -471,7 +470,7 @@ abstract class KlearMatrix_Model_Option_Abstract
     {
         $ret = '<span class="autoOption" ';
         foreach ($this->toArray() as $prop => $value) {
-            $prop = ltrim(strtolower(preg_replace('/[A-Z]/', '-$0', $prop)), '-');
+            $prop = ltrim(strtolower(preg_replace('/[A-Z]/', '-$0', (string) $prop)), '-');
             $ret .= 'data-' . $prop . '="' . $value.'" ';
         }
         $ret .= '></span>';

@@ -105,7 +105,7 @@ class KlearMatrix_Model_FilterProcessor
     protected function _generate()
     {
         if ((!isset($this->_request)) || (!isset($this->_columns)) || (!isset($this->_model))) {
-            Throw new Exception("FilterProcessor not properly invocated");
+            throw new Exception("FilterProcessor not properly invocated");
         }
 
         $searchWhere = $this->_getSearchWhere();

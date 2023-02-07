@@ -9,11 +9,11 @@ class KlearMatrix_FieldDecoratorController extends Zend_Controller_Action
     {
         /* Initialize action controller here */
         $this->_helper->layout->disableLayout();
-        
+
         $this->_helper->ContextSwitch()
             ->addActionContext('index', 'json')
             ->initContext('json');
-        
+
     }
 
     /**
@@ -29,7 +29,7 @@ class KlearMatrix_FieldDecoratorController extends Zend_Controller_Action
 
         if ( !class_exists($fieldDecoratorClassName)) {
 
-            Throw new Exception("Field decorator $fieldDecoratorClassName not found");
+            throw new Exception("Field decorator $fieldDecoratorClassName not found");
         }
 
         $plugin = new $fieldDecoratorClassName($this->_request, $this->_helper, $this->view);

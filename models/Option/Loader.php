@@ -67,7 +67,7 @@ class KlearMatrix_Model_Option_Loader
                 $property = 'links';
                 break;
             default:
-                Throw new Zend_Exception("Undefined Option Type");
+                throw new Zend_Exception("Undefined Option Type");
                 break;
         }
         $_items = $parent->getProperty($property);

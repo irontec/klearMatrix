@@ -457,7 +457,7 @@ class KlearMatrix_FileController extends Zend_Controller_Action
         $this->_loadModel();
 
         if (!$this->_model) {
-            Throw new Exception("file not exists");
+            throw new Exception("file not exists");
         }
 
         $arguments = $this->_item->getConfigAttribute('arguments');

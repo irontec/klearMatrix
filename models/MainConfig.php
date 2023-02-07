@@ -65,7 +65,7 @@ class KlearMatrix_Model_MainConfig
 
         if (!in_array($itemName, $this->_types)) {
             $msgString = "Invalid item specified [" . $itemName . "]";
-            Throw new Zend_Exception($msgString);
+            throw new Zend_Exception($msgString);
         }
 
         $attrName = "_default" . ucfirst($itemName);
@@ -87,7 +87,7 @@ class KlearMatrix_Model_MainConfig
                 }
 
             } else {
-                Throw new Zend_Exception("Default item [".$itemName."] not found");
+                throw new Zend_Exception("Default item [".$itemName."] not found");
             }
         }
 
@@ -113,7 +113,7 @@ class KlearMatrix_Model_MainConfig
     {
 
         if (!$this->_config->exists($type . "->" . $identifier)) {
-            Throw new Zend_Exception("Configuration for selected option [".$identifier.", type: ".$type."] not found");
+            throw new Zend_Exception("Configuration for selected option [".$identifier.", type: ".$type."] not found");
         }
         return $this->_config->getRaw()->{$type}->{$identifier};
     }

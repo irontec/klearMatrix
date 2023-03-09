@@ -531,7 +531,11 @@ class KlearMatrix_Model_Field_Ghost_List extends KlearMatrix_Model_Field_Ghost_A
                 $tr .= '<td class="ui-widget-content default">'.$value.'</td>';
             }
 
-            if (count($options) > 0) {
+            if ($options instanceof \KlearMatrix_Model_Option_Collection) {
+                $options = $options->getIterator();
+            }
+
+            if ($options instanceof \ArrayIterator || count($options) > 0) {
                 $tr .= '<td class="ui-widget-content options">';
                 foreach ($options as $option) {
                     $filterClassName = $option->getConfig()->getProperty("filterClass");

@@ -488,11 +488,12 @@ class KlearMatrix_Model_MatrixResponse
         // (no funciona count / sizeof en las implementaciones de IteratorAggregate)
         // debe tener count implementado
 
-        if (method_exists($this->{'_' . $_fld}, 'count')) {
-            $total = $this->{'_' . $_fld}->count();
-        } else if (is_array($this->{'_' . $_fld})) {
+        if (is_array(($this->{'_' . $_fld}))) {
             $total = count($this->{'_' . $_fld});
+        } else if (method_exists($this->{'_' . $_fld}, 'count')) {
+            $total = $this->{'_' . $_fld}->count();
         }
+
         return $total;
     }
 
